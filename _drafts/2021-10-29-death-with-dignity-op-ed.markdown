@@ -10,7 +10,20 @@ permalink: death-with-dignity-op-ed
 
 Something I've heard repeatedly from older, mentally healthy people is that they wouldn't want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die. We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.
 
-Because dementia-related wish to die is of a different nature than the terminally-ill-induced wish to die, 
+Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different minset and procedure.
+
+There are two main hurdles for people who wish to end their life once they have severe dementia: 
+1. By the time they have severe dementia, somebody else usually holds their medical power of attorney
+2. There are no established business and legal procedures to follow
+
+Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. Now the premise is that there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia.
+Here are a few timelines:
+- the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can't make these decisions for themself anymore
+- the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can't come to a consensus of how or when to move forward
+
+
+
+I don't think we can just try to pass a law saying a severely demented person can 'die with dignity', mostly because somebody severely demented can't really make that call themselves at that point. We need a full system around it. Need well-defined: when decision made, who has to be involved, processes in the years that follow, family that's involved, can change mind anytime.
 
 
 
