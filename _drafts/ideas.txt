@@ -37,3 +37,5 @@ robot to paint lines in parking lot
 idea: slip cover for kindle to signal what book you're reading. Could be paired w/ kindle purchase and sent to you for an extra dollar or two. Some people like to keep books on shelves as either decor or as little trophies, this could replace that.
 
 Make math video with Manim on why taurus is the shape of pacmans world, and not a sphere
+
+Organization to pair programmers with carpal tunnel / hand / wrist / eye problems with junior programmers. Pair program where junior drives. Learning + productive + harm reducing
