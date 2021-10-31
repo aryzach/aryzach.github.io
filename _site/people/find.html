@@ -88,8 +88,11 @@ o__ `._.-'''''    //
 						reader.onload = function (e) {
 								const text = e.target.result;
 								const data = csvToArray(text);
+								const numberOfEntries = data.length;
+								const timeDelay = numberOfEntries * 300;
+								//console.log(data);
 								getNewLocations(data);
-								setTimeout(() => outputCsvFile(toCsvString(globalNewPeople)), 10000);
+								setTimeout(() => outputCsvFile(toCsvString(globalNewPeople)), timeDelay);
 						};
 
 						reader.readAsText(input);
@@ -132,7 +135,7 @@ o__ `._.-'''''    //
 						document.write('<br>')
 						person['New Location'] = location;
 						globalNewPeople.push(person);
-						console.log(person);
+						//console.log(person);
 						//return location;
 
 				}
@@ -180,7 +183,7 @@ o__ `._.-'''''    //
 								}, {});
 								return el;
 						});
-						console.log(arr);
+						console.log(arr.length);
 						return arr;
 				}
 
