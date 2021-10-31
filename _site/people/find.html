@@ -1,8 +1,10 @@
 <head> </head>
 <body>
-		<a href=http://cors-anywhere.herokuapp.com/corsdemo>first click this then click the button on that page</a>
+		<a href=http://cors-anywhere.herokuapp.com/corsdemo>first click this then click the button on that page, then go back to this page</a>
 		<br>
 		then enter the form
+		<br>
+		csv file should download
 		<br>
 		<form id="myForm">
 				<input type="file" id="csvFile" accept=".csv" />
@@ -10,9 +12,9 @@
 				<input type="submit" value="Submit" />
 		</form>
 		<br />
-		<div>
-				<pre>
-						                   
+<div>
+	<pre>
+
  ww_          ___.///			    
 o__ `._.-'''''    //			   
 |/  \   ,     /   //			  
@@ -22,25 +24,30 @@ o__ `._.-'''''    //
           \\\\				 
          ,,','`    		
 
-				</pre>
-				<br />
-
+	</pre>
+</div>
+<div>
+	<br>
 				zo
-		<br />
+	<br>
 				limit is 600 people / hour
-		<br />
+	<br>
 				only tested this in chrome. idk if other browsers will work
-		<br />
+	<br>
 				csv format has to use the same column names
-		<br />
+	<br>
 				'Legal First'
-		<br />
+	<br>
 				'Last'
-		<br />
+	<br>
 				'First'
-		<br />
+	<br>
 				'MDOC #'
-		</div>
+	<br>
+				if in the csv, there are spaces after the titles, then those fields won't be populated. so it needs to look like this: Name,Last,Location
+				and not this: Name ,Last ,Location
+
+</div>
 
 		<script>
 
@@ -82,10 +89,26 @@ o__ `._.-'''''    //
 								const text = e.target.result;
 								const data = csvToArray(text);
 								getNewLocations(data);
+								setTimeout(() => outputCsvFile(toCsvString(globalNewPeople)), 10000);
 						};
 
 						reader.readAsText(input);
 				});
+
+				const outputCsvFile = (csvContent) => {
+						var downloadLink = document.createElement("a");
+						var blob = new Blob(["\ufeff", csvContent]);
+						var url = URL.createObjectURL(blob);
+						downloadLink.href = url;
+						downloadLink.download = "data.csv";
+
+						document.body.appendChild(downloadLink);
+						downloadLink.click();
+						document.body.removeChild(downloadLink);
+				};
+
+
+				var globalNewPeople = [];
 
 				const getNewLocations = (data) => data.map(person => reqNewLocation(person));
 
@@ -97,7 +120,6 @@ o__ `._.-'''''    //
 						var parser = new DOMParser();
 						var htmlDoc = parser.parseFromString(rawResponse, 'text/html');
 						const location = htmlDoc.getElementsByClassName('links btnLink')[2].innerHTML;
-						console.log(location);
 						document.write(`Legal First: ${legalFirst}`);
 						document.write('<br>')
 						document.write(`Last: ${last}`);
@@ -108,6 +130,9 @@ o__ `._.-'''''    //
 						document.write('<br>')
 						document.write('<br>')
 						document.write('<br>')
+						person['New Location'] = location;
+						globalNewPeople.push(person);
+						console.log(person);
 						//return location;
 
 				}
@@ -145,8 +170,8 @@ o__ `._.-'''''    //
 				}
 
 				const csvToArray = (str, delimiter = ",") => {
-						const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
-						const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+						const headers = str.slice(0, str.indexOf("\r\n")).split(delimiter);
+						const rows = str.slice(str.indexOf("\r\n") + 1).split("\r\n");
 						const arr = rows.map(function (row) {
 								const values = row.split(delimiter);
 								const el = headers.reduce(function (object, header, index) {
@@ -155,8 +180,43 @@ o__ `._.-'''''    //
 								}, {});
 								return el;
 						});
+						console.log(arr);
 						return arr;
 				}
+
+				const toCsvString = (arrayOfObject) => {
+						const csvString = [
+								[
+										"Legal First",
+										"Last",
+										"First",
+										"MDOC #",
+										"Facility",
+										"Address",
+										"City",
+										"State",
+										"Zip",
+										"New Location"
+								],
+								...arrayOfObject.map(item => [
+										item["Legal First"],
+										item["Last"],
+										item["First"],
+										item["MDOC #"],
+										item["Facility"],
+										item["Address"],
+										item["City"],
+										item["State"],
+										item["Zip"],
+										item["New Location"]
+								])
+						]
+								.map(e => e.join(","))
+								.join("\n");
+
+						return csvString;
+				}
+
 
 		</script>
 </body>
