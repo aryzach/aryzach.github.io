@@ -22,3 +22,8 @@ I'm deep into security compliance stuff. We're part way done with implementation
 	- You can very easily send your syslogs to a remote server with rsyslog
 	- Log commands ran with sudo through `visudo`
 On another note, I'm doing some legit engineering too! Currently making a translator between two message formats. The mapping between the two message types is poorly defined. And we're toying with the idea of using Haskell for this! Because it's good for parse-y type things. And we have fun thinking in Haskell. The major downside is that it brings unneeded complexity onto our stack for such a small project. We'll probably just do it in python, which is cool, too, because it'll be fast to get going. 
+
+### 11/2/21
+I'm averaging about two jars of peanut butter a month.
+The workstation I'm on has been having issues (previous employees experienced it too with this computer), and while trying to debug, put it in a state where I can't really use it (can't access my hard drive). I could figure it out, but was already starting to feel like I was spread thin, and now my quick workflows are all thrown off. I'm now working between two different computers for different projects. It's coming together though! We have a plan, everybody got more or less on the same page today, I feel some calmness about CMMC security stuff, and we have a plan to move forward with more core engineering project I'll be able to own. Woo! 
+

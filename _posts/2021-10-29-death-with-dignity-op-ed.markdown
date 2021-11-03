@@ -8,26 +8,74 @@ permalink: death-with-dignity-op-ed
 
 # Expanding Accessibility to Assisted Dying
 
-Something I've heard repeatedly from older, mentally healthy people is that they wouldn't want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die. We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.
+### Contents
+#### Background / Intro
+#### Nonprofit Business Plan
+##### Vibe (and why this vibe)
+##### Timeline (education: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
+##### Education
+##### Services
+##### Advocacy
 
-Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different minset and procedure.
+Something I've heard repeatedly from older, mentally healthy people is that they wouldn't want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.
 
-There are two main hurdles for people who wish to end their life once they have severe dementia: 
-1. By the time they have severe dementia, somebody else usually holds their medical power of attorney
+Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.
+
+Currently, the two main hurdles for somebody with severe dementia to take advantage of physician-assisted dying are that you need to be<sup>[[1]](https://deathwithdignity.org/learn/access/#Eligibility)</sup>:
+1. "mentally competent, i.e. capable of making and communicating your health care decisions"
+2. "diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months" 
+
+I'll assume the reasons for these requirements are that we want to ensure that:
+1. this is the patient's choice
+2. they are not making a short-sighted decision, and there is a strong guarantee that their medical condition won't improve
+
+The presumed reasons for these laws are consistant with the reasons somebody with severe dementia would want to take advantage of physician-assisted dying given:
+1. while they were mentally competent they've expressed they wouldn't want to keep living if they ever have severe dementia 
+2. we haven't found a cure for severe dementia
+
+Canada, Luxembourg, Switzerland, and the Netherlands have legalized some form of physician-assisted death and / or euthanasia for patients with severe dementia, though it's unclear how often it's been applied to that demographic.<sup>[[2]](https://www.frontiersin.org/articles/10.3389/fpsyt.2020.622446/full)</sup>
+
+In the US, there are two main logistical hurdles for people who wish to end their life once they have severe dementia: 
+1. They're not able to make their own medical decisions
 2. There are no established business and legal procedures to follow
 
-Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. Now the premise is that there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia.
-Here are a few timelines:
+Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. 
+Here are a few common scenarios (I'm speculating that these are common mostly through empirical evidence!):
+
+- there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia
 - the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can't make these decisions for themself anymore
-- the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can't come to a consensus of how or when to move forward
+- the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can't come to a consensus of how or when to move forward, both logistically and emotionally
 
+or
 
+- there is a spouse
+...........
 
-I don't think we can just try to pass a law saying a severely demented person can 'die with dignity', mostly because somebody severely demented can't really make that call themselves at that point. We need a full system around it. Need well-defined: when decision made, who has to be involved, processes in the years that follow, family that's involved, can change mind anytime.
+The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
+We need to define the following: 
+- when is the decision made
+- who is involved
+	* family (spouse, children, grandchildren)
+	* doctors
+	* emotional / psychological support
+	* legal support
+- processes in the years that follow the decision 
+- how the decision can be redacted
+	* by who
+	* on what timeline
 
 
 
 Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
+
+Plan to make this legal:
+- start a business / non-profit
+	* very clear business plan, incentives align
+	* very good leadership, incentivised correctly
+	* community-driven decisions
+	* somehow limit concentration of power
+	* I think limiting the amount of money the org has can help with this (ie, very bootstrapped,)
+	* but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
 
 Create a process
 
@@ -83,3 +131,5 @@ Creating a clear roadmap for people, and helping them / reminding them along the
 The wiki is good. Section on US polls. Wording of DAS / DAD really matters here. 'Terminally ill' vs 'severe pain', 'patient suicide' vs 'physician-administered voluntary euthanasia'
 
 Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering
+
+

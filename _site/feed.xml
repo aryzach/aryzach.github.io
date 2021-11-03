@@ -1,5 +1,219 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-10-30T21:16:23-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
-</subtitle><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-02T21:42:13-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+</subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+&lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
+
+&lt;h3 id=&quot;vm-setup&quot;&gt;VM setup&lt;/h3&gt;
+&lt;p&gt;I’ve read this post on &lt;a href=&quot;https://www.nakivo.com/blog/virtualbox-network-setting-guide/&quot;&gt;virtualbox network settings&lt;/a&gt; which was very clarifying. I think we should be on a NAT network, but other people who I work with have gotten it to work with the NAT setting. Also, when I try to simply choose ‘NAT Network’ it doesn’t work / requires further setup. Because others have gotten it working with just NAT, I’m moving on from this for now.&lt;/p&gt;
+
+&lt;h3 id=&quot;curious-observations&quot;&gt;Curious observations&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;from a VM, I can ping the host&lt;/li&gt;
+  &lt;li&gt;from a VM, I can ping some other physical computer on our network&lt;/li&gt;
+  &lt;li&gt;from a VM, I can ping the “default gateway” from their side (I think, if I remember correctly. I’m forgetting that IP rn)&lt;/li&gt;
+  &lt;li&gt;from host, I can ping the docker interface (which has it’s own IP, and which I’m assuming is the host-side IP)&lt;/li&gt;
+  &lt;li&gt;from host, I can’t ping the VM&lt;/li&gt;
+  &lt;li&gt;(need more data on this bc I don’t remember right now)&lt;/li&gt;
+  &lt;li&gt;I can see that the VM web server port is open&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;current-questions&quot;&gt;Current questions&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;what is a container / what is docker (I kinda know but need a deeper level)&lt;/li&gt;
+  &lt;li&gt;does it make sense that my host network interface called ‘docker’ is the public IP to a private VM network?&lt;/li&gt;
+  &lt;li&gt;why can a VM ping host, but host can’t ping VM?&lt;/li&gt;
+  &lt;li&gt;how do I find out where the host can access the web page hosted on the VM&lt;/li&gt;
+  &lt;li&gt;why are we using VMs instead of containers here? All VMs are running Linux. Host is Linux. Does CentOS7 have a different kernel than Ubuntu? Or maybe it was a design choice that that you didn’t need a native Linux computer.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Networks with docker are confusing me right now, and while I don’t think this exercise will answer all my questions, I think I’ll gain a better framework for understanding how this internal network is working and will help me debug it.&lt;/p&gt;
+
+&lt;p&gt;This post is like the &lt;a href=&quot;https://aryzach.github.io/quicklearn-networking&quot;&gt;Quicklearn Networking&lt;/a&gt; post, but following Julia’s &lt;a href=&quot;https://jvns.ca/#kubernetes---containers&quot;&gt;Kubernetes / containers&lt;/a&gt; section.&lt;/p&gt;
+
+&lt;p&gt;So I first reread the NAT section from the virtualbox networking post linked above. “A guest operating system on a VM can access hosts in a physical local area network (LAN) by using a virtual NAT (Network Address Translation) device. External networks, including the internet, are accessible from a guest OS. A guest machine is not accessible from a host machine, or from other machines in the network when the NAT mode is used for VirtualBox networking.” Well that answers some questions! But then how is the host supposed to be able to access the web page served from a VM? I’m guessing through the docker network interface (if that’s even what that interface is used for). The issue is that when I tried to use the docker IP with web server port, it didn’t work.&lt;/p&gt;
+
+&lt;h2 id=&quot;post-summaries&quot;&gt;Post summaries&lt;/h2&gt;
+
+&lt;h3 id=&quot;docker-is-amazing&quot;&gt;&lt;a href=&quot;https://jvns.ca/blog/2015/11/09/docker-is-amazing/&quot;&gt;Docker is amazing&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Dockerfile can define OS and what to install on it&lt;/li&gt;
+  &lt;li&gt;good for when you need something but has conflicting dependencies from your computer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;some-questions-about-docker-and-rkt&quot;&gt;&lt;a href=&quot;https://jvns.ca/blog/2016/09/15/whats-up-with-containers-docker-and-rkt/&quot;&gt;Some questions about Docker and rkt&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;reasons: package versioning (like python venv), make different types of computers behave the same, reproducing dev environment on your personal computer, restrict which system calls you can run in the container for security&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;skipping-a-few-that-dont-seem-relevant&quot;&gt;Skipping a few that don’t seem relevant&lt;/h2&gt;
+
+&lt;h3 id=&quot;what-even-is-a-container-namespaces-and-cgroups&quot;&gt;&lt;a href=&quot;https://jvns.ca/blog/2016/10/10/what-even-is-a-container/&quot;&gt;What even is a container: namespaces and cgroups&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;namespaces and cgroups are new linux kernel features&lt;/li&gt;
+  &lt;li&gt;seems like you can have a seperate namespace of every type and limit the system calls allowed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-1&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-2&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-3&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-4&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-5&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-6&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-7&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-8&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Death with Dignity Op-Ed</title><link href="http://localhost:4000/death-with-dignity-op-ed" rel="alternate" type="text/html" title="Death with Dignity Op-Ed" /><published>2021-10-29T12:06:41-07:00</published><updated>2021-10-29T12:06:41-07:00</updated><id>http://localhost:4000/death-with-dignity-op-ed</id><content type="html" xml:base="http://localhost:4000/death-with-dignity-op-ed">&lt;h1 id=&quot;expanding-accessibility-to-assisted-dying&quot;&gt;Expanding Accessibility to Assisted Dying&lt;/h1&gt;
+
+&lt;h3 id=&quot;contents&quot;&gt;Contents&lt;/h3&gt;
+&lt;h4 id=&quot;background--intro&quot;&gt;Background / Intro&lt;/h4&gt;
+&lt;h4 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h4&gt;
+&lt;h5 id=&quot;vibe-and-why-this-vibe&quot;&gt;Vibe (and why this vibe)&lt;/h5&gt;
+&lt;h5 id=&quot;timeline-education-1-2-years---services--education--advocacy-5-15-years---pass-bill&quot;&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/h5&gt;
+&lt;h5 id=&quot;education&quot;&gt;Education&lt;/h5&gt;
+&lt;h5 id=&quot;services&quot;&gt;Services&lt;/h5&gt;
+&lt;h5 id=&quot;advocacy&quot;&gt;Advocacy&lt;/h5&gt;
+
+&lt;p&gt;Something I’ve heard repeatedly from older, mentally healthy people is that they wouldn’t want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.&lt;/p&gt;
+
+&lt;p&gt;Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.&lt;/p&gt;
+
+&lt;p&gt;Currently, the two main hurdles for somebody with severe dementia to take advantage of physician-assisted dying are that you need to be&lt;sup&gt;&lt;a href=&quot;https://deathwithdignity.org/learn/access/#Eligibility&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;“mentally competent, i.e. capable of making and communicating your health care decisions”&lt;/li&gt;
+  &lt;li&gt;“diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months”&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I’ll assume the reasons for these requirements are that we want to ensure that:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;this is the patient’s choice&lt;/li&gt;
+  &lt;li&gt;they are not making a short-sighted decision, and there is a strong guarantee that their medical condition won’t improve&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The presumed reasons for these laws are consistant with the reasons somebody with severe dementia would want to take advantage of physician-assisted dying given:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;while they were mentally competent they’ve expressed they wouldn’t want to keep living if they ever have severe dementia&lt;/li&gt;
+  &lt;li&gt;we haven’t found a cure for severe dementia&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Canada, Luxembourg, Switzerland, and the Netherlands have legalized some form of physician-assisted death and / or euthanasia for patients with severe dementia, though it’s unclear how often it’s been applied to that demographic.&lt;sup&gt;&lt;a href=&quot;https://www.frontiersin.org/articles/10.3389/fpsyt.2020.622446/full&quot;&gt;[2]&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;In the US, there are two main logistical hurdles for people who wish to end their life once they have severe dementia:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;They’re not able to make their own medical decisions&lt;/li&gt;
+  &lt;li&gt;There are no established business and legal procedures to follow&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. 
+Here are a few common scenarios (I’m speculating that these are common mostly through empirical evidence!):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia&lt;/li&gt;
+  &lt;li&gt;the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can’t make these decisions for themself anymore&lt;/li&gt;
+  &lt;li&gt;the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can’t come to a consensus of how or when to move forward, both logistically and emotionally&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;there is a spouse
+………..&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
+We need to define the following:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;when is the decision made&lt;/li&gt;
+  &lt;li&gt;who is involved
+    &lt;ul&gt;
+      &lt;li&gt;family (spouse, children, grandchildren)&lt;/li&gt;
+      &lt;li&gt;doctors&lt;/li&gt;
+      &lt;li&gt;emotional / psychological support&lt;/li&gt;
+      &lt;li&gt;legal support&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;processes in the years that follow the decision&lt;/li&gt;
+  &lt;li&gt;how the decision can be redacted
+    &lt;ul&gt;
+      &lt;li&gt;by who&lt;/li&gt;
+      &lt;li&gt;on what timeline&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning.&lt;/p&gt;
+
+&lt;p&gt;Plan to make this legal:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;start a business / non-profit
+    &lt;ul&gt;
+      &lt;li&gt;very clear business plan, incentives align&lt;/li&gt;
+      &lt;li&gt;very good leadership, incentivised correctly&lt;/li&gt;
+      &lt;li&gt;community-driven decisions&lt;/li&gt;
+      &lt;li&gt;somehow limit concentration of power&lt;/li&gt;
+      &lt;li&gt;I think limiting the amount of money the org has can help with this (ie, very bootstrapped,)&lt;/li&gt;
+      &lt;li&gt;but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it’s legal in 20 years. I think this will help align incentives&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Create a process&lt;/p&gt;
+
+&lt;p&gt;I’m thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;I think it’s a huge underserved market. People say they want it but there’snot commonly known avenues to get there. Then it’s too late and their kids have power of attorney and feel like they can’t make that decision so they keep their miserable parent alive for 5-10k / month. I think it’s a combination of a huge emotianal hurdle and it being a difficult situation when others have some say in the decision (siblings, spouce).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;All baby boomers will be there in 10-30 years and will be a resource sink and toll on all younger generations and economy.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I think people want it so it’s really just creating the vehicles to make it possible and accessible, some reframing, and education.&lt;/p&gt;
+
+&lt;p&gt;Premices is that there aren’t commonly know avenues for DAS. We don’t have the culture around it. “When you’re 60 you make a will or succession plan”, but there’s not a culture around talking about what happens when you get dementia or when your life sucks and your kids have power of attorney.&lt;/p&gt;
+
+&lt;p&gt;Education
+Creating vehicles
+Put somethingin place before they can’t do anything. Meaning somebody else has POA, they can’t make decisions for themselves. Or even if nobody else has POA, they probably don’t have the skills / energy / agency anymore to do the planning. If it’s not in their face, even if they say they want it, it’s very likely it’s not prioritized, then 10 years pass and they start declining and nothing actionable has happened since.&lt;/p&gt;
+
+&lt;p&gt;We could make it a common thing to talk about, what happens in 20 or 30 years when you’re in that position. People know if they want to be buried or cremated or body donated to science. People know where they want their money going and where they want their money spend, and what kind of funural they want.&lt;/p&gt;
+
+&lt;p&gt;The hardest technical challange and maybe social challange might be where to draw the line. I think the solution is to have better quantitative metrics on state of dementia and quality of life.&lt;/p&gt;
+
+&lt;p&gt;Maybe we do have quantitative tools to measure severity of alztimers or degree of pain, but as far as I know they’re still qualitative and subjective.&lt;/p&gt;
+
+&lt;p&gt;Need to develop quantitative markers.&lt;/p&gt;
+
+&lt;p&gt;So you can say “when I reach level 7 it’s time for DAC”&lt;/p&gt;
+
+&lt;p&gt;And even if those measures are somewhat subjective, say you set your marker at 7 and doctors later can’t decide if you’re a 6 or 7 or 8, even though that is a slight problem and would cause some years of messiness, eventually all the doctors, even the most conservative ones, will agree that you’re a 7 (or above), then you can do DAC and you don’t have to wait til level 10 like we do now.&lt;/p&gt;
+
+&lt;p&gt;Another challange will be incentive aligning. Doctors, children, lawyers, (this non-profit organization idea). Financial and emotional (mostly financial)&lt;/p&gt;
+
+&lt;p&gt;Other reason for this is baby boomers in 10 - 30 years will all be here. Nursing homes suck. Lots of people don’t want their parents living with them when their old and sick. Can also be thought of as a way to avoid predatory nursing homes. All the other options are bad. There are no good options here, and maybe this could look like the better of the options in everybodies eyes. It’s gonna be a huge economic and emotional burden on younger generations and economy.&lt;/p&gt;
+
+&lt;p&gt;Don’t know how to pursue this. Where my energy should go. What first steps are. 
+Step 1: Does anything like this exist or has it existed in the past and if so what does it look like, and what is it missing. Because if it does exist, it’s clearly missing something because the culture and mindset around this is not where lots of people think it should be. Or they just aren’t doing it enought. With baby boomers, if there’s a time to be thinking about it, it’s not and in the next 10 - 30 years.&lt;/p&gt;
+
+&lt;p&gt;Main value areas:
+Raising awareness through advocacy and education
+Creating the legal and business pathways 
+Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
+Could have a support group for people. Or just a community of people who are planning DAS
+Making family part of the planning process
+Creating a clear roadmap for people, and helping them / reminding them along the way:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Talking to somebody to help you think about your options, and what the options mean for you (how to prepare for this emotionally and mentally)&lt;/li&gt;
+  &lt;li&gt;Help get plan / legal paperwork in order&lt;/li&gt;
+  &lt;li&gt;Check ins&lt;/li&gt;
+  &lt;li&gt;Evaluation (patient / client can refute results at anytime and void or delay plan)&lt;/li&gt;
+  &lt;li&gt;DAS and family support&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The wiki is good. Section on US polls. Wording of DAS / DAD really matters here. ‘Terminally ill’ vs ‘severe pain’, ‘patient suicide’ vs ‘physician-administered voluntary euthanasia’&lt;/p&gt;
+
+&lt;p&gt;Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering&lt;/p&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Accessibility to Assisted Dying</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
 &lt;p&gt;I deleted our git server!
 We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower&lt;/p&gt;
 
@@ -14,7 +228,11 @@ We do some kinda secret stuff and have to meet some security standars. We can’
 	- PAM and /etc/pam.d/ controls authentication on a granular level. Multi-factor auth, limiting logon attemps, ssh, etc
 	- You can very easily send your syslogs to a remote server with rsyslog
 	- Log commands ran with sudo through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;visudo&lt;/code&gt;
-On another note, I’m doing some legit engineering too! Currently making a translator between two message formats. The mapping between the two message types is poorly defined. And we’re toying with the idea of using Haskell for this! Because it’s good for parse-y type things. And we have fun thinking in Haskell. The major downside is that it brings unneeded complexity onto our stack for such a small project. We’ll probably just do it in python, which is cool, too, because it’ll be fast to get going.&lt;/p&gt;</content><author><name></name></author><category term="robotics" /><category term="career" /><summary type="html">10/13/21 I deleted our git server! We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower</summary></entry><entry><title type="html">Quicklearn Networking</title><link href="http://localhost:4000/quicklearn-networking" rel="alternate" type="text/html" title="Quicklearn Networking" /><published>2021-10-09T12:31:26-07:00</published><updated>2021-10-09T12:31:26-07:00</updated><id>http://localhost:4000/quicklearn-networking</id><content type="html" xml:base="http://localhost:4000/quicklearn-networking">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+On another note, I’m doing some legit engineering too! Currently making a translator between two message formats. The mapping between the two message types is poorly defined. And we’re toying with the idea of using Haskell for this! Because it’s good for parse-y type things. And we have fun thinking in Haskell. The major downside is that it brings unneeded complexity onto our stack for such a small project. We’ll probably just do it in python, which is cool, too, because it’ll be fast to get going.&lt;/p&gt;
+
+&lt;h3 id=&quot;11221&quot;&gt;11/2/21&lt;/h3&gt;
+&lt;p&gt;I’m averaging about two jars of peanut butter a month.
+The workstation I’m on has been having issues (previous employees experienced it too with this computer), and while trying to debug, put it in a state where I can’t really use it (can’t access my hard drive). I could figure it out, but was already starting to feel like I was spread thin, and now my quick workflows are all thrown off. I’m now working between two different computers for different projects. It’s coming together though! We have a plan, everybody got more or less on the same page today, I feel some calmness about CMMC security stuff, and we have a plan to move forward with more core engineering project I’ll be able to own. Woo!&lt;/p&gt;</content><author><name></name></author><category term="robotics" /><category term="career" /><summary type="html">10/13/21 I deleted our git server! We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower</summary></entry><entry><title type="html">Quicklearn Networking</title><link href="http://localhost:4000/quicklearn-networking" rel="alternate" type="text/html" title="Quicklearn Networking" /><published>2021-10-09T12:31:26-07:00</published><updated>2021-10-09T12:31:26-07:00</updated><id>http://localhost:4000/quicklearn-networking</id><content type="html" xml:base="http://localhost:4000/quicklearn-networking">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I just started a new job! We mostly work with &lt;a href=&quot;https://en.wikipedia.org/wiki/Wireless_ad_hoc_network&quot;&gt;MANET networks&lt;/a&gt;. These are wireless networks with non-stationary and unreliable nodes. There are generally no dedicated routers, and all devices are both clients and participate in routing.&lt;/p&gt;
 
 &lt;p&gt;Anyway, because this is government contract work, we need to jump through lots of hoops to get certified with some security protocols including network security. The company is just three full-time people, one of those is me, and I probably have the most experience with networks and security, which isn’t much! (besides the two days / week contractor who seems very smart and capable)&lt;/p&gt;
@@ -835,316 +1053,4 @@ BMS DC converter needs to be isolated because the auxiliary ground is different 
   &lt;li&gt;Instead of hysteresis, could’ve used a timer circuit. This could reduce BMS power cycling when driving through shade, but when it’s still sunny elsewhere&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The BMS is the &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"></summary></entry><entry><title type="html">Class and Book Reviews</title><link href="http://localhost:4000/class-and-book-reviews" rel="alternate" type="text/html" title="Class and Book Reviews" /><published>2020-03-16T11:47:25-07:00</published><updated>2020-03-16T11:47:25-07:00</updated><id>http://localhost:4000/class-and-book-reviews</id><content type="html" xml:base="http://localhost:4000/class-and-book-reviews">&lt;p&gt;This is a chronological listing and description of all resources I’ve used to learn STEM related things. Most of them are computer science and math resources. The resources include college classes, online MOOC-like classes, and books. It’s noted if I audited the class. None of the online courses were for credit, so you could say I audited those, too. I do all the exercises and projects included in the class or book listed, expect for some exceptions where noted. Most of the online classes I take come from an online computer science curriculum that tries to mimic a university CS degree equivalent. The classes are all free and largely project-based. I’ve really enjoyed the curriculum so far and highly recommend most of it. Here’s the link: &lt;a href=&quot;https://github.com/ossu/computer-science&quot;&gt;OSSU (Open Source Society University&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;computer-science&quot;&gt;Computer Science&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;##cs-50&quot;&gt;CS 50&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#introduction-to-programming&quot;&gt;Introduction to programming&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#how-to-design-programs&quot;&gt;How to Design Programs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#networking&quot;&gt;Networking&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#machine-learning&quot;&gt;Machine Learning&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#learn-you-a-haskell&quot;&gt;Learn You a Haskell&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#software-construction&quot;&gt;Software Construction&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#programming-languages&quot;&gt;Programming Languages&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#prolog&quot;&gt;Prolog&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#discrete-math-(cs-dept)&quot;&gt;Discrete Math (CS dept)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#git&quot;&gt;Git&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#intro-to-haskell&quot;&gt;Intro to Haskell&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#nand2tetris&quot;&gt;Nand2Tetris (computer architecture)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#grad-level-programming-languages&quot;&gt;Grad-level Programming Languages&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ai&quot;&gt;AI&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;math&quot;&gt;Math&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;#linear-algebra&quot;&gt;Linear Algebra&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#calculus&quot;&gt;Calculus&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#odes&quot;&gt;ODEs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#Discrete Math (math dept)&quot;&gt;Discrete Math (math dept)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#number-theory&quot;&gt;Number Theory&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#intro-to-real-analysis&quot;&gt;Intro to Real Analysis&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#abstract-algebra&quot;&gt;Abstract Algebra&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;physical-science&quot;&gt;Physical Science&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;#microbiology&quot;&gt;Microbiology&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#physics (mechanics)&quot;&gt;Physics (mechanics)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#general-chemistry-II&quot;&gt;General Chemistry II&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#Physics (electromag)&quot;&gt;Physics (electromag)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#neural-computation&quot;&gt;Neural Computation&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cs-50&quot;&gt;CS 50&lt;/h3&gt;
-&lt;h4 id=&quot;introduction-to-programming-online-edx---2017&quot;&gt;Introduction to programming (online, edX) - 2017&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.cs50.net/2017/fall/syllabus/cs50.html&quot;&gt;2017 syllabus&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.edx.org/course/cs50s-introduction-to-computer-science&quot;&gt;Current edX course&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The first class that got me hooked (on STEM and CS). I was looking for an intro to programming class online to get my feet wet. At this point I decided not to pursue business/accounting jobs and not to get my CPA. I knew I was interested in STEM, and that programming would a useful skill no matter what STEM field I went into.&lt;/p&gt;
-
-&lt;p&gt;The good: This class really opened my eyes to CS. I learned some data structures (arrays, linked lists, trees, hash tables), control structure (for, while, if-else, etc), pointers, recursion, function definitions, using functions, sorting and searching algorithms, memory, basic debugging, and all other things you’d expect out of an intro to programming class and more. Most of what I learned was through a lot of trial and error, this being both really beneficial and really frustrating. I think my first few projects had all of their functionality in the ‘main’ function, which in retrospect would still be very frustrating and difficult way to build something for anybody.&lt;/p&gt;
-
-&lt;p&gt;Two projects I remember:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Pyramid( int x ) prints a pyramid of height x made of character _.&lt;/li&gt;
-  &lt;li&gt;Cipher( string v, string s ) returns your string encrypted using a Vigenère cipher.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The projects were fun and super challenging at the time.&lt;/p&gt;
-
-&lt;p&gt;The less good: The class was in C. In retrospect, this is kind of nuts, and they’ve since moved it to later in the curriculum. At the time, the class was perfect for me, because I was in the zone of determination and will. For somebody who’s not in that zone and just wants to learn ‘coding’, python would be a much better choice. While the idea of ‘strings are arrays with syntactic sugar’ and everything about pointers is useful and interesting, I can see how a lot of people would fall off the wagon here. I also found the edX discussions either lacking traffic, or just unhelpful. I resorted to reddit to ask a lot of questions, which wasn’t bad, and may have actually helped teach me out to ask better technical questions.
-&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;
-Originally, I was so motivated that I’d finish this 3-month, 8 project course in a few weeks. I ended up running into a lot of walls where I couldn’t debug something, and some of those projects ended up taking way longer, especially due to the back and forth on reddit, which can generally have 12-36 hour turnaround times depending on the question and momentum of the post. I did all the difficult-level problem sets instead of the easier ones, and I think it took me about 4 months. I skipped the python sections (recommended from online sources), and by the end was forcing myself to just spend an hour a day on it. But I still look fondly on my experience going through this class. It gave me a lot of confidence to move forward in the CS/programming world that was before so intimidating and foreign. I’d give myself an A in this class if you don’t grade on elegance of solutions.&lt;/p&gt;
-
-&lt;h3 id=&quot;microbiology&quot;&gt;Microbiology&lt;/h3&gt;
-&lt;h4 id=&quot;microbiology-michigan-state-university---2017&quot;&gt;Microbiology (Michigan State University) - 2017&lt;/h4&gt;
-&lt;p&gt;I took this class my last semester in college when I first thought ‘maybe I like/can do STEM.’ Microbiology is all about cycles, and ‘functions’ (read From Bacteria to Bach and Back by Dennett for the controversial use the of the word ‘function’ in the natural sciences).&lt;/p&gt;
-
-&lt;p&gt;While I retained little specific info, I enjoyed the process and readings, and gave me some context when thinking about more physical systems, and let me think about artificial processes more clearly (and other intelligent life may hardly separate the difference that we make between natural and artificial systems).&lt;/p&gt;
-
-&lt;p&gt;I think I 3.5’d this class (so B+/A-).&lt;/p&gt;
-
-&lt;h3 id=&quot;linear-algebra&quot;&gt;Linear Algebra&lt;/h3&gt;
-&lt;h4 id=&quot;linear-algebra-city-colleges-of-chicago---2018&quot;&gt;Linear Algebra (City Colleges of Chicago) - 2018&lt;/h4&gt;
-&lt;p&gt;This was my first math class since failing (then retaking and barely passing) Calc 2 roughly 4-5 years prior. I credit linear algebra and my professor for opening up my eyes to upper level math. While linear algebra is mostly computational, it has interesting ideas (the concept of spaces (4+ dimensional linear spaces), infinite spaces, transformations, determinant as volume, derivative as a linear transform, etc).&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab&quot;&gt;The Essence of Linear Algebra&lt;/a&gt; by Grant Sanderson / 3blue1brown also got me exited and thinking about math&lt;/p&gt;
-
-&lt;p&gt;I wouldn’t still be interested (yet struggling) with higher-level math now if it hadn’t been for my linear algebra professor. He was truly patient and helpful with all of my questions. He introduced me to functional analysis and Hilbert spaces (but which I understand little about), and laid out the world of math for me.&lt;/p&gt;
-
-&lt;p&gt;I 4.0’d this class (A), but don’t remember a lot of the details, which is proving a little frustrating because my Abstract Algebra class now makes heavy use of properties of the some matrix groups for examples.&lt;/p&gt;
-
-&lt;h3 id=&quot;physics-mechanics&quot;&gt;Physics (mechanics)&lt;/h3&gt;
-&lt;h4 id=&quot;physics-mechanics-city-colleges-of-chicago---2018&quot;&gt;Physics (mechanics, City Colleges of Chicago) - 2018&lt;/h4&gt;
-&lt;p&gt;I took this as part of my interest in STEM, and also because I wanted to know how more things worked, and I never took physics in high school. I was very interested and worked hard to understand the topics as deep as I could. While it got me closer to first principles understanding of the world, at some point it gets hand-wavy and you can’t go much deeper without tools like analysis, topology, and PDE’s.&lt;/p&gt;
-
-&lt;p&gt;I 4.0’d the class (A).&lt;/p&gt;
-
-&lt;h3 id=&quot;general-chemistry-ii&quot;&gt;General Chemistry II&lt;/h3&gt;
-&lt;h4 id=&quot;general-chemistry-ii-city-colleges-of-chicago---2018&quot;&gt;General Chemistry II (City Colleges of Chicago) - 2018&lt;/h4&gt;
-&lt;p&gt;I also took this out of general interest. I learned how batteries work (kinda), and that while I enjoyed the labs in class, I don’t want to work in a lab. Also pushed me away from engineering and more towards math / CS.&lt;/p&gt;
-
-&lt;p&gt;I 4.0’d the class (A).&lt;/p&gt;
-
-&lt;h3 id=&quot;calculus&quot;&gt;Calculus&lt;/h3&gt;
-&lt;h4 id=&quot;calculus-sequences-michigan-state-university-city-colleges-of-chicago---2012-to-2018&quot;&gt;Calculus sequences (Michigan State University, City Colleges of Chicago) - 2012 to 2018&lt;/h4&gt;
-&lt;p&gt;First semester freshman year of college, I scraped by Calc I, and then failed Calc II second semester, retook Calc II over the summer at community college and barely passed. Then about 5 years later, I relearned a lot on my own (starting from trig and high school algebra). I used&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Calculus_Made_Easy&quot;&gt;Calculus Made Easy&lt;/a&gt; to relearn Calc I, because I never felt like I understood it when I took it. This book come highly recommended, but I didn’t find exceptionally different or enlightening. I think I actually learned it this time through because I applied myself, which is a lot more than I can say I did taking it 5 years prior. Then I took Calc II and III at City Colleges of Chicago. This endeavor was personal, because I remember it being so hard and defeating before.&lt;/p&gt;
-
-&lt;p&gt;Taking the time to actually practice the concepts and ask questions can do wonders. For anybody struggling with this, I definitely recommend community colleges because the professors and TAs are so much more personable and accessible (in my experience anyway).&lt;/p&gt;
-
-&lt;p&gt;After all that, I don’t really understand all the fuss about the calculus sequence, and think it’s probably really poorly taught most everywhere (because of the required curriculum, not because of the teachers).&lt;/p&gt;
-
-&lt;p&gt;I audited Calc II and officially took Calc III, which I got an A in.&lt;/p&gt;
-
-&lt;h3 id=&quot;physics-electromag&quot;&gt;Physics (electromag)&lt;/h3&gt;
-&lt;h4 id=&quot;physics-electromag-city-colleges-of-chicago---2018&quot;&gt;Physics (electromag, City Colleges of Chicago) - 2018&lt;/h4&gt;
-
-&lt;p&gt;This class was a lot of fun and a lot harder to wrap my head around, and left lots of open questions. When you bend an electron beam with a magnet, why do the different poles move the bean in different directions? I don’t remember the details, but I do remember it seeming suspiciously asymmetric at the time. I also watched a lot of Feynman lectures at the time, which got me thinking a lot about the fun of physics and education.&lt;/p&gt;
-
-&lt;p&gt;I 4.0’d the class (A).&lt;/p&gt;
-
-&lt;h3 id=&quot;odes&quot;&gt;ODEs&lt;/h3&gt;
-&lt;h4 id=&quot;ordinary-differential-equations-city-colleges-of-chicago---2018&quot;&gt;Ordinary Differential Equations (City Colleges of Chicago) - 2018&lt;/h4&gt;
-
-&lt;p&gt;I took this with the same professor who taught Linear Algebra (who I really like). Unfortunately, this class was just bad. It seems everybody has the same experience the first ODE class, where it’s just pattern matching on a superficial and non-mathematical level. I truly felt like I wasn’t doing math most of the time.&lt;/p&gt;
-
-&lt;p&gt;My professor told me the standard / required curriculum for ODE was made during Apollo Era (or maybe it was during the Manhattan Project), when they just needed a lot of competent, but not necessarily comprehending engineers to run all the numbers. This class is required for lots of engineering majors, but it needs to either be dropped or overhauled.&lt;/p&gt;
-
-&lt;p&gt;I 4.0’d the class (A), but don’t feel like I have any real understanding of ODE’s past the basics and how to solve them. I wish there was a discovery period in the class where, given some information, we uncovered the underlying ODE’s that were waiting to be solved. Actually, now that I remember, we did this once with a pendulum, but it wasn’t very enlightening.&lt;/p&gt;
-
-&lt;h3 id=&quot;introduction-to-programming-python&quot;&gt;Introduction to programming (python)&lt;/h3&gt;
-&lt;h4 id=&quot;introduction-to-programming-online-edx---2019&quot;&gt;Introduction to programming (online, edX) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.edx.org/course/introduction-to-computer-science-and-programming-7&quot;&gt;edX course&lt;/a&gt; 
-	Intro to programming (w/ python, edX) (link edx): I was wanting to take more online programming classes, but it had been almost a years since I last took CS 50, so I wanted a refresher, and wanted to learn python because I knew it was considered a more widely used language and more appropriate intro language. 
-	The class is great for an intro class, and fairly breezy after taking the class that was taught in C. I believe this class started to get into OO design. Not much to say here other than I’d recommend this before CS 50 to most people. 
-I would’ve gotten an A in the class.&lt;/p&gt;
-
-&lt;h3 id=&quot;how-to-design-programs&quot;&gt;How to Design Programs&lt;/h3&gt;
-&lt;h4 id=&quot;how-to-design-programs-htdp-online-edx---2019&quot;&gt;How to Design Programs (HtDP, online, edX) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.edx.org/course/how-to-code-simple-data&quot;&gt;edX course part 1 - How to Code: Simple Data&lt;/a&gt; 
-&lt;a href=&quot;https://www.edx.org/course/how-to-code-complex-data&quot;&gt;edX course part 2 - How to Code: Complex Data&lt;/a&gt;
-	At first I didn’t like this class because it seemed like a lot of just referencing design tables and tediously designing code that didn’t have much impact. But it turned out to be a really great class that taught about designing data, designing, functions, and designing programs. 
-	I can’t say I had quite enough context at the time to fully appreciate the course, but it definitely left a mark, and I might have to revisit it in a few years after I have more design experience. It was taught in Racket (lisp dialect), and it was my first time writing functional code. It helped me write a lot more elegant solutions, utilize pattern matching and recursion a lot more elegantly and efficiently. I learned how to write data definitions, write tests and then write test-driven programs, understand the type of data / function / program I’m writing and match it to design patterns, write variations of recursive functions (tail recursive, cached, navigate graphs, etc), maintain state in a functional language, and much more. 
-	The larger projects I remember were building a Sudoku solver using backtracking search, and building a space invaders game. Racket is a weird language because they give you strange language concepts like images as a primitive data type and the ‘big bang’ control structure, which was a little confusing to me at the time when trying to understand why images and other black box-like data types were primitives, and what that meant for a language. 
-	When I was interning, I’d send myself screenshots of the problems / programs assigned, do them as best I could on a text editor at work, then email the files back to myself to run them at home. I would’ve gotten an A in the class.&lt;/p&gt;
-
-&lt;h3 id=&quot;networking&quot;&gt;Networking&lt;/h3&gt;
-&lt;h4 id=&quot;intro-to-computer-networking-online-coursera---2019&quot;&gt;Intro to Computer Networking (online, Coursera) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/playlist?list=PLEAYkSg4uSQ2dr0XO_Nwa5OcdEcaaELSG&quot;&gt;Coursera course&lt;/a&gt;
-	I can’t say I learned much from this course. It was a lot of lecture material, multiple choice chapter tests, and no programming exercises. They recommended getting familiar with WireShark (packet sniffer), but that guidance was pretty useless too. I suggested to the catalogue that compiles this CS curriculum to change the course and provide real programming assignments to go along with the course. They’ve since added 4 assignments (which I haven’t done yet), got rid of the chapter tests (which is a good thing in this case, because it was mostly all rote memorization), and suggest that the learner find a different networking course. 
-	I took this class because I was interning in cybersecurity IT at NASA, and everybody around me knew networking really well, and I felt like an idiot because I didn’t know anything about it. My one big takeaway from this course is that dealing with internet traffic / moving a lot of data with limited resources on a large scale is a fun and math-y (but mostly solved) problem. The instructors did a great job presenting the problems and explaining the creative solutions people have come up with to deal with traffic problems (dealing with priority of data, bad actors, etc). The internet is truly an amazing utility-like infrastructure that’s gone through a lot of iterative changes and growing pains. 
-	I probably would’ve gotten a C or D in this class. There were chapter tests that I guessed a lot on. If you’d like an excuse, the material was just so dry and not engaging. I’d like to go back and work through the assignments that have been posted since I finished the class.&lt;/p&gt;
-
-&lt;h3 id=&quot;machine-learning&quot;&gt;Machine Learning&lt;/h3&gt;
-&lt;h4 id=&quot;machine-learning-online-coursera---2019&quot;&gt;Machine Learning (online, Coursera) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.coursera.org/learn/machine-learning&quot;&gt;Coursera course&lt;/a&gt; 
-&lt;a href=&quot;https://github.com/aryzach/MachineLearningClass&quot;&gt;My code&lt;/a&gt; 
-	This class was strictly machine learning (mostly matrix learning) and not a general AI class. This was a really great introduction to the field and helped make all those buzzwords root themselves in something other than magic. 
-	The course was taught in Matlab / Octave, and most of the project time went towards implementing the correct regression, back propagation, regularization, cost function, etc. techniques. I’ve forgotten many of the details, but would feel confident implementing something from this class with a little re-learning time. 
-	Main topics: Linear regression with one variable, then with multiple variables, logistic regression, regularization, neural network concepts and training, advise for developers who are trying to build and/or train their own systems, support vector machines, unsupervised learning (k-means), anomaly detection, and recommender systems. The project I remember most was identifying handwritten digits using a neural net. Learning the details of things like how back propagation works can get fairly tedious, yet enlightening. 
-	The main takeaways from this class are 1. It’s not magic, 2. Determine what type of problem you have (classification, regression) and apply one of these known solutions. Then by using meta-data that is tracking your training, determine how to better your model (usually more data or more independent parameters for regression and neural nets). 
-	If you’re actually researching machine learning, I know improvements to models go much deeper into things like number of layers or altering the activation function, but this class was especially great because it enables people to fully build their own system for their application from scratch out of the gate. One of Andrew Ng’s (the professor and renowned ML researcher) gripes of ML is that people are doing too much academic research and not enough application, and this class both teaches from first principles and enables more applied ML use. 
-	I would’ve gotten an A in the course, but most of the assignments were walkthroughs, so it’s not saying much. If I wanted to go into machine learning research, I’d probably retake parts of the course, and take another online ML class before I could say I’m a competent and confident machine-learning novice.&lt;/p&gt;
-
-&lt;h3 id=&quot;learn-you-a-haskell&quot;&gt;Learn You a Haskell&lt;/h3&gt;
-&lt;h4 id=&quot;learn-you-a-haskell-book---2019&quot;&gt;Learn You a Haskell (book) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;http://learnyouahaskell.com&quot;&gt;Book&lt;/a&gt;
-	I started reading this book before any PL class because I was interning (and I couldn’t find any more work!), and wanted to move forward with the CS curriculum, but couldn’t download anything that I needed to program (other option was learning more bash scripting). 
-	Looking back, Haskell is a strange step for a beginner programmer to take, but it has informed and driven my learning more than a year later. This book is too long and detailed a resource but I guess that’s by necessity when the standard library is so massive. While it introduced me to some cool concepts (Maybe, Either, Monads), I wouldn’t recommend it as a first resource to learn Haskell (see the Haskell class below). I’ve since posted about this on OSSU, and they are replacing the book with the class below, and moving it back in the curriculum, so that it’s both not necessary and to be taken later.
-	For some reason I was super intrigued in all of Haskell. I’ve always been a sucker for seemingly elite things, and Haskell is one of those things. I’d read that lifelong programmers would have enlightening breakthroughs after learning Haskell. Category theory and type theory / HoTT seemed so sexy (not that I understand them in the slightest). It seems like the furthest away from manipulating bits and physical state as you could get. I’m still drawn to it, but have only spent a little time using the language, and only slightly understand monads. But it did inspire me to take more math (notably algebra), and I hope to one day understand category theory and HoTT. (I’m currently taking algebra and a graduate level PL class where we learn Agda, which I think is interpreted by Haskell). Haskell is hard, especially as you go towards the land of functors, monoids, and monads. 
-	I happy with what I learned while reading this, but have yet to finish the book (stopped around functors). If I finished it just to finish it, I’d be kidding myself, because I don’t really understand functors that well, and definitely don’t understand the monad abstraction, implementation, or use. There weren’t any exercises, but I’d give myself a C- on the whole book, a B+ on the parts I read, and hope that in the next year or so I’ll know Haskell with confidence.&lt;/p&gt;
-
-&lt;h3 id=&quot;software-construction&quot;&gt;Software Construction&lt;/h3&gt;
-&lt;h4 id=&quot;software-construction-online-edx-2-parts---2019&quot;&gt;Software Construction (online, edX, 2 parts) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.edx.org/course/software-construction-object-oriented-design&quot;&gt;Part 1 - Software Construction: Object-Oriented Design&lt;/a&gt; 
-&lt;a href=&quot;https://www.edx.org/course/software-construction-data-abstraction&quot;&gt;Part 2 - Software Construction: Data Abstraction&lt;/a&gt; 
-&lt;a href=&quot;https://github.com/aryzach/SoftwareConstructionClass&quot;&gt;A mess of my code from the class&lt;/a&gt; 
-	I didn’t have much confidence with OOP design before taking this class, and I’m still not as confident and seasoned as I’d like to be. This class helped only mildly with that feeling. Most of the projects I did required the following:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Understand what parts of the code are important for me to understand deeply, and what parts I could mostly ignore&lt;/li&gt;
-  &lt;li&gt;Add functionality, which usually required a form of deciding the correct way to refactor and abstract existing code, or implement a design pattern&lt;/li&gt;
-  &lt;li&gt;Debug unfamiliar code&lt;/li&gt;
-  &lt;li&gt;Create small OO applications from scratch 
-  We also created UML diagrams and learned other methods to understand large OO code bases, and implemented a few design patterns (the visitor and decorator patterns are the only one I vaguely remember). 
-  Overall, I learned to better read, understand, and work with existing code. I know that in most industry jobs, these skillsets are largely important, and I still would like a lot more practice on this front. I’d really like to start working on larger code bases, and also work through one of the design pattern books and apply the concepts to otherwise messy solutions. I’d also like to understand design patterns in functional languages. 
-  Overall, I gained a little through this course, but wouldn’t recommend it to most people. Learning how to work with large code bases is a tricky thing to teach, because, I think, to teach it well, it takes a lot of time and lecture doesn’t really help. I think contributing to a project you care about, or building your own large project is the most effective way to learn to work with large amounts of code. Large code bases take a lot of time to read and fiddle, with large spaces of non-stimulating drudgery. This is a case where you just have to ‘put in the time,’ and that’s unlikely to happen with class projects, and better suited for projects you care about. 
-  To conclude, this is an area that doesn’t bode well to class instruction, and is better suited for on-the-job learning or personal project discovery. I’ve yet to do either of those things, so this is definitely something I still struggle with. Because I had quite a bit of trouble with the last project (twitter mapper, here’s somebody elses description of it: https://github.com/MohamedMandouh/MyTwitterMapper/blob/master/README.md), I’d give myself a B/B- in the course.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;programming-languages&quot;&gt;Programming Languages&lt;/h3&gt;
-&lt;h4 id=&quot;programming-languages-online-edx-3-parts---2019&quot;&gt;Programming Languages (online, edX, 3 parts) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.coursera.org/learn/programming-languages&quot;&gt;Part A&lt;/a&gt; 
-&lt;a href=&quot;https://www.coursera.org/learn/programming-languages-part-b&quot;&gt;Part B&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://www.coursera.org/learn/programming-languages-part-c&quot;&gt;Part C&lt;/a&gt; 
-&lt;a href=&quot;https://github.com/aryzach/ProgrammingLanguagesClass&quot;&gt;My code&lt;/a&gt; 
-	Teaches type systems (dynamic vs static) and where along the spectrum different languages fall and why they fall there (notably SML, Racket, and Ruby). Discussion about the pros and cons of each, how different languages can be preferred depending on use, and specifically what language paradigms are preferred when prototyping vs. shipping a product (seems to be still up for discussion). 
-	We also learned about how language semantics determine evaluation, how polymorphism works, about completeness vs. soundness, and about double dispatch. We compared languages by writing same code in different styles in the different languages. 
-	The most interesting project was writing an interpreter for a small programming language in Racket, where we implemented language features such as closures, let expressions, function definitions, and function calls. This project was super challenging, but still accessible. It was especially difficult trying to understand the difference between Racket code and MUPL code (name of the small programming language), and the interplay between each of them. 
-&lt;a href=&quot;MUPL_Interpreter_Assignment.pdf&quot;&gt;Interpreter assignment&lt;/a&gt;
-&lt;a href=&quot;https://github.com/aryzach/ProgrammingLanguagesClass/blob/master/PartB/Week2/SmallLanguageInterpreter.rkt&quot;&gt;Interpreter code written in Racket&lt;/a&gt;
-This and the HtDP series talked about above are some of my favorite classes so far. I would’ve gotten an A in this class.&lt;/p&gt;
-&lt;h3 id=&quot;prolog&quot;&gt;Prolog&lt;/h3&gt;
-&lt;h4 id=&quot;prolog-book---2019&quot;&gt;Prolog (book) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;http://www.learnprolognow.org/&quot;&gt;Learn Prolog Now! Book &lt;/a&gt;
-&lt;a href=&quot;https://github.com/aryzach/Prolog&quot;&gt;My Prolog coding exercises&lt;/a&gt;
-	I don’t really ‘get’ prolog even though I was able to do most (possibly all) the exercises for the half of the book I read. It just wasn’t very enlightening, and seemed like the same things possibly would’ve been easier in other languages. I only got about halfway through the book. I’d give myself an A for the part I did (was able to complete all but one of the many exercises), but a D for my understanding of Prolog overall.&lt;/p&gt;
-
-&lt;h3 id=&quot;discrete-math-math-dept&quot;&gt;Discrete Math (math dept)&lt;/h3&gt;
-&lt;h4 id=&quot;discrete-math-ut-austin-math-dept-audit---2019&quot;&gt;Discrete math (UT Austin, math dept, audit) - 2019&lt;/h4&gt;
-&lt;p&gt;I came to UT for a few reason, but one reason was that they had some math classes taught using the&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Moore_method&quot;&gt;Moore Method&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Possibly more on this later, but I’m excited about math education, and was really intrigued by this style. UChicago also offers a lot of classes like this, but it would’ve been less likely that I could’ve audited them.&lt;/p&gt;
-
-&lt;p&gt;Anyway, I took this class because I’d never taken proof-based math before and wasn’t confident in my abilities, and because it used the Moore Method. While I think the Moore Method was beneficial to our class, I don’t put it on a pedestal as I did before. 95% of the class time was spent either in groups of 3-6 students writing proofs on the blackboard, or individuals presenting their groups’ proof or homework proofs.&lt;/p&gt;
-
-&lt;p&gt;This class had a lot of overlap from the other discrete math class below, but with a much different perspective; it was a lot more methodical, exhaustive, and tedious. We focused a lot of time on the detail and semantics of the proofs, instead of the problem solving and bigger ideas behind the concepts. This class formalized a lot of concepts that I’ve been informally introduced to before, and gave me confidence in my knowledge of elementary set theory, and ability to write sound proofs. The most novel section for me was the part on equivalence relations.&lt;/p&gt;
-
-&lt;p&gt;I did most/all of the homework, but didn’t take any tests, and think I would’ve gotten an A.&lt;/p&gt;
-
-&lt;h3 id=&quot;discrete-math-cs-dept&quot;&gt;Discrete Math (CS dept)&lt;/h3&gt;
-&lt;h4 id=&quot;discrete-math-ut-austin-cs-dept-audit---2019&quot;&gt;Discrete math (UT Austin, CS dept, audit) - 2019&lt;/h4&gt;
-
-&lt;p&gt;I took this class because it’s in the standard CS curriculum, and I didn’t want to take it online.&lt;/p&gt;
-
-&lt;p&gt;This class was a lot of fun. I took it with my friend Dan, who took the class at a different school about 10 years ago. Most of the class was minimal memorization and just a lot of logic games. Some of the main topics were propositional logic, first-order logic, induction on natural numbers, induction on undirected simple graphs, combinatorics, and a primer on complexity/algorithms. The most interesting and fun parts were combinatorics and proving things about graphs.&lt;/p&gt;
-
-&lt;p&gt;I’d recommend a class like this to anybody that likes toying with games (including board games) and solving fun logic problems. Because there were so many instances in this class where you didn’t need to know much math, and the proofs / solutions were often just informal, creative, slightly out-of-the-box answers, I think the class is really accessible to lots of people. With some modification, I think you could teach parts of this course to intrigued middle schoolers.&lt;/p&gt;
-
-&lt;p&gt;As a fun, accessible example (after a short graph theory primer), why can’t each node of a undirected simple graph have a different order? Order being the number of other nodes that it’s connected to, and simple meaning that there’s at most one edge between nodes.&lt;/p&gt;
-
-&lt;p&gt;Here’s an online version that looks really similar to the one I took:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-042j-mathematics-for-computer-science-spring-2015/index.htm&quot;&gt;Discrete Math&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;I was in the honors section of the class, which was filled with mostly excited freshman who are part of the Turing Scholars program at UT, so I was with smart, excited kids, but also felt old and out of place at 25. The one test I took in that class, I think I got 95%, and would’ve gotten an A overall.&lt;/p&gt;
-
-&lt;h3 id=&quot;number-theory&quot;&gt;Number Theory&lt;/h3&gt;
-&lt;h4 id=&quot;number-theory-ut-austin-audit---2019&quot;&gt;Number Theory (UT Austin, audit) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.amazon.com/Elementary-Number-Theory-Its-Applications/dp/0201578891&quot;&gt;Number Theory book we used&lt;/a&gt;&lt;br /&gt;
-	I took this class because I knew it had applications in CS, and because I wanted more practice with proof writing and mathematical thinking. Our class was only about nine people and our professor was excited to be able to work with a small group and move fast. We covered drastically more than the other number theory class, which was fun to work through, but also I got a little lost and behind at the end. 
-	My class was all math majors, who most likely were able to pick up the material more quickly and gracefully than I was. It was cool to get exposed to things that aren’t normally in an intro to elementary number theory class (like the Dirichlet product), but it came at the expense of me not spending enough time on the fundamentals. Gaps in my understanding were quickly exposed, leading to a struggle for the second half of the class, and I still find myself getting stumped by some fundamental number theory problems that you’d expect a student who’s taken the class to be able to readily answer.
-	I probably would’ve gotten a C- in this course, because I spent a lot of time on the homework and could mostly do it all without help, and would’ve done well on the tests in the first half of the course. He posted the test answers online, and I could only do about 50% of the questions with confidence on the later tests. I’d also recommend this course to non-math majors who are interested in and enjoy math, but don’t want to take analysis or algebra.&lt;/p&gt;
-
-&lt;h3 id=&quot;intro-to-real-analysis&quot;&gt;Intro to Real Analysis&lt;/h3&gt;
-&lt;h4 id=&quot;intro-to-real-analysis-ut-austin-audit---2019&quot;&gt;Intro to Real Analysis (UT Austin, audit) - 2019&lt;/h4&gt;
-
-&lt;p&gt;Analysis is super intimidating, but I wanted to know what it’s about. In this class we went slowly and only covered material through epsilon-delta / limits of functions. While I enjoyed the class, the material doesn’t seem as elegant and clean as algebra, so I’m a little turned off from analysis. That said, fields like topology, geometry, and high level algebra / type seem to make heavy use of analysis concepts, so I’m still pining to learn it so I can take those other classes without gaps in my knowledge.&lt;/p&gt;
-
-&lt;p&gt;Analysis seems to make heavy use of definitions, which gets tedious and wordy, but this may just be a side effect of an intro class. While I didn’t struggle in the class, I never felt completely satisfied. I would’ve gotten an A in the class.&lt;/p&gt;
-
-&lt;h3 id=&quot;git&quot;&gt;Git&lt;/h3&gt;
-&lt;h4 id=&quot;git-online---2019&quot;&gt;Git (online) - 2019&lt;/h4&gt;
-
-&lt;p&gt;I took a short git primer course (3 hours in total?). I knew the basics before, but didn’t know how to take advantage of it. Mainly, now I wish I separated my repositories by project instead of by class.&lt;/p&gt;
-
-&lt;h3 id=&quot;intro-to-haskell&quot;&gt;Intro to Haskell&lt;/h3&gt;
-&lt;h4 id=&quot;introduction-to-haskell-online---2019&quot;&gt;Introduction to Haskell (online) - 2019&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.seas.upenn.edu/~cis194/spring13/&quot;&gt;Haskell lecture notes and assignments&lt;/a&gt;&lt;br /&gt;
-	I’d recommend this class for anybody who wants to learn Haskell, especially for somebody that has experience with some functional language prior. It’s concise, and works through the material quickly. I’m only about halfway through right now, but plan to finish it within the next few months. I’m excited to learn more about monads and actually use them to build something, which I believe this class offers.&lt;/p&gt;
-
-&lt;h3 id=&quot;nand2tetris-computer-architecture&quot;&gt;Nand2Tetris (computer architecture)&lt;/h3&gt;
-&lt;h4 id=&quot;nand2tetris-computer-architecture-2-parts-online-edx---2020&quot;&gt;Nand2Tetris (computer architecture, 2 parts, online, edX) - 2020&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.coursera.org/learn/build-a-computer&quot;&gt;Part 1&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://www.coursera.org/learn/nand2tetris2&quot;&gt;Part 2&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://www.nand2tetris.org/&quot;&gt;Course book and website&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/aryzach/nand2tetris&quot;&gt;My code&lt;/a&gt;&lt;br /&gt;
-	Here we start with a nand gate as a primitive. Later we include a flip-flop as a primitive. From nand gates, we assemble many logic operators (and, or, multiplexor), and then build an ALU (arithmetic logic unit). Using the flip-flop (enables us to maintain state) we build bits, registers, and a series of RAM units. 
-	With all this, we construct a computer with a screen display and keyboard. At this point, we can load and run binary programs. Then we write a VM translator from a stack-based VM language to assembly. We’re then introduced to a higher level language called Jack, which is like a lightweight C / Java-like language with classes, functions, methods, variables, fields, constructors, arrays, expressions, etc. We’re then supposed to develop a Jack to VM compiler, and then extend the functionality of our system by building an operating system.
-	I’m nearly done with the Jack to VM compiler (written in python), which I hope to finish soon, and then move on to the OS. The compiler was a much bigger and more difficult task than I thought it would be, and it’s slowly starting to turn into spaghetti code, and there’s a lot of room for abstraction where I’m currently missing out on. Because it’s been a few months since I last worked on it, I may just start from scratch and use what I learned in the process to my own benefit. 
-	I’m really excited to finish the course, and it’s definitely been eye opening and has uncovered what is seemingly magic. It’s also really hard to hold all the layers of abstraction in your head at the same time, especially at just my first pass at learning this material, so there’s definitely still some magic at play when thinking about how computers work. 
-	Two ideas in this class hold me up:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Nand gates and flip-flops are primitives. I think I’d have to take a computer / electrical engineering or physic course to go deeper here&lt;/li&gt;
-  &lt;li&gt;The course assumes that we’re not writing the first assembler or compiler. To me, this is cheating a little bit, but I can see how that problem would be way to large for this course. Somehow, somebody built the first assembler using binary, and the first higher-level compiler using assembly (maybe FORTRAN or something similar?). Both projects sound huge, mind-bending, and powerful 
-  I would give myself a B in this class. I’ve done all the work and feel confident in the material, but my VM translator and Jack to VM compiler don’t have the cleanest code. While they are bug-free so far, I want to redo these assignments to both understand the material better, and to become better at software design in general, but it’s time consuming, so I haven’t done that yet. If I had to extend one of these to include another feature, it would be a mess, and I’d probably resort to rewriting the program.
-  Edit: I started to try to finish the course. All that was left was wrapping up the compiler and the OS chapter. Last time I worked on the compiler was two months ago. I started to relearn my code base, and think I could fairly easily add non-breaking features to finish it. The main problem I ran into was that I don’t remember the jack language that well. The specific problem was in this:&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Keyboard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;How many numbers? &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);.&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;I wasn’t sure how to handle the string expression. I could generate jack code to compile that would look something like:&lt;/p&gt;
-
-&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;How&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;many&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Keyboard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;which I believe my current compiler could handle, but that’s a messy solution, and could easily cause other things to break and get messy. I don’t remember if there’s a more standard way to solve this in the VM language, because I need to push the string “How many numbers? “ onto the stack before calling ‘Keyboard.readInt 1’, but I don’t remember how to push a string, and I really didn’t spend much time trying to relearn the jack or VM specs. The second problem was that I was having trouble loading directories into the VM emulator, so I couldn’t test programs that spanned more than one class. I might have been doing something wrong / forgot how to do it, or something is wrong with the VM emulator program. I’m a little bummed that I’m giving up / ran into hurdles right now, because I was excited to finish and possibly refactor my compiler. It’s probably the biggest project I’ve done, and would give me good experience with edit old code, abstracting patterns, and refactoring. I also want my biggest project that I’ve worked hard on to be a finished project that I can show off (or at least be proud of).&lt;/p&gt;
-
-&lt;p&gt;I started reading the OS chapter, but decided not to finish. While I think I’d learn some things, it all seemed too tedious right now, and maybe someday I’ll revisit this (but unlikely if I’m being real). I think my time is better spent elsewhere right now, like getting deeper into Haskell, Agda, my AI class, or some larger software development experience. I’d also like to take the OS class eventually, and I’m sure that will overshadow anything I’d learn in this chapter.&lt;/p&gt;
-
-&lt;h3 id=&quot;abstract-algebra&quot;&gt;Abstract Algebra&lt;/h3&gt;
-&lt;h4 id=&quot;abstract-algebra-ut-austin-audit---2020&quot;&gt;Abstract Algebra (UT Austin, audit) - 2020&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.amazon.com/Algebra-2nd-Michael-Artin/dp/0132413779&quot;&gt;Algebra by Artin&lt;/a&gt;&lt;br /&gt;
-	Both Haskell and a coworker at an internship inspired me to take algebra. Haskell is supposedly based on category theory, which requires more algebra, and my coworker had a PhD in CS, and solved this problem that we had be recognizing that the pattern could match that of a monoid (has an identity, and is associative). Seeing how applying the concept from algebra more easily solved this problem was impressive, and I wanted to know more. 
-	I would guess that less than half CS majors take upper-level algebra, and a huge majority that work in software development don’t have a CS degree, so I wonder how many problems like this are out there, just waiting to be solved by an elegant application of some math concept.
-	This class is hard. Often times when reading, I get lost in the weeds and lose the bigger picture; then when solving a problem, I often miss details that would’ve helped my solve it. I definitely struggling in the class, but I also missed two weeks of class because I was out of town. I thought I stayed caught up (by reading and doing HW on vacation), but I was still behind and mostly lost during lecture after that. We’re almost half way through the semester now. Spring break just started and the coronavirus ordeal is happening, so classes are going online for probably the next month or two. I’m just auditing the class, so I don’t have access online. This is kind of a blessing in disguise because I was getting overwhelmed in the class with new material and the gaps in my knowledge. So I’m going to cut my losses and plan to take it in the fall. 
-	That said, I’ve still learned a lot about groups and had fun working with those concepts, and should be able to pick things up a lot more smoothly in the fall. I mostly like the book, but we started with the groups chapter, and my linear algebra is a little rusty, which the book relies heavily on for examples and exercises.
-	With the material we’ve learned up until spring break, I’d give myself a C in the class.&lt;/p&gt;
-
-&lt;h3 id=&quot;grad-level-programming-languages&quot;&gt;Grad-level Programming Languages&lt;/h3&gt;
-&lt;h4 id=&quot;graduate-level-programming-languages-ut-austin-audit---2020&quot;&gt;Graduate-level Programming Languages (UT Austin, audit) - 2020&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://plfa.github.io/&quot;&gt;Programming Language Foundations in Agda book&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/aryzach/ProgrammingLanguageFoundationsInAgda-Part1&quot;&gt;My code&lt;/a&gt;&lt;br /&gt;
-	I’m really excited about this class. We’re learning the programming language / proof assistant Agda. We’ve been following the book exactly, and I’ve done every problem in it so far. Even though classes are going online, and I’m just auditing (same issue as the algebra class above), I’m going to continue working through the book, and I think I’ll be able to get through it without much help. That said, Negation is the chapter I’m on right now, and it’s kicking my butt. My professor said he even had a really hard time with it, and just started really understanding it a few weeks ago.
-	So far, the book has made me think about types a lot differently. I haven’t done much programming creating and using types before, but it makes me excited to. It’s a cool combination of programming, math, and logic. And it’s all interpreted (I think) by Haskell, and generally somewhat similar to Haskell, so I think it’ll make me a better Haskell developer. 
-	So far in the class, I’d give myself an A. I’ll have to revisit this review when I finish the book (or get as far in the book as our prof. planned to, which I think is the Bisimulation chapter).&lt;/p&gt;
-
-&lt;h3 id=&quot;ai&quot;&gt;AI&lt;/h3&gt;
-&lt;h4 id=&quot;ai-ut-austin-audit---2020&quot;&gt;AI (UT Austin, audit) - 2020&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;http://aima.cs.berkeley.edu/&quot;&gt;AI: A Modern Approach&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://github.com/aryzach/AIClass&quot;&gt;My code&lt;/a&gt;&lt;br /&gt;
-	I’ve only done ¼ of the projects, so I’ll have to revisit this later.&lt;/p&gt;
-
-&lt;h3 id=&quot;neural-computation&quot;&gt;Neural Computation&lt;/h3&gt;
-&lt;h4 id=&quot;graduate-level-neural-computation-ut-austin-audit---2020&quot;&gt;Graduate-level Neural Computation (UT Austin, audit) - 2020&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/alexhuth/neuralcomputation-sp2020&quot;&gt;Neural Computation Syllabus&lt;/a&gt;&lt;br /&gt;
-	The first part of this course was super interesting. We learned about the brain mechanism owls use to track where a sound comes from on the horizontal axis (race condition that combines sound information from both ears, and uses the time delay from one ear to the other), and vertical axis (one ear tilts up in comparison to the other). We also learned how neurons want to maintain a certain firing rate, which is what causes tinnitus and phantom limb (inputs are shut off, so the brain fires those neurons to maintain a level of activity). 
-	Professor Huth was an amazing professor for the short time I went to his class, and seems like a really good person in general. His work is really interesting, and he’s really passionate about it. Unfortunately, between me being out of town, and this coronavirus ordeal, I was only able to catch about a quarter of his class. While I’m really interested in his class, I wish I had a stronger background in AI/machine learning and statistics to be able to think about the material more deeply.&lt;/p&gt;</content><author><name></name></author><category term="class" /><category term="book" /><category term="review" /><summary type="html">This is a chronological listing and description of all resources I’ve used to learn STEM related things. Most of them are computer science and math resources. The resources include college classes, online MOOC-like classes, and books. It’s noted if I audited the class. None of the online courses were for credit, so you could say I audited those, too. I do all the exercises and projects included in the class or book listed, expect for some exceptions where noted. Most of the online classes I take come from an online computer science curriculum that tries to mimic a university CS degree equivalent. The classes are all free and largely project-based. I’ve really enjoyed the curriculum so far and highly recommend most of it. Here’s the link: OSSU (Open Source Society University</summary></entry></feed>
+&lt;p&gt;The BMS is the &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"></summary></entry></feed>

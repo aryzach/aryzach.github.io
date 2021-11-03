@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quicklearn Containers</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <nav class="home">
+  <a href="/" >
+    Home
+  </a>
+  <a href="/about.html" >
+    About
+  </a>
+  <a href="/Resume.pdf" class="external" target="_blank">
+    Resume <i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+  <a href="https://github.com/aryzach" rel="noreferrer noopener" target="_blank">
+    Github <i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+</nav>
+
+    <h1 class=postTitle>Quicklearn Containers</h1>
+<p>31 Oct 2021 </p>
+
+<h2 id="background">Background</h2>
+<p>I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</p>
+
+<h3 id="vm-setup">VM setup</h3>
+<p>I’ve read this post on <a href="https://www.nakivo.com/blog/virtualbox-network-setting-guide/">virtualbox network settings</a> which was very clarifying. I think we should be on a NAT network, but other people who I work with have gotten it to work with the NAT setting. Also, when I try to simply choose ‘NAT Network’ it doesn’t work / requires further setup. Because others have gotten it working with just NAT, I’m moving on from this for now.</p>
+
+<h3 id="curious-observations">Curious observations</h3>
+<ul>
+  <li>from a VM, I can ping the host</li>
+  <li>from a VM, I can ping some other physical computer on our network</li>
+  <li>from a VM, I can ping the “default gateway” from their side (I think, if I remember correctly. I’m forgetting that IP rn)</li>
+  <li>from host, I can ping the docker interface (which has it’s own IP, and which I’m assuming is the host-side IP)</li>
+  <li>from host, I can’t ping the VM</li>
+  <li>(need more data on this bc I don’t remember right now)</li>
+  <li>I can see that the VM web server port is open</li>
+</ul>
+
+<h2 id="current-questions">Current questions</h2>
+<ul>
+  <li>what is a container / what is docker (I kinda know but need a deeper level)</li>
+  <li>does it make sense that my host network interface called ‘docker’ is the public IP to a private VM network?</li>
+  <li>why can a VM ping host, but host can’t ping VM?</li>
+  <li>how do I find out where the host can access the web page hosted on the VM</li>
+  <li>why are we using VMs instead of containers here? All VMs are running Linux. Host is Linux. Does CentOS7 have a different kernel than Ubuntu? Or maybe it was a design choice that that you didn’t need a native Linux computer.</li>
+</ul>
+
+<p>Networks with docker are confusing me right now, and while I don’t think this exercise will answer all my questions, I think I’ll gain a better framework for understanding how this internal network is working and will help me debug it.</p>
+
+<p>This post is like the <a href="https://aryzach.github.io/quicklearn-networking">Quicklearn Networking</a> post, but following Julia’s <a href="https://jvns.ca/#kubernetes---containers">Kubernetes / containers</a> section.</p>
+
+<p>So I first reread the NAT section from the virtualbox networking post linked above. “A guest operating system on a VM can access hosts in a physical local area network (LAN) by using a virtual NAT (Network Address Translation) device. External networks, including the internet, are accessible from a guest OS. A guest machine is not accessible from a host machine, or from other machines in the network when the NAT mode is used for VirtualBox networking.” Well that answers some questions! But then how is the host supposed to be able to access the web page served from a VM? I’m guessing through the docker network interface (if that’s even what that interface is used for). The issue is that when I tried to use the docker IP with web server port, it didn’t work.</p>
+
+<h2 id="post-summaries">Post summaries</h2>
+
+<h3 id="docker-is-amazing"><a href="https://jvns.ca/blog/2015/11/09/docker-is-amazing/">Docker is amazing</a></h3>
+<ul>
+  <li>Dockerfile can define OS and what to install on it</li>
+  <li>good for when you need something but has conflicting dependencies from your computer</li>
+</ul>
+
+<h3 id="some-questions-about-docker-and-rkt"><a href="https://jvns.ca/blog/2016/09/15/whats-up-with-containers-docker-and-rkt/">Some questions about Docker and rkt</a></h3>
+<ul>
+  <li>reasons: package versioning (like python venv), make different types of computers behave the same, reproducing dev environment on your personal computer, restrict which system calls you can run in the container for security</li>
+</ul>
+
+<h2 id="skipping-a-few-that-dont-seem-relevant">Skipping a few that don’t seem relevant</h2>
+
+<h3 id="what-even-is-a-container-namespaces-and-cgroups"><a href="https://jvns.ca/blog/2016/10/10/what-even-is-a-container/">What even is a container: namespaces and cgroups</a></h3>
+<ul>
+  <li>namespaces and cgroups are new linux kernel features</li>
+  <li>seems like you can have a seperate namespace of every type and limit the system calls allowed</li>
+</ul>
+
+<h3><a href=""></a></h3>
+<h3 id="-1"><a href=""></a></h3>
+<h3 id="-2"><a href=""></a></h3>
+<h3 id="-3"><a href=""></a></h3>
+<h3 id="-4"><a href=""></a></h3>
+<h3 id="-5"><a href=""></a></h3>
+<h3 id="-6"><a href=""></a></h3>
+<h3 id="-7"><a href=""></a></h3>
+<h3 id="-8"><a href=""></a></h3>
+<h3 id="-9"><a href=""></a></h3>
+
+
+
+
+  </body>
+</html>
+<script>
+
+		// to remove space around images (bc they were wrapped with a <p> tag which adds padding/margin
+		const allPTags = document.querySelectorAll("p");
+
+		allPTags.forEach((elem) => {
+				console.log(elem.childNodes[0].tagName);
+				console.log(elem.parentNode);
+
+				if (elem.childNodes.length === 1 && elem.childNodes[0].tagName === "IMG") {
+						elem.parentNode.insertBefore(elem.childNodes[0], elem);
+						elem.remove();
+				}
+		});
+</script>
+
+
