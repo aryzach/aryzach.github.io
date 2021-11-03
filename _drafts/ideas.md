@@ -39,3 +39,16 @@ idea: slip cover for kindle to signal what book you're reading. Could be paired 
 Make math video with Manim on why taurus is the shape of pacmans world, and not a sphere
 
 Organization to pair programmers with carpal tunnel / hand / wrist / eye problems with junior programmers. Pair program where junior drives. Learning + productive + harm reducing
+
+Post on my current understanding of circuits:
+Power
+	- ac
+	- dc
+	- uses and reasons for each (generation, storage, delivery, requirements of different circuits)
+Signal
+	- active
+		- timer
+		- hysterisis
+		- e-stop
+	- passive
+	- cababilities of each with use case examples, or spec examples (ex. what can you do with "this" type of circuit? well you can make a time graph of voltage like "this" or time graph of current like "this")
