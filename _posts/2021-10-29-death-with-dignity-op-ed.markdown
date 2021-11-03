@@ -10,6 +10,7 @@ permalink: death-with-dignity-op-ed
 
 ### Contents
 #### Background / Intro
+#### Outline of legal decisions to be made
 #### Nonprofit Business Plan
 ##### Vibe (and why this vibe)
 ##### Timeline (education: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
@@ -39,7 +40,7 @@ In the US, there are two main logistical hurdles for people who wish to end thei
 1. They're not able to make their own medical decisions
 2. There are no established business and legal procedures to follow
 
-Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. 
+Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
 Here are a few common scenarios (I'm speculating that these are common mostly through empirical evidence!):
 
 - there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia
@@ -51,22 +52,27 @@ or
 - there is a spouse
 ...........
 
+### Outline of legal decisions to be made
+
 The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
 We need to define the following: 
-- when is the decision made
+- when is the request made
 - who is involved
 	* family (spouse, children, grandchildren)
 	* doctors
 	* emotional / psychological support
 	* legal support
-- processes in the years that follow the decision 
-- how the decision can be redacted
+- procedures in the years that follow the request
+	* dementia status check-ins
+	* emotional check-ins
+	* legal check-ins (the laws could change in the 2 - 30 years between request and action)
+- how the request can be redacted
 	* by who
 	* on what timeline
 
 
 
-Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
+### Nonprofit Business Plan
 
 Plan to make this legal:
 - start a business / non-profit
@@ -77,7 +83,10 @@ Plan to make this legal:
 	* I think limiting the amount of money the org has can help with this (ie, very bootstrapped,)
 	* but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
 
-Create a process
+
+
+Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
+
 
 
 I'm thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.

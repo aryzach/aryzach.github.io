@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-02T21:42:13-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-02T21:59:39-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
 </subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
 
@@ -65,6 +65,7 @@
 
 &lt;h3 id=&quot;contents&quot;&gt;Contents&lt;/h3&gt;
 &lt;h4 id=&quot;background--intro&quot;&gt;Background / Intro&lt;/h4&gt;
+&lt;h4 id=&quot;outline-of-legal-decisions-to-be-made&quot;&gt;Outline of legal decisions to be made&lt;/h4&gt;
 &lt;h4 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h4&gt;
 &lt;h5 id=&quot;vibe-and-why-this-vibe&quot;&gt;Vibe (and why this vibe)&lt;/h5&gt;
 &lt;h5 id=&quot;timeline-education-1-2-years---services--education--advocacy-5-15-years---pass-bill&quot;&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/h5&gt;
@@ -102,7 +103,7 @@
   &lt;li&gt;There are no established business and legal procedures to follow&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the decision and carrying out the request. 
+&lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
 Here are a few common scenarios (I’m speculating that these are common mostly through empirical evidence!):&lt;/p&gt;
 
 &lt;ul&gt;
@@ -118,10 +119,12 @@ Here are a few common scenarios (I’m speculating that these are common mostly 
 ………..&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h3 id=&quot;outline-of-legal-decisions-to-be-made-1&quot;&gt;Outline of legal decisions to be made&lt;/h3&gt;
+
 &lt;p&gt;The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
 We need to define the following:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;when is the decision made&lt;/li&gt;
+  &lt;li&gt;when is the request made&lt;/li&gt;
   &lt;li&gt;who is involved
     &lt;ul&gt;
       &lt;li&gt;family (spouse, children, grandchildren)&lt;/li&gt;
@@ -130,8 +133,14 @@ We need to define the following:&lt;/p&gt;
       &lt;li&gt;legal support&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;processes in the years that follow the decision&lt;/li&gt;
-  &lt;li&gt;how the decision can be redacted
+  &lt;li&gt;procedures in the years that follow the request
+    &lt;ul&gt;
+      &lt;li&gt;dementia status check-ins&lt;/li&gt;
+      &lt;li&gt;emotional check-ins&lt;/li&gt;
+      &lt;li&gt;legal check-ins (the laws could change in the 2 - 30 years between request and action)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;how the request can be redacted
     &lt;ul&gt;
       &lt;li&gt;by who&lt;/li&gt;
       &lt;li&gt;on what timeline&lt;/li&gt;
@@ -139,7 +148,7 @@ We need to define the following:&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning.&lt;/p&gt;
+&lt;h3 id=&quot;nonprofit-business-plan-1&quot;&gt;Nonprofit Business Plan&lt;/h3&gt;
 
 &lt;p&gt;Plan to make this legal:&lt;/p&gt;
 &lt;ul&gt;
@@ -155,7 +164,7 @@ We need to define the following:&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Create a process&lt;/p&gt;
+&lt;p&gt;Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning.&lt;/p&gt;
 
 &lt;p&gt;I’m thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.&lt;/p&gt;
 
