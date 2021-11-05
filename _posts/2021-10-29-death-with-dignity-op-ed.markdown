@@ -9,20 +9,22 @@ permalink: death-with-dignity-op-ed
 # Expanding Accessibility to Assisted Dying
 
 ### Contents
-#### Background / Intro
-#### Outline of legal decisions to be made
-#### Nonprofit Business Plan
-##### Vibe (and why this vibe)
-##### Timeline (education: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
-##### Education
-##### Services
-##### Advocacy
+- Background / Intro
+- Outline of legal decisions to be made
+- Nonprofit Business Plan
+	* Why now
+	* Timeline (education: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
+	* Vibe (and why this vibe)
+	* Defining policy and business model
+	* Education
+	* Services
+	* Advocacy
 
-Something I've heard repeatedly from older, mentally healthy people is that they wouldn't want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.
+(or 'evidence suggests that' and cite it) Something I've heard repeatedly from older, mentally healthy people is that they wouldn't want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.
 
 Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.
 
-Currently, the two main hurdles for somebody with severe dementia to take advantage of physician-assisted dying are that you need to be<sup>[[1]](https://deathwithdignity.org/learn/access/#Eligibility)</sup>:
+Currently, the two main hurdles for somebody with severe dementia to take advantage of the physician-assisted dying law are that you need to be<sup>[[1]](https://deathwithdignity.org/learn/access/#Eligibility)</sup>:
 1. "mentally competent, i.e. capable of making and communicating your health care decisions"
 2. "diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months" 
 
@@ -41,7 +43,7 @@ In the US, there are two main logistical hurdles for people who wish to end thei
 2. There are no established business and legal procedures to follow
 
 Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
-Here are a few common scenarios (I'm speculating that these are common mostly through empirical evidence!):
+Here are a few common scenarios (I'm speculating that these are common mostly through observation!):
 
 - there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia
 - the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can't make these decisions for themself anymore
@@ -55,14 +57,14 @@ or
 ### Outline of legal decisions to be made
 
 The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
-We need to define the following: 
+As a basic framework, we need to define the following: 
 - when is the request made
 - who is involved
 	* family (spouse, children, grandchildren)
 	* doctors
 	* emotional / psychological support
 	* legal support
-- procedures in the years that follow the request
+- agenda in the years that follow the request
 	* dementia status check-ins
 	* emotional check-ins
 	* legal check-ins (the laws could change in the 2 - 30 years between request and action)
@@ -71,23 +73,41 @@ We need to define the following:
 	* on what timeline
 
 
-
 ### Nonprofit Business Plan
+
+#### Why now?
+
+A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:
+- legal work to legalize assisted dying for people with severe dementia
+- develop and build the systems and business infrastructure to support the practice 
+- culture to embrace the practice 
+
+(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)
+
+This conveniently aligns with those in their 60's to 80's who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).
+
+These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this process. They can be first clients, helping fund the mission, and retired people who have extra time can help with both volunteer work and general advocacy. 
+
+And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn't pass in time, then it might be emotionally harmful for clients).
+
+#### Timeline (education, defining policy and business models: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
+(Some time defining policy and business model will inform us how to educate. And the defining process and education will each continually inform each other. Performing services will also be an iterative process. Once we start implementing the business model, we will learn things that will make us want to improve or pivot the services)
 
 Plan to make this legal:
 - start a business / non-profit
-	* very clear business plan, incentives align
-	* very good leadership, incentivised correctly
+	* very clear business plan, incentives align (ex. explicitly forbid financial succession planning services, take a flat fee or sliding scale)
+	* very good leadership, incentivised correctly 
 	* community-driven decisions
 	* somehow limit concentration of power
 	* I think limiting the amount of money the org has can help with this (ie, very bootstrapped,)
 	* but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
 
-
-
 Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
 
 
+This will also be a much bigger industry than the current scope of assisted dying.
+
+people who are possibly the closest to the issue in many ways (emotional, know people who are going through this)
 
 I'm thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.
 

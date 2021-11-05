@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-02T22:59:20-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-04T22:53:27-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
 </subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
 
@@ -64,20 +64,27 @@
 &lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Death with Dignity Op-Ed</title><link href="http://localhost:4000/death-with-dignity-op-ed" rel="alternate" type="text/html" title="Death with Dignity Op-Ed" /><published>2021-10-29T12:06:41-07:00</published><updated>2021-10-29T12:06:41-07:00</updated><id>http://localhost:4000/death-with-dignity-op-ed</id><content type="html" xml:base="http://localhost:4000/death-with-dignity-op-ed">&lt;h1 id=&quot;expanding-accessibility-to-assisted-dying&quot;&gt;Expanding Accessibility to Assisted Dying&lt;/h1&gt;
 
 &lt;h3 id=&quot;contents&quot;&gt;Contents&lt;/h3&gt;
-&lt;h4 id=&quot;background--intro&quot;&gt;Background / Intro&lt;/h4&gt;
-&lt;h4 id=&quot;outline-of-legal-decisions-to-be-made&quot;&gt;Outline of legal decisions to be made&lt;/h4&gt;
-&lt;h4 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h4&gt;
-&lt;h5 id=&quot;vibe-and-why-this-vibe&quot;&gt;Vibe (and why this vibe)&lt;/h5&gt;
-&lt;h5 id=&quot;timeline-education-1-2-years---services--education--advocacy-5-15-years---pass-bill&quot;&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/h5&gt;
-&lt;h5 id=&quot;education&quot;&gt;Education&lt;/h5&gt;
-&lt;h5 id=&quot;services&quot;&gt;Services&lt;/h5&gt;
-&lt;h5 id=&quot;advocacy&quot;&gt;Advocacy&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;Background / Intro&lt;/li&gt;
+  &lt;li&gt;Outline of legal decisions to be made&lt;/li&gt;
+  &lt;li&gt;Nonprofit Business Plan
+    &lt;ul&gt;
+      &lt;li&gt;Why now&lt;/li&gt;
+      &lt;li&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/li&gt;
+      &lt;li&gt;Vibe (and why this vibe)&lt;/li&gt;
+      &lt;li&gt;Defining policy and business model&lt;/li&gt;
+      &lt;li&gt;Education&lt;/li&gt;
+      &lt;li&gt;Services&lt;/li&gt;
+      &lt;li&gt;Advocacy&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Something I’ve heard repeatedly from older, mentally healthy people is that they wouldn’t want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.&lt;/p&gt;
+&lt;p&gt;(or ‘evidence suggests that’ and cite it) Something I’ve heard repeatedly from older, mentally healthy people is that they wouldn’t want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.&lt;/p&gt;
 
 &lt;p&gt;Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.&lt;/p&gt;
 
-&lt;p&gt;Currently, the two main hurdles for somebody with severe dementia to take advantage of physician-assisted dying are that you need to be&lt;sup&gt;&lt;a href=&quot;https://deathwithdignity.org/learn/access/#Eligibility&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;p&gt;Currently, the two main hurdles for somebody with severe dementia to take advantage of the physician-assisted dying law are that you need to be&lt;sup&gt;&lt;a href=&quot;https://deathwithdignity.org/learn/access/#Eligibility&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;“mentally competent, i.e. capable of making and communicating your health care decisions”&lt;/li&gt;
   &lt;li&gt;“diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months”&lt;/li&gt;
@@ -104,7 +111,7 @@
 &lt;/ol&gt;
 
 &lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
-Here are a few common scenarios (I’m speculating that these are common mostly through empirical evidence!):&lt;/p&gt;
+Here are a few common scenarios (I’m speculating that these are common mostly through observation!):&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia&lt;/li&gt;
@@ -119,10 +126,10 @@ Here are a few common scenarios (I’m speculating that these are common mostly 
 ………..&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;outline-of-legal-decisions-to-be-made-1&quot;&gt;Outline of legal decisions to be made&lt;/h3&gt;
+&lt;h3 id=&quot;outline-of-legal-decisions-to-be-made&quot;&gt;Outline of legal decisions to be made&lt;/h3&gt;
 
 &lt;p&gt;The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
-We need to define the following:&lt;/p&gt;
+As a basic framework, we need to define the following:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;when is the request made&lt;/li&gt;
   &lt;li&gt;who is involved
@@ -133,7 +140,7 @@ We need to define the following:&lt;/p&gt;
       &lt;li&gt;legal support&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;procedures in the years that follow the request
+  &lt;li&gt;agenda in the years that follow the request
     &lt;ul&gt;
       &lt;li&gt;dementia status check-ins&lt;/li&gt;
       &lt;li&gt;emotional check-ins&lt;/li&gt;
@@ -148,13 +155,33 @@ We need to define the following:&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;nonprofit-business-plan-1&quot;&gt;Nonprofit Business Plan&lt;/h3&gt;
+&lt;h3 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h3&gt;
+
+&lt;h4 id=&quot;why-now&quot;&gt;Why now?&lt;/h4&gt;
+
+&lt;p&gt;A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;legal work to legalize assisted dying for people with severe dementia&lt;/li&gt;
+  &lt;li&gt;develop and build the systems and business infrastructure to support the practice&lt;/li&gt;
+  &lt;li&gt;culture to embrace the practice&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)&lt;/p&gt;
+
+&lt;p&gt;This conveniently aligns with those in their 60’s to 80’s who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).&lt;/p&gt;
+
+&lt;p&gt;These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this process. They can be first clients, helping fund the mission, and retired people who have extra time can help with both volunteer work and general advocacy.&lt;/p&gt;
+
+&lt;p&gt;And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn’t pass in time, then it might be emotionally harmful for clients).&lt;/p&gt;
+
+&lt;h4 id=&quot;timeline-education-defining-policy-and-business-models-1-2-years---services--education--advocacy-5-15-years---pass-bill&quot;&gt;Timeline (education, defining policy and business models: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/h4&gt;
+&lt;p&gt;(Some time defining policy and business model will inform us how to educate. And the defining process and education will each continually inform each other. Performing services will also be an iterative process. Once we start implementing the business model, we will learn things that will make us want to improve or pivot the services)&lt;/p&gt;
 
 &lt;p&gt;Plan to make this legal:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;start a business / non-profit
     &lt;ul&gt;
-      &lt;li&gt;very clear business plan, incentives align&lt;/li&gt;
+      &lt;li&gt;very clear business plan, incentives align (ex. explicitly forbid financial succession planning services, take a flat fee or sliding scale)&lt;/li&gt;
       &lt;li&gt;very good leadership, incentivised correctly&lt;/li&gt;
       &lt;li&gt;community-driven decisions&lt;/li&gt;
       &lt;li&gt;somehow limit concentration of power&lt;/li&gt;
@@ -165,6 +192,10 @@ We need to define the following:&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning.&lt;/p&gt;
+
+&lt;p&gt;This will also be a much bigger industry than the current scope of assisted dying.&lt;/p&gt;
+
+&lt;p&gt;people who are possibly the closest to the issue in many ways (emotional, know people who are going through this)&lt;/p&gt;
 
 &lt;p&gt;I’m thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.&lt;/p&gt;
 
