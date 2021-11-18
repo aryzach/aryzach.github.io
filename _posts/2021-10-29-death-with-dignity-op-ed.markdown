@@ -89,11 +89,14 @@ These circumstances open up unique advocacy and fundraising advantages. Those wh
 And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn't pass in time, then it might be emotionally harmful for clients).
 
 #### Timeline 
-- year 1 - year 2:   education + define policy and business models 
-- year 3 - year 20:  services + education + advocacy
+- year 1 - year 2:   education + define policy and business models + townhalls
+- year 3 - year 20:  services + education + advocacy + policy and business model refinement
 - year 15 - year 20: pass bill 
+(what is the legal process timeline? Official submit, approval / denial, next steps, challenging outcomes, etc)
+(need to do research to build a better estimated timeline. Look at death with dignity, and other bills like marijuana)
 
-(Some time defining policy and business model will inform us how to educate. And the defining process and education will each continually inform each other. Performing services will also be an iterative process. Once we start implementing the business model, we will learn things that will make us want to improve or pivot the services. Research timeline of current law to support why I think this timeline)
+In year 1 and 2, the dialog from the townhalls and education programs will inform the policy draft and initial business plan, and vice versa. In years 3-7, we'll implement the business plan and refine it along the way. The organization and mission should begin to take a more concrete shape and have better-defined legal and cultural goals. Performing services will be an iterative process, and once we start implementing the business model, we will learn things that will make us want to improve or pivot the services. 
+
 (I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)
 
 #### Vibe
