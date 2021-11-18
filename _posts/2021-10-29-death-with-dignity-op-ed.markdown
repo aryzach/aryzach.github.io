@@ -79,28 +79,52 @@ As a basic framework, we need to define the following:
 
 A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:
 - legal work to legalize assisted dying for people with severe dementia
-- develop and build the systems and business infrastructure to support the practice 
+- development and implementation of the systems and business infrastructure to support the practice 
 - culture to embrace the practice 
-
-(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)
 
 This conveniently aligns with those in their 60's to 80's who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).
 
-These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this process. They can be first clients, helping fund the mission, and retired people who have extra time can help with both volunteer work and general advocacy. 
+These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this idea. They can be first clients, helping fund the mission, and those retired might want to do paid, volunteer, or general advocacy work. 
 
 And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn't pass in time, then it might be emotionally harmful for clients).
 
-#### Timeline (education, defining policy and business models: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
-(Some time defining policy and business model will inform us how to educate. And the defining process and education will each continually inform each other. Performing services will also be an iterative process. Once we start implementing the business model, we will learn things that will make us want to improve or pivot the services)
+#### Timeline 
+- year 1 - year 2:   education + define policy and business models 
+- year 3 - year 20:  services + education + advocacy
+- year 15 - year 20: pass bill 
 
-Plan to make this legal:
-- start a business / non-profit
-	* very clear business plan, incentives align (ex. explicitly forbid financial succession planning services, take a flat fee or sliding scale)
-	* very good leadership, incentivised correctly 
-	* community-driven decisions
-	* somehow limit concentration of power
-	* I think limiting the amount of money the org has can help with this (ie, very bootstrapped,)
-	* but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
+(Some time defining policy and business model will inform us how to educate. And the defining process and education will each continually inform each other. Performing services will also be an iterative process. Once we start implementing the business model, we will learn things that will make us want to improve or pivot the services. Research timeline of current law to support why I think this timeline)
+(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)
+
+#### Vibe
+
+Death and money are two strong forces. An organization like this could easily devolve into a business that chases inheritances and possibly loses sight of it's mission. This organization should be structured in a way where the organization, employees, and members are never financially, emotionally, or politically incentivised to influence individual decisions around assisted death. 
+
+The business plan for the provided services must be clear, commonly agreed upon, and held to that standard. The leadership, doctors, lawyers, and other service providers involved must be incentivised appropriately. 
+
+Build a culture of...
+- listening to older people - don't let the organization get dominated by career-ists
+- community-driven organizational decisions
+- checks and balances - ensure the service providers don't influence individual decisions 
+
+Some suggested practical guidelines: 
+- explicitly forbid financial succession planning services 
+- flat fee or sliding scale pricing model for services- net worth or inheritance should never be involved
+- no outside funding - align organization soley with customers, and never be incentivized to please, prioritize, or give weight to non-customer donors (this might be part of why lots of non-profits get watered-down)
+	* maybe even, once services are provided, disallow donations outside of services. This would help to incentivize prioritizing clients, and not let clients buy power (I think large donors, even if well-intentioned, can disrupt power dynamics, goals, and trajectory)
+- no investments (this might be disallowed for non-profits anyway)
+
+These guidelines will all help to tightly couple service and mission, and incentivize the organization to provide the best service possible to clients both directly and through legal representation of the group. My fear here is that if lack of money is limiting growth or not enough to pay people appropriately, the organization might come up with clever ways to make more money from clients, but in ways that don't provide a lot of client value. I think this would mean that the guidelines are artificially limiting, and actually disservicing the mission and clients. The goal of these guidelines are to have the 'right' amount of money - enough for the mission to be successful, have traction and grow, but not so much that the wrong people are incentivized to lead, or that the organization choses to priorizite the larger sources of money.
+
+Some other thoughts about building the culture and appropriate incentives:
+- somehow limit concentration of power
+- I think limiting the amount of money the org has can help with this (ie, very bootstrapped, no outside funding or "investments")
+- but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
+- "customer-owned cooperative"
+- each customer has one vote no matter how much money donated (not sure if I like this idea, sounds messy, chaotic, political. need to have clear political direction and leadership. This could bring in too much internal politics and cause division)
+- how to incentivize the business to incorporate the changes customers want? changes to both service provided and the proposed law. I think just focusing on listening, townhalls, and propping up the right people to lead this
+
+
 
 Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
 
@@ -142,6 +166,13 @@ Other reason for this is baby boomers in 10 - 30 years will all be here. Nursing
 
 Don't know how to pursue this. Where my energy should go. What first steps are. 
 Step 1: Does anything like this exist or has it existed in the past and if so what does it look like, and what is it missing. Because if it does exist, it's clearly missing something because the culture and mindset around this is not where lots of people think it should be. Or they just aren't doing it enought. With baby boomers, if there's a time to be thinking about it, it's not and in the next 10 - 30 years.
+
+This topic is sensitive, and for good cause. I think the general consensus in the US is that we know that some people with severe dementia don't want to keep living, either because they've expressed it before or because they express it at the time, but we don't have general consensus that we should allow them to die. Fulfilling the wishes of those with severe dementia will require a general mindset shift.
+
+Additionally, 
+Because of how sensitive the issue is, and because we're dealing with peoples lives 
+
+
 
 Main value areas:
 Raising awareness through advocacy and education
