@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-17T22:04:40-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-20T10:03:40-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
 </subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
 
@@ -289,7 +289,35 @@ Creating a clear roadmap for people, and helping them / reminding them along the
 
 &lt;p&gt;The wiki is good. Section on US polls. Wording of DAS / DAD really matters here. ‘Terminally ill’ vs ‘severe pain’, ‘patient suicide’ vs ‘physician-administered voluntary euthanasia’&lt;/p&gt;
 
-&lt;p&gt;Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering&lt;/p&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Accessibility to Assisted Dying</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
+&lt;p&gt;Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering&lt;/p&gt;
+
+&lt;h2 id=&quot;things-to-do---first-steps&quot;&gt;Things to do - first steps:&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;get into acquired community. Learn culture, see where approriate to talk about this idea&lt;/li&gt;
+  &lt;li&gt;obv post op ed, but also reach out to Death with Dignity group&lt;/li&gt;
+  &lt;li&gt;really get to know histories of:
+    &lt;ul&gt;
+      &lt;li&gt;assisted dying&lt;/li&gt;
+      &lt;li&gt;death with dignity, both organization and timeline of how the law was passed&lt;/li&gt;
+      &lt;li&gt;history of one of the most recent biggest movements - legalization of marijuana&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;basics of how a law like this would be passed. I’m so ignorant of the legal process here
+    &lt;ul&gt;
+      &lt;li&gt;whats the general process&lt;/li&gt;
+      &lt;li&gt;main hurdles for this type of law&lt;/li&gt;
+      &lt;li&gt;costs?&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;talk on twitter about these ideas? both current death with dignity law and future of law for people with severe dementia?&lt;/li&gt;
+  &lt;li&gt;reddit groups&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;first-momentum-steps&quot;&gt;First momentum steps:&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves&lt;/li&gt;
+  &lt;li&gt;Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Accessibility to Assisted Dying</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
 &lt;p&gt;I deleted our git server!
 We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower&lt;/p&gt;
 

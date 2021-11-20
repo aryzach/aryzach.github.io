@@ -195,4 +195,20 @@ The wiki is good. Section on US polls. Wording of DAS / DAD really matters here.
 
 Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering
 
+## Things to do - first steps:
+- get into acquired community. Learn culture, see where approriate to talk about this idea
+- obv post op ed, but also reach out to Death with Dignity group
+- really get to know histories of:
+	- assisted dying
+	- death with dignity, both organization and timeline of how the law was passed
+	- history of one of the most recent biggest movements - legalization of marijuana
+- basics of how a law like this would be passed. I'm so ignorant of the legal process here
+	- whats the general process
+	- main hurdles for this type of law
+	- costs?
+- talk on twitter about these ideas? both current death with dignity law and future of law for people with severe dementia?
+- reddit groups
 
+## First momentum steps:
+- talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves
+- Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service
