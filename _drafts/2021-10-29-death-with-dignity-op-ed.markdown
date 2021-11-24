@@ -6,12 +6,13 @@ categories: idea
 permalink: death-with-dignity-op-ed
 ---
 
-# Expanding Accessibility to Assisted Dying
+# Expanding Assisted Dying Accessibility to those with Severe Dementia
 
 ### Contents
 - Background / Intro
 - Outline of legal decisions to be made
 - Nonprofit Business Plan
+	* Overview
 	* Why now
 	* Timeline (education: 1-2 years -> services + education + advocacy: 5-15 years -> pass bill)
 	* Vibe (and why this vibe)
@@ -30,7 +31,7 @@ Currently, the two main hurdles for somebody with severe dementia to take advant
 
 I'll assume the reasons for these requirements are that we want to ensure that:
 1. this is the patient's choice
-2. they are not making a short-sighted decision, and there is a strong guarantee that their medical condition won't improve
+2. they are not making a short-sighted decision, and there is a strong guarantee that their medical condition and quality of life will monotonically decline
 
 The presumed reasons for these laws are consistant with the reasons somebody with severe dementia would want to take advantage of physician-assisted dying given:
 1. while they were mentally competent they've expressed they wouldn't want to keep living if they ever have severe dementia 
@@ -43,8 +44,9 @@ In the US, there are two main logistical hurdles for people who wish to end thei
 2. There are no established business and legal procedures to follow
 
 Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
-Here are a few common scenarios (I'm speculating that these are common mostly through observation!):
+Here are a few scenarios I could imagine:
 
+#### Scenario: Their children are involved
 - there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia
 - the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can't make these decisions for themself anymore
 - the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can't come to a consensus of how or when to move forward, both logistically and emotionally
@@ -75,6 +77,16 @@ As a basic framework, we need to define the following:
 
 ### Nonprofit Business Plan
 
+#### Overview
+
+The mission is to make assisted dying an option for those with severe dementia. To do that, we need to:
+- legalize the practice 
+- establish the systems to support the practice
+
+The common way to pass a law like this would be to raise money through donations and advocate.
+
+The main idea here is to bootstrap that process with capital, labor, and enthusiasm by providing preparatory legal, business, and emotional support services to those who wish to take advantage of an assisted dying law should they get severe dementia. 
+
 #### Why now?
 
 A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:
@@ -84,7 +96,7 @@ A nonprofit with the mission to legalize assisted dying for those with severe de
 
 This conveniently aligns with those in their 60's to 80's who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).
 
-These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this idea. They can be first clients, helping fund the mission, and those retired might want to do paid, volunteer, or general advocacy work. 
+These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this idea. They can be first clients, helping fund the mission, and those retired might want to contribute to the mission through paid or volunteer advocacy work. 
 
 And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn't pass in time, then it might be emotionally harmful for clients).
 
@@ -117,14 +129,52 @@ Some suggested practical guidelines:
 	* maybe even, once services are provided, disallow donations outside of services. This would help to incentivize prioritizing clients, and not let clients buy power (I think large donors, even if well-intentioned, can disrupt power dynamics, goals, and trajectory)
 - no investments (this might be disallowed for non-profits anyway)
 
-These guidelines will all help to tightly couple service and mission, and incentivize the organization to provide the best service possible to clients both directly and through legal representation of the group. My fear here is that if lack of money is limiting growth or not enough to pay people appropriately, the organization might come up with clever ways to make more money from clients, but in ways that don't provide a lot of client value. I think this would mean that the guidelines are artificially limiting, and actually disservicing the mission and clients. The goal of these guidelines are to have the 'right' amount of money - enough for the mission to be successful, have traction and grow, but not so much that the wrong people are incentivized to lead, or that the organization choses to priorizite the larger sources of money.
+These guidelines will all help to tightly couple service and mission, and incentivize the organization to provide the best service possible to clients both directly and through legal representation of the group. My fear here is that if lack of money is limiting growth or not enough to pay people appropriately, the organization might come up with clever ways to make more money from clients, but in ways that don't provide a lot of client value. I think this would mean that the guidelines are artificially limiting, and actually disservicing the mission and clients. The goal of these guidelines are to have the 'right' amount of money - enough for the mission to be successful, have traction and grow, but not so much that the wrong people are incentivized to lead, or that the organization choses to priorizite sources that give larger sums of money.
+
+That said, I believe the organization will need to be funded primarily through donations until it's able to sustain itself through the services provided, hopefully no longer than a year or two.
+
+#### Defining policy and business model
+
+Much like other death-related medical procedures (is this true?), policy and business model will be necessarily coupled. I've outlined some of the questions that will need to be answered in the section 'Outline of legal decisions to be made'. In the end, the law will determine the necessary business infrastructure and processes, but until then, we have to think about and build the process that we're comfortable with. I believe making this a community-driven process will create the best outcome both legally and culturally. Ideally, the community gives input about what processes would be most helpful to them and their families. This inherantly informs us of what processes should be legally required by law to ensure every assisted death is decided upon and carried out in a way that minimizes ambiguity and where everybody is in agreeance that this is what the patient wants. I also believe this communal agreeance on processes will help the law (that necessitates the processes) get passed. 
+
+#### Education and Townhalls
+
+Education topics:
+- history of Death with Dignity
+- history of assisted death
+	* old cultures that practice(d) it
+	* when and why forbidded
+	* where and how it's still practiced
+- what we know so far about what this law would look like
+- history and timeline of similar laws
+- how to talk about this with their families / to other people
+
+Townhall topics:
+- what they would want out of this
+- feedback about proposed process, or if they have new ideas for process
+- feedback from family members
+- feedback from religious groups
+- feedback from lawyers
+- feedback from doctors
+- feedback from counselors
+- feedback from all interested parties
+
+#### Services
+#### Advocacy
+
+
+
+
+----------------
+# Notes
 
 Some other thoughts about building the culture and appropriate incentives:
-- somehow limit concentration of power
+- somehow limit concentration of power. I don't have much experience with this, but I think there should still be strong leadership and representation
 - I think limiting the amount of money the org has can help with this (ie, very bootstrapped, no outside funding or "investments")
 - but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
 - "customer-owned cooperative"
 - each customer has one vote no matter how much money donated (not sure if I like this idea, sounds messy, chaotic, political. need to have clear political direction and leadership. This could bring in too much internal politics and cause division)
+- maybe instead of an explicit "customer-owned cooperative" structure, you could have a traditional structure, but just put the right people in place to create a healthy culture
 - how to incentivize the business to incorporate the changes customers want? changes to both service provided and the proposed law. I think just focusing on listening, townhalls, and propping up the right people to lead this
 
 
