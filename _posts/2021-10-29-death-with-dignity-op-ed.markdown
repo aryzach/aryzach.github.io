@@ -135,22 +135,24 @@ That said, I believe the organization will need to be funded primarily through d
 
 #### Defining policy and business model
 
-Much like other death-related medical procedures (is this true?), policy and business model will be necessarily coupled. I've outlined some of the questions that will need to be answered in the section 'Outline of legal decisions to be made'. In the end, the law will determine the necessary business infrastructure and processes, but until then, we have to think about and build the process that we're comfortable with. I believe making this a community-driven process will create the best outcome both legally and culturally. Ideally, the community gives input about what processes would be most helpful to them and their families. This inherantly informs us of what processes should be legally required by law to ensure every assisted death is decided upon and carried out in a way that minimizes ambiguity and where everybody is in agreeance that this is what the patient wants. I also believe this communal agreeance on processes will help the law (that necessitates the processes) get passed. 
+Much like other death-related medical procedures (is this true?), policy and business model will be necessarily coupled. I've outlined some of the questions that will need to be answered in the section 'Outline of legal decisions to be made'. In the end, the law will determine the necessary business infrastructure and processes, but until then, we have to think about and build the process that we're comfortable with. I believe making this a community-driven process will create the best outcome both legally and culturally. Ideally, the community gives input about what processes would be most helpful to them and their families. This inherently informs us of what processes should be legally required by law to ensure every assisted death is decided upon and carried out in a way that minimizes ambiguity and where everybody is in agreeance that this is what the patient wants. I also believe this communal agreeance on processes will help the law, which will necessitate the processes, get passed. 
 
 #### Education and Townhalls
 
-Education topics:
+Education events and events where we receive feedback will mostly be a blurred line until the proposed policy and business models are better defined and in practice. I think the first year might look like a large, crowd-sourced, organized brainstorming session with a clear goal. While I believe that this bootstrapped business model will be a fruitful path to some form of legalized assisted dying for those with severe dementia, there are a lot of policy and business details that would be better decided by a community of interested parties. Additionally, educating and empowering others to contribute will help people be part of the mission, contribute to a brighter future, and be invested in the outcome. It'll also increase the power behind the mission, both in numbers and passion. Lastly, even if I wrote the most optimal policy and submitted it today, I doubt it would pass. Historically, having a lot of motivated people behind a grassroots push for policy change has led to success (find source?).
+
+Proposed education topics:
 - history of Death with Dignity
 - history of assisted death
 	* old cultures that practice(d) it
-	* when and why forbidded
+	* when and why forbidden
 	* where and how it's still practiced
 - what we know so far about what this law would look like
 - history and timeline of similar laws
 - how to talk about this with their families / to other people
 
-Townhall topics:
-- what they would want out of this
+Proposed feedback topics:
+- what they would want out of this (maybe prior to coming to a session, give them some info, then have them think about what they would want the process to look like for them)
 - feedback about proposed process, or if they have new ideas for process
 - feedback from family members
 - feedback from religious groups
@@ -160,6 +162,20 @@ Townhall topics:
 - feedback from all interested parties
 
 #### Services
+
+As I've explained above, the main idea here is to bootstrap the passing of an assisted dying policy for those with severe dementia by providing prepatory services for those that may want to take advantage of such policy in the future, should the law pass. Those services will likely fall into the folowing categories:
+
+- legal support: preparing the individual and their family. I'm not sure if this will be standardized, or if individuals will required tailored legal documents. If legal requirements around assisted dying are invariable across all people, this could also look like consultation, and not directly provide any legal work, but inform and encourage clients and families to be legally prepared and protected. In this case, this service might look like group education sessions instead of individualized service.
+- medical check-ins: a schedule of dementia status check-ups. Could be once / decade or yearly, depending on the severity. 
+- emotional support: individual and family support for this course. This could also be a decision check-in, to ensure that the client still wants this at every step of the way, and that there is no pressure from family or others to participate or not
+
+Other services might just be fostering and supporting a community for people to talk about this. 
+
+Ultimately, the community will decide what services they want to receive. 
+
+It'll also be important to understand the financial and peoplepower needs to be successful in this mission, and design a business in a way that ensures this success. Because most of the value from these services is not guaranteed, and it's received 10 - 20 years in the future, the payment for the services might be feel disportianately pricey. Maybe a better way to view funding for this mission is that we only take donations from those that are active participants in the community, and that the funding is provided equitably from all interested and dedicated parties.
+
+
 #### Advocacy
 
 
@@ -167,6 +183,8 @@ Townhall topics:
 
 ----------------
 # Notes
+
+## don't forget to find audio note in email with things to do for this
 
 Some other thoughts about building the culture and appropriate incentives:
 - somehow limit concentration of power. I don't have much experience with this, but I think there should still be strong leadership and representation
