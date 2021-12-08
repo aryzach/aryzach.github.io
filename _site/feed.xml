@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-25T22:48:23-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-28T10:43:08-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
 </subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
 
@@ -357,13 +357,21 @@ Step 1: Does anything like this exist or has it existed in the past and if so wh
 &lt;p&gt;Additionally, 
 Because of how sensitive the issue is, and because we’re dealing with peoples lives&lt;/p&gt;
 
-&lt;p&gt;Main value areas:
-Raising awareness through advocacy and education
-Creating the legal and business pathways 
-Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
-Could have a support group for people. Or just a community of people who are planning DAS
-Making family part of the planning process
-Creating a clear roadmap for people, and helping them / reminding them along the way:&lt;/p&gt;
+&lt;p&gt;Dementia-related health costs about $600 billion in US (I think, look this up again)&lt;/p&gt;
+
+&lt;p&gt;Main value areas:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Raising awareness through advocacy and education&lt;/li&gt;
+  &lt;li&gt;Creating the legal and business pathways&lt;/li&gt;
+  &lt;li&gt;Guiding people through the process both mentally and emotionally (they can void the plan at anytime)&lt;/li&gt;
+  &lt;li&gt;Could have a support group for people. Or just a community of people who are planning DAS&lt;/li&gt;
+  &lt;li&gt;Making family part of the planning process&lt;/li&gt;
+  &lt;li&gt;Creating a clear roadmap for people, and helping them / reminding them along the way:&lt;/li&gt;
+  &lt;li&gt;Maybe the service or value add could be fostering a community, teaching people how to talk about it, make it acceptable and common practice. Then move to the Dutch model like the story way below. So that it’s accepted and common for people even with early stage dementia to choose assisted death&lt;/li&gt;
+  &lt;li&gt;Also, I think just putting this product and process in front of people, and getting them, if they want to, to be proactive and fill out the paperwork prior to it becoming an issue, is a huge value add, maybe the biggest. Because I think a lot of people want this, but because there isn’t a clear path, it often doesn’t end up happening. Currently, you have to be extremely proactive to do it - generally meaning planning to go to Switzerland&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;i-dont-think-this-has-to-be-as-intensive-as-im-making-it-out-to-be-maybe-just-a-simple-service-that-says-pay-us-300-and-well-get-you-the-right-paperwork-and-tell-you-where-to-submit-it-or-just-like-heres-a-club-this-is-what-we-do-we-want-to-help-you-heres-the-cost-of-the-service-and-what-you-should-do-right-now-if-you-want-this-to-be-a-real-thing-maybe-goal-is-to-expand-advanced-directive-to-be-proactive-give-me-death-drugs-which-was-the-original-goal-or-follow-the-dutch-model-of-making-available-super-soon-like-right-after-dementia-diagnosis&quot;&gt;I don’t think this has to be as intensive as I’m making it out to be!!! Maybe just a simple service that says pay us $300 and we’ll get you the right paperwork and tell you where to submit it. Or just like “here’s a club, this is what we do. We want to help you. Here’s the cost of the service and what you should do right now if you want this to be a real thing”. Maybe goal is to expand advanced directive to be proactive (“give me death drugs”), which was the original goal. Or follow the Dutch model of making available super soon, like right after dementia diagnosis&lt;/h2&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Talking to somebody to help you think about your options, and what the options mean for you (how to prepare for this emotionally and mentally)&lt;/li&gt;
@@ -403,6 +411,15 @@ Creating a clear roadmap for people, and helping them / reminding them along the
 &lt;ul&gt;
   &lt;li&gt;talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves&lt;/li&gt;
   &lt;li&gt;Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Links:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens’t show interest in food, you can’t encourage eating &lt;a href=&quot;https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/&quot;&gt;Link&lt;/a&gt;. Ideally, I’d like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you’ll show no interest in food. This is a very passive, but agreed upon approach&lt;/li&gt;
+  &lt;li&gt;non-legally-binding directive &lt;a href=&quot;Dementia-Directive.org&quot;&gt;Link&lt;/a&gt;. “Washington State and New York states have end-of-life agencies that have approved advance directives allowing a person to stipulate that no food or water is to be provided severe dementia develops.”&lt;/li&gt;
+  &lt;li&gt;dutch story about seemingly early to moderate stage dementia euthuensa &lt;a href=&quot;https://www.bbc.com/news/stories-47047579&quot;&gt;Link&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://static1.squarespace.com/static/5a0128cf8fd4d22ca11a405d/t/60c51d29f5c2833ef87698d1/1623530793274/dementia-directive.pdf&quot;&gt;Dementia Directive&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.latimes.com/opinion/story/2020-07-15/california-aid-in-dying-law-assisted-suicide-alzheimers-dementia&quot;&gt;Op ed LA times&lt;/a&gt; and contact &lt;a href=&quot;https://en.wikipedia.org/wiki/Nicholas_Goldberg&quot;&gt;this guy&lt;/a&gt; who wrote it&lt;/li&gt;
 &lt;/ul&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Assisted Dying Accessibility to those with Severe Dementia</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
 &lt;p&gt;I deleted our git server!
 We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower&lt;/p&gt;

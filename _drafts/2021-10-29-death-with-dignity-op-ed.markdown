@@ -250,15 +250,20 @@ This topic is sensitive, and for good cause. I think the general consensus in th
 Additionally, 
 Because of how sensitive the issue is, and because we're dealing with peoples lives 
 
-
+Dementia-related health costs about $600 billion in US (I think, look this up again)
 
 Main value areas:
-Raising awareness through advocacy and education
-Creating the legal and business pathways 
-Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
-Could have a support group for people. Or just a community of people who are planning DAS
-Making family part of the planning process
-Creating a clear roadmap for people, and helping them / reminding them along the way:
+- Raising awareness through advocacy and education
+- Creating the legal and business pathways 
+- Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
+- Could have a support group for people. Or just a community of people who are planning DAS
+- Making family part of the planning process
+- Creating a clear roadmap for people, and helping them / reminding them along the way:
+- Maybe the service or value add could be fostering a community, teaching people how to talk about it, make it acceptable and common practice. Then move to the Dutch model like the story way below. So that it's accepted and common for people even with early stage dementia to choose assisted death
+- Also, I think just putting this product and process in front of people, and getting them, if they want to, to be proactive and fill out the paperwork prior to it becoming an issue, is a huge value add, maybe the biggest. Because I think a lot of people want this, but because there isn't a clear path, it often doesn't end up happening. Currently, you have to be extremely proactive to do it - generally meaning planning to go to Switzerland
+
+## I don't think this has to be as intensive as I'm making it out to be!!! Maybe just a simple service that says pay us $300 and we'll get you the right paperwork and tell you where to submit it. Or just like "here's a club, this is what we do. We want to help you. Here's the cost of the service and what you should do right now if you want this to be a real thing". Maybe goal is to expand advanced directive to be proactive ("give me death drugs"), which was the original goal. Or follow the Dutch model of making available super soon, like right after dementia diagnosis
+
  
 1. Talking to somebody to help you think about your options, and what the options mean for you (how to prepare for this emotionally and mentally)
 2. Help get plan / legal paperwork in order
@@ -287,3 +292,16 @@ Wiki seems to focus on terminally ill, but mentally sound patients. I want to fo
 ## First momentum steps:
 - talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves
 - Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service
+
+Links:
+- voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
+- non-legally-binding directive [Link](Dementia-Directive.org). "Washington State and New York states have end-of-life agencies that have approved advance directives allowing a person to stipulate that no food or water is to be provided severe dementia develops."
+- dutch story about seemingly early to moderate stage dementia euthuensa [Link](https://www.bbc.com/news/stories-47047579)
+- [Dementia Directive](https://static1.squarespace.com/static/5a0128cf8fd4d22ca11a405d/t/60c51d29f5c2833ef87698d1/1623530793274/dementia-directive.pdf)
+- [Op ed LA times](https://www.latimes.com/opinion/story/2020-07-15/california-aid-in-dying-law-assisted-suicide-alzheimers-dementia) and contact [this guy](https://en.wikipedia.org/wiki/Nicholas_Goldberg) who wrote it
+
+Links to read:
+https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/
+https://deathwithdignity.org/learn/alzheimers-dementia-directive/
+https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf
+
