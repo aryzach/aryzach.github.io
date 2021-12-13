@@ -1,3 +1,19 @@
+# TODO:
+- [ ] Death with Dignity Op-Ed
+	- [x] apply for [position](https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/)
+	- [ ] submit
+- [ ] Go to nursing home on Post and ask about hosting an event
+- [ ] Find other local nursing homes / groups of older people who would be interested in this
+- [ ] Request a [Final Exit speaker](https://finalexitnetwork.org/resources/speakers-bureau/) and find a group for them to speak at
+	- [Noisebridge](https://www.noisebridge.net/wiki/Hosting_an_Event)
+	- some groiup of older people who would be interested
+- [ ] create clear narrative / elevator pitch
+	- current state in US
+		* current Death with Dignity
+		* VSED as unenforceable AD
+	- current state in other countries
+	- normally how a law like this gets passed
+	- my idea how to bootstrap it
 
 ----------------
 # Notes
