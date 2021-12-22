@@ -52,3 +52,6 @@ Signal
 		- e-stop
 	- passive
 	- cababilities of each with use case examples, or spec examples (ex. what can you do with "this" type of circuit? well you can make a time graph of voltage like "this" or time graph of current like "this")
+
+Business idea:
+Businesses that self-insure for health insurance for their employees. This means the company directly covers cost without a third-party insurance provider. In the book 'Price We Pay', there's an example where an employer who self-insures, gives incentive to employees for choosing the cheaper hospital options (but not less quality). The example was that delivering a baby costs $8000 - $40000 depending on hospital. If you chose $8000, then employer provides you a year worth of free diapers. This could be it's own business, where you do the reseawrch and setup the right incentives for employees.
