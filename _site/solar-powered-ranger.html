@@ -26,9 +26,24 @@
 
 <p><img src="images/ranger.jpg" alt="ranger" /></p>
 
-<p>I wanted to passively charge a <a href="https://ranger.polaris.com/en-us/ranger-ev/">Polaris Ranger EV</a> from solar panels. Two 100 watt solar panels had been installed on top of the ranger. The ranger originally had lead-acid batteries. Running and charging lead-acid from solar is simple with a solar controller, but the ranger had already been converted to run off of a lithium battery, which meant it had a battery management system (BMS). Powering the BMS was the crux of this problem.</p>
+<p>I wanted to passively charge a <a href="https://ranger.polaris.com/en-us/ranger-ev/">Polaris Ranger EV</a> from solar panels. Two 100 watt solar panels had been installed on top of the ranger from when the ranger originally had a lead-acid solar charging system. Running and charging lead-acid from solar is simple with a solar controller, but the ranger had already been converted to run off of a lithium battery, which meant it had a <a href="https://en.wikipedia.org/wiki/Battery_management_system">battery management system (BMS)</a>. I was using an <a href="https://www.orionbms.com/manuals/pdf/wiring_jr.pdf">Orion BMS Jr.</a>. Powering the BMS was the crux of this problem.</p>
 
-<p>I decided I only wanted to power the BMS when the solar panels were producing power. I was able to achieve this using a combination of the following:</p>
+<p>In a lead-acid solar charging system, the three main components are the solar panels, solar controller, and lead-acid batteries. Here, the solar controller can be powered by the panels and only when they are producing energy. This system “just works” right off the shelf.</p>
+
+<p>In a lithium solar charging system, there are four main components- the fourth being the BMS. The BMS must be powered when the battery is being charged or discharged through use. If the BMS isn’t on when the battery is charging, you risk the cells having different voltages or catching fire (which both shorten the life of the battery pack), and if the BMS is on all the time, you shorten the range and possibly risk damaging the batteries. System failure here could mean somebody gets hurt or the $2000 - $5000 battery pack is ruined.</p>
+
+<p>I decided I only wanted to power the BMS when the solar panels had an open-circuit voltage above a certain threshold to avoid the bad scenarios above. This turned out to be non-trivial, which led to a super fun learning experience and why I’m writing this post!</p>
+
+<p>Some specs:</p>
+<ul>
+  <li>Two 100 watt solar panels (I think they were both 24v panels)</li>
+  <li>BMS takes range of voltage 9v - 60v, 3amp max current, toggles a pin from float to ground to indicate that the battery is ready to be charged</li>
+  <li>48v lithium battery (I think lithium iron phosphate, LiFePO4)</li>
+</ul>
+
+<p>Idea / iteration 1: Power the BMS with a DC converter so that the BMS is on when the panels are producing a voltage within the DC converter input range</p>
+
+<p>I was able to achieve this using a combination of the following:</p>
 <ul>
   <li>isolated 9-60v to 24v DC <a href="https://www.digikey.com/en/products/detail/cui-inc/PQAE50-D24-S24-D/13563301?utm_adgroup=DC%20DC%20Converters&amp;utm_source=google&amp;utm_medium=cpc&amp;utm_campaign=Shopping_Product_Power%20Supplies%20-%20Board%20Mount_NEW&amp;utm_term=&amp;utm_content=DC%20DC%20Converters&amp;gclid=Cj0KCQjw8vqGBhC_ARIsADMSd1Ao04uo4vTQqNOUY5ago-pk_4bIGioo2zeDo9YiX6XfKT8Wd89V3r0aAu0_EALw_wcB">converter</a></li>
   <li>high voltage, solid state <a href="https://www.amazon.com/dp/B07PFDJQLV/?coliid=IL264W22BQM4Z&amp;colid=2M5Y12QIIIVYU&amp;psc=1&amp;ref_=lv_ov_lig_dp_it">relay</a></li>
@@ -46,7 +61,7 @@
 <p>This approach worked in simple scenarios such as when the sun was shining or when it wasn’t, but I ran into two coupled issues:</p>
 <ul>
   <li>partial light conditions near a solar panel power boundary (9 - 14v panel voltage)</li>
-  <li>partial light conditions (open-circuit panel voltage &lt;40v) when hooked up to the battery and when the BMS indicates to charge. In this scenario, the relay closes, connecting the solar controller to the batteries. Then the batteries pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.</li>
+  <li>partial light conditions (open-circuit panel voltage &lt;40v) when hooked up to the battery and when the BMS indicates to charge. In this scenario, the relay closes, connecting the solar controller to the batteries. Then when the batteries start charging, they pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.</li>
 </ul>
 
 <p><img src="images/boardInRanger.jpg" alt="testing board" /></p>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Purescript TCP Server</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <nav class="home">
+  <a href="/" >
+    Home
+  </a>
+  <a href="/about.html" >
+    About
+  </a>
+  <a href="/Resume.pdf" class="external" target="_blank">
+    Resume <i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+  <a href="https://github.com/aryzach" rel="noreferrer noopener" target="_blank">
+    Github <i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+</nav>
+
+    <h1 class=postTitle>Purescript TCP Server</h1>
+<p>19 Dec 2021 </p>
+
+<p>There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.</p>
+
+<pre><code class="language-purescript">module Main where
+
+import Prelude
+
+import Effect (Effect)
+import Effect.Console (log, logShow)
+import Node.Net.Server as Serv
+import Node.Net.Socket as Sock
+import Node.Encoding as Encode
+import Data.Options as Opt
+import Data.Unit
+import Data.Either as E
+import Data.Maybe as M
+import Node.Buffer as Buff
+import Effect.Exception as Except
+
+main :: Effect Unit
+main = do
+ server &lt;- Serv.createServer (Opt.Options []) connectionCallback
+ a      &lt;- Serv.listenTCP server 8989 "10.0.0.248" 2 listenCallback
+ pure unit
+
+connectionCallback:: Sock.Socket -&gt; Effect Unit
+connectionCallback s = do
+    addr &lt;- Sock.remoteAddress s
+    port &lt;- Sock.remotePort s
+    _    &lt;- Sock.setEncoding s Encode.UTF8
+    _    &lt;- Sock.onData s handleData
+    _    &lt;- Sock.onClose s $ handleClose addr
+    _    &lt;- Sock.onError s handleError
+    logShow addr
+</code></pre>
+
+
+
+
+  </body>
+</html>
+<script>
+
+		// to remove space around images (bc they were wrapped with a <p> tag which adds padding/margin
+		const allPTags = document.querySelectorAll("p");
+
+		allPTags.forEach((elem) => {
+				console.log(elem.childNodes[0].tagName);
+				console.log(elem.parentNode);
+
+				if (elem.childNodes.length === 1 && elem.childNodes[0].tagName === "IMG") {
+						elem.parentNode.insertBefore(elem.childNodes[0], elem);
+						elem.remove();
+				}
+		});
+</script>
+
+

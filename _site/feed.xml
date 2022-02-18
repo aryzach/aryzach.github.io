@@ -1,5 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-11-28T10:43:08-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
-</subtitle><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-02-17T23:42:48-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+</subtitle><entry><title type="html">Purescript TCP Server</title><link href="http://localhost:4000/purescript-tcp-server" rel="alternate" type="text/html" title="Purescript TCP Server" /><published>2021-12-19T21:23:33-08:00</published><updated>2021-12-19T21:23:33-08:00</updated><id>http://localhost:4000/purescript-tcp-server</id><content type="html" xml:base="http://localhost:4000/purescript-tcp-server">&lt;p&gt;There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-purescript&quot;&gt;module Main where
+
+import Prelude
+
+import Effect (Effect)
+import Effect.Console (log, logShow)
+import Node.Net.Server as Serv
+import Node.Net.Socket as Sock
+import Node.Encoding as Encode
+import Data.Options as Opt
+import Data.Unit
+import Data.Either as E
+import Data.Maybe as M
+import Node.Buffer as Buff
+import Effect.Exception as Except
+
+main :: Effect Unit
+main = do
+ server &amp;lt;- Serv.createServer (Opt.Options []) connectionCallback
+ a      &amp;lt;- Serv.listenTCP server 8989 &quot;10.0.0.248&quot; 2 listenCallback
+ pure unit
+
+connectionCallback:: Sock.Socket -&amp;gt; Effect Unit
+connectionCallback s = do
+    addr &amp;lt;- Sock.remoteAddress s
+    port &amp;lt;- Sock.remotePort s
+    _    &amp;lt;- Sock.setEncoding s Encode.UTF8
+    _    &amp;lt;- Sock.onData s handleData
+    _    &amp;lt;- Sock.onClose s $ handleClose addr
+    _    &amp;lt;- Sock.onError s handleError
+    logShow addr
+&lt;/code&gt;&lt;/pre&gt;</content><author><name></name></author><category term="purescript" /><category term="example" /><summary type="html">There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.</summary></entry><entry><title type="html">Quicklearn Containers</title><link href="http://localhost:4000/quicklearn-containers" rel="alternate" type="text/html" title="Quicklearn Containers" /><published>2021-10-31T11:17:29-07:00</published><updated>2021-10-31T11:17:29-07:00</updated><id>http://localhost:4000/quicklearn-containers</id><content type="html" xml:base="http://localhost:4000/quicklearn-containers">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.&lt;/p&gt;
 
 &lt;h3 id=&quot;vm-setup&quot;&gt;VM setup&lt;/h3&gt;
@@ -61,366 +94,7 @@
 &lt;h3 id=&quot;-6&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;h3 id=&quot;-7&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;h3 id=&quot;-8&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Death with Dignity Op-Ed</title><link href="http://localhost:4000/death-with-dignity-op-ed" rel="alternate" type="text/html" title="Death with Dignity Op-Ed" /><published>2021-10-29T12:06:41-07:00</published><updated>2021-10-29T12:06:41-07:00</updated><id>http://localhost:4000/death-with-dignity-op-ed</id><content type="html" xml:base="http://localhost:4000/death-with-dignity-op-ed">&lt;h1 id=&quot;expanding-assisted-dying-accessibility-to-those-with-severe-dementia&quot;&gt;Expanding Assisted Dying Accessibility to those with Severe Dementia&lt;/h1&gt;
-
-&lt;h3 id=&quot;contents&quot;&gt;Contents&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Background / Intro&lt;/li&gt;
-  &lt;li&gt;Outline of legal decisions to be made&lt;/li&gt;
-  &lt;li&gt;Nonprofit Business Plan
-    &lt;ul&gt;
-      &lt;li&gt;Overview&lt;/li&gt;
-      &lt;li&gt;Why now&lt;/li&gt;
-      &lt;li&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/li&gt;
-      &lt;li&gt;Vibe (and why this vibe)&lt;/li&gt;
-      &lt;li&gt;Defining policy and business model&lt;/li&gt;
-      &lt;li&gt;Education&lt;/li&gt;
-      &lt;li&gt;Services&lt;/li&gt;
-      &lt;li&gt;Advocacy&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;(or ‘evidence suggests that’ and cite it) Something I’ve heard repeatedly from older, mentally healthy people is that they wouldn’t want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.&lt;/p&gt;
-
-&lt;p&gt;Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.&lt;/p&gt;
-
-&lt;p&gt;Currently, the two main hurdles for somebody with severe dementia to take advantage of the physician-assisted dying law are that you need to be&lt;sup&gt;&lt;a href=&quot;https://deathwithdignity.org/learn/access/#Eligibility&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;“mentally competent, i.e. capable of making and communicating your health care decisions”&lt;/li&gt;
-  &lt;li&gt;“diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months”&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I’ll assume the reasons for these requirements are that we want to ensure that:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;this is the patient’s choice&lt;/li&gt;
-  &lt;li&gt;they are not making a short-sighted decision, and there is a strong guarantee that their medical condition and quality of life will monotonically decline&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The presumed reasons for these laws are consistant with the reasons somebody with severe dementia would want to take advantage of physician-assisted dying given:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;while they were mentally competent they’ve expressed they wouldn’t want to keep living if they ever have severe dementia&lt;/li&gt;
-  &lt;li&gt;we haven’t found a cure for severe dementia&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Canada, Luxembourg, Switzerland, and the Netherlands have legalized some form of physician-assisted death and / or euthanasia for patients with severe dementia, though it’s unclear how often it’s been applied to that demographic.&lt;sup&gt;&lt;a href=&quot;https://www.frontiersin.org/articles/10.3389/fpsyt.2020.622446/full&quot;&gt;[2]&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-
-&lt;p&gt;In the US, there are two main logistical hurdles for people who wish to end their life once they have severe dementia:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;They’re not able to make their own medical decisions&lt;/li&gt;
-  &lt;li&gt;There are no established business and legal procedures to follow&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
-Here are a few scenarios I could imagine:&lt;/p&gt;
-
-&lt;h4 id=&quot;scenario-their-children-are-involved&quot;&gt;Scenario: Their children are involved&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia&lt;/li&gt;
-  &lt;li&gt;the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can’t make these decisions for themself anymore&lt;/li&gt;
-  &lt;li&gt;the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can’t come to a consensus of how or when to move forward, both logistically and emotionally&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;or&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;there is a spouse
-………..&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;outline-of-legal-decisions-to-be-made&quot;&gt;Outline of legal decisions to be made&lt;/h3&gt;
-
-&lt;p&gt;The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
-As a basic framework, we need to define the following:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;when is the request made&lt;/li&gt;
-  &lt;li&gt;who is involved
-    &lt;ul&gt;
-      &lt;li&gt;family (spouse, children, grandchildren)&lt;/li&gt;
-      &lt;li&gt;doctors&lt;/li&gt;
-      &lt;li&gt;emotional / psychological support&lt;/li&gt;
-      &lt;li&gt;legal support&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;agenda in the years that follow the request
-    &lt;ul&gt;
-      &lt;li&gt;dementia status check-ins&lt;/li&gt;
-      &lt;li&gt;emotional check-ins&lt;/li&gt;
-      &lt;li&gt;legal check-ins (the laws could change in the 2 - 30 years between request and action)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;how the request can be redacted
-    &lt;ul&gt;
-      &lt;li&gt;by who&lt;/li&gt;
-      &lt;li&gt;on what timeline&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h3&gt;
-
-&lt;h4 id=&quot;overview&quot;&gt;Overview&lt;/h4&gt;
-
-&lt;p&gt;The mission is to make assisted dying an option for those with severe dementia. To do that, we need to:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;legalize the practice&lt;/li&gt;
-  &lt;li&gt;establish the systems to support the practice&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The common way to pass a law like this would be to raise money through donations and advocate.&lt;/p&gt;
-
-&lt;p&gt;The main idea here is to bootstrap that process with capital, labor, and enthusiasm by providing preparatory legal, business, and emotional support services to those who wish to take advantage of an assisted dying law should they get severe dementia.&lt;/p&gt;
-
-&lt;h4 id=&quot;why-now&quot;&gt;Why now?&lt;/h4&gt;
-
-&lt;p&gt;A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;legal work to legalize assisted dying for people with severe dementia&lt;/li&gt;
-  &lt;li&gt;development and implementation of the systems and business infrastructure to support the practice&lt;/li&gt;
-  &lt;li&gt;culture to embrace the practice&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This conveniently aligns with those in their 60’s to 80’s who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).&lt;/p&gt;
-
-&lt;p&gt;These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this idea. They can be first clients, helping fund the mission, and those retired might want to contribute to the mission through paid or volunteer advocacy work.&lt;/p&gt;
-
-&lt;p&gt;And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn’t pass in time, then it might be emotionally harmful for clients).&lt;/p&gt;
-
-&lt;h4 id=&quot;timeline&quot;&gt;Timeline&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;year 1 - year 2:   education + define policy and business models + townhalls&lt;/li&gt;
-  &lt;li&gt;year 3 - year 20:  services + education + advocacy + policy and business model refinement&lt;/li&gt;
-  &lt;li&gt;year 15 - year 20: pass bill 
-(what is the legal process timeline? Official submit, approval / denial, next steps, challenging outcomes, etc)
-(need to do research to build a better estimated timeline. Look at death with dignity, and other bills like marijuana)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In year 1 and 2, the dialog from the townhalls and education programs will inform the policy draft and initial business plan, and vice versa. In years 3-7, we’ll implement the business plan and refine it along the way. The organization and mission should begin to take a more concrete shape and have better-defined legal and cultural goals. Performing services will be an iterative process, and once we start implementing the business model, we will learn things that will make us want to improve or pivot the services.&lt;/p&gt;
-
-&lt;p&gt;(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)&lt;/p&gt;
-
-&lt;h4 id=&quot;vibe&quot;&gt;Vibe&lt;/h4&gt;
-
-&lt;p&gt;Death and money are two strong forces. An organization like this could easily devolve into a business that chases inheritances and possibly loses sight of it’s mission. This organization should be structured in a way where the organization, employees, and members are never financially, emotionally, or politically incentivised to influence individual decisions around assisted death.&lt;/p&gt;
-
-&lt;p&gt;The business plan for the provided services must be clear, commonly agreed upon, and held to that standard. The leadership, doctors, lawyers, and other service providers involved must be incentivised appropriately.&lt;/p&gt;
-
-&lt;p&gt;Build a culture of…&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;listening to older people - don’t let the organization get dominated by career-ists&lt;/li&gt;
-  &lt;li&gt;community-driven organizational decisions&lt;/li&gt;
-  &lt;li&gt;checks and balances - ensure the service providers don’t influence individual decisions&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Some suggested practical guidelines:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;explicitly forbid financial succession planning services&lt;/li&gt;
-  &lt;li&gt;flat fee or sliding scale pricing model for services- net worth or inheritance should never be involved&lt;/li&gt;
-  &lt;li&gt;no outside funding - align organization soley with customers, and never be incentivized to please, prioritize, or give weight to non-customer donors (this might be part of why lots of non-profits get watered-down)
-    &lt;ul&gt;
-      &lt;li&gt;maybe even, once services are provided, disallow donations outside of services. This would help to incentivize prioritizing clients, and not let clients buy power (I think large donors, even if well-intentioned, can disrupt power dynamics, goals, and trajectory)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;no investments (this might be disallowed for non-profits anyway)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;These guidelines will all help to tightly couple service and mission, and incentivize the organization to provide the best service possible to clients both directly and through legal representation of the group. My fear here is that if lack of money is limiting growth or not enough to pay people appropriately, the organization might come up with clever ways to make more money from clients, but in ways that don’t provide a lot of client value. I think this would mean that the guidelines are artificially limiting, and actually disservicing the mission and clients. The goal of these guidelines are to have the ‘right’ amount of money - enough for the mission to be successful, have traction and grow, but not so much that the wrong people are incentivized to lead, or that the organization choses to priorizite sources that give larger sums of money.&lt;/p&gt;
-
-&lt;p&gt;That said, I believe the organization will need to be funded primarily through donations until it’s able to sustain itself through the services provided, hopefully no longer than a year or two.&lt;/p&gt;
-
-&lt;h4 id=&quot;defining-policy-and-business-model&quot;&gt;Defining policy and business model&lt;/h4&gt;
-
-&lt;p&gt;Much like other death-related medical procedures (is this true?), policy and business model will be necessarily coupled. I’ve outlined some of the questions that will need to be answered in the section ‘Outline of legal decisions to be made’. In the end, the law will determine the necessary business infrastructure and processes, but until then, we have to think about and build the process that we’re comfortable with. I believe making this a community-driven process will create the best outcome both legally and culturally. Ideally, the community gives input about what processes would be most helpful to them and their families. This inherently informs us of what processes should be legally required by law to ensure every assisted death is decided upon and carried out in a way that minimizes ambiguity and where everybody is in agreeance that this is what the patient wants. I also believe this communal agreeance on processes will help the law, which will necessitate the processes, get passed.&lt;/p&gt;
-
-&lt;h4 id=&quot;education-and-townhalls&quot;&gt;Education and Townhalls&lt;/h4&gt;
-
-&lt;p&gt;Education events and events where we receive feedback will mostly be a blurred line until the proposed policy and business models are better defined and in practice. I think the first year might look like a large, crowd-sourced, organized brainstorming session with a clear goal. While I believe that this bootstrapped business model will be a fruitful path to some form of legalized assisted dying for those with severe dementia, there are a lot of policy and business details that would be better decided by a community of interested parties. Additionally, educating and empowering others to contribute will help people be part of the mission, contribute to a brighter future, and be invested in the outcome. It’ll also increase the power behind the mission, both in numbers and passion. Lastly, even if I wrote the most optimal policy and submitted it today, I doubt it would pass. Historically, having a lot of motivated people behind a grassroots push for policy change has led to success (find source?).&lt;/p&gt;
-
-&lt;p&gt;Proposed education topics:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;history of Death with Dignity&lt;/li&gt;
-  &lt;li&gt;history of assisted death
-    &lt;ul&gt;
-      &lt;li&gt;old cultures that practice(d) it&lt;/li&gt;
-      &lt;li&gt;when and why forbidden&lt;/li&gt;
-      &lt;li&gt;where and how it’s still practiced&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;what we know so far about what this law would look like&lt;/li&gt;
-  &lt;li&gt;history and timeline of similar laws&lt;/li&gt;
-  &lt;li&gt;how to talk about this with their families / to other people&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Proposed feedback topics:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;what they would want out of this (maybe prior to coming to a session, give them some info, then have them think about what they would want the process to look like for them)&lt;/li&gt;
-  &lt;li&gt;feedback about proposed process, or if they have new ideas for process&lt;/li&gt;
-  &lt;li&gt;feedback from family members&lt;/li&gt;
-  &lt;li&gt;feedback from religious groups&lt;/li&gt;
-  &lt;li&gt;feedback from lawyers&lt;/li&gt;
-  &lt;li&gt;feedback from doctors&lt;/li&gt;
-  &lt;li&gt;feedback from counselors&lt;/li&gt;
-  &lt;li&gt;feedback from all interested parties&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;services&quot;&gt;Services&lt;/h4&gt;
-
-&lt;p&gt;As I’ve explained above, the main idea here is to bootstrap the passing of an assisted dying policy for those with severe dementia by providing prepatory services for those that may want to take advantage of such policy in the future, should the law pass. Those services will likely fall into the folowing categories:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;legal support: preparing the individual and their family. I’m not sure if this will be standardized, or if individuals will required tailored legal documents. If legal requirements around assisted dying are invariable across all people, this could also look like consultation, and not directly provide any legal work, but inform and encourage clients and families to be legally prepared and protected. In this case, this service might look like group education sessions instead of individualized service.&lt;/li&gt;
-  &lt;li&gt;medical check-ins: a schedule of dementia status check-ups. Could be once / decade or yearly, depending on the severity.&lt;/li&gt;
-  &lt;li&gt;emotional support: individual and family support for this course. This could also be a decision check-in, to ensure that the client still wants this at every step of the way, and that there is no pressure from family or others to participate or not&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Other services might just be fostering and supporting a community for people to talk about this.&lt;/p&gt;
-
-&lt;p&gt;Ultimately, the community will decide what services they want to receive.&lt;/p&gt;
-
-&lt;p&gt;It’ll also be important to understand the financial and peoplepower needed to be successful in this mission, and design a business in a way that ensures this success. Because most of the value from these services is not guaranteed, and it’s received 10 - 20 years in the future, the payment for the services might be feel disportianately pricey. Maybe a better way to view funding for this mission is that we only take donations from those that are active participants in the community, and that the funding is provided equitably from all interested and dedicated parties.&lt;/p&gt;
-
-&lt;p&gt;Overall, I think this is the section that could benefit from much more thought. What are other examples of services that are paid up front, but value isn’t delivered for 10 - 20 years? I don’t think that necessarily has to be the case, because I think that we can provide immediate value, and I really think that’s the key to success in any business, especially at the beginning. I think part of the immediate value proposition is the hope that, should you get severe dementia, you might have the option and be legally prepared to take advantage of it. Because of this idea, of getting people totally ‘legally’ prepared, prior to passing the law, is that if the law does get passed in the way intended, and those people meet the criteria of the law (through the legal prep work we’ve done), then they can take advantage of it. This really isn’t much different than any ‘maybe payoff’ except, it’s individually backed, and not backed through taxpayer money (space exploration, science).&lt;/p&gt;
-
-&lt;h4 id=&quot;advocacy&quot;&gt;Advocacy&lt;/h4&gt;
-
-&lt;p&gt;I think the advocacy will look similar to advocacy around other major policy change, like LGBTQ rights or marijuana legalization. It’s largely awareness and education. The difference here, is that it has the potential to be led by an older demographic, which stands out from other movements.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h1 id=&quot;notes&quot;&gt;Notes&lt;/h1&gt;
-
-&lt;h2 id=&quot;dont-forget-to-find-audio-note-in-email-with-things-to-do-for-this&quot;&gt;don’t forget to find audio note in email with things to do for this&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;different risks: business risk (will people want to pay for this and how much, what is the pricing model and what does the product look like at different stages. Second risk is product risk / delivery risk. This isn’t like a normal startup where you have to prove immediate value, I think we could structure it in a way where we are providing immediate value, but it’s harder because ultimately, the real value comes in 10 or 20 years when the bill is passed and their able to receive the full product value. But we can still provide valuable services even if they don’t personally get to participate. It’s a real risk that they have to know they are taking, that some people won’t get the full product.&lt;/li&gt;
-  &lt;li&gt;different business models, different products at different price points at each stage. What does the business model look like in the first stage? Second stage? Third stage? And why for each stage? I think the first stage could be more dependant on donations, then get to a certain point where we disallow donations, or just make it necessarily anonymous&lt;/li&gt;
-  &lt;li&gt;If I were to play a role in this, what would the role be, and why? WOuld be somebody who is driving the process, knows what’s nexts, knows how to transition into the next stages, and can structure the business model and where we’re spending our time and money, and what the priorities are, and also learning about the legal process and getting technical on the legal system and learning the history of other movements and learning what it takes to pass a law and the process, and the laws around it, legal process, who you have to talk to, who you need connections with, because it’s all beaurocratic formal systems. I don’t think you can reinvent the wheel on the legal side. And really put the right people in place on the front-end customer facing side. Because I don’t think I’m particularly emapthetic and don’t think I come across as empathetic. And two I don’t think I have the skillset or think I’m very good at having a lot of relationships, I think the customer-facing person and face of the company should be somebody who is particularly empathetic and has the capacity to have a lot of meaningful and productive and enriching experiences and relationships with a lot of people. I don’t think I should be the one who’s interacting with a lot of different customers on a regular basis.&lt;/li&gt;
-  &lt;li&gt;write a shorter version of this. Idea synopsis that can be linked to the detail page.&lt;/li&gt;
-  &lt;li&gt;Going zero to one. What is the first step? First few steps? 6 months plan? Building a community. Finding people who are interested and connecting them with eachother. Taking with current Death w Dignity people. Finding other orgs and taking with them and learning more about it (other countries, too). I don’t think this could be a full time thing initially. But what are the first steps to get the momentum going? I havent really thought what does the first day look like? What does the first week look like? First few months? How do you build a community? Is there any income initially? Do you take money from somebody? What are the implecations to taking money? Twisted Fields taught me how to have an idea and put it in place. What I didn’t learn is long term execution, company building, and management, but I think this is a big hurdle, is taking an idea from zero to one and doing that first step successfully. Go from idea to early-stage execution.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Some other thoughts about building the culture and appropriate incentives:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;somehow limit concentration of power. I don’t have much experience with this, but I think there should still be strong leadership and representation&lt;/li&gt;
-  &lt;li&gt;I think limiting the amount of money the org has can help with this (ie, very bootstrapped, no outside funding or “investments”)&lt;/li&gt;
-  &lt;li&gt;but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it’s legal in 20 years. I think this will help align incentives&lt;/li&gt;
-  &lt;li&gt;“customer-owned cooperative”&lt;/li&gt;
-  &lt;li&gt;each customer has one vote no matter how much money donated (not sure if I like this idea, sounds messy, chaotic, political. need to have clear political direction and leadership. This could bring in too much internal politics and cause division)&lt;/li&gt;
-  &lt;li&gt;maybe instead of an explicit “customer-owned cooperative” structure, you could have a traditional structure, but just put the right people in place to create a healthy culture&lt;/li&gt;
-  &lt;li&gt;how to incentivize the business to incorporate the changes customers want? changes to both service provided and the proposed law. I think just focusing on listening, townhalls, and propping up the right people to lead this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning.&lt;/p&gt;
-
-&lt;p&gt;This will also be a much bigger industry than the current scope of assisted dying.&lt;/p&gt;
-
-&lt;p&gt;people who are possibly the closest to the issue in many ways (emotional, know people who are going through this)&lt;/p&gt;
-
-&lt;p&gt;I’m thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;I think it’s a huge underserved market. People say they want it but there’snot commonly known avenues to get there. Then it’s too late and their kids have power of attorney and feel like they can’t make that decision so they keep their miserable parent alive for 5-10k / month. I think it’s a combination of a huge emotianal hurdle and it being a difficult situation when others have some say in the decision (siblings, spouce).&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;All baby boomers will be there in 10-30 years and will be a resource sink and toll on all younger generations and economy.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I think people want it so it’s really just creating the vehicles to make it possible and accessible, some reframing, and education.&lt;/p&gt;
-
-&lt;p&gt;Premices is that there aren’t commonly know avenues for DAS. We don’t have the culture around it. “When you’re 60 you make a will or succession plan”, but there’s not a culture around talking about what happens when you get dementia or when your life sucks and your kids have power of attorney.&lt;/p&gt;
-
-&lt;p&gt;Education
-Creating vehicles
-Put somethingin place before they can’t do anything. Meaning somebody else has POA, they can’t make decisions for themselves. Or even if nobody else has POA, they probably don’t have the skills / energy / agency anymore to do the planning. If it’s not in their face, even if they say they want it, it’s very likely it’s not prioritized, then 10 years pass and they start declining and nothing actionable has happened since.&lt;/p&gt;
-
-&lt;p&gt;We could make it a common thing to talk about, what happens in 20 or 30 years when you’re in that position. People know if they want to be buried or cremated or body donated to science. People know where they want their money going and where they want their money spend, and what kind of funural they want.&lt;/p&gt;
-
-&lt;p&gt;The hardest technical challange and maybe social challange might be where to draw the line. I think the solution is to have better quantitative metrics on state of dementia and quality of life.&lt;/p&gt;
-
-&lt;p&gt;Maybe we do have quantitative tools to measure severity of alztimers or degree of pain, but as far as I know they’re still qualitative and subjective.&lt;/p&gt;
-
-&lt;p&gt;Need to develop quantitative markers.&lt;/p&gt;
-
-&lt;p&gt;So you can say “when I reach level 7 it’s time for DAC”&lt;/p&gt;
-
-&lt;p&gt;And even if those measures are somewhat subjective, say you set your marker at 7 and doctors later can’t decide if you’re a 6 or 7 or 8, even though that is a slight problem and would cause some years of messiness, eventually all the doctors, even the most conservative ones, will agree that you’re a 7 (or above), then you can do DAC and you don’t have to wait til level 10 like we do now.&lt;/p&gt;
-
-&lt;p&gt;Another challange will be incentive aligning. Doctors, children, lawyers, (this non-profit organization idea). Financial and emotional (mostly financial)&lt;/p&gt;
-
-&lt;p&gt;Other reason for this is baby boomers in 10 - 30 years will all be here. Nursing homes suck. Lots of people don’t want their parents living with them when their old and sick. Can also be thought of as a way to avoid predatory nursing homes. All the other options are bad. There are no good options here, and maybe this could look like the better of the options in everybodies eyes. It’s gonna be a huge economic and emotional burden on younger generations and economy.&lt;/p&gt;
-
-&lt;p&gt;Don’t know how to pursue this. Where my energy should go. What first steps are. 
-Step 1: Does anything like this exist or has it existed in the past and if so what does it look like, and what is it missing. Because if it does exist, it’s clearly missing something because the culture and mindset around this is not where lots of people think it should be. Or they just aren’t doing it enought. With baby boomers, if there’s a time to be thinking about it, it’s not and in the next 10 - 30 years.&lt;/p&gt;
-
-&lt;p&gt;This topic is sensitive, and for good cause. I think the general consensus in the US is that we know that some people with severe dementia don’t want to keep living, either because they’ve expressed it before or because they express it at the time, but we don’t have general consensus that we should allow them to die. Fulfilling the wishes of those with severe dementia will require a general mindset shift.&lt;/p&gt;
-
-&lt;p&gt;Additionally, 
-Because of how sensitive the issue is, and because we’re dealing with peoples lives&lt;/p&gt;
-
-&lt;p&gt;Dementia-related health costs about $600 billion in US (I think, look this up again)&lt;/p&gt;
-
-&lt;p&gt;Main value areas:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Raising awareness through advocacy and education&lt;/li&gt;
-  &lt;li&gt;Creating the legal and business pathways&lt;/li&gt;
-  &lt;li&gt;Guiding people through the process both mentally and emotionally (they can void the plan at anytime)&lt;/li&gt;
-  &lt;li&gt;Could have a support group for people. Or just a community of people who are planning DAS&lt;/li&gt;
-  &lt;li&gt;Making family part of the planning process&lt;/li&gt;
-  &lt;li&gt;Creating a clear roadmap for people, and helping them / reminding them along the way:&lt;/li&gt;
-  &lt;li&gt;Maybe the service or value add could be fostering a community, teaching people how to talk about it, make it acceptable and common practice. Then move to the Dutch model like the story way below. So that it’s accepted and common for people even with early stage dementia to choose assisted death&lt;/li&gt;
-  &lt;li&gt;Also, I think just putting this product and process in front of people, and getting them, if they want to, to be proactive and fill out the paperwork prior to it becoming an issue, is a huge value add, maybe the biggest. Because I think a lot of people want this, but because there isn’t a clear path, it often doesn’t end up happening. Currently, you have to be extremely proactive to do it - generally meaning planning to go to Switzerland&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;i-dont-think-this-has-to-be-as-intensive-as-im-making-it-out-to-be-maybe-just-a-simple-service-that-says-pay-us-300-and-well-get-you-the-right-paperwork-and-tell-you-where-to-submit-it-or-just-like-heres-a-club-this-is-what-we-do-we-want-to-help-you-heres-the-cost-of-the-service-and-what-you-should-do-right-now-if-you-want-this-to-be-a-real-thing-maybe-goal-is-to-expand-advanced-directive-to-be-proactive-give-me-death-drugs-which-was-the-original-goal-or-follow-the-dutch-model-of-making-available-super-soon-like-right-after-dementia-diagnosis&quot;&gt;I don’t think this has to be as intensive as I’m making it out to be!!! Maybe just a simple service that says pay us $300 and we’ll get you the right paperwork and tell you where to submit it. Or just like “here’s a club, this is what we do. We want to help you. Here’s the cost of the service and what you should do right now if you want this to be a real thing”. Maybe goal is to expand advanced directive to be proactive (“give me death drugs”), which was the original goal. Or follow the Dutch model of making available super soon, like right after dementia diagnosis&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Talking to somebody to help you think about your options, and what the options mean for you (how to prepare for this emotionally and mentally)&lt;/li&gt;
-  &lt;li&gt;Help get plan / legal paperwork in order&lt;/li&gt;
-  &lt;li&gt;Check ins&lt;/li&gt;
-  &lt;li&gt;Evaluation (patient / client can refute results at anytime and void or delay plan)&lt;/li&gt;
-  &lt;li&gt;DAS and family support&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The wiki is good. Section on US polls. Wording of DAS / DAD really matters here. ‘Terminally ill’ vs ‘severe pain’, ‘patient suicide’ vs ‘physician-administered voluntary euthanasia’&lt;/p&gt;
-
-&lt;p&gt;Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering&lt;/p&gt;
-
-&lt;h2 id=&quot;things-to-do---first-steps&quot;&gt;Things to do - first steps:&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;get into acquired community. Learn culture, see where approriate to talk about this idea&lt;/li&gt;
-  &lt;li&gt;obv post op ed, but also reach out to Death with Dignity group&lt;/li&gt;
-  &lt;li&gt;really get to know histories of:
-    &lt;ul&gt;
-      &lt;li&gt;assisted dying&lt;/li&gt;
-      &lt;li&gt;death with dignity, both organization and timeline of how the law was passed&lt;/li&gt;
-      &lt;li&gt;history of one of the most recent biggest movements - legalization of marijuana&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;basics of how a law like this would be passed. I’m so ignorant of the legal process here
-    &lt;ul&gt;
-      &lt;li&gt;whats the general process&lt;/li&gt;
-      &lt;li&gt;main hurdles for this type of law&lt;/li&gt;
-      &lt;li&gt;costs?&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;talk on twitter about these ideas? both current death with dignity law and future of law for people with severe dementia?&lt;/li&gt;
-  &lt;li&gt;reddit groups&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;first-momentum-steps&quot;&gt;First momentum steps:&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves&lt;/li&gt;
-  &lt;li&gt;Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Links:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens’t show interest in food, you can’t encourage eating &lt;a href=&quot;https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/&quot;&gt;Link&lt;/a&gt;. Ideally, I’d like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you’ll show no interest in food. This is a very passive, but agreed upon approach&lt;/li&gt;
-  &lt;li&gt;non-legally-binding directive &lt;a href=&quot;Dementia-Directive.org&quot;&gt;Link&lt;/a&gt;. “Washington State and New York states have end-of-life agencies that have approved advance directives allowing a person to stipulate that no food or water is to be provided severe dementia develops.”&lt;/li&gt;
-  &lt;li&gt;dutch story about seemingly early to moderate stage dementia euthuensa &lt;a href=&quot;https://www.bbc.com/news/stories-47047579&quot;&gt;Link&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://static1.squarespace.com/static/5a0128cf8fd4d22ca11a405d/t/60c51d29f5c2833ef87698d1/1623530793274/dementia-directive.pdf&quot;&gt;Dementia Directive&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.latimes.com/opinion/story/2020-07-15/california-aid-in-dying-law-assisted-suicide-alzheimers-dementia&quot;&gt;Op ed LA times&lt;/a&gt; and contact &lt;a href=&quot;https://en.wikipedia.org/wiki/Nicholas_Goldberg&quot;&gt;this guy&lt;/a&gt; who wrote it&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Assisted Dying Accessibility to those with Severe Dementia</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
+&lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
 &lt;p&gt;I deleted our git server!
 We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower&lt;/p&gt;
 
@@ -1188,9 +862,24 @@ python3 OTAserver.py &amp;amp;
 &lt;p&gt;The ideal hardware setup would be an SPDT relay on built-in Sonoff SV controlling a 3-wire ball valve, powered by a 5-10 watt solar panel and 3-4 lithium batteries or an appropriately-sized supercapacitor.
 The ideal software architeture would be native phone apps and a web app, with a data dashboard to view sensor data.&lt;/p&gt;</content><author><name></name></author><category term="hard" /><category term="tech" /><category term="product" /><category term="design" /><summary type="html"></summary></entry><entry><title type="html">Solar Powered Ranger</title><link href="http://localhost:4000/solar-powered-ranger" rel="alternate" type="text/html" title="Solar Powered Ranger" /><published>2021-04-16T11:47:25-07:00</published><updated>2021-04-16T11:47:25-07:00</updated><id>http://localhost:4000/solar-powered-ranger</id><content type="html" xml:base="http://localhost:4000/solar-powered-ranger">&lt;p&gt;&lt;img src=&quot;images/ranger.jpg&quot; alt=&quot;ranger&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;I wanted to passively charge a &lt;a href=&quot;https://ranger.polaris.com/en-us/ranger-ev/&quot;&gt;Polaris Ranger EV&lt;/a&gt; from solar panels. Two 100 watt solar panels had been installed on top of the ranger. The ranger originally had lead-acid batteries. Running and charging lead-acid from solar is simple with a solar controller, but the ranger had already been converted to run off of a lithium battery, which meant it had a battery management system (BMS). Powering the BMS was the crux of this problem.&lt;/p&gt;
+&lt;p&gt;I wanted to passively charge a &lt;a href=&quot;https://ranger.polaris.com/en-us/ranger-ev/&quot;&gt;Polaris Ranger EV&lt;/a&gt; from solar panels. Two 100 watt solar panels had been installed on top of the ranger from when the ranger originally had a lead-acid solar charging system. Running and charging lead-acid from solar is simple with a solar controller, but the ranger had already been converted to run off of a lithium battery, which meant it had a &lt;a href=&quot;https://en.wikipedia.org/wiki/Battery_management_system&quot;&gt;battery management system (BMS)&lt;/a&gt;. I was using an &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;. Powering the BMS was the crux of this problem.&lt;/p&gt;
 
-&lt;p&gt;I decided I only wanted to power the BMS when the solar panels were producing power. I was able to achieve this using a combination of the following:&lt;/p&gt;
+&lt;p&gt;In a lead-acid solar charging system, the three main components are the solar panels, solar controller, and lead-acid batteries. Here, the solar controller can be powered by the panels and only when they are producing energy. This system “just works” right off the shelf.&lt;/p&gt;
+
+&lt;p&gt;In a lithium solar charging system, there are four main components- the fourth being the BMS. The BMS must be powered when the battery is being charged or discharged through use. If the BMS isn’t on when the battery is charging, you risk the cells having different voltages or catching fire (which both shorten the life of the battery pack), and if the BMS is on all the time, you shorten the range and possibly risk damaging the batteries. System failure here could mean somebody gets hurt or the $2000 - $5000 battery pack is ruined.&lt;/p&gt;
+
+&lt;p&gt;I decided I only wanted to power the BMS when the solar panels had an open-circuit voltage above a certain threshold to avoid the bad scenarios above. This turned out to be non-trivial, which led to a super fun learning experience and why I’m writing this post!&lt;/p&gt;
+
+&lt;p&gt;Some specs:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Two 100 watt solar panels (I think they were both 24v panels)&lt;/li&gt;
+  &lt;li&gt;BMS takes range of voltage 9v - 60v, 3amp max current, toggles a pin from float to ground to indicate that the battery is ready to be charged&lt;/li&gt;
+  &lt;li&gt;48v lithium battery (I think lithium iron phosphate, LiFePO4)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Idea / iteration 1: Power the BMS with a DC converter so that the BMS is on when the panels are producing a voltage within the DC converter input range&lt;/p&gt;
+
+&lt;p&gt;I was able to achieve this using a combination of the following:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;isolated 9-60v to 24v DC &lt;a href=&quot;https://www.digikey.com/en/products/detail/cui-inc/PQAE50-D24-S24-D/13563301?utm_adgroup=DC%20DC%20Converters&amp;amp;utm_source=google&amp;amp;utm_medium=cpc&amp;amp;utm_campaign=Shopping_Product_Power%20Supplies%20-%20Board%20Mount_NEW&amp;amp;utm_term=&amp;amp;utm_content=DC%20DC%20Converters&amp;amp;gclid=Cj0KCQjw8vqGBhC_ARIsADMSd1Ao04uo4vTQqNOUY5ago-pk_4bIGioo2zeDo9YiX6XfKT8Wd89V3r0aAu0_EALw_wcB&quot;&gt;converter&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;high voltage, solid state &lt;a href=&quot;https://www.amazon.com/dp/B07PFDJQLV/?coliid=IL264W22BQM4Z&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;relay&lt;/a&gt;&lt;/li&gt;
@@ -1208,7 +897,7 @@ The ideal software architeture would be native phone apps and a web app, with a 
 &lt;p&gt;This approach worked in simple scenarios such as when the sun was shining or when it wasn’t, but I ran into two coupled issues:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;partial light conditions near a solar panel power boundary (9 - 14v panel voltage)&lt;/li&gt;
-  &lt;li&gt;partial light conditions (open-circuit panel voltage &amp;lt;40v) when hooked up to the battery and when the BMS indicates to charge. In this scenario, the relay closes, connecting the solar controller to the batteries. Then the batteries pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.&lt;/li&gt;
+  &lt;li&gt;partial light conditions (open-circuit panel voltage &amp;lt;40v) when hooked up to the battery and when the BMS indicates to charge. In this scenario, the relay closes, connecting the solar controller to the batteries. Then when the batteries start charging, they pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&quot;images/boardInRanger.jpg&quot; alt=&quot;testing board&quot; /&gt;&lt;/p&gt;
@@ -1260,4 +949,4 @@ BMS DC converter needs to be isolated because the auxiliary ground is different 
   &lt;li&gt;Instead of hysteresis, could’ve used a timer circuit. This could reduce BMS power cycling when driving through shade, but when it’s still sunny elsewhere&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The BMS is the &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;The BMS is the &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="engineering" /><category term="electrical" /><summary type="html"></summary></entry></feed>
