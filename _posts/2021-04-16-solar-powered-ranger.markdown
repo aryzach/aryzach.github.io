@@ -134,4 +134,7 @@ I think the hysteresis solution is the correct long-term product solution, but i
 #### Other thoughts
 Instead of hysteresis, I could've used a timer circuit, where the sun is the signal but power comes from the battery. This could reduce BMS power cycling when driving through shade, but when it's still sunny elsewhere, and because the solar panels wouldn't be powering the BMS, you would deal with the power oscillation.
 
+Another thought we had at the beginning, prior to doing any building or testing, was to have a small lead-acid battery and seperate solar controller, and this would be used to power the BMS 24/7. This solution seemed terribly unelegant and sloppy; we have everything, power and signal, all right there! I wanted to jump to the most optimal solution. This turned out to be misguided thinking, not because I think it's a great solution, but because I learned that Teslas carry a lead-acid battery! So I'm sure this solution wouldn't have been too misguided to pursue. That was a humbling engineering lesson :) 
+
+Also, I should talk about testing the small auxillary solar panel idea. Provides power to BMS, but doesn't get pulled down by battery. This solves the battery hysteresis issue, but not hysteresis when sun is 9v-14v because BMS pulls it down a little bit. But I was going to use it to power and signal just the hysteresis circuit. 
 
