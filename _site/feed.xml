@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-02-17T23:42:48-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-02-19T00:32:23-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
 </subtitle><entry><title type="html">Purescript TCP Server</title><link href="http://localhost:4000/purescript-tcp-server" rel="alternate" type="text/html" title="Purescript TCP Server" /><published>2021-12-19T21:23:33-08:00</published><updated>2021-12-19T21:23:33-08:00</updated><id>http://localhost:4000/purescript-tcp-server</id><content type="html" xml:base="http://localhost:4000/purescript-tcp-server">&lt;p&gt;There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-purescript&quot;&gt;module Main where
@@ -866,87 +866,127 @@ The ideal software architeture would be native phone apps and a web app, with a 
 
 &lt;p&gt;In a lead-acid solar charging system, the three main components are the solar panels, solar controller, and lead-acid batteries. Here, the solar controller can be powered by the panels and only when they are producing energy. This system “just works” right off the shelf.&lt;/p&gt;
 
-&lt;p&gt;In a lithium solar charging system, there are four main components- the fourth being the BMS. The BMS must be powered when the battery is being charged or discharged through use. If the BMS isn’t on when the battery is charging, you risk the cells having different voltages or catching fire (which both shorten the life of the battery pack), and if the BMS is on all the time, you shorten the range and possibly risk damaging the batteries. System failure here could mean somebody gets hurt or the $2000 - $5000 battery pack is ruined.&lt;/p&gt;
+&lt;p&gt;In a lithium solar charging system, there are four main components- the fourth being the BMS. The BMS must be powered when the battery is being charged or discharged through use. If the BMS isn’t on when the battery is charging, you risk the cells having different voltages or catching fire (which both shorten the life of the battery pack), and if the BMS is on all the time, you shorten the range and possibly risk damaging the batteries.&lt;/p&gt;
 
 &lt;p&gt;I decided I only wanted to power the BMS when the solar panels had an open-circuit voltage above a certain threshold to avoid the bad scenarios above. This turned out to be non-trivial, which led to a super fun learning experience and why I’m writing this post!&lt;/p&gt;
 
-&lt;p&gt;Some specs:&lt;/p&gt;
+&lt;p&gt;System hardware previously installed:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;Two 100 watt solar panels (I think they were both 24v panels)&lt;/li&gt;
-  &lt;li&gt;BMS takes range of voltage 9v - 60v, 3amp max current, toggles a pin from float to ground to indicate that the battery is ready to be charged&lt;/li&gt;
-  &lt;li&gt;48v lithium battery (I think lithium iron phosphate, LiFePO4)&lt;/li&gt;
+  &lt;li&gt;Solar panels:
+    &lt;ul&gt;
+      &lt;li&gt;two 100 watt, 24v solar panels&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;BMS:
+    &lt;ul&gt;
+      &lt;li&gt;powered when charging through AC/DC converter&lt;/li&gt;
+      &lt;li&gt;powered when ranger is turned on&lt;/li&gt;
+      &lt;li&gt;input voltage range: 9v - 60v&lt;/li&gt;
+      &lt;li&gt;max current 3A&lt;/li&gt;
+      &lt;li&gt;toggles a pin from float to ground to indicate that the battery is ready to be charged&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Lithium iron phosphate battery (LiFePO4)
+    &lt;ul&gt;
+      &lt;li&gt;charged from grid through AC/DC converter&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Idea / iteration 1: Power the BMS with a DC converter so that the BMS is on when the panels are producing a voltage within the DC converter input range&lt;/p&gt;
+&lt;p&gt;Originally, the ranger used a different &lt;a href=&quot;https://www.amazon.com/Genasun-GVB-8-Pb-48V-WP-Waterproof-Controller-Batteries/dp/B07H8SYB28/ref=pd_lpo_86_t_0/138-2639310-8966331?_encoding=UTF8&amp;amp;pd_rd_i=B07H8SYB28&amp;amp;pd_rd_r=f6de1b83-7f25-4575-9c5c-064d36f5a8df&amp;amp;pd_rd_w=jZxcf&amp;amp;pd_rd_wg=4Q7tc&amp;amp;pf_rd_p=fb1e266d-b690-4b4f-b71c-bd35e5395976&amp;amp;pf_rd_r=1N0XHAM1TXFKEFB1A66T&amp;amp;psc=1&amp;amp;refRID=1N0XHAM1TXFKEFB1A66T&quot;&gt;solar controller for the lead-acid batteries&lt;/a&gt;, but when that didn’t work (3 charging cycles were too reserved for the lithium), I used &lt;a href=&quot;https://www.amazon.com/dp/B08JZCRKDR/?coliid=I3TSBTV63CHLZD&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;this adustable solar controller for lithium&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Other constraints:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The ranger was needed for daily farm use&lt;/li&gt;
+  &lt;li&gt;System failure could mean somebody gets hurt or the $2000 - $5000 battery pack is ruined&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;images/solarOnRanger.jpg&quot; alt=&quot;solar panels on ranger&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;idea--iteration-1-power-the-bms-with-a-dc-converter-so-that-the-bms-is-on-only-when-the-panels-are-producing-a-voltage-within-the-dc-converter-input-range&quot;&gt;Idea / iteration 1: Power the BMS with a DC converter so that the BMS is on only when the panels are producing a voltage within the DC converter input range&lt;/h4&gt;
 
 &lt;p&gt;I was able to achieve this using a combination of the following:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;isolated 9-60v to 24v DC &lt;a href=&quot;https://www.digikey.com/en/products/detail/cui-inc/PQAE50-D24-S24-D/13563301?utm_adgroup=DC%20DC%20Converters&amp;amp;utm_source=google&amp;amp;utm_medium=cpc&amp;amp;utm_campaign=Shopping_Product_Power%20Supplies%20-%20Board%20Mount_NEW&amp;amp;utm_term=&amp;amp;utm_content=DC%20DC%20Converters&amp;amp;gclid=Cj0KCQjw8vqGBhC_ARIsADMSd1Ao04uo4vTQqNOUY5ago-pk_4bIGioo2zeDo9YiX6XfKT8Wd89V3r0aAu0_EALw_wcB&quot;&gt;converter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;high voltage, solid state &lt;a href=&quot;https://www.amazon.com/dp/B07PFDJQLV/?coliid=IL264W22BQM4Z&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;relay&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;high-voltage, solid state &lt;a href=&quot;https://www.amazon.com/dp/B07PFDJQLV/?coliid=IL264W22BQM4Z&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;relay&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;diodes (to prevent back feeding grid power or back feeding the solar controller)&lt;/li&gt;
   &lt;li&gt;voltage distributor&lt;/li&gt;
   &lt;li&gt;3A fuse&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;images/solarOnRanger.jpg&quot; alt=&quot;solar panels on ranger&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So here we take solar power (two 100 watt panels in series, so 0 - 56 volts), convert it to 24v to power the BMS. Then the BMS is sampling the battery. When the BMS determines the battery should be charged, it toggles an output pin from float to ground. Then I also take 24v to signal to the relay. At this point, when the BMS is powered and pulls the output pin to ground, the relay closes. The relay will open and close the connection from the solar controller to the battery.&lt;/p&gt;
+&lt;p&gt;So here we take solar power (two 100 watt, 24v panels in series, so 0 - 56 volts), convert it to 24v to power the BMS. Now the BMS is sampling the battery and doing it’s job. When the BMS determines the battery should be charged, it toggles an output pin from float to ground. So I take that output control pin from the BMS and the 24v from the DC converter to use to signal the high-voltage relay. At this point, when the BMS is powered and pulls the output pin to ground, the relay closes. The relay will open and close the connection from the solar controller to the battery.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images/rangerBoard.jpeg&quot; alt=&quot;ranger board&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;This approach worked in simple scenarios such as when the sun was shining or when it wasn’t, but I ran into two coupled issues:&lt;/p&gt;
+&lt;p&gt;This approach worked in simple scenarios such as when the sun was shining (panels &amp;gt; 40v) or when it wasn’t, but I ran into two coupled issues:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;partial light conditions near a solar panel power boundary (9 - 14v panel voltage)&lt;/li&gt;
-  &lt;li&gt;partial light conditions (open-circuit panel voltage &amp;lt;40v) when hooked up to the battery and when the BMS indicates to charge. In this scenario, the relay closes, connecting the solar controller to the batteries. Then when the batteries start charging, they pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.&lt;/li&gt;
+  &lt;li&gt;low partial light conditions (9 - 14v panel voltage)&lt;/li&gt;
+  &lt;li&gt;medium partial light conditions when hooked up to the battery and when the BMS indicates to charge (open-circuit panel voltage &amp;lt;40v)&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;In the first scenario, the BMS would turn on, then the panel voltage would be pulled below 9v, causing the BMS to turn off, so then the panels would go back above the DC converter threshold, causing the BMS to turn back on. And BMS state would continue to oscillate.
+The second scenario is similar. The BMS is on, indicates to charge, and relay closes, connecting the solar controller to the batteries. Then when the batteries start charging, they pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images/boardInRanger.jpg&quot; alt=&quot;testing board&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;These issues indicated a need for hysteresis in the system. Because the hysteresis had to be low power, I couldn’t use a software solution which would’ve relied on a bare minimum of powering a microcontroller. I found a low powered active circuit solution that relied on a &lt;a href=&quot;https://en.wikipedia.org/wiki/Comparator#:~:text=In%20electronics%2C%20a%20comparator%20is,and%20one%20binary%20digital%20output%20.&quot;&gt;comparator&lt;/a&gt;. I used the &lt;a href=&quot;https://www.ti.com/product/LM339&quot;&gt;LM339&lt;/a&gt; and found this &lt;a href=&quot;https://www.daycounter.com/Calculators/Comparator-Hysteresis-Calculator.phtml&quot;&gt;calculator&lt;/a&gt; useful. I don’t have a good intuition for how a comparator should behave, so I leaned heavy on trial and error with the calculator to find appropriate voltage and resistor values.&lt;/p&gt;
+&lt;h4 id=&quot;idea--iteration-2-hysteresis-circuit&quot;&gt;Idea / iteration 2: Hysteresis circuit&lt;/h4&gt;
+
+&lt;p&gt;These issues indicated a need for hysteresis in the system.&lt;/p&gt;
+
+&lt;p&gt;My first instict would be to implement hystersis with software, but we’d run into similar issues because the computer running it would have to be powered.&lt;/p&gt;
+
+&lt;p&gt;Because the hysteresis had to be low power and resiliant to a flakey power source, I couldn’t use a software solution which would’ve relied on a bare minimum of powering a microcontroller.&lt;/p&gt;
+
+&lt;p&gt;I found a low-powered active circuit solution that relies on a &lt;a href=&quot;https://en.wikipedia.org/wiki/Comparator#:~:text=In%20electronics%2C%20a%20comparator%20is,and%20one%20binary%20digital%20output%20.&quot;&gt;comparator&lt;/a&gt; (or alternatively an op-amp). I used the &lt;a href=&quot;https://www.ti.com/product/LM339&quot;&gt;LM339&lt;/a&gt; and found this &lt;a href=&quot;https://www.daycounter.com/Calculators/Comparator-Hysteresis-Calculator.phtml&quot;&gt;calculator&lt;/a&gt; useful. I don’t have a good intuition for how a comparator should behave, so I leaned heavy on trial and error with the calculator to find appropriate voltage and resistor values.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;images/hysteresisDiagram.jpg&quot; alt=&quot;hysteresis diagram&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Hysteresis diagram&lt;/p&gt;
+&lt;p style=&quot;text-align: center;&quot;&gt;Hysteresis diagram&lt;/p&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt;&lt;img src=&quot;images/circuitDiagramWithHysteresis.jpg&quot; alt=&quot;solar panels on ranger&quot; style=&quot;transform:rotate(270deg); margin-bottom: -60px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;images/circuitDiagramWithHysteresis.jpg&quot; alt=&quot;solar panels on ranger&quot; style=&quot;transform:rotate(270deg); margin-bottom: -100px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Full circuit diagram with hysteresis circuit&lt;/p&gt;
+&lt;p style=&quot;text-align: center;&quot;&gt;Full circuit diagram with hysteresis circuit&lt;/p&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt;The goal of the comparator / hysteresis circuit is to differentiate ON vs OFF threshold values. In my case, I wanted the BMS to turn on when the solar panel voltage was above 40v and turn off when it was below 10v. This would eliminate the power cycling of the BMS when in partial sun and when the battery was connected to the solar controller / solar panels. I learned two technical lessons through experimentation with the comparator:&lt;/p&gt;
+&lt;p&gt;The goal of the comparator / hysteresis circuit is to differentiate ON vs OFF threshold voltage values. In my case, I wanted the BMS to turn on when the solar panel voltage was above 40v and turn off when it was below 10v. I found through experimentation that when the batteries were charging and panel voltage was just below 10v, the open-circuit voltage was below 40v, meaning these hysteresis parameters would eliminate the power cycling problem of the BMS when in partial sun and when the battery was connected to the solar controller / solar panels. I learned a few technical lessons through experimentation with the comparator:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;a higher reference voltage or supply voltage will give you greater difference between your high (on) and low (off) threshold voltages&lt;/li&gt;
-  &lt;li&gt;find resistor ratios that are easy to make with your given set of resistors
-Because the comparator consumed such low power, I used the battery to supply 24v to the comparator through a separate DC converter.&lt;/li&gt;
+  &lt;li&gt;find resistor ratios that are easy to make with your given set of resistors&lt;/li&gt;
+  &lt;li&gt;when working with signal voltages, use the highest resistance possible without diluting your signal. This avoids burning off power in the resister&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The BMS DC converter has an optional enable pin. Adding the hysteresis circuit between the solar panels (comparator signal input) and DC converter (comparator signal output) allowed hysteresis control over the BMS. Now, the power cycle went as follows:&lt;/p&gt;
+&lt;p&gt;Because the comparator consumed such low power, I used the battery to supply 24v to the comparator through a separate isolated DC converter. The BMS DC converter needs to be isolated because the auxiliary ground is different from the battery ground.&lt;/p&gt;
+
+&lt;p&gt;The BMS DC converter has an optional enable pin. Adding the hysteresis circuit between the solar panels (comparator signal input) and DC converter (comparator signal output) allowed the hysteresis circuit to control when the BMS is powered. Now, the power goes like this:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;BMS is off&lt;/li&gt;
-  &lt;li&gt;at 40v or higher, the BMS turns on&lt;/li&gt;
-  &lt;li&gt;if the BMS decides to charge the batteries, the relay is closed&lt;/li&gt;
-  &lt;li&gt;the panel voltage is pulled down from the battery (panel is at 15 - 30v), but BMS stays on&lt;/li&gt;
-  &lt;li&gt;when the panel is pulled down from the battery and reads under 10v, the BMS will be shut off and battery will stop charging
-40v was set as the high threshold because when the panels read an open-cicuit voltage of &amp;lt;40v, the closed-circuit voltage is under 9v. Because the DC converter voltage minimum was 9v, this created the unwanted power cycle effect.&lt;/li&gt;
+  &lt;li&gt;When solar panels open-circuit voltage is 40v or higher, the DC converter is enabled through the hysteresis circuit and the BMS turns on&lt;/li&gt;
+  &lt;li&gt;If the BMS decides to charge the batteries, the relay is closed and the batteries start charging&lt;/li&gt;
+  &lt;li&gt;Connecting the solar panels / solar controller to the batteries pull the panel voltage down to 15 - 30v&lt;/li&gt;
+  &lt;li&gt;Because the hysteresis circuit hasn’t fallen below its 10v off indicator, the BMS stays on&lt;/li&gt;
+  &lt;li&gt;Now when the panel is pulled down from the battery and reads under 10v, the BMS will be shut off and battery will stop charging. The panel voltage will rise because nothing is drawing the power, but it will be below the 40v hysteresis ON parameter, so the BMS won’t cycle back on&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;images/rangerHysteresisBreadboard.jpeg&quot; alt=&quot;ranger hysteresis breadboard&quot; style=&quot;transform:rotate(270deg); margin-bottom: -50px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;images/rangerHysteresisBreadboard.jpeg&quot; alt=&quot;ranger hysteresis breadboard&quot; style=&quot;transform:rotate(270deg); margin-bottom: -100px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
+
+&lt;p style=&quot;text-align: center;&quot;&gt;Breadboard with hysteresis circuit and DC converter to power the comparator&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;Now, this circuit worked as expected. The new issue was to harden the system to tolerate both vibration and mud, which is a lot less interesting to talk about.&lt;/p&gt;
 
-&lt;p&gt;Originally, the ranger used a different &lt;a href=&quot;https://www.amazon.com/Genasun-GVB-8-Pb-48V-WP-Waterproof-Controller-Batteries/dp/B07H8SYB28/ref=pd_lpo_86_t_0/138-2639310-8966331?_encoding=UTF8&amp;amp;pd_rd_i=B07H8SYB28&amp;amp;pd_rd_r=f6de1b83-7f25-4575-9c5c-064d36f5a8df&amp;amp;pd_rd_w=jZxcf&amp;amp;pd_rd_wg=4Q7tc&amp;amp;pf_rd_p=fb1e266d-b690-4b4f-b71c-bd35e5395976&amp;amp;pf_rd_r=1N0XHAM1TXFKEFB1A66T&amp;amp;psc=1&amp;amp;refRID=1N0XHAM1TXFKEFB1A66T&quot;&gt;solar controller for the lead-acid batteries&lt;/a&gt;, but when that didn’t work (3 charging cycles were too reserved for the lithium), I used &lt;a href=&quot;https://www.amazon.com/dp/B08JZCRKDR/?coliid=I3TSBTV63CHLZD&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;this&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h4&gt;
 
-&lt;p&gt;Notes:
-BMS DC converter needs to be isolated because the auxiliary ground is different from the battery ground&lt;/p&gt;
+&lt;p&gt;Using solar as a switch and only powering the BMS when it was sunny may be an unneeded constraint. The BMS consumes only about 2 watts. A simpler solution is to power the BMS directly from the battery and take the power hit of 2 watts. The worse-case failure mode with this solution would be the possibility of draining and damaging the battery if it got too low. The benefit would be that the batteries would charge in times where the hysteresis circuit would prevent charging but when there was still some sun, notably around an open-circuit panel voltage of 30 - 40v.&lt;/p&gt;
 
-&lt;p&gt;What I learned:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;When working with signal voltages, use the highest resistance possible without diluting your signal. This avoids burning off power in the resister&lt;/li&gt;
-  &lt;li&gt;Using solar as a switch and only powering the BMS when it was sunny turned out to be an unneeded constraint. The BMS consumes about 2 watts. A simpler solution would’ve been powering the BMS directly from the battery and taking the power hit of 2 watts. The issue with this would be the possibility of draining and damaging the battery if it got too low. The benefit would be that the batteries would charge in times where the hysteresis circuit would prevent charging but when there was still some sun, notably around an open-circuit panel voltage of 30 - 40v. This is the solution I ended up implementing, so as not to spend more time hardening the breadboard prototype circuit.&lt;/li&gt;
-  &lt;li&gt;Instead of hysteresis, could’ve used a timer circuit. This could reduce BMS power cycling when driving through shade, but when it’s still sunny elsewhere&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;I could’ve done more analysis before building and testing the more complicated hysteresis design, and maybe I would’ve decided to try this simple solution first. I was hesitant to go this route both because of the $2000 - $5000 battery replacement cost if they got damaged from over-discharge, and because I knew it’d be a great way to get better at circuit engineering and design. Ultimately, a lot of mistakes would have to align for the worse-case scenario to happen, as the ranger is generally stored and used outside in the sun everyday.&lt;/p&gt;
 
-&lt;p&gt;The BMS is the &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="engineering" /><category term="electrical" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;So prior to hardening the hysteresis solution, I decided to implement the simpler solution and power the BMS 24/7 from the battery and isolated DC converter. This solution reduces a lot of complexity but has a less desirable worse-case failure mode, even if it’s a remote possibility.&lt;/p&gt;
+
+&lt;p&gt;I think the hysteresis solution is the correct long-term product solution, but in this case, I think the corrent solution is the simple “power BMS 24/7”, both because long-term robustness and product at scale are not important considerations, and because I’ve already sunk too much time into this project.&lt;/p&gt;
+
+&lt;h4 id=&quot;other-thoughts&quot;&gt;Other thoughts&lt;/h4&gt;
+&lt;p&gt;Instead of hysteresis, I could’ve used a timer circuit, where the sun is the signal but power comes from the battery. This could reduce BMS power cycling when driving through shade, but when it’s still sunny elsewhere, and because the solar panels wouldn’t be powering the BMS, you would deal with the power oscillation.&lt;/p&gt;</content><author><name></name></author><category term="engineering" /><category term="electrical" /><summary type="html"></summary></entry></feed>
