@@ -133,6 +133,11 @@ Wiki seems to focus on terminally ill, but mentally sound patients. I want to fo
 - talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves
 - Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service
 
+## Media strategy
+- if chance to get in bed with a media group presents itself, be skeptical. Not because of their intentions (likely good / neutral), but because it might be polarizing / associated with one group. Could be damaging long term and make it very hard to avoid it being non-political / bi-partisan
+- might be hard to avoid being on a media platform, and might be limiting to not be. Might be better to work with conservatives because they might be the tougher sell, and if I can get their buy in, then it's probably game over. This needs to happen prior to ever associating with progressives
+- maybe better to slowly infratrate cultural thought, instead of making a big immediate public show. Ex. somehow get on those high school essay prompts "Should a person be able to choose assisted death in the case they get dementia later in their life?", but this kinda will align with progressives maybe, so maybe this is the next step after getting conservative buy in
+
 Links:
 - voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
 - non-legally-binding directive [Link](Dementia-Directive.org). "Washington State and New York states have end-of-life agencies that have approved advance directives allowing a person to stipulate that no food or water is to be provided severe dementia develops."
