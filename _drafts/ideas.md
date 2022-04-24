@@ -79,3 +79,6 @@ Addition / response to this: https://aella.substack.com/p/side-effects-of-prefer
 - I've had this same feeling but not as lucid / didn't put it into words
 - think it's brilliant
 - my caveat: lots of things like this are imperfect solutions to solve a problem and that's ok / just a transition period that might not be at equillibreum for 1 - 3 generations. Like maybe we all have to agree to "fake it" for our life times, but our kids generation will think it's much more normal, in part due to use tolerating the imperfect transition and 'faking it'. Maybe it's just what's necessary right now, so that in 100 years we get to a point where they look back on the article and say 'faking what? ohh people thought gender meant born sex' or whatever, I don't know the right language to be precise
+
+How I'd like to try to become even more teachable in the right settings and even more agreeable in some settings
+- this isn't really a blog post though, just a thought

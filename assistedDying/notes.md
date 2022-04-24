@@ -41,8 +41,8 @@ Some other thoughts about building the culture and appropriate incentives:
 - each customer has one vote no matter how much money donated (not sure if I like this idea, sounds messy, chaotic, political. need to have clear political direction and leadership. This could bring in too much internal politics and cause division)
 - maybe instead of an explicit "customer-owned cooperative" structure, you could have a traditional structure, but just put the right people in place to create a healthy culture
 - how to incentivize the business to incorporate the changes customers want? changes to both service provided and the proposed law. I think just focusing on listening, townhalls, and propping up the right people to lead this
-
-
+- prohibit large donations, even if they're internal for many reasons (can sway mission / strategy, and pull focus towards those people even if unintended)
+- ex. bill gates might want to promote this (non-monetary). Think carefully about this. Maybe not terrible. There's no reason to 'fight' him, we're not competing and his interests may be mostly aligned, but maybe more important and might lead to better success if more grassroots. Also it might alienate people if it's really bill gates operating behind the scenes. But maybe not terrible to align either and maybe good at the right point, but timing is important. Need to have the harder demographics already on board I think prior to accepting secret society help from bill gates if it's to be successful
 
 Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
 
@@ -137,6 +137,9 @@ Wiki seems to focus on terminally ill, but mentally sound patients. I want to fo
 - if chance to get in bed with a media group presents itself, be skeptical. Not because of their intentions (likely good / neutral), but because it might be polarizing / associated with one group. Could be damaging long term and make it very hard to avoid it being non-political / bi-partisan
 - might be hard to avoid being on a media platform, and might be limiting to not be. Might be better to work with conservatives because they might be the tougher sell, and if I can get their buy in, then it's probably game over. This needs to happen prior to ever associating with progressives
 - maybe better to slowly infratrate cultural thought, instead of making a big immediate public show. Ex. somehow get on those high school essay prompts "Should a person be able to choose assisted death in the case they get dementia later in their life?", but this kinda will align with progressives maybe, so maybe this is the next step after getting conservative buy in
+- maybe good strategy to find powerful not-too-libertatian conservative who truly beleives in this who also understands and has clout with the religious right
+- is DAD "family planning", like birth control / abortion? should it associate with that? probably not if we can help it
+
 
 Links:
 - voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
