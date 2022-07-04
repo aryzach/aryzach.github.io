@@ -82,3 +82,11 @@ Addition / response to this: https://aella.substack.com/p/side-effects-of-prefer
 
 How I'd like to try to become even more teachable in the right settings and even more agreeable in some settings
 - this isn't really a blog post though, just a thought
+
+On what to work on:
+- ideally a tractable technical problem
+- this could be solving a new problem with current tech
+- solving a new problem with current tech and what is enabled by new tech
+- working on a tractable tech breakthrough that will enable a lot more problems to be solved 
+- the assisted death isn't technical, but think it's an important improvement on our social fabric and better functioning society, which could lead to greater impact
+- however, innovating and building in tech is a multiplier, so has a lot of qualitative advantage over a non-tech pursuit. But I see a successful model for an assisted dying success. I like tech more than legal, social (from a scratch-an-itch point of view), and has those qualitive benefits, but who knows if I would find some tractable tech insight, orif I'd just end up working for somebody (also not terrible)

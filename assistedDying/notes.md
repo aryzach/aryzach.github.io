@@ -139,7 +139,7 @@ Wiki seems to focus on terminally ill, but mentally sound patients. I want to fo
 - maybe better to slowly infratrate cultural thought, instead of making a big immediate public show. Ex. somehow get on those high school essay prompts "Should a person be able to choose assisted death in the case they get dementia later in their life?", but this kinda will align with progressives maybe, so maybe this is the next step after getting conservative buy in
 - maybe good strategy to find powerful not-too-libertatian conservative who truly beleives in this who also understands and has clout with the religious right
 - is DAD "family planning", like birth control / abortion? should it associate with that? probably not if we can help it
-
+- maybe contact this guy. Does a lot of novel social work seemingly [Andrew](https://twitter.com/__drewface)
 
 Links:
 - voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
