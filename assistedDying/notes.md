@@ -25,6 +25,7 @@
 - have own non-profit. Point is to keep low overhead, and not have the financial resources diluted toward other causes. I want people to be able to essentially decide where they want there donation going. Help with VSED or help with more risky venture of passing assisted dying law
 - Final Exit is great, but has a different mission that is more readily achievable but would ultimately provide a different service than an assisted dying for dementia law 
 - alternatively, might be better to just join Final Exit. But that is like having the idea and confidence to build a fully electric car, but instead joining GM, building a hybrid with the idea of eventually just building an electric. If you know you can build an electric, just do that 
+- start focusing on a small market and serve that market really well first (ie cater to early adopters). I'm not so sure what I think about this advice yet, but is peter thiel advice for for-profit start ups
 
 ## don't forget to find audio note in email with things to do for this
 1. different risks: business risk (will people want to pay for this and how much, what is the pricing model and what does the product look like at different stages. Second risk is product risk / delivery risk. This isn't like a normal startup where you have to prove immediate value, I think we could structure it in a way where we are providing immediate value, but it's harder because ultimately, the real value comes in 10 or 20 years when the bill is passed and their able to receive the full product value. But we can still provide valuable services even if they don't personally get to participate. It's a real risk that they have to know they are taking, that some people won't get the full product.
@@ -115,6 +116,50 @@ The wiki is good. Section on US polls. Wording of DAS / DAD really matters here.
 
 Wiki seems to focus on terminally ill, but mentally sound patients. I want to focus on dementia and getting the right paperwork in order before dementia. Very different from what wiki is covering
 
+Informal survey: When talking with people, takes notes of what they're saying and what they want, and quantize it. Basically taking a survey without the pressure and coldness that comes with taking surveys.
+
+Random note from email: For dementia could just volunteer and get talks about Outreach and educate on current options for people help them get a set up take donations. Talking about some ideas but focus on what they can do currently to protect them in the future and give them homework on what they can be thinking about and I'll follow up once they have thought about what I want them to think about. Payment model for dementia be explicit about costs plan my ideal income is on top of the cost. Just be transparent about where the money is going and what all this is costing me
+
+Another note from email (seems like voice dictation): I think I need to tame the idea down a little tame the confidence down and tame like how structured and rigid this ideas and poses idea as some like loose maybe ideas of how this could work and instead of shoving my idea Don people's throats go out and just listen to people and what they have to say and get feedback about the idea and this will one focus on growing connections building connections with people that wishing relationships and to dislike really and not jump into it and really try to you know get a sense of what people think we're their current status is on this stuff and I think I have to do this before doing iPad or the opposite should just be a much softer article and a much softer and more fluid and Ivana convey that you know I'm open-minded about what this could be and what it looks like and is it a good idea is it a bad idea I don't want to go into it assuming that I know that it's a great idea I want to go into it and percent that I think it's possibly good idea and potentially bad way but then the end goal of this is not to have a business the end goal is to make this available to people and so I can't be too gung-ho and stuck on feeling like the end goal is this idea to get us to the business then this is just one idea to get us to the end goal and there might be other ideas that are better or more valid in this is just one idea that I think could be a good idea to get us there but there might be other methods to that are fruitful
+
+This is a mission-driven organization. This is an explicitly non-political organization with a singular goal. Unsure if it would be good to draw the line and say never go to one party or use the help of one party if I think it would help us because it might alienate a lot of people and but maybe short-term be good for the cause long-term be bad for the cause. Or maybe it is okay to go that route externally but then in the organization try to make everybody understand that this is just a tool and that the organization is not aligning with a particular party
+
+
+### Notes from voice memo in email (I guess I already took these same notes, and they're in this file. I should coalese them)
+1. different risks
+  - business risk (will people want to pay for this and how much, what is the pricing model and early product look like and how to price it, esp in early stages, but also what does pricing / product model look like at different stages of this)
+  - product risk, delivery risk (not a SaaS where you need to show immediate value. We could structure in such a way to have more immediate value, but it's hard because ultimately 99% of the value will come in 10-20 years when it's passed and they can receive the full product value. This might not neccessarily be true, because a lot of value might come from 'hope'. Otherwise, we can still provide valueable services even if they can't receive the entire value. Part of this is just being part of the process towards a big goal)
+2. different products at different price points at different stages of this. So what does this product/price combo look like at each stage, and why?
+  - first stage more dependent on donations until we get to a point where we can disallow donations (or make donations necessarily anonymous)
+3. if I play a role in this, what is my role and why? (where I want to spend my time and why?)
+  - Me:
+    * driving the process
+    * knows what's next
+    * knows how to transition into next stages
+    * can stucture the business model
+    * where we're spending our time and money
+    * what the priorities are
+    * learing the legal process and getting technical on the legal system
+    * learning history of other similar movements
+    * learning what it takes to pass a law, and who you have to talk to / make connections with because it's a beurocratic, formal system (can't reinvent the wheel or do much different in the law-making process)
+    * generally backend and legal side
+  - Front-end / customer-facing:
+    * put right people in place on the front-end / customer-facing side because I'm not particularly empathetic and don't think I come across as empathetic, and I don't have the skillset or not really good at having a lot of relationships
+    * The front-end person / face of the company should be somebody who is empathetic and has the capacity to have meaningful, productive, enriching experiences and relationships with a lot of people because I don't think I should be the one who's interacting with a lot of different people on a regular basis. Somebody like Zoe would be a lot better at that
+    * obviously need to find this person from somebody I already know, or through working on this project and find somebody in the community who gets what this project is about, understand my thesis for their role, and we align
+4. write a shorter version of the 'op-ed' thing that can be linked to the long version
+5. going zero-to-one. Not as a product, but how do I set this project in motion in a way that keeps momentum
+  - what are the first few steps
+    * 6 month plan: building a community, finding people who are interested and want to talk, and connecting those people, talking w current death with dignity people, and other similar organizations, I don't think this could / should be a full-time thing initially (I'm thinking otherwise now because I was getting burnt out before, and need to have some social balance / enjoyable time away from work now)
+    * what does the first day look like? first week? first few months? 
+    * how do you build a community?
+    * is there any income? should we be taking money from anybody this early?
+    * this is largely what twisted fields taught me, having an idea and putting it in place. What I didn't learn was long-term execution and company building and management, but I think this is a big hurdle, taking an idea from just an idea and going from zero to one. This is difference between ideas and results. Even if you're getting shitty results you need to be able to go from some idea to execution
+
+Need to keep in mind to avoid burnout: I kinda got addicted to setting goals and working non-stop to acheive them. But my first big, self-imposed goal that I actually had to bend and work towards was getting an intership in school. But even then, I knew I had to do a discrete list of things, and I just did those and did them really well. But I didn't spend much of my other time working towards that goal tirelessly, and I wasn't even super confident I would get an internship, but the reason I wouldn't get an internship were kinda out of my control as long as I did the things on that discrete list well. I'd like to recreate that feeling inside myself, not be anxious, still acheive results, know what's outside of my control. Two issues here are 1. this is pre-money, so some anxiety about money (maybe this can be subdued by having contract work 1-2 days / week to keep me afloat) and 2. I've kinda internalized that more is under my control than I used to think, and I think I learned this part at Twisted Fields. I think I have much higher angency now. The unfortunate outcome of that is that I see more places I can have influence over the outcome and I seek those out and use them. But I think I can still do this in a calm, slow-burn type of way
+
+General thought: I've been so focused on writing and finishing this (my only relation with the project). I'm going to have to change mindset and priorities once I start moving forward on this project. This is obvious, but just wanted to writing it down to make it clear, and remind myself
+
 ## Things to do - first steps:
 - get into acquired community. Learn culture, see where approriate to talk about this idea
 - obv post op ed, but also reach out to Death with Dignity group
@@ -140,6 +185,7 @@ Wiki seems to focus on terminally ill, but mentally sound patients. I want to fo
 - maybe good strategy to find powerful not-too-libertatian conservative who truly beleives in this who also understands and has clout with the religious right
 - is DAD "family planning", like birth control / abortion? should it associate with that? probably not if we can help it
 - maybe contact this guy. Does a lot of novel social work seemingly [Andrew](https://twitter.com/__drewface)
+- [tips on public speaking](https://twitter.com/SahilBloom/status/1520391055878901761?t=3zjrKSm6BQIh-5xCwKS1xw&s=03)
 
 Links:
 - voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
@@ -152,9 +198,15 @@ Links:
 - [She provided kits to people who wanted the option to die peacefully](https://www.hemlocksocietysandiego.org/a-tribute-to-sharlotte-hydorn/)
 - [Final Exit (more direct support compared to Death with Dignity)](https://finalexitnetwork.org/)
 - [Supplemental VSED for for your Advanced Directive for Dementia Care (this would be good to include in addition to other legal paperwork, in the case the bill doesn't get passed)](https://finalexitnetwork.org/wp-content/uploads/2021/03/SADD-6-3-2020.pdf)
+- book called "Still Alice" I think about dementia
+- maybe good group to talk about project with: [group of novel projects and the people working on them](https://helena.org/)
+- [end-of-life doula](https://www.consciousdyinginstitute.com/faq)
+- [legal euthanasia in Columbia of man with non-terminal illness](https://www.cnn.com/2022/01/09/americas/colombia-eut    hanasia-intl/index.html)
+
 
 Links to read:
 https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/
 https://deathwithdignity.org/learn/alzheimers-dementia-directive/
 https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf
+
 
