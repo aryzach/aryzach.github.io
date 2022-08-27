@@ -51,6 +51,8 @@ o__ `._.-'''''    //
 
 		<script>
 
+    // hey casey, first, I'm sorry this is messy and really not the right way to do things, so it might not great to understand. 
+
 				const url = 'https://mdocweb.state.mi.us/otis2/otis2.aspx'
 				const urlWithCorsProxy = `https://cors-anywhere.herokuapp.com/${url}`
 				const req_headers = {
@@ -80,11 +82,15 @@ o__ `._.-'''''    //
 				const myForm = document.getElementById("myForm");
 				const csvFile = document.getElementById("csvFile");
 
+        // from what I remember, this is like the 'main' function. Once you upload a CSV, you click 'Submit', then all this suff happens, which I'll comment below
 				myForm.addEventListener("submit", function (e) {
+
+            // preventDefault just prevents Javascript from calling what it normally does when Submit it clicked
 						e.preventDefault();
 						const input = csvFile.files[0];
 						const reader = new FileReader();
 
+            // most of this function parses the CSV file to get the data you need, and all of this should and has been working fine. 
 						reader.onload = function (e) {
 								const text = e.target.result;
 								const data = csvToArray(text);
