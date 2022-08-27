@@ -160,6 +160,15 @@ Need to keep in mind to avoid burnout: I kinda got addicted to setting goals and
 
 General thought: I've been so focused on writing and finishing this (my only relation with the project). I'm going to have to change mindset and priorities once I start moving forward on this project. This is obvious, but just wanted to writing it down to make it clear, and remind myself
 
+General though from email: Tbh I send I'm looking for a little bit of Glory in this Pursuit respond but maybe I should be cautious and try to contain that because it's a bad look and also probably antithetical to the goal
+
+#### States vs federal first?
+- Target states or fed,first? This Will help guide strategy and where to put resources. Only CA or Oregon first? Or all,over US evenly w time? Death w dignity amd,marijuana did state by state. Find out why they took this approach. Was it natural grassroots or intentional strategy? Find out what they wish theyd done differently
+
+#### Can I learn to be more empathetic, especially as perceived by others? 
+- I think I am / can be empathetic, but I don't choose to practice it all the time / prioritize, and I think I'm generally not perceived as particularly emapthetic, which is totally ok
+- Can I train myself,to be more empathetic and develop that mindset like I did for engineering? Or is it just too dofferent of a skill that it cant be intentionally devolped quite the same? Or maybe I was wired to learn engineering more so than empathy
+
 ## Things to do - first steps:
 - get into acquired community. Learn culture, see where approriate to talk about this idea
 - obv post op ed, but also reach out to Death with Dignity group
@@ -186,6 +195,7 @@ General thought: I've been so focused on writing and finishing this (my only rel
 - is DAD "family planning", like birth control / abortion? should it associate with that? probably not if we can help it
 - maybe contact this guy. Does a lot of novel social work seemingly [Andrew](https://twitter.com/__drewface)
 - [tips on public speaking](https://twitter.com/SahilBloom/status/1520391055878901761?t=3zjrKSm6BQIh-5xCwKS1xw&s=03)
+- term "medical aid in dying". How / where should I use it. What does it mean compared to "assisted death" or "assisted dying"?
 
 Links:
 - voluntary stop eating and drinking, and procedures / laws enforcing this on caregivers, like if the patient doens't show interest in food, you can't encourage eating [Link](https://endoflifewa.org/news/alzheimers-patients-deserve-death-dignity/). Ideally, I'd like something more proactive and guarunteed. This is very late stage dementia, and no guaruntee that you'll show no interest in food. This is a very passive, but agreed upon approach
@@ -202,6 +212,10 @@ Links:
 - maybe good group to talk about project with: [group of novel projects and the people working on them](https://helena.org/)
 - [end-of-life doula](https://www.consciousdyinginstitute.com/faq)
 - [legal euthanasia in Columbia of man with non-terminal illness](https://www.cnn.com/2022/01/09/americas/colombia-eut    hanasia-intl/index.html)
+- [BBC documentary about assisted suicide of a millionare](https://www.ama-assn.org/delivering-care/ethics/physician-assisted-suicide)
+- ["Assisted suicide pod" in Swtzerland](https://old.reddit.com/r/TerrifyingAsFuck/comments/vi47ct/assisted_suicide_pod_approved_for_use_in/)
+- [some guys idea to stop the aging process, including dementia](https://www.youtube.com/watch?v=fX9P1xuIJGg)
+
 
 
 Links to read:
