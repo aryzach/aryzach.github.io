@@ -90,3 +90,16 @@ On what to work on:
 - working on a tractable tech breakthrough that will enable a lot more problems to be solved 
 - the assisted death isn't technical, but think it's an important improvement on our social fabric and better functioning society, which could lead to greater impact
 - however, innovating and building in tech is a multiplier, so has a lot of qualitative advantage over a non-tech pursuit. But I see a successful model for an assisted dying success. I like tech more than legal, social (from a scratch-an-itch point of view), and has those qualitive benefits, but who knows if I would find some tractable tech insight, orif I'd just end up working for somebody (also not terrible)
+
+
+Deep dive math / language / linguistics post:
+- do a deep dive research post on math and language / linguistics
+- study on linguistic group that couldn't understand some math, but maybe they could create math that we couldn't understand
+- whats the history and current state of this research? find ou
+
+Business idea: DIY medical lab / self-analysis
+- [DIY MRI brain scanner](https://news.ycombinator.com/item?id=30208083)
+
+Post on SBIRs, Daniel, current job, how to use the funding
+
+To read and maybe binge Gwern. Could be fun to do with somebody and make a post about it: https://www.gwern.net/fiction/Clippy#second
