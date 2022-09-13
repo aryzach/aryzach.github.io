@@ -19,7 +19,7 @@
 # Notes
 #### idea for first year or so:
 - partner with Final Exit (group that does direct support with VSED on AD and trying to make that enforcable by law)
-- this could be mutually beneficial
+  * this could be mutually beneficial
 - do free work (or donation-backed work) to educate people, get them the paperwork and other free resources from Final Exit / VSED
 - in addition to this Final Exit promotion work, the real goal of this part is to educate people on the assisted dying mission, get feedback, ask what they would want in a service, explain the proposed business model, etc
 - have own non-profit. Point is to keep low overhead, and not have the financial resources diluted toward other causes. I want people to be able to essentially decide where they want there donation going. Help with VSED or help with more risky venture of passing assisted dying law
@@ -28,11 +28,65 @@
 - start focusing on a small market and serve that market really well first (ie cater to early adopters). I'm not so sure what I think about this advice yet, but is peter thiel advice for for-profit start ups
 
 ## don't forget to find audio note in email with things to do for this
-1. different risks: business risk (will people want to pay for this and how much, what is the pricing model and what does the product look like at different stages. Second risk is product risk / delivery risk. This isn't like a normal startup where you have to prove immediate value, I think we could structure it in a way where we are providing immediate value, but it's harder because ultimately, the real value comes in 10 or 20 years when the bill is passed and their able to receive the full product value. But we can still provide valuable services even if they don't personally get to participate. It's a real risk that they have to know they are taking, that some people won't get the full product.
-2. different business models, different products at different price points at each stage. What does the business model look like in the first stage? Second stage? Third stage? And why for each stage? I think the first stage could be more dependant on donations, then get to a certain point where we disallow donations, or just make it necessarily anonymous
-3. If I were to play a role in this, what would the role be, and why? WOuld be somebody who is driving the process, knows what's nexts, knows how to transition into the next stages, and can structure the business model and where we're spending our time and money, and what the priorities are, and also learning about the legal process and getting technical on the legal system and learning the history of other movements and learning what it takes to pass a law and the process, and the laws around it, legal process, who you have to talk to, who you need connections with, because it's all beaurocratic formal systems. I don't think you can reinvent the wheel on the legal side. And really put the right people in place on the front-end customer facing side. Because I don't think I'm particularly emapthetic and don't think I come across as empathetic. And two I don't think I have the skillset or think I'm very good at having a lot of relationships, I think the customer-facing person and face of the company should be somebody who is particularly empathetic and has the capacity to have a lot of meaningful and productive and enriching experiences and relationships with a lot of people. I don't think I should be the one who's interacting with a lot of different customers on a regular basis. 
-4. write a shorter version of this. Idea synopsis that can be linked to the detail page.
-5. Going zero to one. What is the first step? First few steps? 6 months plan? Building a community. Finding people who are interested and connecting them with eachother. Taking with current Death w Dignity people. Finding other orgs and taking with them and learning more about it (other countries, too). I don't think this could be a full time thing initially. But what are the first steps to get the momentum going? I havent really thought what does the first day look like? What does the first week look like? First few months? How do you build a community? Is there any income initially? Do you take money from somebody? What are the implecations to taking money? Twisted Fields taught me how to have an idea and put it in place. What I didn't learn is long term execution, company building, and management, but I think this is a big hurdle, is taking an idea from zero to one and doing that first step successfully. Go from idea to early-stage execution.
+1. different risks
+  - business risk 
+    * will people want to pay for this and how much
+    * what is the pricing model and what does the product/pricing look like at different stages, especially early stages
+  - product risk / delivery risk
+    * This isn't like a normal startup / SaaS where you have to prove immediate value
+    * we could structure it in a way where we are providing immediate value, but it's harder because ultimately, the real value comes in 10 or 20 years when the bill is passed and their able to receive the full product value. But we can still provide valuable services even if they don't personally get to participate. It's a real risk that they have to know they are taking, that some people won't get the full product. This might not neccessarily be true, because a lot of value might come from 'hope'. Otherwise, we can still provide valueable services even if they can't receive the entire value. Part of this is just being part of the process towards a big goal
+2. different products / price points and business models at different stages of this
+  - What does the product/price combo and business model look like in the 
+    * first stage? 
+    * Second stage? 
+    * Third stage? 
+    * And why for each stage? 
+  - I think the first stage could be more dependant on donations, then get to a certain point where we disallow donations, or just make it necessarily anonymous
+  - first stage more dependent on donations until we get to a point where we can disallow donations (or make donations necessarily anonymous)
+
+3. If I were to play a role in this, what would the role be, and why? 
+  - driving the process
+  - knows what's next
+  - knows how to transition into the next stages
+  - can structure the business model 
+  - where we're spending our time and money
+  - what the priorities are
+  - learning about the legal process and getting technical on the legal system 
+  - learning the history of other movements 
+  - learning what it takes to pass a law, the process, and the laws around it
+    * legal process
+    * who you have to talk to
+    * who you need connections with, because it's all beaurocratic formal systems
+      - I don't think you can reinvent the wheel on the legal side
+  - put the right people in place on the front-end customer facing side
+    * I don't think I'm particularly emapthetic and don't think I come across as empathetic
+    * I don't think I have the skillset or think I'm very good at having a lot of relationships
+    * I think the customer-facing person and face of the company should be somebody who is particularly empathetic and has the capacity to have a lot of meaningful and productive and enriching experiences and relationships with a lot of people
+    * I don't think I should be the one who's interacting with a lot of different customers on a regular basis. 
+    * Somebody like Zoe would be a lot better at that
+    * obviously need to find this person from somebody I already know, or through working on this project and find somebody in the community who gets what this project is about, understand my thesis for their role, and we align
+
+4. write a shorter version of the op-ed. Idea synopsis that can be linked to the detail page.
+
+5. Going zero to one (not the product, but how do I set this project in motion in a way that keeps momentum)
+  - What is the first step? 
+  - First few steps to get momentum going? 
+    * what does the first day look like? 
+    * What does the first week look like? 
+    * First few months? 
+    * How do you build a community? 
+    * Is there any income initially? 
+    * Should we take money from somebody this early? 
+    * What are the implecations to taking money? 
+    * Twisted Fields taught me how to have an idea and put it in place. What I didn't learn is long term execution, company building, and management, but I think this is a big hurdle, is taking an idea from zero to one and doing that first step successfully. This is difference between ideas and results. Even if you're getting shitty results you need to be able to go from some idea to execution
+Go from idea to early-stage execution.
+  - 6 months plan? 
+    * Building a community
+    * Finding people who are interested and connecting them with eachother
+    * Taking with current Death w Dignity people
+    * Finding other orgs and taking with them and learning more about it (other countries, too)
+    * I don't think this could / should be a full time thing initially. (I'm thinking otherwise now because I was getting burnt out before, and need to have some social balance / enjoyable time away from work now)
+  
 
 Some other thoughts about building the culture and appropriate incentives:
 - somehow limit concentration of power. I don't have much experience with this, but I think there should still be strong leadership and representation
@@ -124,37 +178,6 @@ Another note from email (seems like voice dictation): I think I need to tame the
 
 This is a mission-driven organization. This is an explicitly non-political organization with a singular goal. Unsure if it would be good to draw the line and say never go to one party or use the help of one party if I think it would help us because it might alienate a lot of people and but maybe short-term be good for the cause long-term be bad for the cause. Or maybe it is okay to go that route externally but then in the organization try to make everybody understand that this is just a tool and that the organization is not aligning with a particular party
 
-
-### Notes from voice memo in email (I guess I already took these same notes, and they're in this file. I should coalese them)
-1. different risks
-  - business risk (will people want to pay for this and how much, what is the pricing model and early product look like and how to price it, esp in early stages, but also what does pricing / product model look like at different stages of this)
-  - product risk, delivery risk (not a SaaS where you need to show immediate value. We could structure in such a way to have more immediate value, but it's hard because ultimately 99% of the value will come in 10-20 years when it's passed and they can receive the full product value. This might not neccessarily be true, because a lot of value might come from 'hope'. Otherwise, we can still provide valueable services even if they can't receive the entire value. Part of this is just being part of the process towards a big goal)
-2. different products at different price points at different stages of this. So what does this product/price combo look like at each stage, and why?
-  - first stage more dependent on donations until we get to a point where we can disallow donations (or make donations necessarily anonymous)
-3. if I play a role in this, what is my role and why? (where I want to spend my time and why?)
-  - Me:
-    * driving the process
-    * knows what's next
-    * knows how to transition into next stages
-    * can stucture the business model
-    * where we're spending our time and money
-    * what the priorities are
-    * learing the legal process and getting technical on the legal system
-    * learning history of other similar movements
-    * learning what it takes to pass a law, and who you have to talk to / make connections with because it's a beurocratic, formal system (can't reinvent the wheel or do much different in the law-making process)
-    * generally backend and legal side
-  - Front-end / customer-facing:
-    * put right people in place on the front-end / customer-facing side because I'm not particularly empathetic and don't think I come across as empathetic, and I don't have the skillset or not really good at having a lot of relationships
-    * The front-end person / face of the company should be somebody who is empathetic and has the capacity to have meaningful, productive, enriching experiences and relationships with a lot of people because I don't think I should be the one who's interacting with a lot of different people on a regular basis. Somebody like Zoe would be a lot better at that
-    * obviously need to find this person from somebody I already know, or through working on this project and find somebody in the community who gets what this project is about, understand my thesis for their role, and we align
-4. write a shorter version of the 'op-ed' thing that can be linked to the long version
-5. going zero-to-one. Not as a product, but how do I set this project in motion in a way that keeps momentum
-  - what are the first few steps
-    * 6 month plan: building a community, finding people who are interested and want to talk, and connecting those people, talking w current death with dignity people, and other similar organizations, I don't think this could / should be a full-time thing initially (I'm thinking otherwise now because I was getting burnt out before, and need to have some social balance / enjoyable time away from work now)
-    * what does the first day look like? first week? first few months? 
-    * how do you build a community?
-    * is there any income? should we be taking money from anybody this early?
-    * this is largely what twisted fields taught me, having an idea and putting it in place. What I didn't learn was long-term execution and company building and management, but I think this is a big hurdle, taking an idea from just an idea and going from zero to one. This is difference between ideas and results. Even if you're getting shitty results you need to be able to go from some idea to execution
 
 Need to keep in mind to avoid burnout: I kinda got addicted to setting goals and working non-stop to acheive them. But my first big, self-imposed goal that I actually had to bend and work towards was getting an intership in school. But even then, I knew I had to do a discrete list of things, and I just did those and did them really well. But I didn't spend much of my other time working towards that goal tirelessly, and I wasn't even super confident I would get an internship, but the reason I wouldn't get an internship were kinda out of my control as long as I did the things on that discrete list well. I'd like to recreate that feeling inside myself, not be anxious, still acheive results, know what's outside of my control. Two issues here are 1. this is pre-money, so some anxiety about money (maybe this can be subdued by having contract work 1-2 days / week to keep me afloat) and 2. I've kinda internalized that more is under my control than I used to think, and I think I learned this part at Twisted Fields. I think I have much higher angency now. The unfortunate outcome of that is that I see more places I can have influence over the outcome and I seek those out and use them. But I think I can still do this in a calm, slow-burn type of way
 
