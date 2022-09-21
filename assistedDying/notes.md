@@ -7,17 +7,26 @@
 - [ ] Request a [Final Exit speaker](https://finalexitnetwork.org/resources/speakers-bureau/) and find a group for them to speak at
 	- [Noisebridge](https://www.noisebridge.net/wiki/Hosting_an_Event)
 	- some groiup of older people who would be interested
-- [ ] create clear narrative / elevator pitch
-	- current state in US
-		* current Death with Dignity
-		* VSED as unenforceable AD
-	- current state in other countries
-	- normally how a law like this gets passed
-	- my idea how to bootstrap it
+- [ ] rehearse for first meeting
+- [ ] add to main doc: how to align all parties (doctors, lawyers, customers, organization members, therapists, etc), and having quantitative markers for dementia (is this a thing already?)
 
 ----------------
 # Notes
-#### idea for first year or so:
+## Outline of first few meetings (but make it very conversational and not present-y)
+- intro of purpose
+- brief history
+	* current state in US
+		- current Death with Dignity
+		- VSED as unenforceable AD
+	* current state in other countries
+	* normally how a law like this gets passed
+- we'd like to crowd source ideas, but more so just start having some of these conversations and connect people (go to their place, but then also put on special events where people from anywhere can come)
+- actionable things they can do now within the current system (even if this project isn't successful, how can they take advantage of current laws and protect themselves with current mechanisms)
+- next steps (mostly just keep an ear out, and encourage them to talk to their friends, kids, community abou these issues)
+- while doing all this, try to record data / take notes so I can try to quantify what they're saying
+- don't talk about "my idea to bootstrap it", just be chill, start conversations, and let the people talk and have ideas, and guide those
+
+## idea for first year or so:
 - partner with Final Exit (group that does direct support with VSED on AD and trying to make that enforcable by law)
   * this could be mutually beneficial
 - do free work (or donation-backed work) to educate people, get them the paperwork and other free resources from Final Exit / VSED
@@ -27,7 +36,24 @@
 - alternatively, might be better to just join Final Exit. But that is like having the idea and confidence to build a fully electric car, but instead joining GM, building a hybrid with the idea of eventually just building an electric. If you know you can build an electric, just do that 
 - start focusing on a small market and serve that market really well first (ie cater to early adopters). I'm not so sure what I think about this advice yet, but is peter thiel advice for for-profit start ups
 
-## don't forget to find audio note in email with things to do for this
+## Things to do - first steps:
+- get into acquired community. Learn culture, see where approriate to talk about this idea
+- obv post op ed, but also reach out to Death with Dignity group
+- really get to know histories of:
+	- assisted dying
+	- death with dignity, both organization and timeline of how the law was passed
+	- history of one of the most recent biggest movements - legalization of marijuana
+- basics of how a law like this would be passed. I'm so ignorant of the legal process here
+	- whats the general process
+	- main hurdles for this type of law
+	- costs?
+- talk on twitter about these ideas? both current death with dignity law and future of law for people with severe dementia?
+- reddit groups
+- talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves
+- Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service
+
+
+## From audio note in phone
 1. different risks
   - business risk 
     * will people want to pay for this and how much
@@ -43,7 +69,6 @@
     * And why for each stage? 
   - I think the first stage could be more dependant on donations, then get to a certain point where we disallow donations, or just make it necessarily anonymous
   - first stage more dependent on donations until we get to a point where we can disallow donations (or make donations necessarily anonymous)
-
 3. If I were to play a role in this, what would the role be, and why? 
   - driving the process
   - knows what's next
@@ -65,9 +90,7 @@
     * I don't think I should be the one who's interacting with a lot of different customers on a regular basis. 
     * Somebody like Zoe would be a lot better at that
     * obviously need to find this person from somebody I already know, or through working on this project and find somebody in the community who gets what this project is about, understand my thesis for their role, and we align
-
 4. write a shorter version of the op-ed. Idea synopsis that can be linked to the detail page.
-
 5. Going zero to one (not the product, but how do I set this project in motion in a way that keeps momentum)
   - What is the first step? 
   - First few steps to get momentum going? 
@@ -88,7 +111,7 @@ Go from idea to early-stage execution.
     * I don't think this could / should be a full time thing initially. (I'm thinking otherwise now because I was getting burnt out before, and need to have some social balance / enjoyable time away from work now)
   
 
-Some other thoughts about building the culture and appropriate incentives:
+## Some other thoughts about building the culture and appropriate incentives:
 - somehow limit concentration of power. I don't have much experience with this, but I think there should still be strong leadership and representation
 - I think limiting the amount of money the org has can help with this (ie, very bootstrapped, no outside funding or "investments")
 - but not just an advocating org. Needs to be an org that actually provides services as if it were legal, with the intention that it's legal in 20 years. I think this will help align incentives
@@ -99,63 +122,40 @@ Some other thoughts about building the culture and appropriate incentives:
 - prohibit large donations, even if they're internal for many reasons (can sway mission / strategy, and pull focus towards those people even if unintended)
 - ex. bill gates might want to promote this (non-monetary). Think carefully about this. Maybe not terrible. There's no reason to 'fight' him, we're not competing and his interests may be mostly aligned, but maybe more important and might lead to better success if more grassroots. Also it might alienate people if it's really bill gates operating behind the scenes. But maybe not terrible to align either and maybe good at the right point, but timing is important. Need to have the harder demographics already on board I think prior to accepting secret society help from bill gates if it's to be successful
 
-Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
-
-
-This will also be a much bigger industry than the current scope of assisted dying.
-
-people who are possibly the closest to the issue in many ways (emotional, know people who are going through this)
-
-I'm thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.
-
-1. I think it's a huge underserved market. People say they want it but there'snot commonly known avenues to get there. Then it's too late and their kids have power of attorney and feel like they can't make that decision so they keep their miserable parent alive for 5-10k / month. I think it's a combination of a huge emotianal hurdle and it being a difficult situation when others have some say in the decision (siblings, spouce).
-
-2. All baby boomers will be there in 10-30 years and will be a resource sink and toll on all younger generations and economy.
-
-I think people want it so it's really just creating the vehicles to make it possible and accessible, some reframing, and education.
-
-
-Premices is that there aren't commonly know avenues for DAS. We don't have the culture around it. "When you're 60 you make a will or succession plan", but there's not a culture around talking about what happens when you get dementia or when your life sucks and your kids have power of attorney.
-
-Education
-Creating vehicles
-Put somethingin place before they can't do anything. Meaning somebody else has POA, they can't make decisions for themselves. Or even if nobody else has POA, they probably don't have the skills / energy / agency anymore to do the planning. If it's not in their face, even if they say they want it, it's very likely it's not prioritized, then 10 years pass and they start declining and nothing actionable has happened since.
-
-We could make it a common thing to talk about, what happens in 20 or 30 years when you're in that position. People know if they want to be buried or cremated or body donated to science. People know where they want their money going and where they want their money spend, and what kind of funural they want. 
-
-The hardest technical challange and maybe social challange might be where to draw the line. I think the solution is to have better quantitative metrics on state of dementia and quality of life.
-
-Maybe we do have quantitative tools to measure severity of alztimers or degree of pain, but as far as I know they're still qualitative and subjective. 
-
-Need to develop quantitative markers.
-
-So you can say "when I reach level 7 it's time for DAC"
-
-And even if those measures are somewhat subjective, say you set your marker at 7 and doctors later can't decide if you're a 6 or 7 or 8, even though that is a slight problem and would cause some years of messiness, eventually all the doctors, even the most conservative ones, will agree that you're a 7 (or above), then you can do DAC and you don't have to wait til level 10 like we do now.
-
-Another challange will be incentive aligning. Doctors, children, lawyers, (this non-profit organization idea). Financial and emotional (mostly financial)
-
-Other reason for this is baby boomers in 10 - 30 years will all be here. Nursing homes suck. Lots of people don't want their parents living with them when their old and sick. Can also be thought of as a way to avoid predatory nursing homes. All the other options are bad. There are no good options here, and maybe this could look like the better of the options in everybodies eyes. It's gonna be a huge economic and emotional burden on younger generations and economy. 
-
-Don't know how to pursue this. Where my energy should go. What first steps are. 
-Step 1: Does anything like this exist or has it existed in the past and if so what does it look like, and what is it missing. Because if it does exist, it's clearly missing something because the culture and mindset around this is not where lots of people think it should be. Or they just aren't doing it enought. With baby boomers, if there's a time to be thinking about it, it's not and in the next 10 - 30 years.
-
-This topic is sensitive, and for good cause. I think the general consensus in the US is that we know that some people with severe dementia don't want to keep living, either because they've expressed it before or because they express it at the time, but we don't have general consensus that we should allow them to die. Fulfilling the wishes of those with severe dementia will require a general mindset shift.
-
-Additionally, 
-Because of how sensitive the issue is, and because we're dealing with peoples lives 
-
-Dementia-related health costs about $600 billion in US (I think, look this up again)
-
-Main value areas:
-- Raising awareness through advocacy and education
-- Creating the legal and business pathways 
-- Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
-- Could have a support group for people. Or just a community of people who are planning DAS
-- Making family part of the planning process
-- Creating a clear roadmap for people, and helping them / reminding them along the way:
-- Maybe the service or value add could be fostering a community, teaching people how to talk about it, make it acceptable and common practice. Then move to the Dutch model like the story way below. So that it's accepted and common for people even with early stage dementia to choose assisted death
-- Also, I think just putting this product and process in front of people, and getting them, if they want to, to be proactive and fill out the paperwork prior to it becoming an issue, is a huge value add, maybe the biggest. Because I think a lot of people want this, but because there isn't a clear path, it often doesn't end up happening. Currently, you have to be extremely proactive to do it - generally meaning planning to go to Switzerland
+## Original thoughts
+- Current access to assisted dying is limited in the type of people it addresses. Assisted dying should be an option for all in end-of-life planning. 
+- This will also be a much bigger industry than the current scope of assisted dying.
+- people who are possibly the closest to the issue in many ways (emotional, know people who are going through this)
+- I'm thinking about a non-profit that does education around doc assisted suicide and also helps with elderly planning for people who are interested in doc assistedsuicide if they end up meeting certain criteria later in life. Like dementia or debilitating pain or major decline in quality of life.
+  1. I think it's a huge underserved market. People say they want it but there'snot commonly known avenues to get there. Then it's too late and their kids have power of attorney and feel like they can't make that decision so they keep their miserable parent alive for 5-10k / month. I think it's a combination of a huge emotianal hurdle and it being a difficult situation when others have some say in the decision (siblings, spouce).
+  2. All baby boomers will be there in 10-30 years and will be a resource sink and toll on all younger generations and economy.
+- I think people want it so it's really just creating the vehicles to make it possible and accessible, some reframing, and education.
+- Premices is that there aren't commonly know avenues for DAS. We don't have the culture around it. "When you're 60 you make a will or succession plan", but there's not a culture around talking about what happens when you get dementia or when your life sucks and your kids have power of attorney.
+- Education
+- Creating vehicles
+- Put somethingin place before they can't do anything. Meaning somebody else has POA, they can't make decisions for themselves. Or even if nobody else has POA, they probably don't have the skills / energy / agency anymore to do the planning. If it's not in their face, even if they say they want it, it's very likely it's not prioritized, then 10 years pass and they start declining and nothing actionable has happened since.
+- We could make it a common thing to talk about, what happens in 20 or 30 years when you're in that position. People know if they want to be buried or cremated or body donated to science. People know where they want their money going and where they want their money spend, and what kind of funural they want. 
+- The hardest technical challange and maybe social challange might be where to draw the line. I think the solution is to have better quantitative metrics on state of dementia and quality of life.
+- Maybe we do have quantitative tools to measure severity of alztimers or degree of pain, but as far as I know they're still qualitative and subjective. 
+- Need to develop quantitative markers.
+- So you can say "when I reach level 7 it's time for DAC"
+- And even if those measures are somewhat subjective, say you set your marker at 7 and doctors later can't decide if you're a 6 or 7 or 8, even though that is a slight problem and would cause some years of messiness, eventually all the doctors, even the most conservative ones, will agree that you're a 7 (or above), then you can do DAC and you don't have to wait til level 10 like we do now.
+- Another challange will be incentive aligning. Doctors, children, lawyers, (this non-profit organization idea). Financial and emotional (mostly financial)
+- Other reason for this is baby boomers in 10 - 30 years will all be here. Nursing homes suck. Lots of people don't want their parents living with them when their old and sick. Can also be thought of as a way to avoid predatory nursing homes. All the other options are bad. There are no good options here, and maybe this could look like the better of the options in everybodies eyes. It's gonna be a huge economic and emotional burden on younger generations and economy. 
+- Don't know how to pursue this. Where my energy should go. What first steps are. 
+- Step 1: Does anything like this exist or has it existed in the past and if so what does it look like, and what is it missing. Because if it does exist, it's clearly missing something because the culture and mindset around this is not where lots of people think it should be. Or they just aren't doing it enought. With baby boomers, if there's a time to be thinking about it, it's not and in the next 10 - 30 years.
+- This topic is sensitive, and for good cause. I think the general consensus in the US is that we know that some people with severe dementia don't want to keep living, either because they've expressed it before or because they express it at the time, but we don't have general consensus that we should allow them to die. Fulfilling the wishes of those with severe dementia will require a general mindset shift.
+- Additionally, Because of how sensitive the issue is, and because we're dealing with peoples lives 
+- Dementia-related health costs about $600 billion in US (I think, look this up again)
+- Main value areas:
+  * Raising awareness through advocacy and education
+  * Creating the legal and business pathways 
+  * Guiding people through the process both mentally and emotionally (they can void the plan at anytime)
+  * Could have a support group for people. Or just a community of people who are planning DAS
+  * Making family part of the planning process
+  * Creating a clear roadmap for people, and helping them / reminding them along the way:
+  * Maybe the service or value add could be fostering a community, teaching people how to talk about it, make it acceptable and common practice. Then move to the Dutch model like the story way below. So that it's accepted and common for people even with early stage dementia to choose assisted death
+  * Also, I think just putting this product and process in front of people, and getting them, if they want to, to be proactive and fill out the paperwork prior to it becoming an issue, is a huge value add, maybe the biggest. Because I think a lot of people want this, but because there isn't a clear path, it often doesn't end up happening. Currently, you have to be extremely proactive to do it - generally meaning planning to go to Switzerland
 
 ## I don't think this has to be as intensive as I'm making it out to be!!! Maybe just a simple service that says pay us $300 and we'll get you the right paperwork and tell you where to submit it. Or just like "here's a club, this is what we do. We want to help you. Here's the cost of the service and what you should do right now if you want this to be a real thing". Maybe goal is to expand advanced directive to be proactive ("give me death drugs"), which was the original goal. Or follow the Dutch model of making available super soon, like right after dementia diagnosis
 
@@ -192,24 +192,6 @@ General though from email: Tbh I send I'm looking for a little bit of Glory in t
 - I think I am / can be empathetic, but I don't choose to practice it all the time / prioritize, and I think I'm generally not perceived as particularly emapthetic, which is totally ok
 - Can I train myself,to be more empathetic and develop that mindset like I did for engineering? Or is it just too dofferent of a skill that it cant be intentionally devolped quite the same? Or maybe I was wired to learn engineering more so than empathy
 
-## Things to do - first steps:
-- get into acquired community. Learn culture, see where approriate to talk about this idea
-- obv post op ed, but also reach out to Death with Dignity group
-- really get to know histories of:
-	- assisted dying
-	- death with dignity, both organization and timeline of how the law was passed
-	- history of one of the most recent biggest movements - legalization of marijuana
-- basics of how a law like this would be passed. I'm so ignorant of the legal process here
-	- whats the general process
-	- main hurdles for this type of law
-	- costs?
-- talk on twitter about these ideas? both current death with dignity law and future of law for people with severe dementia?
-- reddit groups
-
-## First momentum steps:
-- talk to people. Related groups, business / legal people, and more importantly, old people who want this option for themselves
-- Once I know a lot and can talk about all areas of law, history, currest status, then come up with a first-iteration scope and plan of what a consultation would look like. Then talk with people for free at first both for their benefit, to practice, get feedback, and see what they would want as a service
-
 ## Media strategy
 - if chance to get in bed with a media group presents itself, be skeptical. Not because of their intentions (likely good / neutral), but because it might be polarizing / associated with one group. Could be damaging long term and make it very hard to avoid it being non-political / bi-partisan
 - might be hard to avoid being on a media platform, and might be limiting to not be. Might be better to work with conservatives because they might be the tougher sell, and if I can get their buy in, then it's probably game over. This needs to happen prior to ever associating with progressives
@@ -238,12 +220,8 @@ Links:
 - [BBC documentary about assisted suicide of a millionare](https://www.ama-assn.org/delivering-care/ethics/physician-assisted-suicide)
 - ["Assisted suicide pod" in Swtzerland](https://old.reddit.com/r/TerrifyingAsFuck/comments/vi47ct/assisted_suicide_pod_approved_for_use_in/)
 - [some guys idea to stop the aging process, including dementia](https://www.youtube.com/watch?v=fX9P1xuIJGg)
-
-
-
-Links to read:
-https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/
-https://deathwithdignity.org/learn/alzheimers-dementia-directive/
-https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf
+- [death dignity volunteer guest writer](https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/)
+- [alzheimers dementia directive](https://deathwithdignity.org/learn/alzheimers-dementia-directive/)
+- [end of life decision brochure](https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf)
 
 
