@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.2.10)  12 SEP 2022 15:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.2.10)  20 SEP 2022 16:23
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -707,6 +707,21 @@ Overfull \hbox (2.68794pt too wide) detected at line 12
  []\OT1/ppl/m/n/12 D--8
  []
 
+
+Overfull \hbox (2.68794pt too wide) detected at line 13
+ []\OT1/ppl/m/n/12 D--8
+ []
+
+
+Overfull \hbox (2.68794pt too wide) detected at line 14
+ []\OT1/ppl/m/n/12 D--8
+ []
+
+
+Overfull \hbox (2.68794pt too wide) detected at line 15
+ []\OT1/ppl/m/n/12 D--8
+ []
+
 )
 \tf@toc=\write4
 \openout4 = `doc.toc'.
@@ -714,16 +729,16 @@ Overfull \hbox (2.68794pt too wide) detected at line 12
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 94--96
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
 
  []
 
-LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 1
-00.
+LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 9
+6.
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ppl.fd
 File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 120--122
+Underfull \hbox (badness 10000) in paragraph at lines 116--118
 
  []
 
@@ -739,11 +754,11 @@ Here is how much of TeX's memory you used:
  31950 multiletter control sequences out of 15000+600000
  543356 words of font info for 51 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 52i,12n,83p,1019b,264s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 52i,12n,83p,1019b,262s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.
 enc}</usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb>
-Output written on build//doc.pdf (10 pages, 63130 bytes).
+Output written on build//doc.pdf (10 pages, 62974 bytes).
 PDF statistics:
  73 PDF objects out of 1000 (max. 8388607)
  42 compressed objects within 1 object stream
