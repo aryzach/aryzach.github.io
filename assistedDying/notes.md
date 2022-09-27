@@ -224,4 +224,5 @@ Links:
 - [alzheimers dementia directive](https://deathwithdignity.org/learn/alzheimers-dementia-directive/)
 - [end of life decision brochure](https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf)
 
-
+People:
+- Leonard (Broaden Death, 80yo man, talked on phone in Traverse City airport for 1.5 hours)- 831-657-9737
