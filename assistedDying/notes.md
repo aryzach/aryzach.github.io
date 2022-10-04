@@ -12,6 +12,18 @@
 
 ----------------
 # Notes
+## Education material outline shortlist
+- history of death practices across cultures
+  * answer question: is what we do now unprecedented (let people live for longer than they want to)?
+  * how we got to current state (heath care improvements, money, shifting attitude towards death)
+- current state of law in CA, US, and all other countries
+- what you can do right now to best prepare for yourself or help get other prepared (legal systems currently in place that you can take advantage of)
+  * voluntary stop eating / drinking, advanced directive, go to Switzerland, etc
+  * inform Death w/ Dignity law and Oregon won't help with dementia cases
+- main takeaway I want people to get. If they've heard somebody (esp seniors) in their life talk about not wanting to live w dementia, talk w/ them, share this info, and direct them to something, whatever is appropriate (can reach out to me)
+- future work to expand end of life options
+  * End-of-life options act (broaden choices), incremental improvements from Compassion and Choices / Death w/ Dignity, thoughts on needing to build a legal structure that necessitates steps needed to take prior to having dementia
+
 ## Outline of first few meetings (but make it very conversational and not present-y)
 - intro of purpose
 - brief history
@@ -174,6 +186,12 @@ Informal survey: When talking with people, takes notes of what they're saying an
 
 Random note from email: For dementia could just volunteer and get talks about Outreach and educate on current options for people help them get a set up take donations. Talking about some ideas but focus on what they can do currently to protect them in the future and give them homework on what they can be thinking about and I'll follow up once they have thought about what I want them to think about. Payment model for dementia be explicit about costs plan my ideal income is on top of the cost. Just be transparent about where the money is going and what all this is costing me
 
+Notes on dementia trend: A recent update to the Alzheimer’s Disease and Related Dementias 
+Facts and Figures in California: Current status and Future Projections report 
+showed the number of people living with dementia will more than double from 
+991,263 estimated in 2019 to over 2.1 million in 2040. One in five Californians over 
+the age of 65 will develop dementia.   
+
 Another note from email (seems like voice dictation): I think I need to tame the idea down a little tame the confidence down and tame like how structured and rigid this ideas and poses idea as some like loose maybe ideas of how this could work and instead of shoving my idea Don people's throats go out and just listen to people and what they have to say and get feedback about the idea and this will one focus on growing connections building connections with people that wishing relationships and to dislike really and not jump into it and really try to you know get a sense of what people think we're their current status is on this stuff and I think I have to do this before doing iPad or the opposite should just be a much softer article and a much softer and more fluid and Ivana convey that you know I'm open-minded about what this could be and what it looks like and is it a good idea is it a bad idea I don't want to go into it assuming that I know that it's a great idea I want to go into it and percent that I think it's possibly good idea and potentially bad way but then the end goal of this is not to have a business the end goal is to make this available to people and so I can't be too gung-ho and stuck on feeling like the end goal is this idea to get us to the business then this is just one idea to get us to the end goal and there might be other ideas that are better or more valid in this is just one idea that I think could be a good idea to get us there but there might be other methods to that are fruitful
 
 This is a mission-driven organization. This is an explicitly non-political organization with a singular goal. Unsure if it would be good to draw the line and say never go to one party or use the help of one party if I think it would help us because it might alienate a lot of people and but maybe short-term be good for the cause long-term be bad for the cause. Or maybe it is okay to go that route externally but then in the organization try to make everybody understand that this is just a tool and that the organization is not aligning with a particular party
@@ -223,6 +241,10 @@ Links:
 - [death dignity volunteer guest writer](https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/)
 - [alzheimers dementia directive](https://deathwithdignity.org/learn/alzheimers-dementia-directive/)
 - [end of life decision brochure](https://www.alz.org/national/documents/brochure_endoflifedecisions.pdf)
+- [hemlock EOLOA](https://www.hemlocksocietysandiego.org/ca-end-of-life-option-act/)
+- [american clinicians MAiD](https://www.acamaid.org/)
+- [list of tons of resources](https://www.hemlocksocietysandiego.org/end-of-life-resources/)
+- [broaden choices, Marcia, Leonard](https://broadenchoice.org/)
 
 People:
 - Leonard (Broaden Death, 80yo man, talked on phone in Traverse City airport for 1.5 hours)- 831-657-9737
