@@ -11,6 +11,7 @@ I first saw [this custom SSH server / shell project for a group called Hack Club
 The Hack Club project is written in Go. I'm deciding to implement the base of my project in Haskell because I see the advantages, and I'd like to get better and become more productive working in a language like this.
 
 ### Prior to starting this journal
+<<<<<<< HEAD
 The hackclub project uses a library to help with the ssh server part. So far, I've found a similar Haskell library to use for this. The current [release on Hackage](https://hackage.haskell.org/package/hssh) wasn't quite working how I expected, but the latest commit on the Github repo has working examples that I was able to get running locally. To import it into my project, I had to make a few changes, so I [forked and made changes here](https://github.com/aryzach/hssh). I'm unsure why I could compile and run the latest source Stack executables locally, but when importing to my own projects, I got type errors. I've since figured out how to serve an ssh session. So now, when the client opens the SSH session, I have access to a stream of their input in bytes, and can send bytes to the client by writing to the output stream. Now it's time to decided what to do!
 
 (I've also put up an AWS instance, expose the right ports, buy a domain name, and make DNS point to my AWS IP)
@@ -18,11 +19,21 @@ The hackclub project uses a library to help with the ssh server part. So far, I'
 ### Structure of post:
 1. Design decision || Engineering decision
 2. Why this decision? Other alternatives?
+=======
+The hackclub project uses a library to help with the ssh server part. So far, I've found a similar Haskell library to use for this. The current [release on Hackage](https://hackage.haskell.org/package/hssh) wasn't quite working how I expected, but the latest commit on the Github repo has working examples that I was able to get running locally. To import it into my project, I had to make a few changes, so I [forked it here](https://github.com/aryzach/hssh). I'm unsure why I could compile and run the latest source Stack executables locally, but when importing to my own projects, I got type errors. I've since figured out how to serve an ssh session. So now, when the client opens the SSH session, I have access to a (stream / buffer) of their input (in bytes?), and can send them (bytes?). Now it's time to decided what to do!
+
+(I've also had to figure out how to: put up an AWS instance, expose the right ports, buy a domain name, and make DNS point to my AWS IP)
+
+### Structure of post:
+1. Design decision || Engineering decision
+2. Why? Other alternatives?
+>>>>>>> 33beb237b04a22235307d3d409d13356fd53f4d5
 3. Narrative / obstacles
 4. Reflections
 5. Next steps / TODO (maybe something that could be cleaner / more optimized but not most pressing)
 
 ### Engineering decision: Reproducable builds and deploys
+<<<<<<< HEAD
 
 Prior to deciding what I want this *MAGICAL SSH EXPERIENCE* to look like, I'm going to spend some time creating a simple CI/CD pipeline. It'll just be a simple Dockerfile that both builds and runs the app. I'll also document some OS setup, if any, to expose the app publically. I've already started to do this, and am already running into issues where it's behaving differently in Docker than on the host machine.
 #### Why this decision?:
@@ -80,6 +91,11 @@ I'm unsure of how to work with Brick, and what the API is. I think getting a raw
 
 
 
+=======
+Prior to deciding what I want this **MAGICAL SSH EXPERIENCE** to look like, I'm going to spend some time creating a simple CI/CD pipeline. It'll just be a simple Dockerfile that both builds and runs the app. I'll also document some OS setup, if any, to expose the app publically. I've already started to do this, and am already running into issues where it's behaving differently in Docker than on the host machine.
+Why?:
+This is low hanging fruit, is generally a huge time saver, and I mostly know how to do it. It's become fairly standard part of my project setup process, especially for projects with dependencies.
+>>>>>>> 33beb237b04a22235307d3d409d13356fd53f4d5
 
 Design decision:
 
@@ -92,7 +108,10 @@ framework for others to create something similar
 games
 resume
 program so somebody can type something and it get's sent to me in an email or something
+<<<<<<< HEAD
 something with concurrency
+=======
+>>>>>>> 33beb237b04a22235307d3d409d13356fd53f4d5
 
 I'm writing it in Haskell because:
 1. I like it
@@ -103,12 +122,15 @@ I'm writing it in Haskell because:
 https://github.com/shazow/ssh-chat
 https://github.com/quackduck/devzat
 
+<<<<<<< HEAD
 terminal solutions:
 https://hackage.haskell.org/package/terminal
 tui solution:
 https://hackage.haskell.org/package/brick
 https://github.com/jtdaugherty/brick/blob/master/docs/samtay-tutorial.md
 
+=======
+>>>>>>> 33beb237b04a22235307d3d409d13356fd53f4d5
 remember to:
 pin client to limited protocols and cipher suites if possible
 sandbox with docker	

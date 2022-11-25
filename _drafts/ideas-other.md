@@ -68,3 +68,41 @@ hot take on mental health / therapists: I think there's a big supply gap for les
 
 What I wish I knew when learning CS / programming:
 Main areas: Domain (businness thing, science thing, but also often computer thing or protocol like how browswer works), engineering process for software (prototype, testing, writing code so people can read it, clean, find bugs easily), how a computer works generally (what happens when program runs (loaded to memory), what is file system), mathy-CS bits
+<<<<<<< HEAD
+=======
+
+People systems I've hacked:
+- community college in Chicago, wanted bus pass perks ($100 / month) and wanted to take calculus, but expensive and didn't need the credits. Took 1 credit music that I wanted to take anyway, got bus pass and card access to building and just audited calculus and took advantage of free tutors and office hours (professors were nice). Paid about $300 for $1000 value
+- Gym in Austin, told them I was thinking about grad school, and was super nice. They put my locker in the very nice profesor locker room with bigger locker, cleaner, less people. 
+- Caf in Austin, bulk up, do homework, takeout salad for dinner, all for $10 / day
+- MSU caf, they'd swipe your meal card to take off a credit. 9/10 times it wouldn't go through right away and the worker would give you back the card before they got the card-denied error. If you walked away with some brisk before that error, they generally wouldn't care enough to ask you to reswipe
+
+Addition / response to this: https://aella.substack.com/p/side-effects-of-preferred-pronouns
+- I've had this same feeling but not as lucid / didn't put it into words
+- think it's brilliant
+- my caveat: lots of things like this are imperfect solutions to solve a problem and that's ok / just a transition period that might not be at equillibreum for 1 - 3 generations. Like maybe we all have to agree to "fake it" for our life times, but our kids generation will think it's much more normal, in part due to use tolerating the imperfect transition and 'faking it'. Maybe it's just what's necessary right now, so that in 100 years we get to a point where they look back on the article and say 'faking what? ohh people thought gender meant born sex' or whatever, I don't know the right language to be precise
+
+How I'd like to try to become even more teachable in the right settings and even more agreeable in some settings
+- this isn't really a blog post though, just a thought
+
+On what to work on:
+- ideally a tractable technical problem
+- this could be solving a new problem with current tech
+- solving a new problem with current tech and what is enabled by new tech
+- working on a tractable tech breakthrough that will enable a lot more problems to be solved 
+- the assisted death isn't technical, but think it's an important improvement on our social fabric and better functioning society, which could lead to greater impact
+- however, innovating and building in tech is a multiplier, so has a lot of qualitative advantage over a non-tech pursuit. But I see a successful model for an assisted dying success. I like tech more than legal, social (from a scratch-an-itch point of view), and has those qualitive benefits, but who knows if I would find some tractable tech insight, orif I'd just end up working for somebody (also not terrible)
+
+
+Deep dive math / language / linguistics post:
+- do a deep dive research post on math and language / linguistics
+- study on linguistic group that couldn't understand some math, but maybe they could create math that we couldn't understand
+- whats the history and current state of this research? find ou
+
+Business idea: DIY medical lab / self-analysis
+- [DIY MRI brain scanner](https://news.ycombinator.com/item?id=30208083)
+
+Post on SBIRs, Daniel, current job, how to use the funding
+
+To read and maybe binge Gwern. Could be fun to do with somebody and make a post about it: https://www.gwern.net/fiction/Clippy#second
+>>>>>>> 33beb237b04a22235307d3d409d13356fd53f4d5
