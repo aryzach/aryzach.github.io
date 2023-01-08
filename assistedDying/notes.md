@@ -1,7 +1,7 @@
 # TODO:
 - [ ] Death with Dignity Op-Ed
 	- [x] apply for [position](https://deathwithdignity.org/about/opportunities/volunteer-guest-writer/)
-	- [ ] submit
+	- [ ] submit (I was denied because not inline, they want testimonials I think)
 - [ ] Go to nursing home on Post and ask about hosting an event
 - [ ] Find other local nursing homes / groups of older people who would be interested in this
 - [ ] Request a [Final Exit speaker](https://finalexitnetwork.org/resources/speakers-bureau/) and find a group for them to speak at
@@ -244,7 +244,8 @@ Links:
 - [hemlock EOLOA](https://www.hemlocksocietysandiego.org/ca-end-of-life-option-act/)
 - [american clinicians MAiD](https://www.acamaid.org/)
 - [list of tons of resources](https://www.hemlocksocietysandiego.org/end-of-life-resources/)
-- [broaden choices, Marcia, Leonard](https://broadenchoice.org/)
+- [A Better Exit](https://abetterexit.org/) formerly [broaden choices, Marcia, Leonard](https://broadenchoice.org/)
 
 People:
 - Leonard (Broaden Death, 80yo man, talked on phone in Traverse City airport for 1.5 hours)- 831-657-9737
+- Marcia (friend of Leonard and A Better Exit, spoke to her while walking to Dogpatch)
