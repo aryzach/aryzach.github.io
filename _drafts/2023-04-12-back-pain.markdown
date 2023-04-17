@@ -1,0 +1,90 @@
+---
+layout: post
+title:  "Back Pain"
+date:   2023-04-12 11:47:25 -0700
+categories: health
+permalink: back-pain
+---
+# Research and analysis for what I should do about my back pain
+
+TODO: 
+- look into data about success/failure rates of difference approaches for different ages
+- look up famous people who've gotten it because their stories are explained more
+  * tiger woods
+
+## Diagnosis:
+- Stenosis
+- herniated disc
+
+## Options:
+
+### Epidural steroid injections:
+- One doctor says "80% of patients that get the injection can avoid surgery"
+
+#### Quotes from [source](https://paindoctor.com/faq-epidural-steroid-injections/)
+
+There are three major types of epidural steroid injections, which we’ll discuss in more detail below. They include:
+
+- Interlaminar epidural steroid injections
+- Transforaminal epidural steroid injections
+- Caudal epidural steroid injections
+
+It’s been suggested that doctors who always use fluoroscopy for a more accurate placement of the injection have higher rates of success.
+
+It’s important that if you decide to undergo this procedure that you work with a doctor who has extensive knowledge and practice in administering these injections.
+
+#### Adhesion removal
+
+Look into adhesions: Adhesions are typically formed due to inflammation and irritation in the epidural space. These adhesions can aggravate nearby nerve roots causing intense pain (Manchikanti 2007). Scar tissue can frequently result in irritated and inflamed nerves, which can cause pain that radiates from the low back into the legs.
+
+Maybe I just need to get those removed / treated
+
+From [reddit](https://www.reddit.com/r/AskOldPeople/comments/blhgtf/has_anyone_had_lower_back_surgery_how_did_that/):
+"Some people need lower back surgery.
+
+Other people don't, especially when they have a lot of ADHESION in their low back and psoas.
+
+Meet Natalie- her surgeons insisted on surgery. But she got 100% better after having us removed the glue from her muscles."
+
+#### Partial disectomy
+Fitting a prosthetic disc that will fuse to the vertebrae over a period of 6 months
+
+#### Spinal fusion
+- lose flexibility
+
+#### Lumbar Interbody Fusion (LIF) 
+- combines spinal fusion with an interbody device, such as a threaded cage.
+- three kinds: ALIF, PLIF, TLIF
+- Tiger Woods did ALIF
+- ALIF is an 'end-stage' procedure
+- ALIF provides 60-70% relief for low back and eliminates motion
+
+#### Dissectomy
+maybe means remove whole disc?
+
+#### Microdiscectomy
+shave some of the disc to create more room
+
+#### Prolotherapy
+"I had a spinal fusion of (I think) L5 S1 over 10 years ago, the operation made my back pain worse, 2 more surgery's over 2 more years later didn't help either, it wasn't to a few years later that I was recommended prolotherapy, which is basically sugar water epidural injections that got it almost back to normal, though it still gives me some grief every now and then, I basically have no flexibility in my lower back, the rest of my back has to compensate, it doesn't effect my mountain biking though, which is a bonus."
+
+Others speak very highly for prolotherapy for tendons / ligaments
+Some people says it's homeopathic "medicine"
+
+#### Artificial disc
+- some like it
+- might be better for C region though (instead of L / S where mine is)
+
+#### decompression surgery
+- One person said didn't work even after 1.5 year recovery, says get it while you're young
+
+#### laminectomy
+shave some of the bone off the nerve
+
+#### nerve medications
+
+#### Lumbar Radiofrequency Neurotomy
+- temporarily turn off their ability to send pain signals
+- last 6 months to 2 years
+- poor / mixed results on reddit
+- a few people said it worked, most said no change, some said made it worse
