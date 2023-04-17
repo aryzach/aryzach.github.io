@@ -12,14 +12,20 @@ TODO:
 - look up famous people who've gotten it because their stories are explained more
   * tiger woods
 
+## Personal data collection
+- MRI "countless articles on MRIs for back pain and understand that they show "issues" in most people, but these issues aren't always the reason for pain"
+
+
 ## Diagnosis:
 - Stenosis
 - herniated disc
+- when going to pain doc for epidural, they should get a good look at your posture, hips, range of motion, etc. You're paying for more than an injection usually, you should get an opinion especially with tests and films in hand.
 
 ## Options:
 
 ### Epidural steroid injections:
 - One doctor says "80% of patients that get the injection can avoid surgery"
+- need to fact check this: "steroid injections are toxic to cartilage and will actually make your injury worse"
 
 #### Quotes from [source](https://paindoctor.com/faq-epidural-steroid-injections/)
 
@@ -88,3 +94,6 @@ shave some of the bone off the nerve
 - last 6 months to 2 years
 - poor / mixed results on reddit
 - a few people said it worked, most said no change, some said made it worse
+
+#### PRP-Lysate injection
+- possible alternative to steroid injection
