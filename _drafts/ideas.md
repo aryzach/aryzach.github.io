@@ -103,3 +103,7 @@ Business idea: DIY medical lab / self-analysis
 Post on SBIRs, Daniel, current job, how to use the funding
 
 To read and maybe binge Gwern. Could be fun to do with somebody and make a post about it: https://www.gwern.net/fiction/Clippy#second
+
+Post idea: experience as Product and Project Manager
+Project: ATAK with Greg, TF house
+Product: Chicken coops, Acorn, Link16 bridge, smart irrigation, space debris
