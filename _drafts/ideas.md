@@ -107,3 +107,8 @@ To read and maybe binge Gwern. Could be fun to do with somebody and make a post 
 Post idea: experience as Product and Project Manager
 Project: ATAK with Greg, TF house
 Product: Chicken coops, Acorn, Link16 bridge, smart irrigation, space debris
+
+People management:
+- people need over five times more positive feedback than constructive feedback for higher performance
+- value-to-drama ratio
+
