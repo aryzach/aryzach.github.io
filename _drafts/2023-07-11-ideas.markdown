@@ -25,6 +25,7 @@ permalink: project-ideas
   * robotic service would lower cost, increase dependability of getting the job done (not relying as much on human labor), minimize human error when painting, and more easy to scale in parallel for a single job (allowing all jobs to be done in one night)
   * RTK GPS likely accurate enough for job (minimize expensive development cost of lidar / vision, and minimize sensor cost)
   * need to assess other unknowns (do the paint tubes get clogged often?, etc)
+  * the business proposition seems so clear (if nobody's done it before). It'd hardly starting be starting a robotics company. It'd be starting a service company. Other people have the book of business and I offer this as a service. Or I win over the business of everyone nationwide
 
 
 - Slip cover for kindle to signal what book you're reading
