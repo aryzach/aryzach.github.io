@@ -1,28 +1,28 @@
 ---
 layout: post
-title: My incredibly badass bitch dev environments with Docker
+title: Dev environments with Docker
 date: 2022-04-14T23:28:17-07:00
 categories: programming
-permalink: badass_bitch_dev_env_with_docker
+permalink: dev_envs_with_docker
 ---
 
 I've never liked IDEs, or graphical IDEs for a few reasons:
 - I've never really put in the time to learn them / reap the benefits
-- when starting programming, they were always a PITA to set up and learn for each new language I was using
-- I felt like they obsured a lot, made the dev environment and setup problems hard to debug
+- when learning how to code, they added friction when setting up a new environment for a different language
+- I felt like they obsured a lot, made the dev environment and setup problems harder to debug
 - relying on them made it harder to be productive in a new setting (different computer, server, etc)
 
 Also, I was sold on the idea of VIM fairly early on, bit the bullet to get over the learning curve, and it's really paid off.
 
-Now I'm discovering another reason that this, not using graphical IDEs, is paying off.
+Now I'm discovering another reason that not using graphical IDEs is paying off. 
 
-When getting started with a new language and ecosystem, it's proved to be annoying to download some tools with apt, then maybe you're downloading some more tools globally with npm. Then oh shit, I wasn't supposed to download that globally, or those were the tools they used for this project, but it was built in 2011 and nobody does it this way now, or they used different versions of the tool, so now this project isn't building, and now your computer is in a weird state that you don't quite understand what you installed. So you try to install the right things, undo some others, but it's really not clear what's happening. Once you get it all working, your computer is in a state you don't quite understand, with tools you probably don't need, and you couldn't easily reproduce your environment. 
+When getting started with a new language and ecosystem, it's proved to be annoying to download some tools with `apt`, then maybe you're downloading some more tools globally with npm. Then, whoops, I wasn't supposed to download that globally, or those were the tools they used for this project, but it was built in 2011 and nobody does it this way now, or they used different versions of the tool, so now this project isn't building, and now your computer is in a weird state that you don't quite understand what you installed. So you try to install the right things, undo some others, but it's really not clear what's happening. Once you get it all working, your computer is in a state you don't quite understand, with tools you probably don't need, and you couldn't easily reproduce your environment. 
 
 Also, now if you go to a different computer, you can't work on this project at all. I realize this is a somewhat rare case, having to have a dev environment on multiple computers for short periods of time, but this was the case for me. 
 
 I started co-opting Docker containers to host a full contained dev environment. Here's one for a Purescript project: 
 
-```purescript
+```bash
 FROM node:16.14.0-buster-slim
 
 RUN groupmod -g 1003 node && usermod -u 1003 -g 1003 node
@@ -80,7 +80,7 @@ CMD /bin/bash -i "/home/aryzach/.bashrc"
 # docker start -i -a usehedwig
 ```
 
-This is in the git repo. So on a new computer, I clone the repo, then run the docker commands at the bottom. I have the dev and language tools I need, without cluttering the host, fully reproducable, files can be edited from either host or within the container, and the only host dependancy is Docker. (So in this case, you could actually use a graphical IDE on the host. 
+This is in the git repo. So on a new computer, I clone the repo, then run the docker commands at the bottom. I have the dev and language tools I need, without cluttering the host, fully reproducable, files can be edited from either host or within the container, and the only host dependancy is Docker. (So in this case, you could actually use a graphical IDE on the host.)
 
 Here's another one for a Haskell project:
 

@@ -1,0 +1,133 @@
+---
+layout: post
+title:  "Project Ideas"
+date:   2023-07-11 11:47:25 -0700
+categories: tech
+permalink: project-ideas
+---
+
+# Some project ideas
+
+- RC boat that can wirelessly maintain proximity to an open water swimmer
+  * lake swimming can be dangerous and sometimes requires a lookout boat to keep the swimmer safe from other boats
+  * to swim alone, the primary method is for the swimmer to pull a small buoy. This is inconvenient for the swimmer and provides minimal protection
+  * tech options to maintain proximity
+    - GPS: receiver on swimmer and boat
+    - computer vision. Likely not much data needed because the scene is fairly static. Vision system could be adapted for other boats to use to warn against swimmers
+    - lidar likely not good option due to poor performance with water
+
+
+- Robot to autonomously navigate and paint lines in parking lot
+  * I was offered an opportunity to work and take over a small company that paints the lines in parking lots and some downtown parking areas
+  * while already very labor intensive (time consuming and very physical moving these machines), the best time to paint the lines is overnight when there are less cars in the parking lot, but when labor is more scarce. Some jobs demand many consecutive nights if limited labor supply 
+  * the labor factor combined with the semi-structured, semi-consistent, clean, predictable environment while performing a repetitive task was ripe for a robot
+  * very niche industry with lots of small (non-tech) companies make this a promising business venture
+  * robotic service would lower cost, increase dependability of getting the job done (not relying as much on human labor), minimize human error when painting, and more easy to scale in parallel for a single job (allowing all jobs to be done in one night)
+  * RTK GPS likely accurate enough for job (minimize expensive development cost of lidar / vision, and minimize sensor cost)
+  * need to assess other unknowns (do the paint tubes get clogged often?, etc)
+
+
+- Slip cover for kindle to signal what book you're reading
+  * could be paired w/ kindle purchase and sent to you for an extra dollar or two
+  * some people like to keep books on shelves as either decor or as little trophies, this could replace that
+
+
+- Match senior developers with RSI to junior developers (pair programming)to pair programmers 
+  * many senior devs have carpal tunnel / hand / wrist / eye problems 
+  * pair them with junior programmers so they can be their hands
+  * junior drives. Learning + productive + harm reducing
+
+
+- Create visual of Pacman's taurus-shaped world
+  * use the Python visual math package 'Manim'
+  * explain why pacmans world is a taurus and not a sphere
+
+
+- Write about my current understanding of cuircuits
+  * Power
+	  - ac
+	  - dc
+	  - uses and reasons for each (generation, storage, delivery, requirements of different circuits)
+  * Signal
+	  - passive (IRC)
+	  - active
+	  	* timer
+	  	* hysterisis
+	  	* e-stop
+	* cababilities of each with use case examples, or spec examples (ex. what can you do with "this" type of circuit? well you can make a time graph of voltage like "this" or time graph of current like "this")
+
+
+- Novel health insurance provider for businesses
+  * some businesses choose to self-insure for health insurance for their employees. This means the company directly covers cost without a third-party insurance provider
+  * in the book 'Price We Pay', there's an example where an employer who self-insures, gives incentive to employees for choosing the cheaper hospital options (but not less quality, supposedly?). The example was that delivering a baby costs $8000 - $40000 depending on hospital. If you chose $8000, then employer provides you a year worth of free diapers
+  * a company could be created to provide this as a service, where you do the research and setup the right incentives for the employees
+
+
+- write some more of my engineering stories
+  * techinal hurdles, changes in spec / learning more about the domain / pivoting, technical successes
+  * what I could've done differently
+
+
+- Reimplement ciechanow.ski in Purescript to get better as JS / PS and better understand the domain covered
+  * https://ciechanow.ski/gps/ 
+
+
+- de-skilled mental health workers / therapists / talk therapy
+  * I think there's a big supply gap for lesser-credentialed mental health professionals in the $30 - $70 / hour range. People could go through a one year masters program, and be "good enough". Lots of people could use / want a therapist, but it's just so expensive that it's inaccessible. I think it's the way it is because the barrier is high. So the cost is high because the therapist went through a lot of work to get there (so can demand high rates), and because it takes a lot of work to become a therapist, this keeps supply low, also adding to high cost. So much of therapy is somebody just actively listening and "caring." Maybe only 5% of the time is the actual theripist training mattering in what they say. While I think that 5% is what makes a high paid therapist super valuable, I still think that you could get a less good therapist for 25% of the cost that provides 50% - 90% of the value that a high paid therapist provides. Ideally, everybody who wants one has an excellent therapist. Say only 20% of people who want a therapist get one, but they get an excellent one. If this solution would allow the other 80% of people to get a therapist who is even 25% as good as a top therapist, we improve the therapist situation by 20%. 
+
+
+- write post on what I wish I knew when learning CS / programming:
+  * I dove into learning C, data structures, deeper CS, without learning how the web works (currently biggest domain where programming is applicable)
+  * Domain (business thing, science thing, but also often computer thing or protocol like how browser works)
+  * engineering process for software (prototype, testing, writing code so people can read it, clean, find bugs easily), how a computer works generally (what happens when program runs (loaded to memory), what is file system), mathy-CS bits
+
+
+- post on some people systems I've hacked
+  * community college in Chicago, wanted bus pass perks ($100 / month) and wanted to take calculus, but expensive and didn't need the credits. Took 1 credit music that I wanted to take anyway, got bus pass and card access to building and just audited calculus and took advantage of free tutors and office hours (professors were nice). Paid about $300 for $1000 value
+  * gym in Austin, told them I was thinking about grad school, and was super nice. They put my locker in the very nice profesor locker room with bigger locker, cleaner, less people
+  * cafeteria in Austin, bulk up, do homework, takeout salad for dinner, all for $10 / day
+
+
+- write thoughts about how I'd like to try to become even more teachable in the right settings and even more agreeable in some settings
+  * I don't tend to use 'agreeableness' as a tool. I just act on how agreeable I actually am. I think this has been useful sometimes, like when I'm learning something new and want to understand it deeply (I avoid glossing over details to appease the teacher), but has been a disservice in other circumstances, particularly when working on a team to acheive a goal. Sometimes it's ok to have a slightly degraded project outcome in exchange is that team morale is stronger going in to the next project
+
+
+- how to pick what to work on (for myself)
+  * ideally a tractable technical problem
+  * this could be solving a new problem with current tech
+  * solving a new problem with current tech and what is enabled by new tech
+  * working on a tractable tech breakthrough that will enable a lot more problems to be solved 
+  * the assisted death isn't technical, but think it's an important improvement on our social fabric and better functioning society, which could lead to greater impact
+  * however, innovating and building in tech is a multiplier, so has a lot of qualitative advantage over a non-tech pursuit. But I see a successful model for an assisted dying success. I like tech more than legal, social (from a scratch-an-itch point of view), and has those qualitive benefits, but who knows if I would find some tractable tech insight, orif I'd just end up working for somebody (also not terrible)
+
+
+- math and linguistics post
+  - do a deep dive research post on math and language / linguistics
+  - study on linguistic group (somewhere in Indonesia?) with a particular linguists that couldn't understand some math. Could they be wired to create math that we couldn't understand?
+  - whats the history and current state of this research? 
+
+
+- DIY medical lab to collect data, perform self-analysis
+  * cheaper access to medical imaging, measuring, data collecting equipment
+  * give raw data to client and allow them to keep all data and perform analysis
+  * [DIY MRI brain scanner](https://news.ycombinator.com/item?id=30208083)
+
+
+- Post on my experience with SBIRs
+  * Twisted Fields / Vecna / Daniel's approach
+  * IMX approach
+  * my assessment on how to best use SBIR funding to add value and create a successful business
+  * an SBIR shouldn't be the nexus of a business. The business should have solid fundamentals, business plan, etc. outside of the SBIR funding
+  * IMX relied way to heavily on SBIRs to prompt and validate a business plan, and wouldn't pursue the businesses they did if not for the SBIR award
+
+
+- post about Product / Project mananager experience
+  * I've thought a lot about my experience as an IC, but haven't reflected as much on my product and project manaagement experience
+  * project: ATAK with Greg, TF house
+  * product: Chicken coops, Acorn, Link16 bridge, smart irrigation, space debris, death / dementia, parking lot line painter
+
+
+- post on people management
+  * people need over five times more positive feedback than constructive feedback for higher performance
+  * value-to-drama ratio
+
