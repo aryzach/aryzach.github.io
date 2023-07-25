@@ -44,7 +44,7 @@ permalink: project-ideas
   * explain why pacmans world is a taurus and not a sphere
 
 
-- Write about my current understanding of cuircuits
+- Write about my current understanding of circuits
   * Power
 	  - ac
 	  - dc
@@ -132,3 +132,7 @@ permalink: project-ideas
   * people need over five times more positive feedback than constructive feedback for higher performance
   * value-to-drama ratio
 
+- NLP project that helps you become:
+  * a more confident speaker 
+  * better presenter
+  * slow down, take approriate pauses, pitch / intonation, cadence
