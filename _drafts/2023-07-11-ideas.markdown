@@ -136,3 +136,4 @@ permalink: project-ideas
   * a more confident speaker 
   * better presenter
   * slow down, take approriate pauses, pitch / intonation, cadence
+  * product called 'Poised' seems to do this
