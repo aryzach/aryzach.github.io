@@ -137,3 +137,15 @@ permalink: project-ideas
   * better presenter
   * slow down, take approriate pauses, pitch / intonation, cadence
   * product called 'Poised' seems to do this
+
+- what is tech
+  * 4x4 matrix of tech on one axis and business model innovation (BMI) on another axis
+  * another talking about what kind of tech (funding the scaling of something that already exists vs in-house R&D from scratch)
+  * something is primarily tech if the only reason company exists is because it formed on the basis of new tech and scaled it in a new way or developed it in house
+  * amazon store - neither: just moved online which gave massive operating leverage, later led to tech (scale backend web? and BMI w prime, etc)
+  * spacex - tech: either in-house R&D or scaled already existing self-landing
+  * openai - tech: scale transformers
+  * airbnb - BMI: C2C hospitality, very unlikely new tech
+  * FB - tech, but only secondarily, business not formed on the basis of new tech, just needed as it scaled
+  * Miro - neither: they've maybe created new frontend libraries, but really just an application with already existing tech, not even BMI, moreso just innovation in remote work and collaboration
+  * Snowflake / Databricks - tech: formed off Berkeley research Apache Spark
