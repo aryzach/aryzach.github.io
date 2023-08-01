@@ -149,3 +149,8 @@ permalink: project-ideas
   * FB - tech, but only secondarily, business not formed on the basis of new tech, just needed as it scaled
   * Miro - neither: they've maybe created new frontend libraries, but really just an application with already existing tech, not even BMI, moreso just innovation in remote work and collaboration
   * Snowflake / Databricks - tech: formed off Berkeley research Apache Spark
+
+- add deeper software engineering projects where I actually kinda innovated:
+  * physical clock vs logical clock - distributed drone messaging / one view of state: https://medium.com/distributed-knowledge/time-synchronization-in-distributed-systems-a21808928bc8
+  * MAC address code maintanence IoT devices
+  * design of Hey There and matching people / data structure to do that / LLMs
