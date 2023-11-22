@@ -1,9 +1,9 @@
 open:
-	xdg-open build/doc.pdf
+	open build/doc.pdf
 
 # live recompile, shell-escape needed for tikz diagrams
 live:
-	latexmk -shell-escape -pdf -pvc -output-directory=build/ doc.tex
+	latexmk -view=none -shell-escape -pdf -pvc -output-directory=build/ doc.tex
 
 # recursily remove all files (not dirs) in build/ 
 clean:
