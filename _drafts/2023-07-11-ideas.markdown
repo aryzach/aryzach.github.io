@@ -154,3 +154,5 @@ permalink: project-ideas
   * physical clock vs logical clock - distributed drone messaging / one view of state: https://medium.com/distributed-knowledge/time-synchronization-in-distributed-systems-a21808928bc8
   * MAC address code maintanence IoT devices
   * design of Hey There and matching people / data structure to do that / LLMs
+
+Tesla app to identify closest open street parking spot and how long ago it was known available. Data from teslas and other cars driving around and noting open street parking spots.
