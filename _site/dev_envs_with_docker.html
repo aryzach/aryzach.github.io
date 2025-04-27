@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dev environments with Docker</title>
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+  <body>
+    <nav class="home">
+  <a href="/" >
+    Home
+  </a>
+  <a href="/about.html" >
+    About
+  </a>
+  <a href="https://github.com/aryzach" rel="noreferrer noopener" target="_blank">
+    Github <i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+  <a href="https://calendly.com/aryzach/15min" rel="noreferrer noopener" target="_blank">
+    Calendly<i class="fa fa-external-link" style="font-size:12px"></i>
+  </a>
+</nav>
+
+    <h1 class=postTitle>Dev environments with Docker</h1>
+<p>14 Apr 2022 </p>
+
+<p>I’ve never liked IDEs, or graphical IDEs for a few reasons:</p>
+<ul>
+  <li>I’ve never really put in the time to learn them / reap the benefits</li>
+  <li>when learning how to code, they added friction when setting up a new environment for a different language</li>
+  <li>I felt like they obsured a lot, made the dev environment and setup problems harder to debug</li>
+  <li>relying on them made it harder to be productive in a new setting (different computer, server, etc)</li>
+</ul>
+
+<p>Also, I was sold on the idea of VIM fairly early on, bit the bullet to get over the learning curve, and it’s really paid off.</p>
+
+<p>Now I’m discovering another reason that not using graphical IDEs is paying off.</p>
+
+<p>When getting started with a new language and ecosystem, it’s proved to be annoying to download some tools with <code class="language-plaintext highlighter-rouge">apt</code>, then maybe you’re downloading some more tools globally with npm. Then, whoops, I wasn’t supposed to download that globally, or those were the tools they used for this project, but it was built in 2011 and nobody does it this way now, or they used different versions of the tool, so now this project isn’t building, and now your computer is in a weird state that you don’t quite understand what you installed. So you try to install the right things, undo some others, but it’s really not clear what’s happening. Once you get it all working, your computer is in a state you don’t quite understand, with tools you probably don’t need, and you couldn’t easily reproduce your environment.</p>
+
+<p>Also, now if you go to a different computer, you can’t work on this project at all. I realize this is a somewhat rare case, having to have a dev environment on multiple computers for short periods of time, but this was the case for me.</p>
+
+<p>I started co-opting Docker containers to host a full contained dev environment. Here’s one for a Purescript project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM node:16.14.0-buster-slim
+
+RUN groupmod <span class="nt">-g</span> 1003 node <span class="o">&amp;&amp;</span> usermod <span class="nt">-u</span> 1003 <span class="nt">-g</span> 1003 node
+
+<span class="c">#ENV PURESCRIPT_VERSION 0.13.6</span>
+ENV PURESCRIPT_VERSION 0.14.2
+ENV SPAGO_VERSION 0.20.7
+ENV TERSER_VERSION 5.11.0
+
+ARG <span class="nv">UNAME</span><span class="o">=</span>aryzach
+ARG <span class="nv">UID</span><span class="o">=</span>1001
+ARG <span class="nv">GID</span><span class="o">=</span>1001
+RUN groupadd <span class="nt">-g</span> <span class="nv">$GID</span> <span class="nt">-o</span> <span class="nv">$UNAME</span>
+RUN useradd <span class="nt">-m</span> <span class="nt">-u</span> <span class="nv">$UID</span> <span class="nt">-g</span> <span class="nv">$GID</span> <span class="nt">-o</span> <span class="nt">-s</span> /bin/bash <span class="nv">$UNAME</span>
+
+<span class="c"># packages for dev environment</span>
+RUN apt-get update 
+RUN apt-get <span class="nb">install</span> <span class="nt">-y</span> curl 
+RUN apt-get <span class="nb">install</span> <span class="nt">-y</span> <span class="nb">sudo
+</span>RUN apt-get <span class="nb">install</span> <span class="nt">-y</span> git
+RUN apt <span class="nb">install</span> <span class="nt">-y</span> tmux
+RUN apt <span class="nb">install</span> <span class="nt">-y</span> vim
+
+<span class="c"># for purescript</span>
+RUN apt update <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> apt <span class="nb">install</span> <span class="nt">-y</span> git libtinfo5 
+
+
+<span class="c">#USER aryzach </span>
+RUN npm <span class="nb">install</span> <span class="nt">-g</span> purescript@<span class="nv">$PURESCRIPT_VERSION</span> <span class="nt">--unsafe-perm</span> <span class="se">\</span>
+		<span class="o">&amp;&amp;</span> npm <span class="nb">install</span> <span class="nt">-g</span> pulp bower <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> npm <span class="nb">install</span> <span class="nt">-g</span> spago@<span class="nv">$SPAGO_VERSION</span> <span class="nt">--unsafe-perm</span> <span class="se">\</span>
+    <span class="c">#&amp;&amp; npm install -g terser@$TERSER_VERSION \</span>
+    <span class="c"># smoke tests</span>
+    <span class="o">&amp;&amp;</span> purs <span class="nt">--version</span> <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> spago <span class="nt">--version</span> 
+    <span class="c">#&amp;&amp; terser --version</span>
+
+RUN npm <span class="nb">install</span> <span class="nt">-g</span> http-server
+RUN npm <span class="nb">install</span> <span class="nt">-g</span> purs-tidy
+
+<span class="c"># setup env</span>
+USER aryzach
+WORKDIR /home/aryzach/
+RUN git clone https://github.com/aryzach/dotfiles.git
+WORKDIR /home/aryzach/dotfiles
+RUN /home/aryzach/dotfiles/setup.sh
+WORKDIR /home/aryzach/
+CMD /bin/bash <span class="nt">-i</span> <span class="s2">"/home/aryzach/.bashrc"</span>
+
+
+
+<span class="c"># docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t usehedwig .</span>
+<span class="c"># docker run --net=host -itv `pwd`:/home/aryzach/useHedwig usehedwig /bin/bash</span>
+<span class="c"># docker start -i -a usehedwig</span>
+</code></pre></div></div>
+
+<p>This is in the git repo. So on a new computer, I clone the repo, then run the docker commands at the bottom. I have the dev and language tools I need, without cluttering the host, fully reproducable, files can be edited from either host or within the container, and the only host dependancy is Docker. (So in this case, you could actually use a graphical IDE on the host.)</p>
+
+<p>Here’s another one for a Haskell project:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">#</span> <span class="n">dockerfile</span> <span class="n">for</span> <span class="n">dev</span> <span class="n">environment</span>
+<span class="kt">FROM</span> <span class="n">ubuntu</span><span class="o">:</span><span class="mf">20.04</span>
+
+<span class="kt">USER</span> <span class="n">root</span>
+<span class="kt">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> 
+<span class="kt">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">curl</span> 
+<span class="kt">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">sudo</span>
+<span class="kt">RUN</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">git</span>
+<span class="kt">RUN</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">tmux</span>
+<span class="kt">RUN</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">vim</span>
+
+<span class="kt">WORKDIR</span> <span class="o">/</span><span class="n">root</span><span class="o">/</span>
+
+<span class="kt">RUN</span> <span class="n">curl</span> <span class="o">-</span><span class="n">sSL</span> <span class="n">https</span><span class="o">://</span><span class="n">get</span><span class="o">.</span><span class="n">haskellstack</span><span class="o">.</span><span class="n">org</span><span class="o">/</span> <span class="o">|</span> <span class="n">sh</span>
+
+
+<span class="kt">RUN</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="o">://</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">aryzach</span><span class="o">/</span><span class="n">dotfiles</span><span class="o">.</span><span class="n">git</span>
+<span class="kt">RUN</span> <span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="n">dotfiles</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">sh</span>
+
+
+<span class="kt">ADD</span> <span class="o">.</span> <span class="o">.</span>
+
+<span class="o">#</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">ssh</span><span class="o">-</span><span class="n">img</span> <span class="o">.</span>
+<span class="o">#</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">p</span> <span class="mi">2024</span><span class="o">:</span><span class="mi">2024</span> <span class="o">-</span><span class="n">d</span> <span class="n">ssh</span> <span class="o">-</span><span class="n">it</span> <span class="n">ssh</span><span class="o">-</span><span class="n">img</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
+<span class="o">#</span> <span class="n">docker</span> <span class="n">start</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">a</span> <span class="n">ssh</span>
+</code></pre></div></div>
+
+<p>Anyway, it’s been a really fun way to learn to set up a new dev environment and make it reproducible without joshin around too much on your host computer. Thanks for reading!</p>
+
+
+
+
+  </body>
+</html>
+<script>
+
+		// to remove space around images (bc they were wrapped with a <p> tag which adds padding/margin
+		const allPTags = document.querySelectorAll("p");
+
+		allPTags.forEach((elem) => {
+				console.log(elem.childNodes[0].tagName);
+				console.log(elem.parentNode);
+
+				if (elem.childNodes.length === 1 && elem.childNodes[0].tagName === "IMG") {
+						elem.parentNode.insertBefore(elem.childNodes[0], elem);
+						elem.remove();
+				}
+		});
+</script>
+
+

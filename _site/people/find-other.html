@@ -1,0 +1,232 @@
+<head> </head>
+<body>
+		<a href=http://cors-anywhere.herokuapp.com/corsdemo>first click this then click the button on that page, then go back to this page</a>
+		<br>
+		then enter the form
+		<br>
+		csv file should download
+		<br>
+		<form id="myForm">
+				<input type="file" id="csvFile" accept=".csv" />
+				<br />
+				<input type="submit" value="Submit" />
+		</form>
+		<br />
+<div>
+	<pre>
+
+ ww_          ___.///			    
+o__ `._.-'''''    //			   
+|/  \   ,     /   //			  
+     \  ``,,,' _//			   
+      `-.  \--'   .'`.		
+         \_/_/    `.,'	
+          \\\\				 
+         ,,','`    		
+
+	</pre>
+</div>
+<div>
+	<br>
+				zo
+	<br>
+				limit is 600 people / hour
+	<br>
+				only tested this in chrome. idk if other browsers will work
+	<br>
+				csv format has to use the same column names
+	<br>
+				'Legal First'
+	<br>
+				'Last'
+	<br>
+				'First'
+	<br>
+				'MDOC #'
+	<br>
+				if in the csv, there are spaces after the titles, then those fields won't be populated. so it needs to look like this: Name,Last,Location
+				and not this: Name ,Last ,Location
+
+</div>
+
+		<script>
+
+    // hey casey, first, I'm sorry this is messy and really not the right way to do things, so it might not great to understand. 
+
+				const url = 'https://mdocweb.state.mi.us/otis2/otis2.aspx'
+				const urlWithCorsProxy = `https://cors-anywhere.herokuapp.com/${url}`
+				const req_headers = {
+						"Host": "mdocweb.state.mi.us",
+						"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0",
+						"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+						"Accept-Language": "en-US,en;q=0.5",
+						"Accept-Encoding": "gzip, deflate, br",
+						"Content-Type": "application/x-www-form-urlencoded",
+						"Content-Length": "1114",
+						"Origin": "https://mdocweb.state.mi.us",
+						"Connection": "keep-alive",
+						"Referer": "https://mdocweb.state.mi.us/otis2/otis2.aspx",
+						"Cookie": "ASP.NET_SessionId=pe3pqqfr3kr3uetxe5tg3rr0; cmTPSet=Y; CoreID6=83832604730516346990076&ci=90259494; 90259494_clogin=v=1&l=81781671634699007675&e=1634701474377",
+						"Upgrade-Insecure-Requests": "1",
+						"Sec-Fetch-Dest": "document",
+						"Sec-Fetch-Mode": "navigate",
+						"Sec-Fetch-Site": "same-origin",
+						"Sec-Fetch-User": "?1",
+						"Pragma": "no-cache",
+						"Cache-Control": "no-cache"
+				}
+
+				const makeRequestBody= (mdoc) => `__EVENTTARGET=&__EVENTARGUMENT=&__VIEWSTATE=wPEg7eGUNCBM%2BkwDReDLp1U4LTvYcxTE8%2BMCgkswCP4c1nC%2F9oAFct3iFbeqTHG4%2B%2BvFrC%2Bd0jOwbPO3JAeCNZ4kY7pkJyp8tY1jVFs02759E7%2BrR5cPO9VtFZx4wgDRuu%2B3S4Ukp66FyDZ0&__VIEWSTATEGENERATOR=E95F36A0&__EVENTVALIDATION=ZZjkESo%2BB1JZ5cJzEdZTBrkPzd3sig3fQA3l1IcN%2B3ZAdHzbq%2FMaGlekZ6eRLM%2BLgwK%2Fv%2F5CrR05RIwQPwKGWrI5nf%2BbUoFIA9bEce4%2BhASsR0Jl7cZ00nVYVfG0JzwySzAVwUuSOmKm%2BfHbQEADomaWHhGL1c%2F%2FJPPdNECV75uo4nj2rSfxSIzt6UfmLfXiiaxscsaUiQDqEAFVWo8CF7Xh6ddBLsj4uoLE%2BeS4xAiXTfctJEX7I9Z9izvE6DdeZVMdz1c5auBVgXtnyJz32BfjNwHc9Wxwqg8nlW%2Fyp1LN16SEi9zt2lQeKNqJ4334Cq660Tq2b0A%2FUd7DUtx70E4pkz%2FJvl4r%2BFSYzi%2B9u4o4l5ih3R8GbV0knjuMmywk6jwo%2FjyaOPlgRr89R7RdlxiVxWDMWAETsKLf9phDKHqcY%2BDLB%2BC%2Fy5kqyevf90BoZSq7AQK0o0JpoEfXXcPnGriwuel6nnX5mWKaozcx4NzI7mnpUfirD5cIcY3UbWOtxqxrJGo7aKbPf8wTuSmgGs5VGk6WQwmkM1t8pKF2HlYW5dmXR%2Fot3CHTq6PiEesnLJ0JiD583od5CD8Pw8H46qDaWNiEru8h%2FlXF5mXXHfDlIQ%2Bcvlk5ptCLt6KPZtDjl58%2FOF1QkXT7f%2FC7&txtboxLName=&txtboxFName=&txtboxMDOCNum=${mdoc}&drpdwnGender=Either&drpdwnRace=All&txtboxAge=&drpdwnStatus=Active+Offenders&txtboxMarks=&btnSearch=Search`
+
+
+				const myForm = document.getElementById("myForm");
+				const csvFile = document.getElementById("csvFile");
+
+        // from what I remember, this is like the 'main' function. Once you upload a CSV, you click 'Submit', then all this suff happens, which I'll comment below
+				myForm.addEventListener("submit", function (e) {
+
+            // preventDefault just prevents Javascript from calling what it normally does when Submit it clicked
+						e.preventDefault();
+						const input = csvFile.files[0];
+						const reader = new FileReader();
+
+            // most of this function parses the CSV file to get the data you need, and all of this should and has been working fine. 
+						reader.onload = function (e) {
+								const text = e.target.result;
+								const data = csvToArray(text);
+								const numberOfEntries = data.length;
+								const timeDelay = numberOfEntries * 300;
+								//console.log(data);
+								getNewLocations(data);
+								setTimeout(() => outputCsvFile(toCsvString(globalNewPeople)), timeDelay);
+						};
+
+						reader.readAsText(input);
+				});
+
+				const outputCsvFile = (csvContent) => {
+						var downloadLink = document.createElement("a");
+						var blob = new Blob(["\ufeff", csvContent]);
+						var url = URL.createObjectURL(blob);
+						downloadLink.href = url;
+						downloadLink.download = "data.csv";
+
+						document.body.appendChild(downloadLink);
+						downloadLink.click();
+						document.body.removeChild(downloadLink);
+				};
+
+
+				var globalNewPeople = [];
+
+				const getNewLocations = (data) => data.map(person => reqNewLocation(person));
+
+				const getLocationFromReq = (person, rawResponse) => {
+						const legalFirst = person['Legal First'];
+						const first = person['First'];
+						const last = person['Last'];
+
+						var parser = new DOMParser();
+						var htmlDoc = parser.parseFromString(rawResponse, 'text/html');
+						const location = htmlDoc.getElementsByClassName('links btnLink')[2].innerHTML;
+						document.write(`Legal First: ${legalFirst}`);
+						document.write('<br>')
+						document.write(`Last: ${last}`);
+						document.write('<br>')
+						document.write(`First: ${first}`);
+						document.write('<br>')
+						document.write(`Location: ${location}`)
+						document.write('<br>')
+						document.write('<br>')
+						document.write('<br>')
+						person['New Location'] = location;
+						globalNewPeople.push(person);
+						//console.log(person);
+						//return location;
+
+				}
+
+
+
+				const reqNewLocation = (person) => {
+						const mdoc = person['MDOC #'];
+						var xhr = new XMLHttpRequest();
+						xhr.open("POST", urlWithCorsProxy, true);
+						//xhr.setRequestHeader('Host', 'mdocweb.state.mi.us');
+						//xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0');
+						xhr.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
+						xhr.setRequestHeader('Accept-Language', 'en-US,en;q=0.5');
+						//xhr.setRequestHeader('Accept-Encoding', 'gzip, deflate, br');
+						xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+						//xhr.setRequestHeader('Content-Length', '1114');
+						//xhr.setRequestHeader('Origin', 'https://mdocweb.state.mi.us');
+						//xhr.setRequestHeader('Connection', 'keep-alive');
+						//xhr.setRequestHeader('Referer', 'https://mdocweb.state.mi.us/otis2/otis2.aspx');
+						//xhr.setRequestHeader('Cookie', 'ASP.NET_SessionId=pe3pqqfr3kr3uetxe5tg3rr0; cmTPSet=Y; CoreID6=83832604730516346990076&ci=90259494; 90259494_clogin=v=1&l=81781671634699007675&e=1634701474377');
+						xhr.setRequestHeader('Upgrade-Insecure-Requests', '1');
+						//xhr.setRequestHeader('Sec-Fetch-Dest', 'document');
+						//xhr.setRequestHeader('Sec-Fetch-Mode', 'navigate');
+						//xhr.setRequestHeader('Sec-Fetch-Site', 'same-origin');
+						//xhr.setRequestHeader('Sec-Fetch-User', '?1');
+						xhr.setRequestHeader('Pragma', 'no-cache');
+						xhr.setRequestHeader('Cache-Control', 'no-cache');
+						xhr.send(makeRequestBody(mdoc));
+						xhr.onreadystatechange = function() {
+								if (xhr.readyState === 4) {
+										return getLocationFromReq(person, xhr.response);
+								}
+						}
+				}
+
+				const csvToArray = (str, delimiter = ",") => {
+						const headers = str.slice(0, str.indexOf("\r\n")).split(delimiter);
+						const rows = str.slice(str.indexOf("\r\n") + 1).split("\r\n");
+						const arr = rows.map(function (row) {
+								const values = row.split(delimiter);
+								const el = headers.reduce(function (object, header, index) {
+										object[header] = values[index];
+										return object;
+								}, {});
+								return el;
+						});
+						console.log(arr.length);
+						return arr;
+				}
+
+				const toCsvString = (arrayOfObject) => {
+						const csvString = [
+								[
+										"Legal First",
+										"Last",
+										"First",
+										"MDOC #",
+										"Facility",
+										"Address",
+										"City",
+										"State",
+										"Zip",
+										"New Location"
+								],
+								...arrayOfObject.map(item => [
+										item["Legal First"],
+										item["Last"],
+										item["First"],
+										item["MDOC #"],
+										item["Facility"],
+										item["Address"],
+										item["City"],
+										item["State"],
+										item["Zip"],
+										item["New Location"]
+								])
+						]
+								.map(e => e.join(","))
+								.join("\n");
+
+						return csvString;
+				}
+
+
+		</script>
+</body>
+

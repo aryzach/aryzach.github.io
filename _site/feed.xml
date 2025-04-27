@@ -1,5 +1,134 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-02-19T00:47:09-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
-</subtitle><entry><title type="html">Purescript TCP Server</title><link href="http://localhost:4000/purescript-tcp-server" rel="alternate" type="text/html" title="Purescript TCP Server" /><published>2021-12-19T21:23:33-08:00</published><updated>2021-12-19T21:23:33-08:00</updated><id>http://localhost:4000/purescript-tcp-server</id><content type="html" xml:base="http://localhost:4000/purescript-tcp-server">&lt;p&gt;There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-04-27T07:17:22-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Zach Blog</title><subtitle>Zach Blog Engineering Functional Programming Types Management Robotics
+</subtitle><entry><title type="html">SF Sauna Rental</title><link href="http://localhost:4000/sf-sauna-rental" rel="alternate" type="text/html" title="SF Sauna Rental" /><published>2025-04-27T01:17:29-07:00</published><updated>2025-04-27T01:17:29-07:00</updated><id>http://localhost:4000/sf-sauna-rental</id><content type="html" xml:base="http://localhost:4000/sf-sauna-rental">&lt;p&gt;Started a new business in January- &lt;a href=&quot;https://sfsaunarental.com/&quot;&gt;SF Sauna Rental&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="health" /><summary type="html">Started a new business in January- SF Sauna Rental</summary></entry><entry><title type="html">Create a Temporary Alternative World</title><link href="http://localhost:4000/create-a-temporary-alternative-world" rel="alternate" type="text/html" title="Create a Temporary Alternative World" /><published>2023-12-01T10:17:29-08:00</published><updated>2023-12-01T10:17:29-08:00</updated><id>http://localhost:4000/create-a-temporary-alternative-world</id><content type="html" xml:base="http://localhost:4000/create-a-temporary-alternative-world">&lt;p&gt;We met at book club to talk about Ch 5 in Art of Gathering : Create a Temporary Alternative World&lt;/p&gt;
+
+&lt;p&gt;Here is a brief of some of our thoughts.&lt;/p&gt;
+
+&lt;h3 id=&quot;some-guidelines-to-help-us-create-the-rules-for-our-temporary-alternative-world&quot;&gt;Some guidelines to help us create the rules for our temporary alternative world&lt;/h3&gt;
+
+&lt;p&gt;a good rule:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;gives permission to everybody to do something weird / risky that they might not do otherwise (courtesy Audrey)&lt;/li&gt;
+  &lt;li&gt;encourages risk taking to connect with others&lt;/li&gt;
+  &lt;li&gt;helps people connect with other individuals or the group&lt;/li&gt;
+  &lt;li&gt;makes everybody feel like you’re in a special world&lt;/li&gt;
+  &lt;li&gt;facilitates conversations / interactions that might not happen otherwise&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;example-rules&quot;&gt;example rules:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;“titties!” When going on an adventure, each member gets a “titties” where they get to pick an impromptu side quest with everybodys buy-in (Georgia / David)&lt;/li&gt;
+  &lt;li&gt;rubics cube party. 6 colors. Everybody picks one color to dress in, and wears 6 articles of clothing with that color. The goal for everybody is that by the end of the night everybody has one article of each color accumulated by trading (Audrey)&lt;/li&gt;
+  &lt;li&gt;“I am here” day. Dedicate a whole day adventure together. Minimal planning. Default down. Minimize distractions. Opt-in means committing to the entire day. Pick a neighborhood and explore together (from book)&lt;/li&gt;
+  &lt;li&gt;work together for a day to set up wedding (Jackie)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="friendship" /><summary type="html">We met at book club to talk about Ch 5 in Art of Gathering : Create a Temporary Alternative World</summary></entry><entry><title type="html">Dev environments with Docker</title><link href="http://localhost:4000/dev_envs_with_docker" rel="alternate" type="text/html" title="Dev environments with Docker" /><published>2022-04-14T23:28:17-07:00</published><updated>2022-04-14T23:28:17-07:00</updated><id>http://localhost:4000/my-incredibly-badass-bitch-dev-environments-with-docker</id><content type="html" xml:base="http://localhost:4000/dev_envs_with_docker">&lt;p&gt;I’ve never liked IDEs, or graphical IDEs for a few reasons:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;I’ve never really put in the time to learn them / reap the benefits&lt;/li&gt;
+  &lt;li&gt;when learning how to code, they added friction when setting up a new environment for a different language&lt;/li&gt;
+  &lt;li&gt;I felt like they obsured a lot, made the dev environment and setup problems harder to debug&lt;/li&gt;
+  &lt;li&gt;relying on them made it harder to be productive in a new setting (different computer, server, etc)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Also, I was sold on the idea of VIM fairly early on, bit the bullet to get over the learning curve, and it’s really paid off.&lt;/p&gt;
+
+&lt;p&gt;Now I’m discovering another reason that not using graphical IDEs is paying off.&lt;/p&gt;
+
+&lt;p&gt;When getting started with a new language and ecosystem, it’s proved to be annoying to download some tools with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;apt&lt;/code&gt;, then maybe you’re downloading some more tools globally with npm. Then, whoops, I wasn’t supposed to download that globally, or those were the tools they used for this project, but it was built in 2011 and nobody does it this way now, or they used different versions of the tool, so now this project isn’t building, and now your computer is in a weird state that you don’t quite understand what you installed. So you try to install the right things, undo some others, but it’s really not clear what’s happening. Once you get it all working, your computer is in a state you don’t quite understand, with tools you probably don’t need, and you couldn’t easily reproduce your environment.&lt;/p&gt;
+
+&lt;p&gt;Also, now if you go to a different computer, you can’t work on this project at all. I realize this is a somewhat rare case, having to have a dev environment on multiple computers for short periods of time, but this was the case for me.&lt;/p&gt;
+
+&lt;p&gt;I started co-opting Docker containers to host a full contained dev environment. Here’s one for a Purescript project:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM node:16.14.0-buster-slim
+
+RUN groupmod &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; 1003 node &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; usermod &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; 1003 &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; 1003 node
+
+&lt;span class=&quot;c&quot;&gt;#ENV PURESCRIPT_VERSION 0.13.6&lt;/span&gt;
+ENV PURESCRIPT_VERSION 0.14.2
+ENV SPAGO_VERSION 0.20.7
+ENV TERSER_VERSION 5.11.0
+
+ARG &lt;span class=&quot;nv&quot;&gt;UNAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;aryzach
+ARG &lt;span class=&quot;nv&quot;&gt;UID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001
+ARG &lt;span class=&quot;nv&quot;&gt;GID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001
+RUN groupadd &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$GID&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$UNAME&lt;/span&gt;
+RUN useradd &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$UID&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$GID&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; /bin/bash &lt;span class=&quot;nv&quot;&gt;$UNAME&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# packages for dev environment&lt;/span&gt;
+RUN apt-get update 
+RUN apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; curl 
+RUN apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sudo
+&lt;/span&gt;RUN apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; git
+RUN apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; tmux
+RUN apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; vim
+
+&lt;span class=&quot;c&quot;&gt;# for purescript&lt;/span&gt;
+RUN apt update &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; git libtinfo5 
+
+
+&lt;span class=&quot;c&quot;&gt;#USER aryzach &lt;/span&gt;
+RUN npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; purescript@&lt;span class=&quot;nv&quot;&gt;$PURESCRIPT_VERSION&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--unsafe-perm&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; pulp bower &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; spago@&lt;span class=&quot;nv&quot;&gt;$SPAGO_VERSION&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--unsafe-perm&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;#&amp;amp;&amp;amp; npm install -g terser@$TERSER_VERSION \&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# smoke tests&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; purs &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; spago &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt; 
+    &lt;span class=&quot;c&quot;&gt;#&amp;amp;&amp;amp; terser --version&lt;/span&gt;
+
+RUN npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; http-server
+RUN npm &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; purs-tidy
+
+&lt;span class=&quot;c&quot;&gt;# setup env&lt;/span&gt;
+USER aryzach
+WORKDIR /home/aryzach/
+RUN git clone https://github.com/aryzach/dotfiles.git
+WORKDIR /home/aryzach/dotfiles
+RUN /home/aryzach/dotfiles/setup.sh
+WORKDIR /home/aryzach/
+CMD /bin/bash &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/home/aryzach/.bashrc&quot;&lt;/span&gt;
+
+
+
+&lt;span class=&quot;c&quot;&gt;# docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t usehedwig .&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# docker run --net=host -itv `pwd`:/home/aryzach/useHedwig usehedwig /bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# docker start -i -a usehedwig&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This is in the git repo. So on a new computer, I clone the repo, then run the docker commands at the bottom. I have the dev and language tools I need, without cluttering the host, fully reproducable, files can be edited from either host or within the container, and the only host dependancy is Docker. (So in this case, you could actually use a graphical IDE on the host.)&lt;/p&gt;
+
+&lt;p&gt;Here’s another one for a Haskell project:&lt;/p&gt;
+
+&lt;div class=&quot;language-haskell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dockerfile&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ubuntu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;20.04&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;USER&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt; 
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;curl&lt;/span&gt; 
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sudo&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tmux&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vim&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;WORKDIR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;curl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sSL&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;://&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;haskellstack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sh&lt;/span&gt;
+
+
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clone&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;://&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aryzach&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dotfiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dotfiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sh&lt;/span&gt;
+
+
+&lt;span class=&quot;kt&quot;&gt;ADD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;docker&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;build&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;docker&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2024&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2024&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bash&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;docker&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Anyway, it’s been a really fun way to learn to set up a new dev environment and make it reproducible without joshin around too much on your host computer. Thanks for reading!&lt;/p&gt;</content><author><name></name></author><category term="programming" /><summary type="html">I’ve never liked IDEs, or graphical IDEs for a few reasons: I’ve never really put in the time to learn them / reap the benefits when learning how to code, they added friction when setting up a new environment for a different language I felt like they obsured a lot, made the dev environment and setup problems harder to debug relying on them made it harder to be productive in a new setting (different computer, server, etc)</summary></entry><entry><title type="html">Purescript TCP Server</title><link href="http://localhost:4000/purescript-tcp-server" rel="alternate" type="text/html" title="Purescript TCP Server" /><published>2021-12-19T21:23:33-08:00</published><updated>2021-12-19T21:23:33-08:00</updated><id>http://localhost:4000/purescript-tcp-server</id><content type="html" xml:base="http://localhost:4000/purescript-tcp-server">&lt;p&gt;There’s not a lot of basic purescript examples out there! So I’m putting this up. This is a TCP echo server. Because there aren’t a ton of examples of Purescript, I found it helpful to find a NodeJS example of what I want to do, and then use that to create the Purescript implementation. This is helpful because the Purescript wrapper API to the underlying NodeJS code uses similar terminology / function names as the NodeJS examples.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-purescript&quot;&gt;module Main where
 
@@ -94,26 +223,229 @@ connectionCallback s = do
 &lt;h3 id=&quot;-6&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;h3 id=&quot;-7&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
 &lt;h3 id=&quot;-8&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Work Journal</title><link href="http://localhost:4000/work-journal" rel="alternate" type="text/html" title="Work Journal" /><published>2021-10-14T21:02:42-07:00</published><updated>2021-10-14T21:02:42-07:00</updated><id>http://localhost:4000/work-journal</id><content type="html" xml:base="http://localhost:4000/work-journal">&lt;h3 id=&quot;101321&quot;&gt;10/13/21&lt;/h3&gt;
-&lt;p&gt;I deleted our git server!
-We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower&lt;/p&gt;
+&lt;h3 id=&quot;-9&quot;&gt;&lt;a href=&quot;&quot;&gt;&lt;/a&gt;&lt;/h3&gt;</content><author><name></name></author><category term="work" /><category term="linux" /><category term="containters" /><summary type="html">Background I’m again running into an issue at work where there are gaps in what I know, and it’s slowing down my debugging process. The overall project has to do with running a MANET network with some nodes. Usually the nodes would be real physical devices that move around and dynamically connect and disconnect from each other (self-healing network). The MANET network layer is beta software, and mostly not in our domain. Our job is to try to turn their beta software into a usable product. For testing, we want to run the nodes on virtual machines (VMs). The current process is to use Vagrant to start a few VMs. This starts / configures a few Linux VMs with virtualbox. Then we run an Ansible playbook to install / configure the MANET network software. The current problem is that the ansible build fails. Each node hosts a web page, which is supposedly accessible from the host machine. Even when I ssh into the VM and manually start each service with failed before (which is mostly successful), I still can’t find the web page. One issue is that I don’t know what IP it’s supposed to show up from, but I do know the port. When I start the VMs, my host machine has another network interface, which indicates something about docker.</summary></entry><entry><title type="html">Death with Dignity Op-Ed</title><link href="http://localhost:4000/death-with-dignity-op-ed" rel="alternate" type="text/html" title="Death with Dignity Op-Ed" /><published>2021-10-29T12:06:41-07:00</published><updated>2021-10-29T12:06:41-07:00</updated><id>http://localhost:4000/death-with-dignity-op-ed</id><content type="html" xml:base="http://localhost:4000/death-with-dignity-op-ed">&lt;h1 id=&quot;expanding-assisted-dying-accessibility-to-those-with-severe-dementia&quot;&gt;Expanding Assisted Dying Accessibility to those with Severe Dementia&lt;/h1&gt;
 
-&lt;h3 id=&quot;101421&quot;&gt;10/14/21&lt;/h3&gt;
-&lt;p&gt;I fixed our git server! So I really did delete everything. Luckily, we had all the repos on different peoples computers. I learned a lot today, mostly from debugging problems when setting up git and it wasn’t working like the docs said it would. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;journalctl -xe&lt;/code&gt; ! &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl status &amp;lt;program_name&amp;gt;&lt;/code&gt; ! &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ss -tupln&lt;/code&gt; ! I also learned a little about nginx and kinda had it working how I wanted it. I’ve never really worked with logs before, but today, they were incredibly useful. I felt like a wizard. I’m not sure if I would’ve had the confidence to do this if I hadn’t done the &lt;a href=&quot;aryzach.github.io/quicklearn-networking&quot;&gt;jvns.com networking exercise&lt;/a&gt; that I did last weekend.&lt;/p&gt;
+&lt;h3 id=&quot;contents&quot;&gt;Contents&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Background / Intro&lt;/li&gt;
+  &lt;li&gt;Outline of legal decisions to be made&lt;/li&gt;
+  &lt;li&gt;Nonprofit Business Plan
+    &lt;ul&gt;
+      &lt;li&gt;Overview&lt;/li&gt;
+      &lt;li&gt;Why now&lt;/li&gt;
+      &lt;li&gt;Timeline (education: 1-2 years -&amp;gt; services + education + advocacy: 5-15 years -&amp;gt; pass bill)&lt;/li&gt;
+      &lt;li&gt;Vibe (and why this vibe)&lt;/li&gt;
+      &lt;li&gt;Defining policy and business model&lt;/li&gt;
+      &lt;li&gt;Education&lt;/li&gt;
+      &lt;li&gt;Services&lt;/li&gt;
+      &lt;li&gt;Advocacy&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h3 id=&quot;101521&quot;&gt;10/15/21&lt;/h3&gt;
-&lt;p&gt;I started to take on the task of making us security compliant (CMMC L3). I’m learning a bit about security and will probably learn a lot more about sys admin which is useful. Today I read through all the requirements and read about how other people have fulfilled compliance for each requirement. It’s mostly large companies that have to be compliant, so we’re in a somewhat new / underserved area. Windows has more or less off-the-shelf solutions for this, but we use non-Red Hat linux, so we have to figure out solutions ourselves.&lt;/p&gt;
+&lt;p&gt;(or ‘evidence suggests that’ and cite it) Something I’ve heard repeatedly from older, mentally healthy people is that they wouldn’t want to keep living if they had severe dementia. Then there are two end-of-life narratives that follow: their life ends without ever having severe dementia, or they get severe dementia and live with it for an indefinite amount of time until they die (usually not directly from dementia). We need to build the business and legal processes to enable the end-of-life choice to not live with severe dementia.&lt;/p&gt;
 
-&lt;h3 id=&quot;102821&quot;&gt;10/28/21&lt;/h3&gt;
-&lt;p&gt;I’m deep into security compliance stuff. We’re part way done with implementation, but almost done with understanding all we have to do. Security is a totally different mindset, and I’m glad I’m learning to think in this way. Some fun tech / Linux take aways:
-	- PAM and /etc/pam.d/ controls authentication on a granular level. Multi-factor auth, limiting logon attemps, ssh, etc
-	- You can very easily send your syslogs to a remote server with rsyslog
-	- Log commands ran with sudo through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;visudo&lt;/code&gt;
-On another note, I’m doing some legit engineering too! Currently making a translator between two message formats. The mapping between the two message types is poorly defined. And we’re toying with the idea of using Haskell for this! Because it’s good for parse-y type things. And we have fun thinking in Haskell. The major downside is that it brings unneeded complexity onto our stack for such a small project. We’ll probably just do it in python, which is cool, too, because it’ll be fast to get going.&lt;/p&gt;
+&lt;p&gt;Because a dementia-related wish to die is different in nature than a terminally-ill-induced wish to die, we need a different mindset and process.&lt;/p&gt;
 
-&lt;h3 id=&quot;11221&quot;&gt;11/2/21&lt;/h3&gt;
-&lt;p&gt;I’m averaging about two jars of peanut butter a month.
-The workstation I’m on has been having issues (previous employees experienced it too with this computer), and while trying to debug, put it in a state where I can’t really use it (can’t access my hard drive). I could figure it out, but was already starting to feel like I was spread thin, and now my quick workflows are all thrown off. I’m now working between two different computers for different projects. It’s coming together though! We have a plan, everybody got more or less on the same page today, I feel some calmness about CMMC security stuff, and we have a plan to move forward with more core engineering project I’ll be able to own. Woo!&lt;/p&gt;</content><author><name></name></author><category term="robotics" /><category term="career" /><summary type="html">10/13/21 I deleted our git server! We do some kinda secret stuff and have to meet some security standars. We can’t have an unsanctioned cloud git server (haven’t had permission to do it yet), so we had a local one. I was setting up a wiki to keep better docs and totally deleted /var/lib instead of /var/lib/mediawiki. Not my best day. Note to self: be more careful with sys admin / dev ops. It’s a different mindset than programming. Move slower</summary></entry><entry><title type="html">Quicklearn Networking</title><link href="http://localhost:4000/quicklearn-networking" rel="alternate" type="text/html" title="Quicklearn Networking" /><published>2021-10-09T12:31:26-07:00</published><updated>2021-10-09T12:31:26-07:00</updated><id>http://localhost:4000/quicklearn-networking</id><content type="html" xml:base="http://localhost:4000/quicklearn-networking">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Currently, the two main hurdles for somebody with severe dementia to take advantage of the physician-assisted dying law are that you need to be&lt;sup&gt;&lt;a href=&quot;https://deathwithdignity.org/learn/access/#Eligibility&quot;&gt;[1]&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;“mentally competent, i.e. capable of making and communicating your health care decisions”&lt;/li&gt;
+  &lt;li&gt;“diagnosed with a terminal illness that will, within reasonable medical judgment, lead to death within six months”&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I’ll assume the reasons for these requirements are that we want to ensure that:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;this is the patient’s choice&lt;/li&gt;
+  &lt;li&gt;they are not making a short-sighted decision, and there is a strong guarantee that their medical condition and quality of life will monotonically decline&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The presumed reasons for these laws are consistant with the reasons somebody with severe dementia would want to take advantage of physician-assisted dying given:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;while they were mentally competent they’ve expressed they wouldn’t want to keep living if they ever have severe dementia&lt;/li&gt;
+  &lt;li&gt;we haven’t found a cure for severe dementia&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Canada, Luxembourg, Switzerland, and the Netherlands have legalized some form of physician-assisted death and / or euthanasia for patients with severe dementia, though it’s unclear how often it’s been applied to that demographic.&lt;sup&gt;&lt;a href=&quot;https://www.frontiersin.org/articles/10.3389/fpsyt.2020.622446/full&quot;&gt;[2]&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;In the US, there are two main logistical hurdles for people who wish to end their life once they have severe dementia:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;They’re not able to make their own medical decisions&lt;/li&gt;
+  &lt;li&gt;There are no established business and legal procedures to follow&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Imagine that assisted dying is legal for people with severe dementia, but there is not a well-defined procedure for making the request and carrying out the request. 
+Here are a few scenarios I could imagine:&lt;/p&gt;
+
+&lt;h4 id=&quot;scenario-their-children-are-involved&quot;&gt;Scenario: Their children are involved&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;there is a parent who has adult children, and the parent expresses the wish to not continue living if they get severe dementia&lt;/li&gt;
+  &lt;li&gt;the parent starts to get mild dementia, realizes it, but they struggle navigating the business / legal processes to put it in place. Even if they manage to plan it, the children will rebel with the argument that their mildly demented parent can’t make these decisions for themself anymore&lt;/li&gt;
+  &lt;li&gt;the children have some sort of medical power of attorney agreement over their parent. They know of their parents wish but can’t come to a consensus of how or when to move forward, both logistically and emotionally&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;there is a spouse
+………..&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;outline-of-legal-decisions-to-be-made&quot;&gt;Outline of legal decisions to be made&lt;/h3&gt;
+
+&lt;p&gt;The logistics around an assisted death law for somebody with severe dementia are much more complicated than somebody with a six-month prognosis.
+As a basic framework, we need to define the following:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;when is the request made&lt;/li&gt;
+  &lt;li&gt;who is involved
+    &lt;ul&gt;
+      &lt;li&gt;family (spouse, children, grandchildren)&lt;/li&gt;
+      &lt;li&gt;doctors&lt;/li&gt;
+      &lt;li&gt;emotional / psychological support&lt;/li&gt;
+      &lt;li&gt;legal support&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;agenda in the years that follow the request
+    &lt;ul&gt;
+      &lt;li&gt;dementia status check-ins&lt;/li&gt;
+      &lt;li&gt;emotional check-ins&lt;/li&gt;
+      &lt;li&gt;legal check-ins (the laws could change in the 2 - 30 years between request and action)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;how the request can be redacted
+    &lt;ul&gt;
+      &lt;li&gt;by who&lt;/li&gt;
+      &lt;li&gt;on what timeline&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;nonprofit-business-plan&quot;&gt;Nonprofit Business Plan&lt;/h3&gt;
+
+&lt;h4 id=&quot;overview&quot;&gt;Overview&lt;/h4&gt;
+
+&lt;p&gt;The mission is to make assisted dying an option for those with severe dementia. To do that, we need to:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;legalize the practice&lt;/li&gt;
+  &lt;li&gt;establish the systems to support the practice&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The common way to pass a law like this would be to raise money through donations and advocate.&lt;/p&gt;
+
+&lt;p&gt;The main idea here is to bootstrap that process with capital, labor, and enthusiasm by providing preparatory legal, business, and emotional support services to those who wish to take advantage of an assisted dying law should they get severe dementia.&lt;/p&gt;
+
+&lt;h4 id=&quot;why-now&quot;&gt;Why now?&lt;/h4&gt;
+
+&lt;p&gt;A nonprofit with the mission to legalize assisted dying for those with severe dementia is in a unique and privileged position. I can foresee the following independently each taking roughly 10 - 20 years to mature:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;legal work to legalize assisted dying for people with severe dementia&lt;/li&gt;
+  &lt;li&gt;development and implementation of the systems and business infrastructure to support the practice&lt;/li&gt;
+  &lt;li&gt;culture to embrace the practice&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This conveniently aligns with those in their 60’s to 80’s who share a common sentiment to not want to continue to live if they have severe dementia. This group of people, in 10 - 20 years, will be in a position where they have a higher chance of having some form of dementia. Now is a particularly unique time to act because the size of that age demographic is big (how do I say this? baby boomers).&lt;/p&gt;
+
+&lt;p&gt;These circumstances open up unique advocacy and fundraising advantages. Those who will directly benefit in 10 - 20 years can bootstrap this idea. They can be first clients, helping fund the mission, and those retired might want to contribute to the mission through paid or volunteer advocacy work.&lt;/p&gt;
+
+&lt;p&gt;And we can structure and align the nonprofit in such a way that the preparation services are immediately useful for them by providing legal and family / emotional support (the idea would be to perform the preperation services as if we knew it would be legal. This could be troublesome because if a law doesn’t pass in time, then it might be emotionally harmful for clients).&lt;/p&gt;
+
+&lt;h4 id=&quot;timeline&quot;&gt;Timeline&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;year 1 - year 2:   education + define policy and business models + townhalls&lt;/li&gt;
+  &lt;li&gt;year 3 - year 20:  services + education + advocacy + policy and business model refinement&lt;/li&gt;
+  &lt;li&gt;year 15 - year 20: pass bill 
+(what is the legal process timeline? Official submit, approval / denial, next steps, challenging outcomes, etc)
+(need to do research to build a better estimated timeline. Look at death with dignity, and other bills like marijuana)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In year 1 and 2, the dialog from the townhalls and education programs will inform the policy draft and initial business plan, and vice versa. In years 3-7, we’ll implement the business plan and refine it along the way. The organization and mission should begin to take a more concrete shape and have better-defined legal and cultural goals. Performing services will be an iterative process, and once we start implementing the business model, we will learn things that will make us want to improve or pivot the services.&lt;/p&gt;
+
+&lt;p&gt;(I believe it will take roughly this long because it will support many more people and require more peripheral support systems compared to the terminally-ill assisted death model)&lt;/p&gt;
+
+&lt;h4 id=&quot;vibe&quot;&gt;Vibe&lt;/h4&gt;
+
+&lt;p&gt;Death and money are two strong forces. An organization like this could easily devolve into a business that chases inheritances and possibly loses sight of it’s mission. This organization should be structured in a way where the organization, employees, and members are never financially, emotionally, or politically incentivised to influence individual decisions around assisted death.&lt;/p&gt;
+
+&lt;p&gt;The business plan for the provided services must be clear, commonly agreed upon, and held to that standard. The leadership, doctors, lawyers, and other service providers involved must be incentivised appropriately.&lt;/p&gt;
+
+&lt;p&gt;Build a culture of…&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;listening to older people - don’t let the organization get dominated by career-ists&lt;/li&gt;
+  &lt;li&gt;community-driven organizational decisions&lt;/li&gt;
+  &lt;li&gt;checks and balances - ensure the service providers don’t influence individual decisions&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some suggested practical guidelines:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;explicitly forbid financial succession planning services&lt;/li&gt;
+  &lt;li&gt;flat fee or sliding scale pricing model for services- net worth or inheritance should never be involved&lt;/li&gt;
+  &lt;li&gt;no outside funding - align organization soley with customers, and never be incentivized to please, prioritize, or give weight to non-customer donors (this might be part of why lots of non-profits get watered-down)
+    &lt;ul&gt;
+      &lt;li&gt;maybe even, once services are provided, disallow donations outside of services. This would help to incentivize prioritizing clients, and not let clients buy power (I think large donors, even if well-intentioned, can disrupt power dynamics, goals, and trajectory)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;no investments (this might be disallowed for non-profits anyway)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These guidelines will all help to tightly couple service and mission, and incentivize the organization to provide the best service possible to clients both directly and through legal representation of the group. My fear here is that if lack of money is limiting growth or not enough to pay people appropriately, the organization might come up with clever ways to make more money from clients, but in ways that don’t provide a lot of client value. I think this would mean that the guidelines are artificially limiting, and actually disservicing the mission and clients. The goal of these guidelines are to have the ‘right’ amount of money - enough for the mission to be successful, have traction and grow, but not so much that the wrong people are incentivized to lead, or that the organization choses to priorizite sources that give larger sums of money.&lt;/p&gt;
+
+&lt;p&gt;That said, I believe the organization will need to be funded primarily through donations until it’s able to sustain itself through the services provided, hopefully no longer than a year or two.&lt;/p&gt;
+
+&lt;h4 id=&quot;defining-policy-and-business-model&quot;&gt;Defining policy and business model&lt;/h4&gt;
+
+&lt;p&gt;Much like other death-related medical procedures (is this true?), policy and business model will be necessarily coupled. I’ve outlined some of the questions that will need to be answered in the section ‘Outline of legal decisions to be made’. In the end, the law will determine the necessary business infrastructure and processes, but until then, we have to think about and build the process that we’re comfortable with. I believe making this a community-driven process will create the best outcome both legally and culturally. Ideally, the community gives input about what processes would be most helpful to them and their families. This inherently informs us of what processes should be legally required by law to ensure every assisted death is decided upon and carried out in a way that minimizes ambiguity and where everybody is in agreeance that this is what the patient wants. I also believe this communal agreeance on processes will help the law, which will necessitate the processes, get passed.&lt;/p&gt;
+
+&lt;h4 id=&quot;education-and-townhalls&quot;&gt;Education and Townhalls&lt;/h4&gt;
+
+&lt;p&gt;Education events and events where we receive feedback will mostly be a blurred line until the proposed policy and business models are better defined and in practice. I think the first year might look like a large, crowd-sourced, organized brainstorming session with a clear goal. While I believe that this bootstrapped business model will be a fruitful path to some form of legalized assisted dying for those with severe dementia, there are a lot of policy and business details that would be better decided by a community of interested parties. Additionally, educating and empowering others to contribute will help people be part of the mission, contribute to a brighter future, and be invested in the outcome. It’ll also increase the power behind the mission, both in numbers and passion. Lastly, even if I wrote the most optimal policy and submitted it today, I doubt it would pass. Historically, having a lot of motivated people behind a grassroots push for policy change has led to success (find source?).&lt;/p&gt;
+
+&lt;p&gt;Proposed education topics:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;history of Death with Dignity&lt;/li&gt;
+  &lt;li&gt;history of assisted death
+    &lt;ul&gt;
+      &lt;li&gt;old cultures that practice(d) it&lt;/li&gt;
+      &lt;li&gt;when and why forbidden&lt;/li&gt;
+      &lt;li&gt;where and how it’s still practiced&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;what we know so far about what this law would look like&lt;/li&gt;
+  &lt;li&gt;history and timeline of similar laws&lt;/li&gt;
+  &lt;li&gt;how to talk about this with their families / to other people&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Proposed feedback topics:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;what they would want out of this (maybe prior to coming to a session, give them some info, then have them think about what they would want the process to look like for them)&lt;/li&gt;
+  &lt;li&gt;feedback about proposed process, or if they have new ideas for process&lt;/li&gt;
+  &lt;li&gt;feedback from family members&lt;/li&gt;
+  &lt;li&gt;feedback from religious groups&lt;/li&gt;
+  &lt;li&gt;feedback from lawyers&lt;/li&gt;
+  &lt;li&gt;feedback from doctors&lt;/li&gt;
+  &lt;li&gt;feedback from counselors&lt;/li&gt;
+  &lt;li&gt;feedback from all interested parties&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;services&quot;&gt;Services&lt;/h4&gt;
+
+&lt;p&gt;As I’ve explained above, the main idea here is to bootstrap the passing of an assisted dying policy for those with severe dementia by providing prepatory services for those that may want to take advantage of such policy in the future, should the law pass. Those services will likely fall into the folowing categories:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;legal support: preparing the individual and their family. I’m not sure if this will be standardized, or if individuals will required tailored legal documents. If legal requirements around assisted dying are invariable across all people, this could also look like consultation, and not directly provide any legal work, but inform and encourage clients and families to be legally prepared and protected. In this case, this service might look like group education sessions instead of individualized service.&lt;/li&gt;
+  &lt;li&gt;medical check-ins: a schedule of dementia status check-ups. Could be once / decade or yearly, depending on the severity.&lt;/li&gt;
+  &lt;li&gt;emotional support: individual and family support for this course. This could also be a decision check-in, to ensure that the client still wants this at every step of the way, and that there is no pressure from family or others to participate or not&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Other services might just be fostering and supporting a community for people to talk about this.&lt;/p&gt;
+
+&lt;p&gt;Ultimately, the community will decide what services they want to receive.&lt;/p&gt;
+
+&lt;p&gt;It’ll also be important to understand the financial and peoplepower needed to be successful in this mission, and design a business in a way that ensures this success. Because most of the value from these services is not guaranteed, and it’s received 10 - 20 years in the future, the payment for the services might be feel disportianately pricey. Maybe a better way to view funding for this mission is that we only take donations from those that are active participants in the community, and that the funding is provided equitably from all interested and dedicated parties.&lt;/p&gt;
+
+&lt;p&gt;Overall, I think this is the section that could benefit from much more thought. What are other examples of services that are paid up front, but value isn’t delivered for 10 - 20 years? I don’t think that necessarily has to be the case, because I think that we can provide immediate value, and I really think that’s the key to success in any business, especially at the beginning. I think part of the immediate value proposition is the hope that, should you get severe dementia, you might have the option and be legally prepared to take advantage of it. Because of this idea, of getting people totally ‘legally’ prepared, prior to passing the law, is that if the law does get passed in the way intended, and those people meet the criteria of the law (through the legal prep work we’ve done), then they can take advantage of it. This really isn’t much different than any ‘maybe payoff’ except, it’s individually backed, and not backed through taxpayer money (space exploration, science).&lt;/p&gt;
+
+&lt;h4 id=&quot;advocacy&quot;&gt;Advocacy&lt;/h4&gt;
+
+&lt;p&gt;I think the advocacy will look similar to advocacy around other major policy change, like LGBTQ rights or marijuana legalization. It’s largely awareness and education. The difference here, is that it has the potential to be led by an older demographic, which stands out from other movements.&lt;/p&gt;</content><author><name></name></author><category term="idea" /><summary type="html">Expanding Assisted Dying Accessibility to those with Severe Dementia</summary></entry><entry><title type="html">Quicklearn Networking</title><link href="http://localhost:4000/quicklearn-networking" rel="alternate" type="text/html" title="Quicklearn Networking" /><published>2021-10-09T12:31:26-07:00</published><updated>2021-10-09T12:31:26-07:00</updated><id>http://localhost:4000/quicklearn-networking</id><content type="html" xml:base="http://localhost:4000/quicklearn-networking">&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 &lt;p&gt;I just started a new job! We mostly work with &lt;a href=&quot;https://en.wikipedia.org/wiki/Wireless_ad_hoc_network&quot;&gt;MANET networks&lt;/a&gt;. These are wireless networks with non-stationary and unreliable nodes. There are generally no dedicated routers, and all devices are both clients and participate in routing.&lt;/p&gt;
 
 &lt;p&gt;Anyway, because this is government contract work, we need to jump through lots of hoops to get certified with some security protocols including network security. The company is just three full-time people, one of those is me, and I probably have the most experience with networks and security, which isn’t much! (besides the two days / week contractor who seems very smart and capable)&lt;/p&gt;
@@ -586,411 +918,4 @@ I pivoted away from ZIO for two other reasons:&lt;/li&gt;
 
 &lt;p&gt;I’m not sure if this is more or less efficient than doing an IO random call only when needed (when the snake ate food). I don’t know enough about how streams work. If any stream that can be precomputed precomputes with a lot of values, it might be more efficient than doing ‘random IO’ only when needed. Regardless, it probably doesn’t matter at all for this app, and it’s prematurely optimizing. But it’s fun to think about!&lt;/p&gt;
 
-&lt;p&gt;Now the game is largely feature complete. It’s not a full snake game, because it never ends and you never lose, but it’s all ported to ZIO, which was my main learning goal.&lt;/p&gt;</content><author><name></name></author><summary type="html"></summary></entry><entry><title type="html">Journey to ZIO</title><link href="http://localhost:4000/journey-to-zio" rel="alternate" type="text/html" title="Journey to ZIO" /><published>2021-07-08T08:35:05-07:00</published><updated>2021-07-08T08:35:05-07:00</updated><id>http://localhost:4000/journey-to-zio</id><content type="html" xml:base="http://localhost:4000/journey-to-zio">&lt;p&gt;I have a job lined up working in Scala and will make heavy use of ZIO. This is a brief and working post about how I’m learning Scala and ZIO. Maybe it can be useful for somebody else wanting to learn.&lt;/p&gt;
-
-&lt;h4 id=&quot;prior-experience--understanding&quot;&gt;Prior experience / understanding:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;I’m comfortable with the basics of FP from Haskell including a theoretical understanding of monads, functors, applicative. I can work with the IO monad, bind operator, ‘do’ syntax. I also understand that list and maybe are also monads. I’d never heavily applied these concepts outside of making small CLI apps, and I was basically writing lisp style code in Haskell.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;so-far&quot;&gt;So far:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Read and did exercises from &lt;a href=&quot;https://books.underscore.io/essential-scala/essential-scala.html#getting-started&quot;&gt;Essential Scala by Noel Welsh and Dave Gurnell&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Built a sloppy, unfinished hangman to get used to language. &lt;a href=&quot;https://github.com/aryzach/scalaPracticeProjects/blob/main/Hangman.scala&quot;&gt;Link to file&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Followed &lt;a href=&quot;https://scalac.io/blog/introduction-to-programming-with-zio-functional-effects/&quot;&gt;this tutorial&lt;/a&gt;. The first time through without deep understanding just to understand the structure and thought process. I then rebuilt it mostly to build muscle memory, get a deeper understanding of the program structure and types&lt;/li&gt;
-  &lt;li&gt;Built the game from &lt;a href=&quot;https://www.youtube.com/watch?app=desktop&amp;amp;v=sxudIMiOo68&quot;&gt;FP to the Max&lt;/a&gt; with ZIO before watching how John De Goes does it. Then I followed along as he built App1, which I understood fairly comfortably. In App2 he builds monads from scratch, which, before he said it, I thought I’d seen it before (just defining map and flatMap / bind on a data structure), and I recognized that the TestIO was similar to the state monad. When he started breaking down IO into Console and Random, that looked like the ZIO environment types. While I was already beyond my comfort level at this point, I really like the idea of getting to this level of understanding of working in FP and types. While I only understand App2 and App3 at a high level, it makes me excited to work towards this level of understanding, and I think I’ll get there much faster if I’m building real world applications with the FP mindset.&lt;/li&gt;
-  &lt;li&gt;I’m getting side tracked and started watching and following along with the series &lt;a href=&quot;https://www.youtube.com/watch?v=XwMKw03w8bs&amp;amp;list=PLJGDHERh23x-ammk-n2XuZWhoRVB-wAF&quot;&gt;ZIO from DevInsideYou&lt;/a&gt; which I’m finding insightful and demystifying, but lost at the covarience / contravarience discussion.&lt;/li&gt;
-  &lt;li&gt;Started building a Tic Tac Toe game with ZIO, but stopped when I felt I wasn’t learning much more.&lt;/li&gt;
-  &lt;li&gt;Follow &lt;a href=&quot;https://www.signifytechnology.com/blog/2021/01/fp-to-the-min-by-john-de-goes-scala-in-the-city-conference&quot;&gt;FP to the Min&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Finished Tic Tac Toe and extended it to have an optional bot. I ran into an issue when trying to generalize a function which I think has to do with polymorphic methods. For now, I’m moving on, but I’d still like to clean this up, and make a smarter bot. Here’s the &lt;a href=&quot;https://github.com/aryzach/scala-ZIO-ticTacToe&quot;&gt;repo&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;I found a &lt;a href=&quot;https://github.com/lpld/simple-games&quot;&gt;tetris game written with Cats&lt;/a&gt;. I wanted to build a game so I could focus on ZIO instead learning other tech / libraries. I had a hard time finding ZIO games that use streams, so I’m especially excited about this because it’ll help me learn about working with streams in general, with the bonus of learning some Cats. Maybe I’ll try to port the app to use ZIO instead of Cats. I’ve also never had to deal with drawing to the console. The rendering approach in this repo seems like it’s less mature than something like curses in Python, so I’m hoping to learn something about that, too. Hacking this project will also hopefully help me understand larger pure FP scala code bases and learn about structuring larger pure FP scala projects in general! This is a bigger project, so I’ll track it &lt;a href=&quot;https://aryzach.github.io/ZIO-snake&quot;&gt;in this blog post&lt;/a&gt;. And here’s my &lt;a href=&quot;https://github.com/aryzach/snake-console-game-scala-ZIO&quot;&gt;repo&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;I found a post about &lt;a href=&quot;https://stefan.saasen.me/articles/git-clone-in-haskell-from-the-bottom-up/&quot;&gt;cloning ‘git clone’ in Haskell&lt;/a&gt;. This is a #realworld FP app, and I’m super excited to implement it with Scala/ZIO. My primary learning goal is to get more practice with ZIO. My secondary goals are to practice much better SWE practices (agile, comments, good git practices) and to gain a better understanding of how git works. TDD, Kanban, git practices, Extreme Programming, Scrum.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;todo&quot;&gt;Todo:&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;Create small real world ZIO app, ideally something that needs concurrency / async&lt;/li&gt;
-  &lt;li&gt;Create online multiplayer CLI game (or browser game? scalaJS?) using Play framework and ZIO&lt;/li&gt;
-  &lt;li&gt;Think about this: https://rcoh.svbtle.com/no-magic-regular-expressions&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Commonly used resources / people to follow:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;ZIO benevolent dictator for life? &lt;a href=&quot;https://degoes.net/&quot;&gt;John De Goes&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;ZIO discord&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://scalac.io/zio/&quot;&gt;Scalac / ZIO&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;General scala: &lt;a href=&quot;https://alvinalexander.com/&quot;&gt;Alvin Alexander&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ZIO seems more like an ecosystem than a tooling library, similar to React (middle ground between a framework and a library). I could be totally off base here!&lt;/p&gt;</content><author><name></name></author><summary type="html">I have a job lined up working in Scala and will make heavy use of ZIO. This is a brief and working post about how I’m learning Scala and ZIO. Maybe it can be useful for somebody else wanting to learn.</summary></entry><entry><title type="html">Smart Irrigation</title><link href="http://localhost:4000/smart-irrigation" rel="alternate" type="text/html" title="Smart Irrigation" /><published>2021-04-16T11:47:25-07:00</published><updated>2021-04-16T11:47:25-07:00</updated><id>http://localhost:4000/smart-irrigation</id><content type="html" xml:base="http://localhost:4000/smart-irrigation">&lt;p&gt;&lt;img src=&quot;images/valveModuleEnclosure.jpg&quot; alt=&quot;Valve module without valve&quot; style=&quot;transform:rotate(90deg); margin-bottom: -50px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;problem&quot;&gt;Problem&lt;/h3&gt;
-&lt;p&gt;The problem that we are facing is regularly irrigating roughly 40 - 100 acres with as little water, labor, and power possible. Currently, we have about 20 overhead sprinkler valves and 50 drip irrigation valves. It’s a roughly 5 - 15 minute round trip to change each sprinkler valve, which both takes time and interrupt other projects you may be working on. This translates to roughly four labor hours to irrigate 40 acres, and will take even more time when the rest of the property needs to be irrigated. The 50 drip irrigation valves are less of an issue right now because the valves are in a more central location.&lt;/p&gt;
-
-&lt;p&gt;Secondary to the issue of manual labor is minimizing energy costs and water usage. In 2020, the energy cost was roughly $12,000 to irrigate 40 acres. We’re also limited by our water supply, a common problem for farmers in California. When we are near the end of the irrigation season (September - November), the creek produces much less water and at times, the pumps dry up the creek. Currently we only irrigate 40 acres, which is about 40% of what we plan to irrigate. As we irrigate more land, it’ll be important to use water resources more efficiently and save on energy costs when possible.&lt;/p&gt;
-
-&lt;h3 id=&quot;proposed-solution&quot;&gt;Proposed Solution&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;First stage: Implement remote on / off functionality for each valve&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Second stage: Build a scheduler, schedule optimizer, and schedule deployer&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Third stage: Add valve and field sensors to collect and visualize water pressure, water flow, and dampness data&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Fourth stage: Incorporate sensor data to further reduce water and energy consumption&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;project-specification&quot;&gt;Project Specification&lt;/h3&gt;
-&lt;p&gt;Succinctly, the infrastructure is a mix of overhead sprinklers and drip irrigation. The sprinklers each have their own 2” valve, and are about 80 meters from each other. We currently have 16 sprinklers. We also have about 30 rows with drip irrigation, each with their own valve. Because the water is delivered to the field through a pump, there is a small acceptable water pressure range. As a rule of thumb, one sprinkler valve and 5-15 drip irrigation valves must be open when the pump is on, otherwise, the pipes will burst under high pressure, and the sprinklers won’t turn with low pressure. Other infrastructure that we’ll have access to is 120 VAC power at the edge of the field, and WiFi coverage throughout.&lt;/p&gt;
-
-&lt;p&gt;This problem naturally calls for a system to remotely command the valve state and receive sensor data. It’s clear we need electrically controlled valves, small and cheap computers in the field (microcontroller or Raspberry Pi), a way to both communicate with and power the devices in the field, and a user interface to command and interpret the sensor data. On the software side, the end goal is to use water, pressure, and flow data to intelligently irrigate the field. The pump should run for the least time possible, correlating to energy and water savings.&lt;/p&gt;
-
-&lt;h3 id=&quot;valves&quot;&gt;Valves&lt;/h3&gt;
-&lt;p&gt;Ball valves only require power when switching state, while solenoid valves require continuous power in the ‘on’ state. But ball valves, depending on type, require either polarity reversal, or a feedback sensor to read position. Solenoid valves can be toggled with a SPSP relay. Ball valves introduce more hardware complexity, so when thinking about scaling this to 100 - 1000 valves in the field, it’s something I wanted to avoid.&lt;/p&gt;
-
-&lt;p&gt;At first I tested an aftermarket 120 VAC solenoid on a valve that came with a 24 VAC solenoid. It worked but was loud, got hot, and drew more power. I eventually found a 24 VDC solenoid that could be actuated by 5 VDC. This was better in every way, but if I used 120 VAC to power the valves would mean I’d have to add another piece of hardware to covert from 120 VAC to 5 VDC.&lt;/p&gt;
-
-&lt;h3 id=&quot;power&quot;&gt;Power&lt;/h3&gt;
-&lt;p&gt;I still debate the best way to solve the power issue. The main sources of power considered are cabled 120 VAC and a minimal solar / lithium battery system. 120 VAC is reliable, cheap, and requires little design, but then you have cables running all throughout the field on top of the 2” PVC where they’ll have to move periodically and will probably break from loose connections or get damaged by farm equipment. As the farm gets built out further from the 120 VAC power source, this won’t be a realistic option. The solar setup is more complex and could possibly fail if the solar panel and/or batteries aren’t sized big enough, and introduces other possible hardware failures.&lt;/p&gt;
-
-&lt;p&gt;Before finding the Sonoff product line (below), I was discouraged from the naive assumption that I’d have to power the microcontrollers or Raspberry Pis by setting up a lot of outlets in the field, which would’ve been a messy and bloated solution. Luckily, I found the Sonoff Basic microcontroller board which takes 120 VAC directly from the cable.&lt;/p&gt;
-
-&lt;p&gt;I found another product, the &lt;a href=&quot;https://www.itead.cc/wiki/Sonoff_SV&quot;&gt;Sonoff SV&lt;/a&gt;, that has a build in relay and takes 5 - 24 VDC. After reluctantly deciding to use the Sonoff Basic where we had access to 120 VAC, I wanted to understand power requirements to power the Sonoff SV board 24/7 and power the solenoid for 1 hour / day. Powering the microcontroller at 5 VDC draws about 70 mA and 150 mA when the relay is triggered. The 24 VDC solenoid powered by 5V draws about 100 mA. So 70 mA for 23 hours / day, and 250 mA for one hour / day. We’d like to run sprinklers at night (to minimize evaporation loss), so conservatively, we’d need&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(11 hrs * 70 mA) + (1 hr * 250 mA) = 1.02 Ah&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Conservatively, we’d need 3 &lt;a href=&quot;https://www.adafruit.com/product/1578&quot;&gt;3.7 VDC 500mAh lithium batteries&lt;/a&gt;. I still haven’t tested if the 3.7 - 4.2 VDC range is enough to power the Sonoff SV and solenoid, but if not, I may be able to put them in series, but that may complicate the solar panel / minimal solar controller setup. The Sonoff SV is run on an ESP8266, which I know has a low power mode, but I’m still in exploratory phase and haven’t gone down that route, yet. A potential downside to low power mode is that I may loose communications with it because I think it’ll turn off the WiFi.&lt;/p&gt;
-
-&lt;p&gt;I’m also exploring using super capacitors instead of batteries. This has the benefit of possibly reducing complexity and cost, and they’ll last forever. The downside is that I haven’t seen any projects that do this, so there are a lot of unknown unknowns. I’ve order these &lt;a href=&quot;https://www.alibaba.com/product-detail/10000f-Super-Capacitor-2-7v-Capacitor_1600092154455.html?spm=a2700.7724857.normal_offer.d_title.49c651ce1VJr7n&amp;amp;s=p&quot;&gt;10,000 F 2.7v super capacitors&lt;/a&gt;. I’ll experiment putting them in combinations of series and parallel, and I should be able to get around 1-2 Ah in an acceptable voltage range, recharged directly by a 5 W solar panel.&lt;/p&gt;
-
-&lt;h3 id=&quot;communication&quot;&gt;Communication&lt;/h3&gt;
-&lt;p&gt;We don’t have cell service on the property, so we’re gradually building out WiFi service to the whole 130 acres. Both the Raspberry Pi and ESP8266 on the Sonoff series boards come with a WiFi antenna, so I readily decided to use it for communications. We also entertained the idea of using &lt;a href=&quot;https://en.wikipedia.org/wiki/LoRa&quot;&gt;LoRa&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/Power-line_communication&quot;&gt;power-line communication&lt;/a&gt;. LoRa is a great solution for farms, but because we plan to have full-service WiFi, it didn’t make sense to manage two wireless communication systems. I’d never heard of power-line communications before, so while interesting, there may not be off-the-shelf solutions, and it relied on cabled power.&lt;/p&gt;
-
-&lt;h3 id=&quot;iot-devices&quot;&gt;IoT devices&lt;/h3&gt;
-&lt;p&gt;At first I tested using a Raspberry Pi with a relay board that held 16 relays. So I’d be able to control 16 solenoids or 4 - 8 ball valves, depending on relay type and ball valve motor wiring. If I went with 120 VAC and outlets, this would limit the number of outlets I needed, and it’s nice to be able to ssh into the pi to make changes or debug.&lt;/p&gt;
-
-&lt;p&gt;This still seems like a non-optimal solution, and I gradually tested different microcontroller solutions until I found the Sonoff series. This uses an ESP8266 with a built-in WiFi antenna and SPST relay rated for 120 VAC for the Sonoff Basic and 5 - 24 VDC for the Sonoff SV. Other boards used poorly documented chips which made it difficult to flash custom firmware. The major downside is that it doesn’t have GPIO pins, but I’ve read that you can commandeer the TX and RX pins to use as GPIO. I’ll have to learn more about then when we implement sensors, but I wish I had time to test it before committing to this board.&lt;/p&gt;
-
-&lt;p&gt;The firmware is fairly basic and most of it is just gluing parts of &lt;a href=&quot;https://tttapa.github.io/ESP8266/Chap01%20-%20ESP8266.html&quot;&gt;this guide&lt;/a&gt; together. It includes&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;WiFi setup&lt;/li&gt;
-  &lt;li&gt;MQTT subscription&lt;/li&gt;
-  &lt;li&gt;Parsing JSON data from the MQTT socket&lt;/li&gt;
-  &lt;li&gt;Over-the-air (OTA) updates&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I implemented a different OTA procedure which uses HTTP GET requests to check if there’s a firmware update on the server. Then uses the ESPhttpUpdate library to update the firmware. To update, I update the FW_VERSION in the code with the latest version, upload the new compiled code to a specific file on the server, then update the file ‘postedVersion.version’ to contain the latest version number.&lt;/p&gt;
-
-&lt;p&gt;Global:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;HTTPClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FW_VERSION&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Main loop:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// get version&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;checking for version update&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;httpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://192.168.1.7/postedVersion.version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;200&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newFWVersion&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;version on server: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;newFWVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newVersion&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newFWVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newVersion&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FW_VERSION&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Preparing to update&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;// get binary&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;t_httpUpdate_return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ret&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ESPhttpUpdate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;192.168.1.7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-                &lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/postedVersion.bin&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  
-        &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ret&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HTTP_UPDATE_FAILED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HTTP_UPDATE_NO_UPDATES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;HTTP_UPDATE_NO_UPDATES&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;My favorite feature of the firmware is that all devices can have the same code. They each have a lookup table that consists of all the name : value pairs with their MAC address and human readable name. This design choice is especially valuable because it allows for a simpler communication protocol, and allows all client devices to have the same code. The database stores IoT device info with a compressed human-readable name, and the IoT clients have a dictionary of all MAC addresses matched to human-readable name. When a command is received by a device, the device will look up it’s human-readable name, and then act accordingly. This simplifies the firmware updating process because the same code can be pushed to all devices.&lt;/p&gt;
-
-&lt;p&gt;Global:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;entry&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;entry&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;C8:2B:96:4F:DC:A6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;p00d00&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;D8:F1:5B:DA:E9:27&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;p00d01&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;D8:F1:5B:E8:3B:51&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;p00d02&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Setup:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// set MAC&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;MAC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;macAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// set ID&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MAC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
-        &lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Main loop MQTT callback function:&lt;/p&gt;
-&lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// 'doc' is the deserialized JSON message from the MQTT connection &lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
-&lt;p&gt;Here I host a web app built with Flask, run a Redis instance, an MQTT instance and server, and a ZMQ server (for a separate part of the project). For direct on/off functionality, the app takes user input as an HTTP POST, the Flask server handles the request and updates the Redis database. An MQTT server then grabs the Redis value and publishes it, which is then pushed to subscribing clients. This is admittedly an overly complicated stack. I already use Redis and ZMQ for other projects, but had a hard time with ZMQ on the microcontrollers, so I had to add MQTT to the stack.&lt;/p&gt;
-
-&lt;p&gt;I’d already started managing a continuously operational server on a Raspberry Pi for a separate project because it had a few daily users. Most reliability issues were solved by running a cron job on boot that started a tmux session and started the necessary programs. Starting the programs in a tmux session allows me to work on the server without interfering with the necessary programs. Here is the bulk of the startup server script:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#bash&lt;/span&gt;
-......
-&lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;2 
-ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;redis | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; | 
-	&lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; 1 | xargs &lt;span class=&quot;nb&quot;&gt;sudo kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-9&lt;/span&gt;
-runuser &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; pi &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'redis-server &amp;amp;'&lt;/span&gt; 
-&lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;2
-
-&lt;span class=&quot;c&quot;&gt;# point port 80 to port 5000 &lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;iptables &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; nat &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; PREROUTING 
-	&lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; tcp &lt;span class=&quot;nt&quot;&gt;--dport&lt;/span&gt; 80 &lt;span class=&quot;nt&quot;&gt;-j&lt;/span&gt; REDIRECT &lt;span class=&quot;nt&quot;&gt;--to-port&lt;/span&gt; 5000
-
-python3 /home/pi/twistedApp/twistedApp.py &amp;amp; 
-python3 /home/pi/zmqServer.py &amp;amp; 
-&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;python3 
-	/home/pi/twistedApp/
-		app/tools/network/pingLAN.py &amp;amp;
-ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;mosquitto | &lt;span class=&quot;nb&quot;&gt;awk&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{print $2}'&lt;/span&gt; | 
-	&lt;span class=&quot;nb&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; 1 | xargs &lt;span class=&quot;nb&quot;&gt;sudo kill&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-9&lt;/span&gt;
-mosquitto &amp;amp;
-&lt;span class=&quot;nb&quot;&gt;sleep &lt;/span&gt;2
-python3 mqttServer.py &amp;amp;
-python3 OTAserver.py &amp;amp; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;This has been a journey of trial and error to get all the programs to restart and make re-connections with clients reliably. I kill the Redis and MQTT / mosquito daemons before restarting them. I also reroute port 80 traffic to port 5000, which allows me to run the web app ‘twistedApp’ from a non-root user, and still allow users to access the web page at the simple local domain ‘twisted.local’ instead of the unintuitive ‘192.168.1.7:5000’&lt;/p&gt;
-
-&lt;h3 id=&quot;user-interface-and-app&quot;&gt;User Interface and App&lt;/h3&gt;
-&lt;p&gt;Currently, the functionality available to users is direct on/off valve and pump control using forms on a web app.&lt;/p&gt;
-
-&lt;p&gt;The IoT device at the pump is a Raspberry Pi with a high-voltage solid state relay and a float sensor. The pump runs, but will momentarily stop if the creek water level gets too low. If the creek water level rises, the pump will turn back on. This functionality is handled locally on the Pi at the creek.&lt;/p&gt;
-
-&lt;p&gt;I’ve started to build out a scheduler which will create an optimized schedule that limits the total pump runtime while staying within the acceptable water pressure range. The user inputs how long they would like to run each drip irrigation row and each sprinkler.&lt;/p&gt;
-
-&lt;p&gt;When the form is submitted, the values are passed to an optimizing function. Here it creates a list of all acceptable valve state permutations. For example if we had 2 drip valves and 2 sprinklers, and we required 1 sprinkler and 1 drip valve to be open to stay in the acceptable pressure range, the acceptable states would look as follows:&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Valve Type&lt;/th&gt;
-      &lt;th&gt;State 1&lt;/th&gt;
-      &lt;th&gt;State 2&lt;/th&gt;
-      &lt;th&gt;State 3&lt;/th&gt;
-      &lt;th&gt;State 4&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Drip 1&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Drip 2&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Sprinkler 1&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Sprinkler 2&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-      &lt;td&gt;Off&lt;/td&gt;
-      &lt;td&gt;On&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;The state will represent a time increment of 15 minutes. We’ll then create increasingly longer list of state combinations, and stop when we’ve reached a schedule that opens the valves for the correct amount of total time for each valve. This ensures all valves are open for the inputted time, while minimizing the time the pump is on. Because it’s beneficial to water the plants periodically throughout the day, the final schedule will be one that alternates valve state permutations.&lt;/p&gt;
-
-&lt;p&gt;I’ll still have to build a deployer that allows you to select a schedule and deploy it at a specified time.&lt;/p&gt;
-
-&lt;h3 id=&quot;reflections&quot;&gt;Reflections&lt;/h3&gt;
-&lt;h4 id=&quot;ewelink-software&quot;&gt;eWeLink Software&lt;/h4&gt;
-&lt;p&gt;As I’m finishing building this out and installing / testing in the field, I found that the Sonoff devices come with a cloud-based, off-the-shelf controller called &lt;a href=&quot;https://www.ewelink.cc/en/&quot;&gt;eWeLink&lt;/a&gt;, which covers most of our initial use cases (scheduling and on/off functionality). They also have event-triggered control, but it looks like they only support sensors within the Sonoff ecosystem, which, unless they expanded their product line or made the software open source, wouldn’t be able to fulfill our requirements.&lt;/p&gt;
-
-&lt;p&gt;If I would’ve known about this off-the-shelf software solution earlier, I could’ve prioritized finishing the hardware design and installation, and therefore completing Stage 1 and 2 earlier.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h4 id=&quot;power-consumption-and-valve-type&quot;&gt;Power Consumption and Valve Type&lt;/h4&gt;
-&lt;p&gt;When I found the Sonoff boards with built-in SPST relay, I was relieved from a lot of hardware mess. The downfall is that it limits me to solenoid valves. In the future, I may try 3-wire ball valves with a normal ESP8266 and SPDT to limit power consumption and possibly minimize solar / battery requirements.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h4 id=&quot;server-and-apps&quot;&gt;Server and Apps&lt;/h4&gt;
-&lt;p&gt;If this ever moves from a home brew project to a consumer-grade product / service, I would build a more robust server that could handle multiple customers, and I’d likely host in in the cloud with native iOS and Android apps.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h4 id=&quot;overall&quot;&gt;Overall&lt;/h4&gt;
-&lt;p&gt;The ideal hardware setup would be an SPDT relay on built-in Sonoff SV controlling a 3-wire ball valve, powered by a 5-10 watt solar panel and 3-4 lithium batteries or an appropriately-sized supercapacitor.
-The ideal software architeture would be native phone apps and a web app, with a data dashboard to view sensor data.&lt;/p&gt;</content><author><name></name></author><category term="hard" /><category term="tech" /><category term="product" /><category term="design" /><summary type="html"></summary></entry><entry><title type="html">Solar Powered Ranger</title><link href="http://localhost:4000/solar-powered-ranger" rel="alternate" type="text/html" title="Solar Powered Ranger" /><published>2021-04-16T11:47:25-07:00</published><updated>2021-04-16T11:47:25-07:00</updated><id>http://localhost:4000/solar-powered-ranger</id><content type="html" xml:base="http://localhost:4000/solar-powered-ranger">&lt;p&gt;&lt;img src=&quot;images/ranger.jpg&quot; alt=&quot;ranger&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I wanted to passively charge a &lt;a href=&quot;https://ranger.polaris.com/en-us/ranger-ev/&quot;&gt;Polaris Ranger EV&lt;/a&gt; from solar panels. Two 100 watt solar panels had been installed on top of the ranger from when the ranger originally had a lead-acid solar charging system. Running and charging lead-acid from solar is simple with a solar controller, but the ranger had already been converted to run off of a lithium battery, which meant it had a &lt;a href=&quot;https://en.wikipedia.org/wiki/Battery_management_system&quot;&gt;battery management system (BMS)&lt;/a&gt;. I was using an &lt;a href=&quot;https://www.orionbms.com/manuals/pdf/wiring_jr.pdf&quot;&gt;Orion BMS Jr.&lt;/a&gt;. Powering the BMS was the crux of this problem.&lt;/p&gt;
-
-&lt;p&gt;In a lead-acid solar charging system, the three main components are the solar panels, solar controller, and lead-acid batteries. Here, the solar controller can be powered by the panels and only when they are producing energy. This system “just works” right off the shelf.&lt;/p&gt;
-
-&lt;p&gt;In a lithium solar charging system, there are four main components- the fourth being the BMS. The BMS must be powered when the battery is being charged or discharged through use. If the BMS isn’t on when the battery is charging, you risk the cells having different voltages or catching fire (which both shorten the life of the battery pack), and if the BMS is on all the time, you shorten the range and possibly risk damaging the batteries.&lt;/p&gt;
-
-&lt;p&gt;I decided I only wanted to power the BMS when the solar panels had an open-circuit voltage above a certain threshold to avoid the bad scenarios above. This turned out to be non-trivial, which led to a super fun learning experience and why I’m writing this post!&lt;/p&gt;
-
-&lt;p&gt;System hardware previously installed:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Solar panels:
-    &lt;ul&gt;
-      &lt;li&gt;two 100 watt, 24v solar panels&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;BMS:
-    &lt;ul&gt;
-      &lt;li&gt;powered when charging through AC/DC converter&lt;/li&gt;
-      &lt;li&gt;powered when ranger is turned on&lt;/li&gt;
-      &lt;li&gt;input voltage range: 9v - 60v&lt;/li&gt;
-      &lt;li&gt;max current 3A&lt;/li&gt;
-      &lt;li&gt;toggles a pin from float to ground to indicate that the battery is ready to be charged&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Lithium iron phosphate battery (LiFePO4)
-    &lt;ul&gt;
-      &lt;li&gt;charged from grid through AC/DC converter&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Originally, the ranger used a different &lt;a href=&quot;https://www.amazon.com/Genasun-GVB-8-Pb-48V-WP-Waterproof-Controller-Batteries/dp/B07H8SYB28/ref=pd_lpo_86_t_0/138-2639310-8966331?_encoding=UTF8&amp;amp;pd_rd_i=B07H8SYB28&amp;amp;pd_rd_r=f6de1b83-7f25-4575-9c5c-064d36f5a8df&amp;amp;pd_rd_w=jZxcf&amp;amp;pd_rd_wg=4Q7tc&amp;amp;pf_rd_p=fb1e266d-b690-4b4f-b71c-bd35e5395976&amp;amp;pf_rd_r=1N0XHAM1TXFKEFB1A66T&amp;amp;psc=1&amp;amp;refRID=1N0XHAM1TXFKEFB1A66T&quot;&gt;solar controller for the lead-acid batteries&lt;/a&gt;, but when that didn’t work (3 charging cycles were too reserved for the lithium), I used &lt;a href=&quot;https://www.amazon.com/dp/B08JZCRKDR/?coliid=I3TSBTV63CHLZD&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;this adustable solar controller for lithium&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Other constraints:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;The ranger was needed for daily farm use&lt;/li&gt;
-  &lt;li&gt;System failure could mean somebody gets hurt or the $2000 - $5000 battery pack is ruined&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/solarOnRanger.jpg&quot; alt=&quot;solar panels on ranger&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;idea--iteration-1-power-the-bms-with-a-dc-converter-so-that-the-bms-is-on-only-when-the-panels-are-producing-a-voltage-within-the-dc-converter-input-range&quot;&gt;Idea / iteration 1: Power the BMS with a DC converter so that the BMS is on only when the panels are producing a voltage within the DC converter input range&lt;/h4&gt;
-
-&lt;p&gt;I was able to achieve this using a combination of the following:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;isolated 9-60v to 24v DC &lt;a href=&quot;https://www.digikey.com/en/products/detail/cui-inc/PQAE50-D24-S24-D/13563301?utm_adgroup=DC%20DC%20Converters&amp;amp;utm_source=google&amp;amp;utm_medium=cpc&amp;amp;utm_campaign=Shopping_Product_Power%20Supplies%20-%20Board%20Mount_NEW&amp;amp;utm_term=&amp;amp;utm_content=DC%20DC%20Converters&amp;amp;gclid=Cj0KCQjw8vqGBhC_ARIsADMSd1Ao04uo4vTQqNOUY5ago-pk_4bIGioo2zeDo9YiX6XfKT8Wd89V3r0aAu0_EALw_wcB&quot;&gt;converter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;high-voltage, solid state &lt;a href=&quot;https://www.amazon.com/dp/B07PFDJQLV/?coliid=IL264W22BQM4Z&amp;amp;colid=2M5Y12QIIIVYU&amp;amp;psc=1&amp;amp;ref_=lv_ov_lig_dp_it&quot;&gt;relay&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;diodes (to prevent back feeding grid power or back feeding the solar controller)&lt;/li&gt;
-  &lt;li&gt;voltage distributor&lt;/li&gt;
-  &lt;li&gt;3A fuse&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So here we take solar power (two 100 watt, 24v panels in series, so 0 - 56 volts), convert it to 24v to power the BMS. Now the BMS is sampling the battery and doing it’s job. When the BMS determines the battery should be charged, it toggles an output pin from float to ground. So I take that output control pin from the BMS and the 24v from the DC converter to use to signal the high-voltage relay. At this point, when the BMS is powered and pulls the output pin to ground, the relay closes. The relay will open and close the connection from the solar controller to the battery.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/rangerBoard.jpeg&quot; alt=&quot;ranger board&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This approach worked in simple scenarios such as when the sun was shining (panels &amp;gt; 40v) or when it wasn’t, but I ran into two coupled issues:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;low partial light conditions (9 - 14v panel voltage)&lt;/li&gt;
-  &lt;li&gt;medium partial light conditions when hooked up to the battery and when the BMS indicates to charge (open-circuit panel voltage &amp;lt;40v)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In the first scenario, the BMS would turn on, then the panel voltage would be pulled below 9v, causing the BMS to turn off, so then the panels would go back above the DC converter threshold, causing the BMS to turn back on. And BMS state would continue to oscillate.
-The second scenario is similar. The BMS is on, indicates to charge, and relay closes, connecting the solar controller to the batteries. Then when the batteries start charging, they pull the panel voltage down (to under 9v), which in turn turns off the BMS. Once the BMS turns off and the batteries stop charging, the solar panel open-circuit voltage rises again, which triggers the BMS to turn on. And the cycle repeats with a period of about 1 second.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/boardInRanger.jpg&quot; alt=&quot;testing board&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;idea--iteration-2-hysteresis-circuit&quot;&gt;Idea / iteration 2: Hysteresis circuit&lt;/h4&gt;
-
-&lt;p&gt;These issues indicated a need for hysteresis in the system.&lt;/p&gt;
-
-&lt;p&gt;My first instict would be to implement hystersis with software, but we’d run into similar issues because the computer running it would have to be powered.&lt;/p&gt;
-
-&lt;p&gt;Because the hysteresis had to be low power and resiliant to a flakey power source, I couldn’t use a software solution which would’ve relied on a bare minimum of powering a microcontroller.&lt;/p&gt;
-
-&lt;p&gt;I found a low-powered active circuit solution that relies on a &lt;a href=&quot;https://en.wikipedia.org/wiki/Comparator#:~:text=In%20electronics%2C%20a%20comparator%20is,and%20one%20binary%20digital%20output%20.&quot;&gt;comparator&lt;/a&gt; (or alternatively an op-amp). I used the &lt;a href=&quot;https://www.ti.com/product/LM339&quot;&gt;LM339&lt;/a&gt; and found this &lt;a href=&quot;https://www.daycounter.com/Calculators/Comparator-Hysteresis-Calculator.phtml&quot;&gt;calculator&lt;/a&gt; useful. I don’t have a good intuition for how a comparator should behave, so I leaned heavy on trial and error with the calculator to find appropriate voltage and resistor values.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/hysteresisDiagram.jpg&quot; alt=&quot;hysteresis diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align: center;&quot;&gt;Hysteresis diagram&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/circuitDiagramWithHysteresis.jpg&quot; alt=&quot;solar panels on ranger&quot; style=&quot;transform:rotate(270deg); margin-bottom: -100px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align: center;&quot;&gt;Full circuit diagram with hysteresis circuit&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;The goal of the comparator / hysteresis circuit is to differentiate ON vs OFF threshold voltage values. In my case, I wanted the BMS to turn on when the solar panel voltage was above 40v and turn off when it was below 10v. I found through experimentation that when the batteries were charging and panel voltage was just below 10v, the open-circuit voltage was below 40v, meaning these hysteresis parameters would eliminate the power cycling problem of the BMS when in partial sun and when the battery was connected to the solar controller / solar panels. I learned a few technical lessons through experimentation with the comparator:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;a higher reference voltage or supply voltage will give you greater difference between your high (on) and low (off) threshold voltages&lt;/li&gt;
-  &lt;li&gt;find resistor ratios that are easy to make with your given set of resistors&lt;/li&gt;
-  &lt;li&gt;when working with signal voltages, use the highest resistance possible without diluting your signal. This avoids burning off power in the resister&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Because the comparator consumed such low power, I used the battery to supply 24v to the comparator through a separate isolated DC converter. The BMS DC converter needs to be isolated because the auxiliary ground is different from the battery ground.&lt;/p&gt;
-
-&lt;p&gt;The BMS DC converter has an optional enable pin. Adding the hysteresis circuit between the solar panels (comparator signal input) and DC converter (comparator signal output) allowed the hysteresis circuit to control when the BMS is powered. Now, the power goes like this:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;BMS is off&lt;/li&gt;
-  &lt;li&gt;When solar panels open-circuit voltage is 40v or higher, the DC converter is enabled through the hysteresis circuit and the BMS turns on&lt;/li&gt;
-  &lt;li&gt;If the BMS decides to charge the batteries, the relay is closed and the batteries start charging&lt;/li&gt;
-  &lt;li&gt;Connecting the solar panels / solar controller to the batteries pull the panel voltage down to 15 - 30v&lt;/li&gt;
-  &lt;li&gt;Because the hysteresis circuit hasn’t fallen below its 10v off indicator, the BMS stays on&lt;/li&gt;
-  &lt;li&gt;Now when the panel is pulled down from the battery and reads under 10v, the BMS will be shut off and battery will stop charging. The panel voltage will rise because nothing is drawing the power, but it will be below the 40v hysteresis ON parameter, so the BMS won’t cycle back on&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/rangerHysteresisBreadboard.jpeg&quot; alt=&quot;ranger hysteresis breadboard&quot; style=&quot;transform:rotate(270deg); margin-bottom: -100px; margin-top: -50px;&quot; /&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align: center;&quot;&gt;Breadboard with hysteresis circuit and DC converter to power the comparator&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Now, this circuit worked as expected. The new issue was to harden the system to tolerate both vibration and mud, which is a lot less interesting to talk about.&lt;/p&gt;
-
-&lt;h4 id=&quot;thoughts&quot;&gt;Thoughts&lt;/h4&gt;
-
-&lt;p&gt;Using solar as a switch and only powering the BMS when it was sunny may be an unneeded constraint. The BMS consumes only about 2 watts. A simpler solution is to power the BMS directly from the battery and take the power hit of 2 watts. The worse-case failure mode with this solution would be the possibility of draining and damaging the battery if it got too low. The benefit would be that the batteries would charge in times where the hysteresis circuit would prevent charging but when there was still some sun, notably around an open-circuit panel voltage of 30 - 40v.&lt;/p&gt;
-
-&lt;p&gt;I could’ve done more analysis before building and testing the more complicated hysteresis design, and maybe I would’ve decided to try this simple solution first. I was hesitant to go this route both because of the $2000 - $5000 battery replacement cost if they got damaged from over-discharge, and because I knew it’d be a great way to get better at circuit engineering and design. Ultimately, a lot of mistakes would have to align for the worse-case scenario to happen, as the ranger is generally stored and used outside in the sun everyday.&lt;/p&gt;
-
-&lt;p&gt;So prior to hardening the hysteresis solution, I decided to implement the simpler solution and power the BMS 24/7 from the battery and isolated DC converter. This solution reduces a lot of complexity but has a less desirable worse-case failure mode, even if it’s a remote possibility.&lt;/p&gt;
-
-&lt;p&gt;I think the hysteresis solution is the correct long-term product solution, but in this case, I think the corrent solution is the simple “power BMS 24/7”, both because long-term robustness and product at scale are not important considerations, and because I’ve already sunk too much time into this project.&lt;/p&gt;
-
-&lt;h4 id=&quot;other-thoughts&quot;&gt;Other thoughts&lt;/h4&gt;
-&lt;p&gt;Instead of hysteresis, I could’ve used a timer circuit, where the sun is the signal but power comes from the battery. This could reduce BMS power cycling when driving through shade, but when it’s still sunny elsewhere, and because the solar panels wouldn’t be powering the BMS, you would deal with the power oscillation.&lt;/p&gt;
-
-&lt;p&gt;Another thought we had at the beginning, prior to doing any building or testing, was to have a small lead-acid battery and seperate solar controller, and this would be used to power the BMS 24/7. This solution seemed terribly unelegant and sloppy; we have everything, power and signal, all right there! I wanted to jump to the most optimal solution. This turned out to be misguided thinking, not because I think it’s a great solution, but because I learned that Teslas carry a lead-acid battery! So I’m sure this solution wouldn’t have been too misguided to pursue. That was a humbling engineering lesson :)&lt;/p&gt;
-
-&lt;p&gt;Also, I should talk about testing the small auxillary solar panel idea. Provides power to BMS, but doesn’t get pulled down by battery. This solves the battery hysteresis issue, but not hysteresis when sun is 9v-14v because BMS pulls it down a little bit. But I was going to use it to power and signal just the hysteresis circuit.&lt;/p&gt;</content><author><name></name></author><category term="engineering" /><category term="electrical" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;Now the game is largely feature complete. It’s not a full snake game, because it never ends and you never lose, but it’s all ported to ZIO, which was my main learning goal.&lt;/p&gt;</content><author><name></name></author><summary type="html"></summary></entry></feed>
