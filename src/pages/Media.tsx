@@ -14,7 +14,6 @@ const Media = () => {
     { src: "/media/0804_8.mp4" },
     { src: "/media/0804_9.mp4" },
     { src: "/media/0804_10.mp4" },
-    { src: "/media/0804_12.mp4" },
     { src: "/media/IMG_5789_1.mp4" },
   ];
 
