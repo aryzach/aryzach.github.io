@@ -59,7 +59,7 @@ const ServiceArea = () => {
           <p className="text-lg text-muted-foreground mb-4">
             Not sure if you're in our service area? Get in touch
           </p>
-          <Link to="/contact">
+          <Link to="/learn-more">
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               Contact Us
             </Button>

@@ -99,7 +99,7 @@ const Pricing = () => {
                         </li>
                       ))}
                     </ul>
-                    <Link to="/contact">
+                    <Link to="/reserve-your-sauna">
                       <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                         Reserve Now
                       </Button>

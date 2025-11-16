@@ -13,7 +13,7 @@ const ReserveCTA = () => {
           Join the many San Franciscans enjoying daily infrared therapy at home
         </p>
         <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
-          <Link to="/contact">
+          <Link to="/reserve-your-sauna">
             Reserve Now
             <ArrowRight className="ml-2" size={20} />
           </Link>
