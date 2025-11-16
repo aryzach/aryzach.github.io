@@ -91,7 +91,7 @@ const Pricing = () => {
 
           {/* Sauna Grid */}
           <h2 className="text-2xl font-bold text-center mb-8 text-foreground">Select Option</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4 md:gap-6">
             {saunaTypes.map((sauna, index) => (
               <Collapsible key={index}>
                 <div className="bg-card rounded-lg overflow-hidden border border-border">
@@ -102,48 +102,48 @@ const Pricing = () => {
                         loop
                         muted
                         playsInline
-                        className="w-full aspect-video object-cover"
+                        className="w-full h-[300px] md:h-[400px] object-cover"
                       >
                         <source src={sauna.video} type="video/mp4" />
                       </video>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                        <div className="p-4 w-full flex items-center justify-between">
+                        <div className="p-3 md:p-4 w-full flex items-center justify-between">
                           <div>
-                            <h3 className="text-xl font-bold text-white mb-1">
+                            <h3 className="text-base md:text-xl font-bold text-white mb-1">
                               {sauna.type}
                             </h3>
-                            <p className="text-sm text-white/90">{sauna.availability}</p>
+                            <p className="text-xs md:text-sm text-white/90">{sauna.availability}</p>
                           </div>
-                          <ChevronDown className="text-white h-6 w-6 transition-transform" />
+                          <ChevronDown className="text-white h-5 w-5 md:h-6 md:w-6 transition-transform flex-shrink-0" />
                         </div>
                       </div>
                     </div>
                   </CollapsibleTrigger>
 
                   <CollapsibleContent>
-                    <div className="p-6">
+                    <div className="p-4 md:p-6">
                       {/* Pricing Table */}
-                      <div className="space-y-3 mb-6">
+                      <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
                         {sauna.pricing.map((plan, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center justify-between py-2"
+                            className="flex items-center justify-between py-1 md:py-2"
                           >
-                            <div className="flex items-center gap-3">
-                              <span className="font-semibold text-card-foreground min-w-[100px]">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <span className="font-semibold text-card-foreground text-sm md:text-base min-w-[80px] md:min-w-[100px]">
                                 {plan.duration}
                               </span>
                               {plan.popular && (
-                                <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
+                                <span className="bg-primary text-primary-foreground text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full">
                                   POPULAR
                                 </span>
                               )}
                             </div>
                             <div>
-                              <span className="text-2xl font-bold text-card-foreground">
+                              <span className="text-xl md:text-2xl font-bold text-card-foreground">
                                 {plan.price}
                               </span>
-                              <span className="text-sm text-muted-foreground">
+                              <span className="text-xs md:text-sm text-muted-foreground">
                                 {plan.priceDetail}
                               </span>
                             </div>
