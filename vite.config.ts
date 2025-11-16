@@ -5,6 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // base URL for GitHub Pages project site
   base: mode === "development" ? "/" : "/sf-sauna-sanity/",
 
   server: {
