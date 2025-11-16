@@ -1,10 +1,15 @@
-const galleryImages = [
-  "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?auto=format&fit=crop&w=800&q=80",
+import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
+import gallery3 from "@/assets/gallery-3.jpg";
+import gallery4 from "@/assets/gallery-4.jpg";
+
+const galleryItems = [
+  { type: "image", src: gallery1 },
+  { type: "image", src: gallery2 },
+  { type: "video", src: "/media/0804_5.mp4" },
+  { type: "image", src: gallery3 },
+  { type: "video", src: "/media/gallery-video.mp4" },
+  { type: "image", src: gallery4 },
 ];
 
 const Gallery = () => {
@@ -19,17 +24,37 @@ const Gallery = () => {
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {galleryImages.map((image, index) => (
+          {galleryItems.map((item, index) => (
             <div
               key={index}
               className="aspect-[4/3] rounded-lg overflow-hidden shadow-lg"
             >
-              <img
-                src={image}
-                alt={`SF Sauna installation ${index + 1}`}
-                loading="lazy"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-              />
+              {item.type === "image" ? (
+                <img
+                  src={item.src}
+                  alt={`SF Sauna installation ${index + 1}`}
+                  loading="lazy"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <video
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover cursor-pointer"
+                  preload="metadata"
+                  onClick={(e) => {
+                    const video = e.currentTarget;
+                    if (video.paused) {
+                      video.play();
+                    } else {
+                      video.pause();
+                    }
+                  }}
+                >
+                  <source src={item.src} type="video/mp4" />
+                </video>
+              )}
             </div>
           ))}
         </div>
