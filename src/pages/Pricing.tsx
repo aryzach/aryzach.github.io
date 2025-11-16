@@ -8,47 +8,54 @@ const saunaTypes = [
   {
     type: "Indoor Infrared",
     availability: "Available within a week",
+    video: "/videos/indoor-infrared.mp4",
     pricing: [
       { duration: "1 Month", price: "$449", priceDetail: "/month" },
       { duration: "3 Months", price: "$259", priceDetail: "/month", popular: true },
       { duration: "6 Months", price: "$229", priceDetail: "/month" },
       { duration: "12 Months", price: "$199", priceDetail: "/month" },
     ],
-    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support"],
   },
   {
     type: "Indoor Finnish Dry",
     availability: "Available within two weeks",
+    video: "/videos/indoor-finnish.mp4",
     pricing: [
       { duration: "1 Month", price: "$599", priceDetail: "/month" },
       { duration: "3 Months", price: "$359", priceDetail: "/month", popular: true },
       { duration: "6 Months", price: "$319", priceDetail: "/month" },
       { duration: "12 Months", price: "$299", priceDetail: "/month" },
     ],
-    features: ["Full setup included", "Traditional heater & rocks", "Pickup included", "24/7 support"],
   },
   {
     type: "Outdoor Infrared",
     availability: "Available within a month",
+    video: "/videos/outdoor-infrared.mp4",
     pricing: [
       { duration: "1 Month", price: "$499", priceDetail: "/month" },
       { duration: "3 Months", price: "$359", priceDetail: "/month", popular: true },
       { duration: "6 Months", price: "$329", priceDetail: "/month" },
       { duration: "12 Months", price: "$299", priceDetail: "/month" },
     ],
-    features: ["Full setup included", "Weather-resistant", "Pickup included", "24/7 support"],
   },
   {
     type: "Outdoor Finnish Dry",
     availability: "Available in 2 months",
+    video: "/videos/outdoor-finnish.mp4",
     pricing: [
       { duration: "1 Month", price: "$679", priceDetail: "/month" },
       { duration: "3 Months", price: "$399", priceDetail: "/month", popular: true },
       { duration: "6 Months", price: "$349", priceDetail: "/month" },
       { duration: "12 Months", price: "$319", priceDetail: "/month" },
     ],
-    features: ["Full setup included", "Traditional heater & rocks", "Weather-resistant", "Pickup included", "24/7 support"],
   },
+];
+
+const commonFeatures = [
+  "Full setup included",
+  "Standard 120V",
+  "Pickup included",
+  "24/7 support",
 ];
 
 const Pricing = () => {
@@ -60,55 +67,155 @@ const Pricing = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-center mb-6 text-foreground">
             Pricing & Options
           </h1>
-          <p className="text-xl text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-            Choose the sauna type and rental period that works best for you. All plans include delivery, professional setup, and pickup.
+          <p className="text-xl text-center text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Choose the sauna type and rental period that works best for you.
           </p>
 
-          {saunaTypes.map((sauna, saunaIndex) => (
-            <div key={saunaIndex} className="mb-16">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                  {sauna.type}
-                </h2>
-                <p className="text-lg text-muted-foreground">{sauna.availability}</p>
-              </div>
+          {/* Common Features */}
+          <div className="bg-card rounded-lg p-6 mb-12 max-w-2xl mx-auto border border-border">
+            <h3 className="text-lg font-semibold mb-4 text-center text-card-foreground">All plans include:</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {commonFeatures.map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <Check className="text-primary flex-shrink-0" size={20} />
+                  <span className="text-card-foreground">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-                {sauna.pricing.map((plan, index) => (
-                  <div
-                    key={index}
-                    className={`bg-card rounded-lg p-6 border-2 ${
-                      plan.popular ? "border-primary shadow-lg" : "border-border"
-                    }`}
+          {/* Sauna Sections */}
+          <div className="space-y-16">
+            {saunaTypes.map((sauna, index) => (
+              <div
+                key={index}
+                className="bg-card rounded-lg overflow-hidden border border-border"
+              >
+                {/* Mobile Layout */}
+                <div className="block lg:hidden">
+                  <div className="p-6 pb-4">
+                    <h2 className="text-3xl font-bold text-card-foreground mb-2">
+                      {sauna.type}
+                    </h2>
+                    <p className="text-muted-foreground mb-4">{sauna.availability}</p>
+                  </div>
+                  
+                  {/* Full Bleed Video on Mobile */}
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full"
                   >
-                    {plan.popular && (
-                      <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
-                        MOST POPULAR
-                      </span>
-                    )}
-                    <h3 className="text-2xl font-bold mt-4 mb-2 text-card-foreground">{plan.duration}</h3>
-                    <div className="mb-6">
-                      <span className="text-4xl font-bold text-card-foreground">{plan.price}</span>
-                      {plan.priceDetail && <span className="text-muted-foreground">{plan.priceDetail}</span>}
-                    </div>
-                    <ul className="space-y-3 mb-6">
-                      {sauna.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <Check className="text-primary flex-shrink-0 mt-1" size={16} />
-                          <span className="text-sm text-card-foreground">{feature}</span>
-                        </li>
+                    <source src={sauna.video} type="video/mp4" />
+                  </video>
+
+                  <div className="p-6">
+                    {/* Pricing Grid */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      {sauna.pricing.map((plan, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-lg border-2 ${
+                            plan.popular
+                              ? "border-primary bg-primary/5"
+                              : "border-border"
+                          }`}
+                        >
+                          {plan.popular && (
+                            <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full inline-block mb-2">
+                              POPULAR
+                            </span>
+                          )}
+                          <div className="font-semibold text-card-foreground mb-1">
+                            {plan.duration}
+                          </div>
+                          <div>
+                            <span className="text-2xl font-bold text-card-foreground">
+                              {plan.price}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {plan.priceDetail}
+                            </span>
+                          </div>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
+
                     <Link to="/reserve-your-sauna">
                       <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                         Reserve Now
                       </Button>
                     </Link>
                   </div>
-                ))}
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden lg:grid lg:grid-cols-2">
+                  {/* Left: Video */}
+                  <div className="relative">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    >
+                      <source src={sauna.video} type="video/mp4" />
+                    </video>
+                  </div>
+
+                  {/* Right: Content */}
+                  <div className="p-8 flex flex-col">
+                    <h2 className="text-4xl font-bold text-card-foreground mb-2">
+                      {sauna.type}
+                    </h2>
+                    <p className="text-lg text-muted-foreground mb-6">
+                      {sauna.availability}
+                    </p>
+
+                    {/* Pricing Grid */}
+                    <div className="grid grid-cols-2 gap-4 mb-6 flex-grow">
+                      {sauna.pricing.map((plan, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-lg border-2 ${
+                            plan.popular
+                              ? "border-primary bg-primary/5"
+                              : "border-border"
+                          }`}
+                        >
+                          {plan.popular && (
+                            <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full inline-block mb-2">
+                              POPULAR
+                            </span>
+                          )}
+                          <div className="font-semibold text-card-foreground mb-1">
+                            {plan.duration}
+                          </div>
+                          <div>
+                            <span className="text-2xl font-bold text-card-foreground">
+                              {plan.price}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {plan.priceDetail}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Link to="/reserve-your-sauna">
+                      <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                        Reserve Now
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </main>
       <Footer />
