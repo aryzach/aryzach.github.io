@@ -20,24 +20,13 @@ const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-12 text-foreground">
+        <h2 className="text-3xl md:text-5xl font-bold text-center md:hidden mb-12 text-foreground">
           How It Works
         </h2>
         
-        {/* Mobile: Video first, then steps */}
+        {/* Mobile: Steps first, then video */}
         <div className="md:hidden mb-12">
-          <div className="rounded-lg overflow-hidden shadow-lg mb-8">
-            <video
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="w-full"
-            >
-              <source src="/how-it-works-video.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <div className="space-y-8">
+          <div className="space-y-8 mb-8">
             {steps.map((step) => (
               <div key={step.number} className="text-center">
                 <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto mb-4">
@@ -48,10 +37,6 @@ const HowItWorks = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Desktop: Video left, steps right */}
-        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
           <div className="rounded-lg overflow-hidden shadow-lg">
             <video
               muted
@@ -63,18 +48,38 @@ const HowItWorks = () => {
               <source src="/how-it-works-video.mp4" type="video/mp4" />
             </video>
           </div>
-          <div className="space-y-8">
-            {steps.map((step) => (
-              <div key={step.number} className="flex gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold flex-shrink-0">
-                  {step.number}
+        </div>
+
+        {/* Desktop: Video left, title and steps right */}
+        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
+          <div className="rounded-lg overflow-hidden shadow-lg">
+            <video
+              muted
+              loop
+              autoPlay
+              playsInline
+              className="w-full"
+            >
+              <source src="/how-it-works-video.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+              How It Works
+            </h2>
+            <div className="space-y-8">
+              {steps.map((step) => (
+                <div key={step.number} className="flex gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold flex-shrink-0">
+                    {step.number}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-foreground">{step.title}</h3>
+                    <p className="text-muted-foreground">{step.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2 text-foreground">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
