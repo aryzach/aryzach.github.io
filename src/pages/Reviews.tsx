@@ -60,10 +60,10 @@ const Reviews = () => {
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="fill-warm-orange text-warm-orange" size={28} />
               ))}
-              <span className="ml-2 text-2xl font-semibold text-foreground">4.9</span>
+              <span className="ml-2 text-2xl font-semibold text-foreground">5.0</span>
             </div>
             <p className="text-xl text-muted-foreground">
-              Based on 200+ Google Reviews
+              Based on 17 Google Reviews
             </p>
           </div>
 
