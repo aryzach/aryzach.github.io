@@ -11,6 +11,7 @@ import ServiceAreas from "./pages/ServiceAreas";
 import Policies from "./pages/Policies";
 import LearnHub from "./pages/LearnHub";
 import Contact from "./pages/Contact";
+import Media from "./pages/Media";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/policies" element={<Policies />} />
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/media" element={<Media />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
