@@ -63,9 +63,9 @@ const Header = () => {
             <Link to="/pricing" className="text-foreground hover:text-primary transition-colors">
               Pricing
             </Link>
-            <Link to="/service-areas" className="text-foreground hover:text-primary transition-colors">
+            <button onClick={() => scrollToSection("service-area")} className="text-foreground hover:text-primary transition-colors">
               Service Areas
-            </Link>
+            </button>
             <Link to="/media" className="text-foreground hover:text-primary transition-colors">
               Media
             </Link>
@@ -98,9 +98,9 @@ const Header = () => {
               <Link to="/pricing" className="text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
               </Link>
-              <Link to="/service-areas" className="text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+              <button onClick={() => scrollToSection("service-area")} className="text-left text-foreground hover:text-primary transition-colors">
                 Service Areas
-              </Link>
+              </button>
               <Link to="/media" className="text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Media
               </Link>
