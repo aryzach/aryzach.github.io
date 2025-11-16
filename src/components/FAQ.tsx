@@ -27,6 +27,10 @@ const faqs = [
     question: "Do I need to leave it running all day?",
     answer: "No. People just turn it on 20–60 minutes before using it. Most run it once a day for about an hour, then switch it off.",
   },
+  {
+    question: "Do you have Finnish dry saunas?",
+    answer: "Yes. We have indoor and outdoor Finnish dry saunas available. Please click 'Learn More' at the top and leave a note. We'll be in touch soon.",
+  },
 ];
 
 const FAQ = () => {
