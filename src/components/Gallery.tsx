@@ -14,7 +14,7 @@ const galleryItems = [
 
 const Gallery = () => {
   return (
-    <section className="py-16 md:py-24 bg-muted">
+    <section className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-5xl font-bold text-center mb-4 text-foreground">
           Real SF Homes
@@ -23,18 +23,18 @@ const Gallery = () => {
           See how our saunas fit beautifully into apartments and homes across San Francisco
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {galleryItems.map((item, index) => (
             <div
               key={index}
-              className="aspect-[4/3] rounded-lg overflow-hidden shadow-lg"
+              className="overflow-hidden"
             >
               {item.type === "image" ? (
                 <img
                   src={item.src}
                   alt={`SF Sauna installation ${index + 1}`}
                   loading="lazy"
-                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+                  className="w-full h-auto hover:scale-105 transition-transform duration-300"
                 />
               ) : (
                 <video
@@ -42,7 +42,7 @@ const Gallery = () => {
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-contain cursor-pointer"
+                  className="w-full h-auto cursor-pointer"
                   preload="metadata"
                   onClick={(e) => {
                     const video = e.currentTarget;

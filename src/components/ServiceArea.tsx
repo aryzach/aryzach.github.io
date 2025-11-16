@@ -6,18 +6,16 @@ const serviceAreas = [
   {
     name: "San Francisco",
     description: "Free delivery and installation",
-    highlight: true,
   },
   {
     name: "Rest of the Bay Area",
     description: "$150 delivery fee, free installation",
-    highlight: false,
   },
 ];
 
 const ServiceArea = () => {
   return (
-    <section id="service-area" className="py-16 md:py-24 bg-muted">
+    <section id="service-area" className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
@@ -44,9 +42,7 @@ const ServiceArea = () => {
           {serviceAreas.map((area, index) => (
             <div 
               key={index} 
-              className={`bg-card rounded-lg p-6 border-2 ${
-                area.highlight ? "border-primary shadow-lg" : "border-border"
-              }`}
+              className="bg-card rounded-lg p-6 border-2 border-border"
             >
               <div className="flex items-start gap-3">
                 <MapPin className="text-primary flex-shrink-0 mt-1" size={24} />

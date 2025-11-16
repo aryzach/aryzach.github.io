@@ -51,6 +51,7 @@ export default {
           DEFAULT: "hsl(var(--cedar))",
           dark: "hsl(var(--cedar-dark))",
           light: "hsl(var(--cedar-light))",
+          section: "hsl(var(--cedar-section))",
         },
         "warm-orange": "hsl(var(--warm-orange))",
         charcoal: "hsl(var(--charcoal))",
