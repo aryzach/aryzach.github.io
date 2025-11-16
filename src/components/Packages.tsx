@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Packages = () => {
@@ -23,19 +23,19 @@ const Packages = () => {
         {/* Trust Strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-12 border-t border-border">
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <CheckCircle2 className="mx-auto mb-2 text-primary fill-primary/20" size={32} strokeWidth={2.5} />
             <p className="font-medium text-foreground text-lg">SF-local</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <CheckCircle2 className="mx-auto mb-2 text-primary fill-primary/20" size={32} strokeWidth={2.5} />
             <p className="font-medium text-foreground text-lg">Setup included</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <CheckCircle2 className="mx-auto mb-2 text-primary fill-primary/20" size={32} strokeWidth={2.5} />
             <p className="font-medium text-foreground text-lg">Standard 120V plug</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <CheckCircle2 className="mx-auto mb-2 text-primary fill-primary/20" size={32} strokeWidth={2.5} />
             <p className="font-medium text-foreground text-lg">&lt;$1 electricity cost per use</p>
           </div>
         </div>
