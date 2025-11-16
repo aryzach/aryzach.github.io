@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 
 const Media = () => {
   const videos = [
-    { src: "/media/0804.mp4" },
     { src: "/media/0804_1.mp4" },
     { src: "/media/IMG_6475_2.mp4" },
     { src: "/media/0804_3.mp4" },
@@ -36,6 +35,7 @@ const Media = () => {
             {videos.map((video, index) => (
               <div key={index} className="overflow-hidden">
                 <video
+                  autoPlay
                   muted
                   loop
                   playsInline
