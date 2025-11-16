@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     question: "How much space do I need?",
-    answer: "The sauna footprint is approximately 4×4 feet. You'll want a few inches of clearance around it for ventilation.",
+    answer: "The sauna footprint is approximately 4×4 feet.",
   },
   {
     question: "How long does setup take?",
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     question: "Can I use it indoors and outdoors?",
-    answer: "Yes! Our saunas work great both indoors and in covered outdoor spaces like patios or decks. Just keep them protected from rain.",
+    answer: "Right now we only have indoor saunas. Sign up on our email list to hear about outdoor options, or get in touch to pre-order.",
   },
 ];
 

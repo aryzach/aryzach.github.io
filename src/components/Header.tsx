@@ -27,7 +27,7 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-transparent"
-      }`}
+      } ${isMobileMenuOpen ? "bg-background/95 backdrop-blur-sm" : ""}`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -39,9 +39,6 @@ const Header = () => {
           <nav className="hidden md:flex items-center gap-8">
             <button onClick={() => scrollToSection("how-it-works")} className="text-foreground hover:text-primary transition-colors">
               How It Works
-            </button>
-            <button onClick={() => scrollToSection("packages")} className="text-foreground hover:text-primary transition-colors">
-              Packages
             </button>
             <Link to="/pricing" className="text-foreground hover:text-primary transition-colors">
               Pricing
@@ -56,7 +53,7 @@ const Header = () => {
 
           {/* CTA Button */}
           <Button className="hidden md:flex bg-accent hover:bg-accent/90 text-accent-foreground">
-            Get Quote
+            Learn More
           </Button>
 
           {/* Mobile Menu Button */}
@@ -75,9 +72,6 @@ const Header = () => {
               <button onClick={() => scrollToSection("how-it-works")} className="text-left text-foreground hover:text-primary transition-colors">
                 How It Works
               </button>
-              <button onClick={() => scrollToSection("packages")} className="text-left text-foreground hover:text-primary transition-colors">
-                Packages
-              </button>
               <Link to="/pricing" className="text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
               </Link>
@@ -88,7 +82,7 @@ const Header = () => {
                 FAQ
               </button>
               <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full">
-                Get Quote
+                Learn More
               </Button>
             </div>
           </nav>

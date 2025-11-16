@@ -24,22 +24,15 @@ const InstallPower = () => {
                   <h2 className="text-2xl font-bold mb-3 text-card-foreground">Power Requirements</h2>
                   <div className="space-y-4 text-card-foreground">
                     <div>
-                      <h3 className="font-semibold mb-2">Standard 120V (Default)</h3>
+                      <h3 className="font-semibold mb-2">Standard 120V</h3>
                       <p className="text-muted-foreground">
                         Plugs into any standard household outlet. No special wiring needed. Heats to full temperature in 30-40 minutes.
-                        Uses approximately 1500W (same as a hair dryer).
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-2">240V Upgrade (Optional)</h3>
-                      <p className="text-muted-foreground">
-                        Requires dedicated circuit (like an electric dryer). Heats to full temperature in 15-20 minutes. Uses approximately 3000W.
-                        Additional $50/month.
+                        Uses approximately 1500W.
                       </p>
                     </div>
                     <div className="bg-muted p-4 rounded-lg mt-4">
                       <p className="font-semibold text-foreground mb-2">💡 Cost per session</p>
-                      <p className="text-muted-foreground">Based on average SF electricity rates ($0.30/kWh), a 30-minute session costs less than $1</p>
+                      <p className="text-muted-foreground">Based on average SF electricity rates ($0.30/kWh), a 1 hour session costs less than $1</p>
                     </div>
                   </div>
                 </div>
@@ -60,9 +53,6 @@ const InstallPower = () => {
                       <strong>Height:</strong> 6 feet 3 inches (75")
                     </p>
                     <p className="text-muted-foreground">
-                      <strong>Clearance needed:</strong> 3-4 inches on all sides for ventilation
-                    </p>
-                    <p className="text-muted-foreground">
                       <strong>Door clearance:</strong> Opens outward, needs 24" of swing space
                     </p>
                   </div>
@@ -77,8 +67,7 @@ const InstallPower = () => {
                 <div>
                   <h2 className="text-2xl font-bold mb-3 text-card-foreground">Noise Level</h2>
                   <p className="text-muted-foreground">
-                    Our infrared saunas are whisper-quiet. The only sound is a gentle hum from the heating panels, comparable to a desktop computer
-                    (40-50 dB). Perfect for apartments and shared living spaces.
+                    Our infrared saunas are whisper-quiet. Perfect for apartments and shared living spaces.
                   </p>
                 </div>
               </div>
