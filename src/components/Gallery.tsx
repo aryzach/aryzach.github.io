@@ -34,14 +34,15 @@ const Gallery = () => {
                   src={item.src}
                   alt={`SF Sauna installation ${index + 1}`}
                   loading="lazy"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                 />
               ) : (
                 <video
+                  autoPlay
                   muted
                   loop
                   playsInline
-                  className="w-full h-full object-cover cursor-pointer"
+                  className="w-full h-full object-contain cursor-pointer"
                   preload="metadata"
                   onClick={(e) => {
                     const video = e.currentTarget;

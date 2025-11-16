@@ -19,6 +19,14 @@ const faqs = [
     question: "Can I use it indoors and outdoors?",
     answer: "Right now we only have indoor saunas. Sign up on our email list to hear about outdoor options, or get in touch to pre-order.",
   },
+  {
+    question: "Will a sauna overheat my apartment?",
+    answer: "No. They're heavily insulated, so heat stays inside the cabin. No noticeable spillage into your space.",
+  },
+  {
+    question: "Do I need to leave it running all day?",
+    answer: "No. People just turn it on 20–60 minutes before using it. Most run it once a day for about an hour, then switch it off.",
+  },
 ];
 
 const FAQ = () => {
