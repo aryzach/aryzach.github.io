@@ -1,27 +1,22 @@
+import { useEffect } from "react";
 import { Star } from "lucide-react";
 
-const reviews = [
-  {
-    name: "Sarah M.",
-    location: "Mission District",
-    text: "Best investment in my wellness routine. Setup was quick, and it fits perfectly in my apartment.",
-    rating: 5,
-  },
-  {
-    name: "David L.",
-    location: "Noe Valley",
-    text: "The team was professional and the sauna quality is amazing. Using it every morning!",
-    rating: 5,
-  },
-  {
-    name: "Emma K.",
-    location: "Sunset",
-    text: "Couldn't be happier! The rental process was seamless and customer service is top-notch.",
-    rating: 5,
-  },
-];
-
 const SocialProof = () => {
+  useEffect(() => {
+    // Load Elfsight script
+    const script = document.createElement("script");
+    script.src = "https://elfsightcdn.com/platform.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -40,22 +35,8 @@ const SocialProof = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {reviews.map((review, index) => (
-            <div key={index} className="bg-card p-6 rounded-lg shadow-md border border-border">
-              <div className="flex gap-1 mb-3">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="fill-warm-orange text-warm-orange" size={16} />
-                ))}
-              </div>
-              <p className="text-card-foreground mb-4">"{review.text}"</p>
-              <div className="text-sm">
-                <p className="font-semibold text-card-foreground">{review.name}</p>
-                <p className="text-muted-foreground">{review.location}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Elfsight Google Reviews */}
+        <div className="elfsight-app-7bdbfaeb-56f2-4804-9ef2-54bf4f091e1c" data-elfsight-app-lazy></div>
       </div>
     </section>
   );
