@@ -51,9 +51,15 @@ const Header = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="text-xl md:text-2xl font-semibold text-foreground">
+          <button 
+            onClick={() => {
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-xl md:text-2xl font-semibold text-foreground hover:text-primary transition-colors"
+          >
             SF Sauna Rental
-          </Link>
+          </button>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">

@@ -1,15 +1,11 @@
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
 import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
 
 const galleryItems = [
-  { type: "image", src: gallery1 },
+  { type: "video", src: "/media/0804_1.mp4" },
+  { type: "video", src: "/media/IMG_6475_2.mp4" },
   { type: "video", src: "/media/0804.mp4" },
-  { type: "image", src: gallery2 },
   { type: "image", src: gallery3 },
-  { type: "video", src: "/media/gallery-video.mp4" },
-  { type: "image", src: gallery4 },
+  { type: "video", src: "/media/IMG_6591.mp4" },
 ];
 
 const Gallery = () => {
