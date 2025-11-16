@@ -35,13 +35,10 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          A personal sauna -- in your home, this week.
+          A real sauna — in your home this week.
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-4 max-w-2xl mx-auto">
-          Delivered, installed, and picked up when you're done.
-        </p>
-        <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-          Infrared, Finnish/dry, indoor, and outdoor options available
+        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
+          Infrared or Finnish, indoor or outdoor. Delivery, install, and pickup included.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
