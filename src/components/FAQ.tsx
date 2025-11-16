@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 
 const faqs = [
   {
+    question: "What's the difference between an infrared sauna and a dry Finnish sauna?",
+    answer: "Infrared saunas heat your body directly using infrared panels and offer a gentler, deeper warmth at lower air temperatures. Finnish saunas use a traditional heater and hot rocks, warming the air to higher temperatures for a classic dry-sauna experience.",
+  },
+  {
     question: "What kind of power does it need?",
     answer: "Our saunas run on standard 120V household power—just plug into any regular outlet. No special wiring required.",
   },
@@ -28,8 +32,8 @@ const faqs = [
     answer: "No. People just turn it on 20–60 minutes before using it. Most run it once a day for about an hour, then switch it off.",
   },
   {
-    question: "Do you have Finnish dry saunas?",
-    answer: "Yes. We have indoor and outdoor Finnish dry saunas available. Please click 'Learn More' at the top and leave a note. We'll be in touch soon.",
+    question: "How long does the sauna take to heat up?",
+    answer: "Our infrared saunas heat to 150°F in 30 minutes. Our Finnish dry saunas reach 175-194°F in 20-60 minutes, depending on what heaters you choose.",
   },
 ];
 

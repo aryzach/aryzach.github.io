@@ -2,18 +2,18 @@ const HowItWorks = () => {
   const steps = [
     {
       number: "1",
-      title: "We deliver & set up",
-      description: "Professional installation in your home, usually within a week. Takes about 1 hour.",
+      title: "Delivery & installation",
+      description: "Your infrared or Finnish sauna is brought to your home and professionally installed in 2–3 hours.",
     },
     {
       number: "2",
-      title: "You relax daily",
-      description: "Enjoy infrared therapy in the comfort of your home. Simple controls, minimal maintenance.",
+      title: "Daily use, zero friction",
+      description: "Your personal wellness ritual — warm up with infrared or go full Finnish dry heat.",
     },
     {
       number: "3",
       title: "We handle pickup",
-      description: "When you're done, we come pick it up. No hassle, no strings attached.",
+      description: "Your lease rolls into month-to-month. When you're done, you cancel and we return for removal.",
     },
   ];
 

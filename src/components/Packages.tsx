@@ -8,7 +8,7 @@ const Packages = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground">
-            Infrared sauna from $199/mo
+            At-home sauna from $199/mo
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Flexible rental periods with everything included
