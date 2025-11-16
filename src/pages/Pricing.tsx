@@ -1,8 +1,13 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const saunaTypes = [
   {
@@ -84,132 +89,77 @@ const Pricing = () => {
             </div>
           </div>
 
-          {/* Sauna Sections */}
-          <div className="space-y-16">
+          {/* Sauna Grid */}
+          <h2 className="text-2xl font-bold text-center mb-8 text-foreground">Select Option</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {saunaTypes.map((sauna, index) => (
-              <div
-                key={index}
-                className="bg-card rounded-lg overflow-hidden border border-border"
-              >
-                {/* Mobile Layout */}
-                <div className="block lg:hidden">
-                  <div className="p-6 pb-4">
-                    <h2 className="text-3xl font-bold text-card-foreground mb-2">
-                      {sauna.type}
-                    </h2>
-                    <p className="text-muted-foreground mb-4">{sauna.availability}</p>
-                  </div>
-                  
-                  {/* Full Bleed Video on Mobile */}
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full"
-                  >
-                    <source src={sauna.video} type="video/mp4" />
-                  </video>
-
-                  <div className="p-6">
-                    {/* Pricing Table */}
-                    <div className="space-y-3 mb-6">
-                      {sauna.pricing.map((plan, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between py-2"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-card-foreground min-w-[100px]">
-                              {plan.duration}
-                            </span>
-                            {plan.popular && (
-                              <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
-                                POPULAR
-                              </span>
-                            )}
-                          </div>
+              <Collapsible key={index}>
+                <div className="bg-card rounded-lg overflow-hidden border border-border">
+                  <CollapsibleTrigger className="w-full text-left hover:bg-muted/50 transition-colors">
+                    <div className="relative">
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full aspect-video object-cover"
+                      >
+                        <source src={sauna.video} type="video/mp4" />
+                      </video>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div className="p-4 w-full flex items-center justify-between">
                           <div>
-                            <span className="text-2xl font-bold text-card-foreground">
-                              {plan.price}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              {plan.priceDetail}
-                            </span>
+                            <h3 className="text-xl font-bold text-white mb-1">
+                              {sauna.type}
+                            </h3>
+                            <p className="text-sm text-white/90">{sauna.availability}</p>
                           </div>
+                          <ChevronDown className="text-white h-6 w-6 transition-transform" />
                         </div>
-                      ))}
+                      </div>
                     </div>
+                  </CollapsibleTrigger>
 
-                    <Link to="/reserve-your-sauna">
-                      <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                        Reserve Now
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Desktop Layout */}
-                <div className="hidden lg:grid lg:grid-cols-2">
-                  {/* Left: Video */}
-                  <div className="relative">
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    >
-                      <source src={sauna.video} type="video/mp4" />
-                    </video>
-                  </div>
-
-                  {/* Right: Content */}
-                  <div className="p-8 flex flex-col">
-                    <h2 className="text-4xl font-bold text-card-foreground mb-2">
-                      {sauna.type}
-                    </h2>
-                    <p className="text-lg text-muted-foreground mb-6">
-                      {sauna.availability}
-                    </p>
-
-                    {/* Pricing Table */}
-                    <div className="space-y-3 mb-6">
-                      {sauna.pricing.map((plan, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between py-2"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-card-foreground min-w-[100px]">
-                              {plan.duration}
-                            </span>
-                            {plan.popular && (
-                              <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
-                                POPULAR
+                  <CollapsibleContent>
+                    <div className="p-6">
+                      {/* Pricing Table */}
+                      <div className="space-y-3 mb-6">
+                        {sauna.pricing.map((plan, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between py-2"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="font-semibold text-card-foreground min-w-[100px]">
+                                {plan.duration}
                               </span>
-                            )}
+                              {plan.popular && (
+                                <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
+                                  POPULAR
+                                </span>
+                              )}
+                            </div>
+                            <div>
+                              <span className="text-2xl font-bold text-card-foreground">
+                                {plan.price}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                {plan.priceDetail}
+                              </span>
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-2xl font-bold text-card-foreground">
-                              {plan.price}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              {plan.priceDetail}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
 
-                    <Link to="/reserve-your-sauna">
-                      <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                        Reserve Now
-                      </Button>
-                    </Link>
-                  </div>
+                      <Link to="/reserve-your-sauna">
+                        <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                          Reserve Now
+                        </Button>
+                      </Link>
+                    </div>
+                  </CollapsibleContent>
                 </div>
-              </div>
+              </Collapsible>
             ))}
           </div>
         </div>
