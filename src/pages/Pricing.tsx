@@ -15,10 +15,10 @@ const saunaTypes = [
     availability: "Available within a week",
     video: "/videos/indoor-infrared.mp4",
     pricing: [
-      { duration: "1 Month", price: "$449", priceDetail: "/month" },
-      { duration: "3 Months", price: "$259", priceDetail: "/month", popular: true },
-      { duration: "6 Months", price: "$229", priceDetail: "/month" },
-      { duration: "12 Months", price: "$199", priceDetail: "/month" },
+      { duration: "1", price: "$449", priceDetail: "/mo" },
+      { duration: "3", price: "$259", priceDetail: "/mo", popular: true },
+      { duration: "6", price: "$229", priceDetail: "/mo" },
+      { duration: "12", price: "$199", priceDetail: "/mo" },
     ],
   },
   {
@@ -26,10 +26,10 @@ const saunaTypes = [
     availability: "Available within two weeks",
     video: "/videos/indoor-finnish.mp4",
     pricing: [
-      { duration: "1 Month", price: "$599", priceDetail: "/month" },
-      { duration: "3 Months", price: "$359", priceDetail: "/month", popular: true },
-      { duration: "6 Months", price: "$319", priceDetail: "/month" },
-      { duration: "12 Months", price: "$299", priceDetail: "/month" },
+      { duration: "1", price: "$599", priceDetail: "/mo" },
+      { duration: "3", price: "$359", priceDetail: "/mo", popular: true },
+      { duration: "6", price: "$319", priceDetail: "/mo" },
+      { duration: "12", price: "$299", priceDetail: "/mo" },
     ],
   },
   {
@@ -37,10 +37,10 @@ const saunaTypes = [
     availability: "Available within a month",
     video: "/videos/outdoor-infrared.mp4",
     pricing: [
-      { duration: "1 Month", price: "$499", priceDetail: "/month" },
-      { duration: "3 Months", price: "$359", priceDetail: "/month", popular: true },
-      { duration: "6 Months", price: "$329", priceDetail: "/month" },
-      { duration: "12 Months", price: "$299", priceDetail: "/month" },
+      { duration: "1", price: "$499", priceDetail: "/mo" },
+      { duration: "3", price: "$359", priceDetail: "/mo", popular: true },
+      { duration: "6", price: "$329", priceDetail: "/mo" },
+      { duration: "12", price: "$299", priceDetail: "/mo" },
     ],
   },
   {
@@ -48,10 +48,10 @@ const saunaTypes = [
     availability: "Available in 2 months",
     video: "/videos/outdoor-finnish.mp4",
     pricing: [
-      { duration: "1 Month", price: "$679", priceDetail: "/month" },
-      { duration: "3 Months", price: "$399", priceDetail: "/month", popular: true },
-      { duration: "6 Months", price: "$349", priceDetail: "/month" },
-      { duration: "12 Months", price: "$319", priceDetail: "/month" },
+      { duration: "1", price: "$679", priceDetail: "/mo" },
+      { duration: "3", price: "$399", priceDetail: "/mo", popular: true },
+      { duration: "6", price: "$349", priceDetail: "/mo" },
+      { duration: "12", price: "$319", priceDetail: "/mo" },
     ],
   },
 ];
@@ -102,7 +102,7 @@ const Pricing = () => {
                         loop
                         muted
                         playsInline
-                        className="w-full h-[300px] md:h-[400px] object-cover"
+                        className="w-full h-[300px] md:h-[600px] object-cover"
                       >
                         <source src={sauna.video} type="video/mp4" />
                       </video>
@@ -121,34 +121,40 @@ const Pricing = () => {
                   </CollapsibleTrigger>
 
                   <CollapsibleContent>
-                    <div className="p-4 md:p-6">
+                    <div className="p-3 md:p-6">
                       {/* Pricing Table */}
-                      <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                        {sauna.pricing.map((plan, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center justify-between py-1 md:py-2"
-                          >
-                            <div className="flex items-center gap-2 md:gap-3">
-                              <span className="font-semibold text-card-foreground text-sm md:text-base min-w-[80px] md:min-w-[100px]">
-                                {plan.duration}
-                              </span>
-                              {plan.popular && (
-                                <span className="bg-primary text-primary-foreground text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full">
-                                  POPULAR
+                      <div className="mb-3 md:mb-4">
+                        <div className="flex items-center justify-between mb-2 pb-1 border-b border-border">
+                          <span className="text-xs md:text-sm font-semibold text-muted-foreground">Months</span>
+                          <span className="text-xs md:text-sm font-semibold text-muted-foreground">Price</span>
+                        </div>
+                        <div className="space-y-1.5 md:space-y-2">
+                          {sauna.pricing.map((plan, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between py-1"
+                            >
+                              <div className="flex items-center gap-1.5 md:gap-2">
+                                <span className="font-semibold text-card-foreground text-sm md:text-base w-6 md:w-8">
+                                  {plan.duration}
                                 </span>
-                              )}
+                                {plan.popular && (
+                                  <span className="bg-primary text-primary-foreground text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
+                                    POPULAR
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-right">
+                                <span className="text-base md:text-xl font-bold text-card-foreground">
+                                  {plan.price}
+                                </span>
+                                <span className="text-[10px] md:text-xs text-muted-foreground">
+                                  {plan.priceDetail}
+                                </span>
+                              </div>
                             </div>
-                            <div>
-                              <span className="text-xl md:text-2xl font-bold text-card-foreground">
-                                {plan.price}
-                              </span>
-                              <span className="text-xs md:text-sm text-muted-foreground">
-                                {plan.priceDetail}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
 
                       <Link to="/reserve-your-sauna">
