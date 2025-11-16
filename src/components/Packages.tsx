@@ -23,20 +23,20 @@ const Packages = () => {
         {/* Trust Strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-12 border-t border-border">
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={24} />
-            <p className="font-medium text-foreground">SF-local</p>
+            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <p className="font-medium text-foreground text-lg">SF-local</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={24} />
-            <p className="font-medium text-foreground">Setup included</p>
+            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <p className="font-medium text-foreground text-lg">Setup included</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={24} />
-            <p className="font-medium text-foreground">Standard 120V plug</p>
+            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <p className="font-medium text-foreground text-lg">Standard 120V plug</p>
           </div>
           <div className="text-center">
-            <Check className="mx-auto mb-2 text-primary" size={24} />
-            <p className="font-medium text-foreground">&lt;$1 electricity cost per use</p>
+            <Check className="mx-auto mb-2 text-primary" size={32} />
+            <p className="font-medium text-foreground text-lg">&lt;$1 electricity cost per use</p>
           </div>
         </div>
       </div>
