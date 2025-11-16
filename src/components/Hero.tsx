@@ -27,9 +27,15 @@ const Hero = () => {
           Delivered, installed, and picked up when you're done.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
-            Free Sauna Consultation
-            <ArrowRight className="ml-2" size={20} />
+          <Button 
+            size="lg" 
+            className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8"
+            asChild
+          >
+            <a href="https://calendar.app.google/15uxvc8nue1YjcYt9" target="_blank" rel="noopener noreferrer">
+              Free Sauna Consultation
+              <ArrowRight className="ml-2" size={20} />
+            </a>
           </Button>
         </div>
       </div>
