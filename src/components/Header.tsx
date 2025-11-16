@@ -82,7 +82,7 @@ const Header = () => {
 
           {/* CTA Button */}
           <Button asChild className="hidden md:flex bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link to="/contact">Learn More</Link>
+            <Link to="/learn-more">Learn More</Link>
           </Button>
 
           {/* Mobile Menu Button */}
@@ -114,7 +114,7 @@ const Header = () => {
                 FAQ
               </button>
               <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground w-full">
-                <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Learn More</Link>
+                <Link to="/learn-more" onClick={() => setIsMobileMenuOpen(false)}>Learn More</Link>
               </Button>
             </div>
           </nav>
