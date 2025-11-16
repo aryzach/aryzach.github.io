@@ -1,9 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Instagram } from "lucide-react";
 
 const Footer = () => {
+  const location = useLocation();
+
+  const handlePoliciesClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/policies") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="bg-charcoal text-white py-12">
       <div className="container mx-auto px-4">
@@ -31,9 +40,8 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Legal</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/policies" className="text-white/70 hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link to="/policies" className="text-white/70 hover:text-white transition-colors">Cancellation Policy</Link></li>
-              <li><Link to="/policies" className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
 

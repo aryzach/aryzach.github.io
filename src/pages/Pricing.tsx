@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const pricingPlans = [
   {
@@ -69,9 +70,11 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                  Reserve Now
-                </Button>
+                <Link to="/contact">
+                  <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                    Reserve Now
+                  </Button>
+                </Link>
           </div>
           ))}
         </div>
