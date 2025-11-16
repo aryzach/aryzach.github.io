@@ -11,6 +11,7 @@ import ServiceAreas from "./pages/ServiceAreas";
 import Reviews from "./pages/Reviews";
 import Policies from "./pages/Policies";
 import LearnHub from "./pages/LearnHub";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/policies" element={<Policies />} />
           <Route path="/learn" element={<LearnHub />} />
+          <Route path="/contact" element={<Contact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
