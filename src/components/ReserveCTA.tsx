@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ReserveCTA = () => {
   return (
@@ -11,9 +12,11 @@ const ReserveCTA = () => {
         <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
           Join hundreds of San Franciscans enjoying daily infrared therapy at home
         </p>
-        <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
-          Reserve Now
-          <ArrowRight className="ml-2" size={20} />
+        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
+          <Link to="/contact">
+            Reserve Now
+            <ArrowRight className="ml-2" size={20} />
+          </Link>
         </Button>
       </div>
     </section>

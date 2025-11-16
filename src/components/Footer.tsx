@@ -41,7 +41,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
-            <form action="https://formspree.io/f/xwpkyllz" method="POST" className="flex gap-2">
+            <form action="https://formspree.io/f/meovlkjw" method="POST" className="flex gap-2">
               <Input
                 type="email"
                 name="email"
