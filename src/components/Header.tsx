@@ -24,7 +24,14 @@ const Header = () => {
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          const headerOffset = 100; // Fixed header height + padding
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
         }
       }, 300);
     }
@@ -35,7 +42,14 @@ const Header = () => {
       // Already on home page, just scroll
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+        const headerOffset = 100; // Fixed header height + padding
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
         setIsMobileMenuOpen(false);
       }
     } else {
