@@ -363,7 +363,7 @@ const Policies = () => {
               We're here to help clarify any terms or answer questions about your rental agreement.
             </p>
             <a 
-              href="/contact" 
+              href="/learn-more" 
               className="text-primary hover:underline font-semibold"
             >
               Contact us →
