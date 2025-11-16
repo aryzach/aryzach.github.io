@@ -28,11 +28,8 @@ const Hero = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
-            Free Video Consultation
+            Free Sauna Consultation
             <ArrowRight className="ml-2" size={20} />
-          </Button>
-          <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white/20 text-lg px-8">
-            Check Address
           </Button>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 const pricingPlans = [
   {
     duration: "1 Month",
-    price: "$299",
+    price: "$499",
     features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support"],
   },
   {
@@ -72,32 +72,10 @@ const Pricing = () => {
                 <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                   Reserve Now
                 </Button>
-              </div>
-            ))}
           </div>
-
-          <div className="bg-muted rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4 text-foreground">Additional Options</h2>
-            <div className="space-y-4 text-foreground">
-              <div className="flex justify-between items-center border-b border-border pb-3">
-                <span>Rush delivery (24-48 hours)</span>
-                <span className="font-semibold">+$99</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border pb-3">
-                <span>240V upgrade for faster heating</span>
-                <span className="font-semibold">+$50/month</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-border pb-3">
-                <span>Extended session (beyond rental period)</span>
-                <span className="font-semibold">$75/week</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>Buyout option</span>
-                <span className="font-semibold">Contact us</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
+      </div>
       </main>
       <Footer />
     </div>

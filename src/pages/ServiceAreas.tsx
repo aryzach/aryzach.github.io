@@ -3,46 +3,16 @@ import Footer from "@/components/Footer";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const areas = [
+const serviceAreas = [
   {
-    name: "Mission District",
-    description: "From Dolores Park to the vibrant Valencia corridor",
-    testimonial: "Love having my sauna in my Mission apartment! - Maria R.",
+    name: "San Francisco",
+    description: "Free delivery and installation",
+    highlight: true,
   },
   {
-    name: "Sunset District",
-    description: "Inner and Outer Sunset, near Ocean Beach",
-    testimonial: "Perfect after a cold day at the beach - Kevin L.",
-  },
-  {
-    name: "Noe Valley",
-    description: "Family-friendly neighborhood with easy delivery access",
-    testimonial: "The whole family uses it daily - Jennifer K.",
-  },
-  {
-    name: "SOMA",
-    description: "South of Market, including lofts and condos",
-    testimonial: "Great addition to my downtown loft - Alex M.",
-  },
-  {
-    name: "Pacific Heights",
-    description: "Elegant homes with stunning views",
-    testimonial: "Exceptional service and product - David S.",
-  },
-  {
-    name: "Richmond District",
-    description: "Inner and Outer Richmond, near Golden Gate Park",
-    testimonial: "Perfect post-park run recovery - Lisa H.",
-  },
-  {
-    name: "Hayes Valley",
-    description: "Trendy neighborhood near civic center",
-    testimonial: "Love the wellness addition to my routine - Sam T.",
-  },
-  {
-    name: "Castro",
-    description: "Historic and vibrant community",
-    testimonial: "Best home upgrade I've made - Jordan P.",
+    name: "Rest of the Bay Area",
+    description: "$150 delivery fee, free installation",
+    highlight: false,
   },
 ];
 
@@ -71,15 +41,19 @@ const ServiceAreas = () => {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {areas.map((area, index) => (
-              <div key={index} className="bg-card rounded-lg p-6 border border-border">
+          <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-4xl mx-auto">
+            {serviceAreas.map((area, index) => (
+              <div 
+                key={index} 
+                className={`bg-card rounded-lg p-8 border-2 ${
+                  area.highlight ? "border-primary shadow-lg" : "border-border"
+                }`}
+              >
                 <div className="flex items-start gap-3 mb-3">
-                  <MapPin className="text-primary flex-shrink-0 mt-1" size={20} />
+                  <MapPin className="text-primary flex-shrink-0 mt-1" size={24} />
                   <div>
-                    <h3 className="text-xl font-bold text-card-foreground mb-2">{area.name}</h3>
-                    <p className="text-muted-foreground text-sm mb-3">{area.description}</p>
-                    <p className="text-sm italic text-muted-foreground">"{area.testimonial}"</p>
+                    <h3 className="text-2xl font-bold text-card-foreground mb-2">{area.name}</h3>
+                    <p className="text-muted-foreground text-lg">{area.description}</p>
                   </div>
                 </div>
               </div>
@@ -87,12 +61,11 @@ const ServiceAreas = () => {
           </div>
 
           <div className="bg-muted rounded-lg p-8 text-center max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4 text-foreground">Beyond San Francisco</h2>
-            <p className="text-muted-foreground mb-6">
-              We also serve Oakland, Berkeley, Daly City, San Mateo, and other Bay Area cities. Not sure if we deliver to your area?
+            <p className="text-muted-foreground mb-4 text-lg">
+              Not sure if you're in our service area? Get in touch
             </p>
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              Check Your Address
+              Contact Us
             </Button>
           </div>
         </div>
