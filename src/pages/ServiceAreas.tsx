@@ -10,6 +10,11 @@ const serviceAreas = [
     highlight: true,
   },
   {
+    name: "Oakland, Marin & Sonoma",
+    description: "$150 delivery fee, free installation",
+    highlight: false,
+  },
+  {
     name: "Rest of the Bay Area",
     description: "$150 delivery fee, free installation",
     highlight: false,
