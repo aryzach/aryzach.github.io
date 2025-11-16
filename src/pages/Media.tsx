@@ -30,20 +30,27 @@ const Media = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {videos.map((video, index) => (
-              <div key={index} className="bg-card rounded-lg overflow-hidden shadow-lg">
+              <div key={index} className="overflow-hidden">
                 <video
-                  controls
-                  className="w-full aspect-video object-cover"
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-auto"
                   preload="metadata"
+                  onClick={(e) => {
+                    const video = e.currentTarget;
+                    if (video.paused) {
+                      video.play();
+                    } else {
+                      video.pause();
+                    }
+                  }}
                 >
                   <source src={video.src} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-foreground">{video.title}</h3>
-                </div>
               </div>
             ))}
           </div>
