@@ -52,8 +52,8 @@ const Header = () => {
           </nav>
 
           {/* CTA Button */}
-          <Button className="hidden md:flex bg-accent hover:bg-accent/90 text-accent-foreground">
-            Learn More
+          <Button asChild className="hidden md:flex bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Link to="/contact">Learn More</Link>
           </Button>
 
           {/* Mobile Menu Button */}
@@ -81,8 +81,8 @@ const Header = () => {
               <button onClick={() => scrollToSection("faq")} className="text-left text-foreground hover:text-primary transition-colors">
                 FAQ
               </button>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full">
-                Learn More
+              <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground w-full">
+                <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Learn More</Link>
               </Button>
             </div>
           </nav>
