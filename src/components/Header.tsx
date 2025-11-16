@@ -21,10 +21,11 @@ const Header = () => {
     // Scroll to section if hash is present in URL
     if (location.hash) {
       const id = location.hash.replace('#', '');
-      setTimeout(() => {
+      // Use longer timeout to ensure page is fully loaded
+      const scrollToTarget = () => {
         const element = document.getElementById(id);
         if (element) {
-          const headerOffset = 100; // Fixed header height + padding
+          const headerOffset = 80; // Fixed header height
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
           
@@ -33,7 +34,12 @@ const Header = () => {
             behavior: "smooth"
           });
         }
-      }, 300);
+      };
+      
+      // Try multiple times to ensure content is loaded
+      setTimeout(scrollToTarget, 100);
+      setTimeout(scrollToTarget, 500);
+      setTimeout(scrollToTarget, 1000);
     }
   }, [location]);
 
@@ -42,7 +48,7 @@ const Header = () => {
       // Already on home page, just scroll
       const element = document.getElementById(id);
       if (element) {
-        const headerOffset = 100; // Fixed header height + padding
+        const headerOffset = 80; // Fixed header height
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
