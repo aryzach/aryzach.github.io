@@ -1,0 +1,58 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const Media = () => {
+  const videos = [
+    { src: "/media/0804.mp4", title: "Sauna Experience 1" },
+    { src: "/media/0804_1.mp4", title: "Sauna Experience 2" },
+    { src: "/media/0804_3.mp4", title: "Sauna Experience 3" },
+    { src: "/media/0804_4.mp4", title: "Sauna Experience 4" },
+    { src: "/media/0804_5.mp4", title: "Sauna Experience 5" },
+    { src: "/media/0804_8.mp4", title: "Sauna Experience 6" },
+    { src: "/media/0804_9.mp4", title: "Sauna Experience 7" },
+    { src: "/media/0804_10.mp4", title: "Sauna Experience 8" },
+    { src: "/media/0804_12.mp4", title: "Sauna Experience 9" },
+    { src: "/media/IMG_5789_1.mp4", title: "Sauna Experience 10" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Media Gallery
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              See our saunas in action and experience the joy our customers have shared with us
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {videos.map((video, index) => (
+              <div key={index} className="bg-card rounded-lg overflow-hidden shadow-lg">
+                <video
+                  controls
+                  className="w-full aspect-video object-cover"
+                  preload="metadata"
+                >
+                  <source src={video.src} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-foreground">{video.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Media;
