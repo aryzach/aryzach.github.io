@@ -9,11 +9,6 @@ const serviceAreas = [
     highlight: true,
   },
   {
-    name: "Oakland, Marin & Sonoma",
-    description: "$150 delivery fee, free installation",
-    highlight: false,
-  },
-  {
     name: "Rest of the Bay Area",
     description: "$150 delivery fee, free installation",
     highlight: false,
@@ -45,7 +40,7 @@ const ServiceArea = () => {
           />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
           {serviceAreas.map((area, index) => (
             <div 
               key={index} 
@@ -65,9 +60,12 @@ const ServiceArea = () => {
         </div>
 
         <div className="text-center">
-          <Link to="/service-areas">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              View Detailed Service Areas
+          <p className="text-lg text-muted-foreground mb-4">
+            Not sure if you're in our service area? Get in touch
+          </p>
+          <Link to="/contact">
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              Contact Us
             </Button>
           </Link>
         </div>
