@@ -35,6 +35,10 @@ const faqs = [
     question: "How long does the sauna take to heat up?",
     answer: "Our infrared saunas heat to 150°F in 30 minutes. Our Finnish dry saunas reach 175-194°F in 20-60 minutes, depending on what heaters you choose.",
   },
+  {
+    question: "Is this landlord-friendly?",
+    answer: "Yes. The sauna is a free-standing unit that uses a standard outlet and doesn't need any building or electrical changes. At the end of the day, a sauna is just a somewhat large, fancy appliance (like a powerful space heater in a box).",
+  },
 ];
 
 const FAQ = () => {

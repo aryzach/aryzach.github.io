@@ -29,7 +29,7 @@ const SocialProof = () => {
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="fill-warm-orange text-warm-orange" size={24} />
             ))}
-            <span className="ml-2 text-lg text-muted-foreground">5.0 stars • 17 reviews</span>
+            <span className="ml-2 text-lg text-muted-foreground">5.0 stars • 18 reviews</span>
           </div>
           <a 
             href="https://sfstandard.com/2025/06/21/welcome-to-san-franciscos-summer-of-saunas/" 
