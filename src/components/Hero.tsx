@@ -1,15 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const Hero = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Force video to play on mobile devices
+    if (videoRef.current) {
+      videoRef.current.play().catch((error) => {
+        console.log("Video autoplay failed:", error);
+      });
+    }
+  }, []);
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Video Background */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source src="/hero-video.mp4" type="video/mp4" />
