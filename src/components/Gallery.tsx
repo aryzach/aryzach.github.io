@@ -6,7 +6,6 @@ import gallery4 from "@/assets/gallery-4.jpg";
 const galleryItems = [
   { type: "image", src: gallery1 },
   { type: "image", src: gallery2 },
-  { type: "video", src: "/media/0804_5.mp4" },
   { type: "image", src: gallery3 },
   { type: "video", src: "/media/gallery-video.mp4" },
   { type: "image", src: gallery4 },
