@@ -3,16 +3,19 @@ import Footer from "@/components/Footer";
 
 const Media = () => {
   const videos = [
-    { src: "/media/0804.mp4", title: "Sauna Experience 1" },
-    { src: "/media/0804_1.mp4", title: "Sauna Experience 2" },
-    { src: "/media/0804_3.mp4", title: "Sauna Experience 3" },
-    { src: "/media/0804_4.mp4", title: "Sauna Experience 4" },
-    { src: "/media/0804_5.mp4", title: "Sauna Experience 5" },
-    { src: "/media/0804_8.mp4", title: "Sauna Experience 6" },
-    { src: "/media/0804_9.mp4", title: "Sauna Experience 7" },
-    { src: "/media/0804_10.mp4", title: "Sauna Experience 8" },
-    { src: "/media/0804_12.mp4", title: "Sauna Experience 9" },
-    { src: "/media/IMG_5789_1.mp4", title: "Sauna Experience 10" },
+    { src: "/media/0804.mp4" },
+    { src: "/media/0804_1.mp4" },
+    { src: "/media/IMG_6475_2.mp4" },
+    { src: "/media/0804_3.mp4" },
+    { src: "/media/IMG_6591.mp4" },
+    { src: "/media/0804_4.mp4" },
+    { src: "/media/0804_5.mp4" },
+    { src: "/media/IMG_6595.mp4" },
+    { src: "/media/0804_8.mp4" },
+    { src: "/media/0804_9.mp4" },
+    { src: "/media/0804_10.mp4" },
+    { src: "/media/0804_12.mp4" },
+    { src: "/media/IMG_5789_1.mp4" },
   ];
 
   return (
