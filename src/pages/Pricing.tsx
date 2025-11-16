@@ -112,24 +112,22 @@ const Pricing = () => {
                   </video>
 
                   <div className="p-6">
-                    {/* Pricing Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
+                    {/* Pricing Table */}
+                    <div className="space-y-3 mb-6">
                       {sauna.pricing.map((plan, idx) => (
                         <div
                           key={idx}
-                          className={`p-4 rounded-lg border-2 ${
-                            plan.popular
-                              ? "border-primary bg-primary/5"
-                              : "border-border"
-                          }`}
+                          className="flex items-center justify-between py-2"
                         >
-                          {plan.popular && (
-                            <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full inline-block mb-2">
-                              POPULAR
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold text-card-foreground min-w-[100px]">
+                              {plan.duration}
                             </span>
-                          )}
-                          <div className="font-semibold text-card-foreground mb-1">
-                            {plan.duration}
+                            {plan.popular && (
+                              <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
+                                POPULAR
+                              </span>
+                            )}
                           </div>
                           <div>
                             <span className="text-2xl font-bold text-card-foreground">
@@ -175,24 +173,22 @@ const Pricing = () => {
                       {sauna.availability}
                     </p>
 
-                    {/* Pricing Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-6 flex-grow">
+                    {/* Pricing Table */}
+                    <div className="space-y-3 mb-6">
                       {sauna.pricing.map((plan, idx) => (
                         <div
                           key={idx}
-                          className={`p-4 rounded-lg border-2 ${
-                            plan.popular
-                              ? "border-primary bg-primary/5"
-                              : "border-border"
-                          }`}
+                          className="flex items-center justify-between py-2"
                         >
-                          {plan.popular && (
-                            <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded-full inline-block mb-2">
-                              POPULAR
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold text-card-foreground min-w-[100px]">
+                              {plan.duration}
                             </span>
-                          )}
-                          <div className="font-semibold text-card-foreground mb-1">
-                            {plan.duration}
+                            {plan.popular && (
+                              <span className="bg-primary text-primary-foreground text-xs font-semibold px-2 py-0.5 rounded-full">
+                                POPULAR
+                              </span>
+                            )}
                           </div>
                           <div>
                             <span className="text-2xl font-bold text-card-foreground">
