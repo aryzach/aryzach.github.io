@@ -119,6 +119,19 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="city">
+                  City <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="city"
+                  name="city"
+                  required
+                  placeholder="San Francisco"
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="sauna-type">
                   Sauna Type <span className="text-destructive">*</span>
                 </Label>
