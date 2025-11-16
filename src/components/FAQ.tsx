@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     question: "How much space do I need?",
-    answer: "The sauna footprint is approximately 4×4 feet.",
+    answer: "The sauna footprint is 48\" × 42\".",
   },
   {
     question: "How long does setup take?",

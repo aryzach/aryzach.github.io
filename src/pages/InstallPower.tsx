@@ -47,7 +47,7 @@ const InstallPower = () => {
                   <h2 className="text-2xl font-bold mb-3 text-card-foreground">Space & Clearance</h2>
                   <div className="space-y-4 text-card-foreground">
                     <p className="text-muted-foreground">
-                      <strong>Footprint:</strong> 4 feet × 4 feet (48" × 48")
+                      <strong>Footprint:</strong> 48" × 42"
                     </p>
                     <p className="text-muted-foreground">
                       <strong>Height:</strong> 6 feet 3 inches (75")
