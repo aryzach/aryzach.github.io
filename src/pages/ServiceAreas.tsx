@@ -36,7 +36,7 @@ const ServiceAreas = () => {
 
           <div className="mb-16 rounded-lg overflow-hidden shadow-lg h-[500px]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100940.17732527188!2d-122.51296584589844!3d37.75766994082031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d403161.0279932432!2d-122.68374135!3d37.757815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808580f4cfcfe14d%3A0x5c5234bc20c3ff7e!2sSan%20Francisco%20Bay%20Area%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -69,8 +69,8 @@ const ServiceAreas = () => {
             <p className="text-muted-foreground mb-4 text-lg">
               Not sure if you're in our service area? Get in touch
             </p>
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              Contact Us
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground" asChild>
+              <a href="/contact">Contact Us</a>
             </Button>
           </div>
         </div>
