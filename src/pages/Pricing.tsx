@@ -14,19 +14,19 @@ const pricingPlans = [
     price: "$249",
     priceDetail: "/month",
     popular: true,
-    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support", "10% discount"],
+    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support"],
   },
   {
     duration: "6 Months",
     price: "$219",
     priceDetail: "/month",
-    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support", "25% discount"],
+    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support"],
   },
   {
     duration: "12 Months",
     price: "$199",
     priceDetail: "/month",
-    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support", "33% discount", "Priority scheduling"],
+    features: ["Full setup included", "Standard 120V", "Pickup included", "24/7 support", "Priority scheduling"],
   },
 ];
 
