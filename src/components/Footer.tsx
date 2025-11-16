@@ -23,7 +23,7 @@ const Footer = () => {
               <li><Link to="/pricing" className="text-white/70 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link to="/service-areas" className="text-white/70 hover:text-white transition-colors">Service Areas</Link></li>
               <li><Link to="/install-power" className="text-white/70 hover:text-white transition-colors">Installation Guide</Link></li>
-              <li><Link to="/reviews" className="text-white/70 hover:text-white transition-colors">Reviews</Link></li>
+              <li><Link to="/contact" className="text-white/70 hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -41,16 +41,18 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
-            <div className="flex gap-2">
+            <form action="https://formspree.io/f/xwpkyllz" method="POST" className="flex gap-2">
               <Input
                 type="email"
+                name="email"
                 placeholder="Your email"
+                required
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
               />
-              <Button size="sm" className="bg-accent hover:bg-accent/90">
+              <Button type="submit" size="sm" className="bg-accent hover:bg-accent/90">
                 Join
               </Button>
-            </div>
+            </form>
           </div>
         </div>
 
@@ -73,7 +75,7 @@ const Footer = () => {
           </div>
 
           <p className="text-white/70 text-sm">
-            📍 San Francisco, CA | 📧 hello@sfsaunarental.com
+            📍 San Francisco, CA | 📧 sfsaunarental@gmail.com
           </p>
         </div>
       </div>

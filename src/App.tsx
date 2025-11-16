@@ -8,7 +8,6 @@ import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import InstallPower from "./pages/InstallPower";
 import ServiceAreas from "./pages/ServiceAreas";
-import Reviews from "./pages/Reviews";
 import Policies from "./pages/Policies";
 import LearnHub from "./pages/LearnHub";
 import Contact from "./pages/Contact";
@@ -38,7 +37,6 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/install-power" element={<InstallPower />} />
           <Route path="/service-areas" element={<ServiceAreas />} />
-          <Route path="/reviews" element={<Reviews />} />
           <Route path="/policies" element={<Policies />} />
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/contact" element={<Contact />} />
