@@ -26,7 +26,7 @@ const Header = () => {
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
         }
-      }, 100);
+      }, 300);
     }
   }, [location]);
 
