@@ -64,7 +64,7 @@ const Hero = () => {
             asChild
           >
             <a href="https://calendar.app.google/15uxvc8nue1YjcYt9" target="_blank" rel="noopener noreferrer">
-              Check Availability
+              Schedule Free Sauna Fit Check
               <ArrowRight className="ml-2" size={20} />
             </a>
           </Button>
