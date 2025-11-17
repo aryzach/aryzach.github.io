@@ -15,7 +15,7 @@ const ReserveCTA = () => {
         <div className="flex flex-col items-center gap-3">
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
             <Link to="/reserve-your-sauna">
-              Check Availability
+              Schedule Free Sauna Fit Check
               <ArrowRight className="ml-2" size={20} />
             </Link>
           </Button>
