@@ -64,7 +64,7 @@ const Pricing = () => {
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-center mb-6 text-foreground">
+          <h1 className="text-4xl md:text-6xl font-semibold text-center mb-6 text-foreground">
             Pricing & Options
           </h1>
           <p className="text-xl text-center text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -100,7 +100,7 @@ const Pricing = () => {
                   </video>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
                     <div className="p-3 md:p-4 w-full">
-                      <h3 className="text-base md:text-xl font-bold text-white mb-1">
+                      <h3 className="text-base md:text-xl font-semibold text-white mb-1">
                         {sauna.type}
                       </h3>
                       <p className="text-xs md:text-sm text-white/90">{sauna.availability}</p>
@@ -132,7 +132,7 @@ const Pricing = () => {
                             )}
                           </div>
                           <div className="text-right">
-                            <span className="text-base md:text-xl font-bold text-card-foreground">
+                            <span className="text-base md:text-xl font-semibold text-card-foreground">
                               {plan.price}
                             </span>
                             <span className="text-[10px] md:text-xs text-muted-foreground">
