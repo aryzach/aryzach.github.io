@@ -85,82 +85,72 @@ const Pricing = () => {
           </div>
 
           {/* Sauna Grid */}
-          <h2 className="text-2xl font-bold text-center mb-8 text-foreground">Select Option</h2>
           <div className="grid grid-cols-2 gap-4 md:gap-6">
             {saunaTypes.map((sauna, index) => (
-              <Collapsible key={index}>
-                <div className="bg-card rounded-lg overflow-hidden border border-border">
-                  <CollapsibleTrigger className="w-full text-left hover:bg-muted/50 transition-colors">
-                    <div className="relative">
-                      <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-[300px] md:h-[600px] object-cover"
-                      >
-                        <source src={sauna.video} type="video/mp4" />
-                      </video>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                        <div className="p-3 md:p-4 w-full flex items-center justify-between">
-                          <div>
-                            <h3 className="text-base md:text-xl font-bold text-white mb-1">
-                              {sauna.type}
-                            </h3>
-                            <p className="text-xs md:text-sm text-white/90">{sauna.availability}</p>
-                          </div>
-                          <ChevronDown className="text-white h-5 w-5 md:h-6 md:w-6 transition-transform flex-shrink-0" />
-                        </div>
-                      </div>
+              <div key={index} className="bg-card rounded-lg overflow-hidden border border-border">
+                <div className="relative">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-[300px] md:h-[600px] object-cover"
+                  >
+                    <source src={sauna.video} type="video/mp4" />
+                  </video>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                    <div className="p-3 md:p-4 w-full">
+                      <h3 className="text-base md:text-xl font-bold text-white mb-1">
+                        {sauna.type}
+                      </h3>
+                      <p className="text-xs md:text-sm text-white/90">{sauna.availability}</p>
                     </div>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent>
-                    <div className="p-3 md:p-6">
-                      {/* Pricing Table */}
-                      <div className="mb-3 md:mb-4">
-                        <div className="flex items-center justify-between mb-2 pb-1 border-b border-border">
-                          <span className="text-xs md:text-sm font-semibold text-muted-foreground">Months</span>
-                          <span className="text-xs md:text-sm font-semibold text-muted-foreground">Price</span>
-                        </div>
-                        <div className="space-y-1.5 md:space-y-2">
-                          {sauna.pricing.map((plan, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-center justify-between py-1"
-                            >
-                              <div className="flex items-center gap-1.5 md:gap-2">
-                                <span className="font-semibold text-card-foreground text-sm md:text-base w-6 md:w-8">
-                                  {plan.duration}
-                                </span>
-                                {plan.popular && (
-                                  <span className="bg-primary text-primary-foreground text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
-                                    POPULAR
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-right">
-                                <span className="text-base md:text-xl font-bold text-card-foreground">
-                                  {plan.price}
-                                </span>
-                                <span className="text-[10px] md:text-xs text-muted-foreground">
-                                  {plan.priceDetail}
-                                </span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <Link to="/reserve-your-sauna">
-                        <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                          Reserve Now
-                        </Button>
-                      </Link>
-                    </div>
-                  </CollapsibleContent>
+                  </div>
                 </div>
-              </Collapsible>
+
+                <div className="p-3 md:p-6">
+                  {/* Pricing Table */}
+                  <div className="mb-3 md:mb-4">
+                    <div className="flex items-center justify-between mb-2 pb-1 border-b border-border">
+                      <span className="text-xs md:text-sm font-semibold text-muted-foreground">Months</span>
+                      <span className="text-xs md:text-sm font-semibold text-muted-foreground">Price</span>
+                    </div>
+                    <div className="space-y-1.5 md:space-y-2">
+                      {sauna.pricing.map((plan, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between py-1"
+                        >
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                            <span className="font-semibold text-card-foreground text-sm md:text-base w-6 md:w-8">
+                              {plan.duration}
+                            </span>
+                            {plan.popular && (
+                              <span className="bg-primary text-primary-foreground text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
+                                POPULAR
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <span className="text-base md:text-xl font-bold text-card-foreground">
+                              {plan.price}
+                            </span>
+                            <span className="text-[10px] md:text-xs text-muted-foreground">
+                              {plan.priceDetail}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Link to="/reserve-your-sauna">
+                    <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                      Reserve Now
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
