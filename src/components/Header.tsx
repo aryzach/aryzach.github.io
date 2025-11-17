@@ -18,30 +18,19 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll to section if hash is present in URL
     if (location.hash) {
       const id = location.hash.replace('#', '');
-      // Use longer timeout to ensure page is fully loaded
-      const scrollToTarget = () => {
+      setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
-          const headerOffset = 80; // Fixed header height
+          const headerOffset = 80;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          });
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
         }
-      };
-      
-      // Try multiple times to ensure content is loaded
-      setTimeout(scrollToTarget, 100);
-      setTimeout(scrollToTarget, 500);
-      setTimeout(scrollToTarget, 1000);
+      }, 100);
     }
-  }, [location]);
+  }, [location.pathname, location.hash]);
 
   const scrollToSection = (id: string) => {
     if (location.pathname === '/') {
