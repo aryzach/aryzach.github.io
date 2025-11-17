@@ -39,6 +39,10 @@ const faqs = [
     question: "Is this landlord-friendly?",
     answer: "Yes. The sauna is a free-standing unit that uses a standard outlet and doesn't need any building or electrical changes. At the end of the day, a sauna is just a somewhat large, fancy appliance (like a powerful space heater in a box).",
   },
+  {
+    question: "What happens after the initial lease period?",
+    answer: "After your lease ends, your plan switches to simple month-to-month. You keep the sauna as long as you'd like. If you want to end your rental, just let us know and we'll schedule pickup and remove the sauna within 30 days.",
+  },
 ];
 
 const FAQ = () => {
