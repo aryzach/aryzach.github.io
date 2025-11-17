@@ -48,11 +48,14 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px]">
+        <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-3 font-normal">
+          Make daily heat therapy effortless.
+        </p>
         <h1 className="font-heading text-[40px] md:text-[56px] font-semibold text-white mb-6 leading-[1.1] tracking-[-0.01em]">
           A personal sauna — in your home this week.
         </h1>
         <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-8 max-w-2xl mx-auto font-normal">
-          Infrared or Finnish, indoor or outdoor. Professional installation with a simple monthly plan.
+          Fast delivery, zero-hassle setup, and a simple monthly plan so you can finally enjoy consistent sauna sessions at home.
         </p>
         <div className="flex flex-col items-center gap-4">
           <Button 
@@ -61,10 +64,13 @@ const Hero = () => {
             asChild
           >
             <a href="https://calendar.app.google/15uxvc8nue1YjcYt9" target="_blank" rel="noopener noreferrer">
-              Free Sauna Consultation
+              Check Availability
               <ArrowRight className="ml-2" size={20} />
             </a>
           </Button>
+          <p className="text-white/80 font-sans text-[14px] font-normal max-w-md">
+            We confirm fit, electrical, and recommend the right model—no pressure.
+          </p>
           <div className="flex items-center gap-2 text-white/90 font-sans text-[14px] font-normal">
             <span>Loved by 42+ San Franciscans</span>
             <div className="flex">

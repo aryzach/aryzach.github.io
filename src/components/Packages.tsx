@@ -15,9 +15,12 @@ const Packages = () => {
           </p>
           <Link to="/pricing">
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              See Full Pricing
+              Check Availability
             </Button>
           </Link>
+          <p className="text-sm text-muted-foreground mt-2">
+            We confirm fit, electrical, and recommend the right model—no pressure.
+          </p>
         </div>
 
         {/* Trust Strip */}
