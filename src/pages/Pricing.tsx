@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SaunaComparison from "@/components/SaunaComparison";
+import InstallationRequirements from "@/components/InstallationRequirements";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -67,9 +69,12 @@ const Pricing = () => {
           <h1 className="text-4xl md:text-6xl font-semibold text-center mb-6 text-foreground">
             Pricing & Options
           </h1>
-          <p className="text-xl text-center text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
             Choose the sauna type and rental period that works best for you.
           </p>
+
+          {/* Sauna Comparison */}
+          <SaunaComparison />
 
           {/* Common Features */}
           <div className="bg-card rounded-lg p-6 mb-12 max-w-2xl mx-auto border border-border">
@@ -146,13 +151,16 @@ const Pricing = () => {
 
                   <Link to="/reserve-your-sauna">
                     <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                      Reserve Now
+                      Check Availability
                     </Button>
                   </Link>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Installation Requirements */}
+          <InstallationRequirements />
         </div>
       </main>
       <Footer />
