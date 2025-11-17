@@ -52,7 +52,7 @@ const Hero = () => {
           A personal sauna — in your home this week.
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-          Infrared or Finnish, indoor or outdoor. Delivery, install, and pickup included to {zipCode}.
+          Infrared or Finnish, indoor or outdoor. Professionally installed, with month-to-month service after your initial term.
         </p>
         <div className="flex flex-col items-center gap-4">
           <Button 
