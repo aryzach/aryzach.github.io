@@ -41,7 +41,7 @@ const SocialProof = () => {
             <img 
               src={sfStandardLogo} 
               alt="The San Francisco Standard" 
-              className="h-8 mx-auto"
+              className="h-12 md:h-16 mx-auto"
             />
           </a>
         </div>
