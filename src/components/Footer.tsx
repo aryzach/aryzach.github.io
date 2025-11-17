@@ -19,15 +19,15 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-semibold mb-4">SF Sauna Rental</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-accent">SF Sauna</h3>
             <p className="text-white/70 text-sm">
-              Premium infrared sauna rentals for San Francisco homes
+              Premium in-home sauna rentals for San Francisco Bay Area
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="font-medium mb-4">Quick Links</h4>
+            <h4 className="font-medium mb-4 text-accent">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/pricing" className="text-white/70 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link to="/#service-area" className="text-white/70 hover:text-white transition-colors">Service Areas</Link></li>
@@ -38,7 +38,7 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-medium mb-4">Legal</h4>
+            <h4 className="font-medium mb-4 text-accent">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Terms of Service</Link></li>
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
@@ -47,7 +47,7 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div>
-            <h4 className="font-medium mb-4">Stay Updated</h4>
+            <h4 className="font-medium mb-4 text-accent">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
             <form action="https://formspree.io/f/meovlkjw" method="POST" className="flex gap-2">
               <Input
