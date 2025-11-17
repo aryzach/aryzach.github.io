@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     question: "Can I use it indoors and outdoors?",
-    answer: "Right now we only have indoor saunas. Sign up on our email list to hear about outdoor options, or get in touch to pre-order.",
+    answer: "Yes. We have indoor and outdoor saunas available.",
   },
   {
     question: "Will a sauna overheat my apartment?",
