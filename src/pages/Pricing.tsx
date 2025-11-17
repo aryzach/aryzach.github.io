@@ -111,7 +111,7 @@ const Pricing = () => {
                 <div className="p-3 md:p-6">
                   {/* Pricing Table */}
                   <div className="mb-3 md:mb-4">
-                    <div className="flex items-center justify-between mb-2 pb-1 border-b border-border">
+                    <div className="grid grid-cols-[auto_auto] gap-6 md:gap-12 mb-2 pb-1 border-b border-border">
                       <span className="text-xs md:text-sm font-semibold text-muted-foreground">Months</span>
                       <span className="text-xs md:text-sm font-semibold text-muted-foreground">Price</span>
                     </div>
@@ -119,7 +119,7 @@ const Pricing = () => {
                       {sauna.pricing.map((plan, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between py-1"
+                          className="grid grid-cols-[auto_auto] gap-6 md:gap-12 items-center py-1"
                         >
                           <div className="flex items-center gap-1.5 md:gap-2">
                             <span className="font-semibold text-card-foreground text-sm md:text-base w-6 md:w-8">
