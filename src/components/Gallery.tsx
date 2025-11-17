@@ -1,4 +1,5 @@
 import gallery3 from "@/assets/gallery-3.jpg";
+import saunaTemp from "@/assets/sauna-temp.png";
 
 const galleryItems = [
   { type: "video", src: "/media/0804_1.mp4" },
@@ -6,6 +7,7 @@ const galleryItems = [
   { type: "video", src: "/media/0804.mp4" },
   { type: "image", src: gallery3 },
   { type: "video", src: "/media/IMG_6591.mp4" },
+  { type: "image", src: saunaTemp },
 ];
 
 const Gallery = () => {
