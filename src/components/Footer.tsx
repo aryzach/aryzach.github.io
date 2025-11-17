@@ -27,7 +27,7 @@ const Footer = () => {
 
           {/* Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-medium mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/pricing" className="text-white/70 hover:text-white transition-colors">Pricing</Link></li>
               <li><Link to="/#service-area" className="text-white/70 hover:text-white transition-colors">Service Areas</Link></li>
@@ -38,7 +38,7 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
+            <h4 className="font-medium mb-4">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Terms of Service</Link></li>
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
@@ -47,7 +47,7 @@ const Footer = () => {
 
           {/* Newsletter */}
           <div>
-            <h4 className="font-semibold mb-4">Stay Updated</h4>
+            <h4 className="font-medium mb-4">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
             <form action="https://formspree.io/f/meovlkjw" method="POST" className="flex gap-2">
               <Input
