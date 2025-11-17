@@ -56,99 +56,99 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 30 8% 15%;
-    --foreground: 0 0% 95%;
+    --background: 30 38% 94%;
+    --foreground: 0 0% 10%;
 
-    --card: 30 10% 20%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
 
-    --popover: 30 10% 20%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 30 35% 55%;
+    --primary: 28 45% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 15% 25%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 33 17% 83%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 30 15% 25%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 33 17% 83%;
+    --muted-foreground: 0 0% 10%;
 
-    --accent: 25 85% 55%;
+    --accent: 28 45% 56%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 30%;
-    --input: 30 15% 25%;
-    --ring: 30 35% 55%;
+    --border: 33 17% 83%;
+    --input: 33 17% 83%;
+    --ring: 28 45% 56%;
 
     --radius: 0.75rem;
 
-    --cedar: 30 35% 55%;
-    --cedar-dark: 30 40% 35%;
-    --cedar-light: 30 30% 75%;
-    --warm-orange: 25 85% 55%;
-    --charcoal: 30 8% 15%;
-    --cream: 28 20% 95%;
-    --cedar-section: 30 30% 25%;
+    --cedar: 28 45% 56%;
+    --cedar-dark: 28 45% 46%;
+    --cedar-light: 28 45% 70%;
+    --warm-orange: 28 45% 56%;
+    --charcoal: 0 0% 10%;
+    --cream: 30 38% 94%;
+    --cedar-section: 30 38% 94%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 30 8% 15%;
-    --sidebar-primary: 30 35% 55%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 28 45% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 28 20% 92%;
-    --sidebar-accent-foreground: 30 8% 15%;
-    --sidebar-border: 28 15% 88%;
-    --sidebar-ring: 30 35% 55%;
+    --sidebar-accent: 33 17% 83%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 33 17% 83%;
+    --sidebar-ring: 28 45% 56%;
   }
 
   .dark {
-    --background: 30 8% 10%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 5%;
+    --foreground: 0 0% 100%;
 
-    --card: 30 10% 15%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 30 10% 15%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 30 35% 55%;
+    --primary: 28 45% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 15% 20%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 33 17% 83%;
+    --secondary-foreground: 0 0% 5%;
 
-    --muted: 30 15% 20%;
-    --muted-foreground: 30 8% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 33 17% 83%;
 
-    --accent: 25 85% 55%;
+    --accent: 28 45% 56%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 20%;
-    --input: 30 15% 20%;
-    --ring: 30 35% 55%;
+    --border: 0 0% 10%;
+    --input: 0 0% 10%;
+    --ring: 28 45% 56%;
 
-    --cedar: 30 35% 55%;
-    --cedar-dark: 30 40% 35%;
-    --cedar-light: 30 30% 75%;
-    --warm-orange: 25 85% 55%;
-    --charcoal: 30 8% 15%;
-    --cream: 28 20% 95%;
-    --cedar-section: 30 30% 20%;
+    --cedar: 28 45% 56%;
+    --cedar-dark: 28 45% 46%;
+    --cedar-light: 28 45% 70%;
+    --warm-orange: 28 45% 56%;
+    --charcoal: 0 0% 10%;
+    --cream: 30 38% 94%;
+    --cedar-section: 0 0% 10%;
 
-    --sidebar-background: 30 8% 15%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 30 35% 55%;
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 28 45% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 15% 25%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 30 15% 25%;
-    --sidebar-ring: 30 35% 55%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 10%;
+    --sidebar-ring: 28 45% 56%;
   }
 }
 
