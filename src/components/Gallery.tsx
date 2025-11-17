@@ -1,13 +1,11 @@
 import gallery3 from "@/assets/gallery-3.jpg";
 import saunaTemp from "@/assets/sauna-temp.png";
+import lindseySauna from "@/assets/lindsey-sauna.png";
 
 const galleryItems = [
-  { type: "video", src: "/media/0804_1.mp4" },
-  { type: "video", src: "/media/IMG_6475_2.mp4" },
-  { type: "video", src: "/media/0804.mp4" },
   { type: "image", src: gallery3 },
-  { type: "video", src: "/media/IMG_6591.mp4" },
   { type: "image", src: saunaTemp },
+  { type: "image", src: lindseySauna },
 ];
 
 const Gallery = () => {
