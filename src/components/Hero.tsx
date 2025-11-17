@@ -49,10 +49,10 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          A personal sauna — at {zipCode} this week.
+          A personal sauna — in your home this week.
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-          Infrared or Finnish, indoor or outdoor. Delivery, install, and pickup included.
+          Infrared or Finnish, indoor or outdoor. Delivery, install, and pickup included to {zipCode}.
         </p>
         <div className="flex flex-col items-center gap-4">
           <Button 
