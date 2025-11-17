@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Clash Display', 'sans-serif'],
+        sans: ['Clash Grotesk', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
