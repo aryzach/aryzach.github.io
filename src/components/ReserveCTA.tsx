@@ -10,7 +10,7 @@ const ReserveCTA = () => {
           Ready to start your sauna ritual?
         </h2>
         <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-          Join the many San Franciscans enjoying daily infrared therapy at home
+          Join the many San Franciscans enjoying daily heat therapy at home
         </p>
         <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
           <Link to="/reserve-your-sauna">
