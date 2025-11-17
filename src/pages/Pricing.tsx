@@ -6,49 +6,57 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const saunaTypes = [
+const saunaData = [
   {
-    type: "Indoor Infrared",
-    availability: "Available within a week",
-    video: "/videos/indoor-infrared.mp4",
-    pricing: [
-      { duration: "1", price: "$449", priceDetail: "/mo" },
-      { duration: "3", price: "$259", priceDetail: "/mo", popular: true },
-      { duration: "6", price: "$229", priceDetail: "/mo" },
-      { duration: "12", price: "$199", priceDetail: "/mo" },
+    type: "Finnish Dry Sauna",
+    video: "/videos/pricing-finnish.mp4",
+    variants: [
+      {
+        name: "Indoor Finnish Dry",
+        availability: "Available within two weeks",
+        pricing: [
+          { duration: "1", price: "$599", priceDetail: "/mo" },
+          { duration: "3", price: "$359", priceDetail: "/mo" },
+          { duration: "6", price: "$319", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
+        ],
+      },
+      {
+        name: "Outdoor Finnish Dry",
+        availability: "Available in 2 months",
+        pricing: [
+          { duration: "1", price: "$679", priceDetail: "/mo" },
+          { duration: "3", price: "$399", priceDetail: "/mo" },
+          { duration: "6", price: "$349", priceDetail: "/mo" },
+          { duration: "12", price: "$319", priceDetail: "/mo" },
+        ],
+      },
     ],
   },
   {
-    type: "Indoor Finnish Dry",
-    availability: "Available within two weeks",
-    video: "/videos/indoor-finnish.mp4",
-    pricing: [
-      { duration: "1", price: "$599", priceDetail: "/mo" },
-      { duration: "3", price: "$359", priceDetail: "/mo", popular: true },
-      { duration: "6", price: "$319", priceDetail: "/mo" },
-      { duration: "12", price: "$299", priceDetail: "/mo" },
-    ],
-  },
-  {
-    type: "Outdoor Infrared",
-    availability: "Available within a month",
-    video: "/videos/outdoor-infrared.mp4",
-    pricing: [
-      { duration: "1", price: "$499", priceDetail: "/mo" },
-      { duration: "3", price: "$359", priceDetail: "/mo", popular: true },
-      { duration: "6", price: "$329", priceDetail: "/mo" },
-      { duration: "12", price: "$299", priceDetail: "/mo" },
-    ],
-  },
-  {
-    type: "Outdoor Finnish Dry",
-    availability: "Available in 2 months",
-    video: "/videos/outdoor-finnish.mp4",
-    pricing: [
-      { duration: "1", price: "$679", priceDetail: "/mo" },
-      { duration: "3", price: "$399", priceDetail: "/mo", popular: true },
-      { duration: "6", price: "$349", priceDetail: "/mo" },
-      { duration: "12", price: "$319", priceDetail: "/mo" },
+    type: "Infrared Sauna",
+    video: "/videos/pricing-infrared.mp4",
+    variants: [
+      {
+        name: "Indoor Infrared",
+        availability: "Available within a week",
+        pricing: [
+          { duration: "1", price: "$449", priceDetail: "/mo" },
+          { duration: "3", price: "$259", priceDetail: "/mo" },
+          { duration: "6", price: "$229", priceDetail: "/mo" },
+          { duration: "12", price: "$199", priceDetail: "/mo" },
+        ],
+      },
+      {
+        name: "Outdoor Infrared",
+        availability: "Available within a month",
+        pricing: [
+          { duration: "1", price: "$499", priceDetail: "/mo" },
+          { duration: "3", price: "$359", priceDetail: "/mo" },
+          { duration: "6", price: "$329", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
+        ],
+      },
     ],
   },
 ];
@@ -89,71 +97,78 @@ const Pricing = () => {
             </div>
           </div>
 
-          {/* Sauna Grid */}
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
-            {saunaTypes.map((sauna, index) => (
-              <div key={index} className="bg-card rounded-lg overflow-hidden border border-border">
+          {/* Sauna Sections */}
+          <div className="space-y-16">
+            {saunaData.map((sauna, saunaIndex) => (
+              <div key={saunaIndex} className="bg-card rounded-lg overflow-hidden border border-border">
+                {/* Video Header */}
                 <div className="relative">
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="w-full h-[300px] md:h-[600px] object-cover"
+                    className="w-full h-[300px] md:h-[400px] object-cover"
                   >
                     <source src={sauna.video} type="video/mp4" />
                   </video>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                    <div className="p-3 md:p-4 w-full">
-                      <h3 className="text-base md:text-xl font-semibold text-white mb-1">
+                    <div className="p-6 w-full">
+                      <h2 className="text-2xl md:text-3xl font-semibold text-white">
                         {sauna.type}
-                      </h3>
-                      <p className="text-xs md:text-sm text-white/90">{sauna.availability}</p>
+                      </h2>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3 md:p-6">
-                  {/* Pricing Table */}
-                  <div className="mb-3 md:mb-4">
-                    <div className="grid grid-cols-[auto_auto] gap-6 md:gap-12 mb-2 pb-1 border-b border-border">
-                      <span className="text-xs md:text-sm font-semibold text-muted-foreground">Months</span>
-                      <span className="text-xs md:text-sm font-semibold text-muted-foreground">Price</span>
-                    </div>
-                    <div className="space-y-1.5 md:space-y-2">
-                      {sauna.pricing.map((plan, idx) => (
-                        <div
-                          key={idx}
-                          className="grid grid-cols-[auto_auto] gap-6 md:gap-12 items-center py-1"
-                        >
-                          <div className="flex items-center gap-1.5 md:gap-2">
-                            <span className="font-semibold text-card-foreground text-sm md:text-base w-6 md:w-8">
-                              {plan.duration}
-                            </span>
-                            {plan.popular && (
-                              <span className="bg-primary text-primary-foreground text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
-                                POPULAR
-                              </span>
-                            )}
+                {/* Pricing Tables */}
+                <div className="p-6 md:p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {sauna.variants.map((variant, variantIndex) => (
+                      <div key={variantIndex} className="space-y-4">
+                        <div>
+                          <h3 className="text-xl font-semibold text-card-foreground mb-1">
+                            {variant.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">{variant.availability}</p>
+                        </div>
+
+                        {/* Pricing Table */}
+                        <div className="mb-4">
+                          <div className="grid grid-cols-2 gap-4 mb-2 pb-2 border-b border-border">
+                            <span className="text-sm font-semibold text-muted-foreground">Months</span>
+                            <span className="text-sm font-semibold text-muted-foreground text-right">Price</span>
                           </div>
-                          <div className="text-right">
-                            <span className="text-base md:text-xl font-semibold text-card-foreground">
-                              {plan.price}
-                            </span>
-                            <span className="text-[10px] md:text-xs text-muted-foreground">
-                              {plan.priceDetail}
-                            </span>
+                          <div className="space-y-2">
+                            {variant.pricing.map((plan, idx) => (
+                              <div
+                                key={idx}
+                                className="grid grid-cols-2 gap-4 items-center py-1"
+                              >
+                                <span className="font-semibold text-card-foreground">
+                                  {plan.duration}
+                                </span>
+                                <div className="text-right">
+                                  <span className="text-xl font-semibold text-card-foreground">
+                                    {plan.price}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {plan.priceDetail}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
 
-                  <Link to="/reserve-your-sauna">
-                    <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                      Check Availability
-                    </Button>
-                  </Link>
+                        <Link to="/reserve-your-sauna">
+                          <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                            Check Availability
+                          </Button>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
