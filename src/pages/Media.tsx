@@ -6,6 +6,10 @@ import gallery4 from "@/assets/gallery-4.jpg";
 
 const Media = () => {
   const mediaItems = [
+    { type: "video", src: "/media/0804_1.mp4" },
+    { type: "video", src: "/media/IMG_6475_2.mp4" },
+    { type: "video", src: "/media/0804.mp4" },
+    { type: "video", src: "/media/IMG_6591.mp4" },
     { type: "image", src: gallery1 },
     { type: "video", src: "/media/0804_3.mp4" },
     { type: "image", src: gallery2 },
