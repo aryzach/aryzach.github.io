@@ -17,27 +17,15 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace('#', '');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          const headerOffset = 80;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        }
-      }, 100);
-    }
-  }, [location.pathname, location.hash]);
 
   const scrollToSection = (id: string) => {
+    setIsMobileMenuOpen(false);
+    
     if (location.pathname === '/') {
       // Already on home page, just scroll
       const element = document.getElementById(id);
       if (element) {
-        const headerOffset = 80; // Fixed header height
+        const headerOffset = 80;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         
@@ -45,12 +33,23 @@ const Header = () => {
           top: offsetPosition,
           behavior: "smooth"
         });
-        setIsMobileMenuOpen(false);
       }
     } else {
-      // Navigate to home page with hash
-      navigate(`/#${id}`);
-      setIsMobileMenuOpen(false);
+      // First navigate to homepage, then scroll to section
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const headerOffset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }
+      }, 100);
     }
   };
 
