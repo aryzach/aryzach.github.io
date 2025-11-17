@@ -35,7 +35,7 @@ const ServiceArea = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="text-primary flex-shrink-0 mt-1" size={24} />
                 <div>
-                  <h3 className="text-xl font-semibold text-card-foreground mb-2">{area.name}</h3>
+                  <h3 className="text-xl font-medium text-card-foreground mb-2">{area.name}</h3>
                   <p className="text-muted-foreground">{area.description}</p>
                 </div>
               </div>
