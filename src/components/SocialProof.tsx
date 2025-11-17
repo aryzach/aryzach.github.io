@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Star } from "lucide-react";
 import sfStandardLogo from "@/assets/sf-standard-logo.png";
 
 const SocialProof = () => {
@@ -25,12 +24,6 @@ const SocialProof = () => {
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground">
             Loved by San Franciscans
           </h2>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="fill-warm-orange text-warm-orange" size={24} />
-            ))}
-            <span className="ml-2 text-lg text-muted-foreground">5.0 stars • 18 reviews</span>
-          </div>
           <a 
             href="https://sfstandard.com/2025/06/21/welcome-to-san-franciscos-summer-of-saunas/" 
             target="_blank" 
