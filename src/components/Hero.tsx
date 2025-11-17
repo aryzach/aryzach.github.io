@@ -69,7 +69,7 @@ const Hero = () => {
             </a>
           </Button>
           <p className="text-white/80 font-sans text-[14px] font-normal max-w-md">
-            We confirm fit, electrical, and recommend the right model—no pressure.
+            We confirm fit, electrical, and recommend the right model, no pressure.
           </p>
           <div className="flex items-center gap-2 text-white/90 font-sans text-[14px] font-normal">
             <span>Loved by 42+ San Franciscans</span>
