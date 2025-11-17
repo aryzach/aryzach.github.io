@@ -9,7 +9,7 @@ const serviceAreas = [
   },
   {
     name: "Rest of the Bay Area",
-    description: "$150 delivery fee, free installation",
+    description: "Delivery fee dependent on location, free installation",
   },
 ];
 
@@ -24,18 +24,6 @@ const ServiceArea = () => {
           <p className="text-muted-foreground mb-6">
             Proudly delivering premium sauna experiences throughout San Francisco and the greater Bay Area
           </p>
-        </div>
-
-        <div className="mb-8 rounded-lg overflow-hidden shadow-lg h-[500px]">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d403161.0279932432!2d-122.68374135!3d37.757815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808580f4cfcfe14d%3A0x5c5234bc20c3ff7e!2sSan%20Francisco%20Bay%20Area%2C%20CA!5e0!3m2!1sen!2sus!4v1234567890"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">

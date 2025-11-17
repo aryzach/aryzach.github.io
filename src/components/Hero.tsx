@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { ArrowRight, Star } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [zipCode, setZipCode] = useState<string>("your area");
 
   useEffect(() => {
     // Force video to play on mobile devices
@@ -12,6 +13,18 @@ const Hero = () => {
         console.log("Video autoplay failed:", error);
       });
     }
+
+    // Fetch user's zip code
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(data => {
+        if (data.postal) {
+          setZipCode(data.postal);
+        }
+      })
+      .catch(error => {
+        console.log("Failed to fetch zip code:", error);
+      });
   }, []);
 
   return (
@@ -36,12 +49,12 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          A real sauna — in your home this week.
+          A personal sauna — at {zipCode} this week.
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
           Infrared or Finnish, indoor or outdoor. Delivery, install, and pickup included.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col items-center gap-4">
           <Button 
             size="lg" 
             className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8"
@@ -52,6 +65,14 @@ const Hero = () => {
               <ArrowRight className="ml-2" size={20} />
             </a>
           </Button>
+          <div className="flex items-center gap-2 text-white/90">
+            <span className="text-lg">Loved by 42+ San Franciscans</span>
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="fill-warm-orange text-warm-orange" size={16} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

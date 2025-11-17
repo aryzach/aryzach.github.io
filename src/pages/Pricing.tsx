@@ -1,13 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronDown } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 
 const saunaTypes = [
   {
