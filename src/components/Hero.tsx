@@ -55,7 +55,7 @@ const Hero = () => {
           A personal sauna — in your home this week.
         </h1>
         <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-8 max-w-2xl mx-auto font-normal">
-          Fast delivery, zero-hassle setup, and a simple monthly plan so you can finally enjoy consistent sauna sessions at home.
+          Zero-hassle setup and a simple monthly plan so you can finally enjoy consistent sauna sessions at home.
         </p>
         <div className="flex flex-col items-center gap-4">
           <Button 
