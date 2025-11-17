@@ -14,7 +14,17 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Clash Grotesk', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Clash Grotesk', 'sans-serif'],
+      },
+      fontSize: {
+        'h1-desktop': ['56px', { lineHeight: '1.1', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'h1-mobile': ['40px', { lineHeight: '1.1', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'h2-desktop': ['36px', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'h2-mobile': ['28px', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'h3': ['24px', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'body': ['18px', { lineHeight: '1.6' }],
+        'caption': ['14px', { lineHeight: '1.5', fontWeight: '500' }],
       },
       colors: {
         border: "hsl(var(--border))",
