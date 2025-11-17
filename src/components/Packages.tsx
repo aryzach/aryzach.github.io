@@ -19,7 +19,7 @@ const Packages = () => {
             </Button>
           </Link>
           <p className="text-sm text-muted-foreground mt-2">
-            We confirm fit, electrical, and recommend the right model—no pressure.
+            We confirm fit, electrical, and recommend the right model, no pressure.
           </p>
         </div>
 

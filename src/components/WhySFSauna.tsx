@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 
 const WhySFSauna = () => {
   const benefits = [
-    "Fast SF-local delivery (1–14 days depending on sauna type)",
+    "Fast SF-local delivery (1–8 weeks depending on sauna type)",
     "Professional installation + removal included",
     "Standard 120V power (no electrician needed)",
     "Month-to-month after initial term",

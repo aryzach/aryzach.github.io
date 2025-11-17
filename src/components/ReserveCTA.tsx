@@ -20,7 +20,7 @@ const ReserveCTA = () => {
             </Link>
           </Button>
           <p className="text-primary-foreground/80 text-sm max-w-md">
-            We confirm fit, electrical, and recommend the right model—no pressure.
+            We confirm fit, electrical, and recommend the right model, no pressure.
           </p>
         </div>
       </div>
