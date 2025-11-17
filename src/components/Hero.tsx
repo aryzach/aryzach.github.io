@@ -47,17 +47,17 @@ const Hero = () => {
       <div className="absolute inset-0 bg-charcoal/60" />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold text-white mb-6 leading-tight">
+      <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px]">
+        <h1 className="font-heading text-[40px] md:text-[56px] font-bold text-white mb-6 leading-[1.1] tracking-[-0.01em]">
           A personal sauna — in your home this week.
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
-          Infrared or Finnish, indoor or outdoor. Professionally installed, with month-to-month service after your initial term.
+        <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-8 max-w-2xl mx-auto font-normal">
+          Infrared or Finnish, indoor or outdoor. Professional installation with a simple monthly plan.
         </p>
         <div className="flex flex-col items-center gap-4">
           <Button 
             size="lg" 
-            className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8"
+            className="font-sans font-medium"
             asChild
           >
             <a href="https://calendar.app.google/15uxvc8nue1YjcYt9" target="_blank" rel="noopener noreferrer">
@@ -65,11 +65,11 @@ const Hero = () => {
               <ArrowRight className="ml-2" size={20} />
             </a>
           </Button>
-          <div className="flex items-center gap-2 text-white/90">
-            <span className="text-lg">Loved by 42+ San Franciscans</span>
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[14px] font-normal">
+            <span>Loved by 42+ San Franciscans</span>
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="fill-warm-orange text-warm-orange" size={16} />
+                <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={16} />
               ))}
             </div>
           </div>
