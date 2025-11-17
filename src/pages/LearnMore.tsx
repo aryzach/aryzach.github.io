@@ -53,7 +53,7 @@ const LearnMore = () => {
       <main className="flex-grow pt-20">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-foreground">
               Contact Us
             </h1>
             <p className="text-lg text-muted-foreground mb-8">

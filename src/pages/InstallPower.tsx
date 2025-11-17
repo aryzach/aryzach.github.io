@@ -8,7 +8,7 @@ const InstallPower = () => {
       <Header />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
+          <h1 className="text-4xl md:text-6xl font-semibold mb-6 text-foreground">
             Installation & Power Guide
           </h1>
           <p className="text-xl text-muted-foreground mb-12">
@@ -21,7 +21,7 @@ const InstallPower = () => {
               <div className="flex items-start gap-4 mb-4">
                 <Zap className="text-primary flex-shrink-0" size={32} />
                 <div>
-                  <h2 className="text-2xl font-bold mb-3 text-card-foreground">Power Requirements</h2>
+                  <h2 className="text-2xl font-semibold mb-3 text-card-foreground">Power Requirements</h2>
                   <div className="space-y-4 text-card-foreground">
                     <div>
                       <h3 className="font-semibold mb-2">Standard 120V</h3>
@@ -44,7 +44,7 @@ const InstallPower = () => {
               <div className="flex items-start gap-4 mb-4">
                 <Ruler className="text-primary flex-shrink-0" size={32} />
                 <div>
-                  <h2 className="text-2xl font-bold mb-3 text-card-foreground">Space & Clearance</h2>
+                  <h2 className="text-2xl font-semibold mb-3 text-card-foreground">Space & Clearance</h2>
                   <div className="space-y-4 text-card-foreground">
                     <p className="text-muted-foreground">
                       <strong>Footprint:</strong> 48" × 42"
@@ -65,7 +65,7 @@ const InstallPower = () => {
               <div className="flex items-start gap-4 mb-4">
                 <Volume2 className="text-primary flex-shrink-0" size={32} />
                 <div>
-                  <h2 className="text-2xl font-bold mb-3 text-card-foreground">Noise Level</h2>
+                  <h2 className="text-2xl font-semibold mb-3 text-card-foreground">Noise Level</h2>
                   <p className="text-muted-foreground">
                     Our infrared saunas are whisper-quiet. Perfect for apartments and shared living spaces.
                   </p>
@@ -78,7 +78,7 @@ const InstallPower = () => {
               <div className="flex items-start gap-4 mb-4">
                 <Droplet className="text-primary flex-shrink-0" size={32} />
                 <div>
-                  <h2 className="text-2xl font-bold mb-3 text-card-foreground">Moisture & Safety</h2>
+                  <h2 className="text-2xl font-semibold mb-3 text-card-foreground">Moisture & Safety</h2>
                   <div className="space-y-4 text-card-foreground">
                     <p className="text-muted-foreground">
                       Infrared saunas produce <strong>minimal moisture</strong> compared to traditional steam saunas. Safe for indoor use including:
@@ -99,7 +99,7 @@ const InstallPower = () => {
 
             {/* Setup Process */}
             <section className="bg-muted rounded-lg p-8">
-              <h2 className="text-2xl font-bold mb-4 text-foreground">Our Setup Process</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-foreground">Our Setup Process</h2>
               <ol className="space-y-3 text-foreground list-decimal list-inside">
                 <li>We arrive at your scheduled time with all equipment</li>
                 <li>Assess the placement location with you (usually takes 5 minutes)</li>

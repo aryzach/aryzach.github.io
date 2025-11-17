@@ -18,7 +18,7 @@ const ServiceArea = () => {
     <section id="service-area" className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-foreground">
             We Serve the Bay Area
           </h2>
           <p className="text-muted-foreground mb-6">
@@ -35,7 +35,7 @@ const ServiceArea = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="text-primary flex-shrink-0 mt-1" size={24} />
                 <div>
-                  <h3 className="text-xl font-bold text-card-foreground mb-2">{area.name}</h3>
+                  <h3 className="text-xl font-semibold text-card-foreground mb-2">{area.name}</h3>
                   <p className="text-muted-foreground">{area.description}</p>
                 </div>
               </div>

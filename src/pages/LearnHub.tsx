@@ -34,7 +34,7 @@ const LearnHub = () => {
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="text-4xl md:text-6xl font-semibold mb-6 text-foreground">
               Learn About Home Saunas
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -60,7 +60,7 @@ const LearnHub = () => {
                     <span>•</span>
                     <span>{post.readTime}</span>
                   </div>
-                  <h2 className="text-xl font-bold mb-3 text-card-foreground">
+                  <h2 className="text-xl font-semibold mb-3 text-card-foreground">
                     {post.title}
                   </h2>
                   <p className="text-muted-foreground mb-4">
@@ -79,7 +79,7 @@ const LearnHub = () => {
           </div>
 
           <div className="mt-16 bg-muted rounded-lg p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4 text-foreground">
+            <h2 className="text-2xl font-semibold mb-4 text-foreground">
               Want More Sauna Tips?
             </h2>
             <p className="text-muted-foreground mb-6">

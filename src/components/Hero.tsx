@@ -48,7 +48,7 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold text-white mb-6 leading-tight">
           A personal sauna — in your home this week.
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">

@@ -20,7 +20,7 @@ const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-bold text-center md:hidden mb-12 text-foreground">
+        <h2 className="text-3xl md:text-5xl font-semibold text-center md:hidden mb-12 text-foreground">
           How It Works
         </h2>
         
@@ -29,10 +29,10 @@ const HowItWorks = () => {
           <div className="space-y-8 mb-8">
             {steps.map((step) => (
               <div key={step.number} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-semibold mx-auto mb-4">
                   {step.number}
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-foreground">{step.title}</h3>
+                <h3 className="text-xl font-semibold mb-2 text-foreground">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
               </div>
             ))}
@@ -64,17 +64,17 @@ const HowItWorks = () => {
             </video>
           </div>
           <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+            <h2 className="text-3xl md:text-5xl font-semibold mb-8 text-foreground">
               How It Works
             </h2>
             <div className="space-y-8">
               {steps.map((step) => (
                 <div key={step.number} className="flex gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-semibold flex-shrink-0">
                     {step.number}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2 text-foreground">{step.title}</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-foreground">{step.title}</h3>
                     <p className="text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
