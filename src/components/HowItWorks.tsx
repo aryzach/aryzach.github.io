@@ -37,13 +37,13 @@ const HowItWorks = () => {
               </div>
             ))}
           </div>
-          <div className="rounded-lg overflow-hidden shadow-lg">
+          <div className="rounded-lg overflow-hidden shadow-lg aspect-[9/16]">
             <video
               muted
               loop
               autoPlay
               playsInline
-              className="w-full"
+              className="w-full h-full object-cover"
             >
               <source src="/how-it-works-video.mp4" type="video/mp4" />
             </video>
@@ -52,13 +52,13 @@ const HowItWorks = () => {
 
         {/* Desktop: Video left, title and steps right */}
         <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
-          <div className="rounded-lg overflow-hidden shadow-lg">
+          <div className="rounded-lg overflow-hidden shadow-lg aspect-[9/16]">
             <video
               muted
               loop
               autoPlay
               playsInline
-              className="w-full"
+              className="w-full h-full object-cover"
             >
               <source src="/how-it-works-video.mp4" type="video/mp4" />
             </video>

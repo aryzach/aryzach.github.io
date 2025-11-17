@@ -23,14 +23,14 @@ const Gallery = () => {
           {galleryItems.map((item, index) => (
             <div
               key={index}
-              className="overflow-hidden"
+              className="overflow-hidden aspect-[9/16]"
             >
               {item.type === "image" ? (
                 <img
                   src={item.src}
                   alt={`SF Sauna installation ${index + 1}`}
                   loading="lazy"
-                  className="w-full h-auto hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               ) : (
                 <video
@@ -38,7 +38,7 @@ const Gallery = () => {
                   muted
                   loop
                   playsInline
-                  className="w-full h-auto cursor-pointer"
+                  className="w-full h-full object-cover cursor-pointer"
                   preload="metadata"
                   onClick={(e) => {
                     const video = e.currentTarget;

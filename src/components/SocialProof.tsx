@@ -40,7 +40,9 @@ const SocialProof = () => {
         </div>
 
         {/* Elfsight Google Reviews */}
-        <div className="elfsight-app-7bdbfaeb-56f2-4804-9ef2-54bf4f091e1c" data-elfsight-app-lazy></div>
+        <div className="min-h-[400px] md:min-h-[500px]">
+          <div className="elfsight-app-7bdbfaeb-56f2-4804-9ef2-54bf4f091e1c" data-elfsight-app-lazy></div>
+        </div>
       </div>
     </section>
   );
