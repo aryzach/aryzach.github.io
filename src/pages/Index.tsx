@@ -7,6 +7,7 @@ import SocialProof from "@/components/SocialProof";
 import ServiceArea from "@/components/ServiceArea";
 import FAQ from "@/components/FAQ";
 import ReserveCTA from "@/components/ReserveCTA";
+import GoogleReviews from "@/components/GoogleReviews";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -21,6 +22,7 @@ const Index = () => {
         <SocialProof />
         <ServiceArea />
         <FAQ />
+        <GoogleReviews />
         <ReserveCTA />
       </main>
       <Footer />
