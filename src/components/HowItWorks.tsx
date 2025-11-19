@@ -5,6 +5,17 @@ const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4 text-center max-w-2xl">
+        <div className="mb-8 rounded-lg overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto"
+          >
+            <source src="/media/lindsey-sauna.mp4" type="video/mp4" />
+          </video>
+        </div>
         <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-foreground">
           Do you have any questions?
         </h2>
