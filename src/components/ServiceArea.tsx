@@ -9,7 +9,7 @@ const serviceAreas = [
   },
   {
     name: "Rest of the Bay Area",
-    description: "Delivery fee dependent on location, free installation",
+    description: "Delivery fee may apply, contact us for pricing",
   },
 ];
 

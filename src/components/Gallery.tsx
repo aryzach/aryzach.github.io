@@ -2,6 +2,8 @@ import gallery3 from "@/assets/gallery-3.jpg";
 import saunaTemp from "@/assets/sauna-temp.png";
 import lindseySauna from "@/assets/lindsey-sauna.png";
 import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const galleryItems = [
   { type: "image", src: gallery3 },
@@ -82,6 +84,14 @@ const Gallery = () => {
               <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
               <span className="text-muted-foreground">Apartment-friendly setups</span>
             </div>
+          </div>
+          
+          <div className="text-center mt-8">
+            <Link to="/learn-more">
+              <Button size="lg" className="bg-accent hover:bg-accent-dark text-white">
+                Interested? Send us a message to learn more
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
@@ -41,36 +43,47 @@ const Media = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {mediaItems.map((item, index) => (
-              <div key={index} className="overflow-hidden">
-                {item.type === "image" ? (
-                  <img
-                    src={item.src}
-                    alt={`SF Sauna ${index + 1}`}
-                    loading="lazy"
-                    className="w-full h-auto"
-                  />
-                ) : (
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-auto cursor-pointer"
-                    preload="metadata"
-                    onClick={(e) => {
-                      const video = e.currentTarget;
-                      if (video.paused) {
-                        video.play();
-                      } else {
-                        video.pause();
-                      }
-                    }}
-                  >
-                    <source src={item.src} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+              <>
+                <div key={index} className="overflow-hidden">
+                  {item.type === "image" ? (
+                    <img
+                      src={item.src}
+                      alt={`SF Sauna ${index + 1}`}
+                      loading="lazy"
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-auto cursor-pointer"
+                      preload="metadata"
+                      onClick={(e) => {
+                        const video = e.currentTarget;
+                        if (video.paused) {
+                          video.play();
+                        } else {
+                          video.pause();
+                        }
+                      }}
+                    >
+                      <source src={item.src} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                </div>
+                {(index + 1) % 2 === 0 && (
+                  <div key={`cta-${index}`} className="flex items-center justify-center p-8 bg-cedar-section">
+                    <Link to="/learn-more">
+                      <Button size="lg" className="bg-accent hover:bg-accent-dark text-white">
+                        Get in touch
+                      </Button>
+                    </Link>
+                  </div>
                 )}
-              </div>
+              </>
             ))}
           </div>
         </div>
