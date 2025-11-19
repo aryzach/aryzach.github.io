@@ -21,7 +21,7 @@ const Footer = () => {
           <div>
             <h3 className="text-2xl font-semibold mb-4 text-accent">SF Sauna</h3>
             <p className="text-white/70 text-sm">
-              Premium in-home sauna rentals for San Francisco Bay Area
+              Premium in-home sauna rentals in the San Francisco Bay Area
             </p>
           </div>
 
@@ -40,7 +40,6 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-4 text-accent">Legal</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Terms of Service</Link></li>
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>

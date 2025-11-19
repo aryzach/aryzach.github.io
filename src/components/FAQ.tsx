@@ -37,7 +37,19 @@ const faqs = [
   },
   {
     question: "Is this landlord-friendly?",
-    answer: "Yes. The sauna is a free-standing unit that uses a standard outlet and doesn't need any building or electrical changes. At the end of the day, a sauna is just a somewhat large, fancy appliance (like a powerful space heater in a box).",
+    answer: "Yes. The sauna is a free-standing unit that plugs into a normal household outlet and doesn't require any building or electrical changes. Nothing is mounted, drilled, vented, or hardwired. It sits on the floor like a large appliance (think: a high-end space heater inside a wooden enclosure). Most customers in SF live in apartments, and the sauna leaves zero marks when removed. It's fully reversible and we handle the entire installation and pickup process.",
+  },
+  {
+    question: "Do I need to ask my landlord?",
+    answer: "In most cases, no. There's nothing permanent about the installation. There are no modifications, no wiring, no plumbing, no holes in walls, and nothing is attached to the building. The sauna sits in the space just like furniture or a Peloton. That said, every lease is different, so you should follow whatever your lease says about appliances or heat-producing equipment. Our customers almost never need permission.",
+  },
+  {
+    question: "Will this overload my electrical panel?",
+    answer: "No, the sauna uses a standard 120V outlet on a normal household circuit. It draws about the same load as a hair dryer or space heater. You don't need any upgrades or electrician visit.",
+  },
+  {
+    question: "What if I move during my rental?",
+    answer: "We simply move the sauna to your new place. Most customers are renters, so this is common and it's part of the service.",
   },
   {
     question: "What happens after the initial lease period?",
