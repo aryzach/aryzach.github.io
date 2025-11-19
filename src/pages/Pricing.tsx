@@ -5,6 +5,9 @@ import InstallationRequirements from "@/components/InstallationRequirements";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import thermometerIcon from "@/assets/thermometer.svg";
+import peopleIcon from "@/assets/2-people.svg";
+import saunaIcon from "@/assets/sauna.svg";
 
 const saunaData = [
   {
@@ -126,6 +129,26 @@ const Pricing = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {sauna.variants.map((variant, variantIndex) => (
                       <div key={variantIndex} className="space-y-4">
+                        {/* Sauna Specifications */}
+                        <div className="flex flex-col gap-2 mb-2">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <img src={thermometerIcon} alt="Temperature" className="w-5 h-5" />
+                            <span>
+                              {variant.name === "Indoor Finnish Dry" || variant.name === "Outdoor Finnish Dry" 
+                                ? "170 - 194°F (77 - 90°C)" 
+                                : "150°F (65°C)"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <img src={peopleIcon} alt="Capacity" className="w-5 h-5" />
+                            <span>2 person</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <img src={saunaIcon} alt="Equipment" className="w-5 h-5" />
+                            <span>Equipment included</span>
+                          </div>
+                        </div>
+                        
                         <div>
                           <h3 className="text-xl font-semibold text-card-foreground mb-1">
                             {variant.name}

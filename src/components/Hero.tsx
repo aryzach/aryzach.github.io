@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const Hero = () => {
@@ -48,15 +48,34 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px]">
+        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[13px] font-normal mb-3">
+          <span>Loved by 42+ San Franciscans</span>
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={14} />
+            ))}
+          </div>
+        </div>
         <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-3 font-normal">
           Make daily heat therapy effortless.
         </p>
         <h1 className="font-heading text-[40px] md:text-[56px] font-semibold text-white mb-6 leading-[1.1] tracking-[-0.01em]">
           A personal sauna — in your home this week.
         </h1>
-        <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-8 max-w-2xl mx-auto font-normal">
-          Zero-hassle setup and a simple monthly plan so you can finally enjoy consistent sauna sessions at home.
-        </p>
+        <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8">
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+            <span>Zero-hassle delivery + installation</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+            <span>Enjoy daily sauna at home, no commute</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6]">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+            <span>Simple monthly plan, maintenance + pickup included</span>
+          </div>
+        </div>
         <div className="flex flex-col items-center gap-4">
           <Button 
             size="lg" 
@@ -71,14 +90,6 @@ const Hero = () => {
           <p className="text-white/80 font-sans text-[14px] font-normal max-w-md">
             We confirm fit, electrical, and recommend the right model, no pressure.
           </p>
-          <div className="flex items-center gap-2 text-white/90 font-sans text-[14px] font-normal">
-            <span>Loved by 42+ San Franciscans</span>
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={16} />
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>
