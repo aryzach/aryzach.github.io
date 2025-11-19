@@ -1,8 +1,7 @@
 import gallery3 from "@/assets/gallery-3.jpg";
 import saunaTemp from "@/assets/sauna-temp.png";
 import lindseySauna from "@/assets/lindsey-sauna.png";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Check } from "lucide-react";
 
 const galleryItems = [
   { type: "image", src: gallery3 },
@@ -58,12 +57,32 @@ const Gallery = () => {
           ))}
         </div>
         
-        <div className="text-center mt-12">
-          <Link to="/media">
-            <Button size="lg" className="bg-accent hover:bg-accent-dark text-white">
-              View More Installations
-            </Button>
-          </Link>
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-foreground">
+            Why SF Sauna?
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">Fast SF-local delivery (1–8 weeks depending on sauna type)</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">Professional installation + removal included</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">Standard 120V power (no electrician needed)</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">Month-to-month after initial term</span>
+            </div>
+            <div className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">Apartment-friendly setups</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

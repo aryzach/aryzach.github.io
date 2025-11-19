@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
-import WhySFSauna from "@/components/WhySFSauna";
 import HealthBenefits from "@/components/HealthBenefits";
 import Packages from "@/components/Packages";
 import Gallery from "@/components/Gallery";
@@ -20,7 +19,6 @@ const Index = () => {
         <Hero />
         <Gallery />
         <HowItWorks />
-        <WhySFSauna />
         <HealthBenefits />
         <GoogleReviews />
         <Packages />
