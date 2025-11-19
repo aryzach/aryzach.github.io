@@ -18,9 +18,9 @@ const Index = () => {
       <main>
         <Hero />
         <Gallery />
+        <GoogleReviews />
         <HowItWorks />
         <HealthBenefits />
-        <GoogleReviews />
         <Packages />
         <SocialProof />
         <ServiceArea />
