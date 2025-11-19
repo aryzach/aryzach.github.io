@@ -1,86 +1,31 @@
-const HowItWorks = () => {
-  const steps = [
-    {
-      number: "1",
-      title: "Delivery & installation",
-      description: "Your infrared or Finnish sauna is brought to your home and professionally installed in 2–3 hours.",
-    },
-    {
-      number: "2",
-      title: "Daily use, zero friction",
-      description: "Your personal wellness ritual — warm up with infrared or go full Finnish dry heat.",
-    },
-    {
-      number: "3",
-      title: "We handle pickup",
-      description: "Your lease rolls into month-to-month. When you're done, you cancel and we return for removal.",
-    },
-  ];
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
+const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-16 md:py-24 bg-cedar-section">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-5xl font-semibold text-center md:hidden mb-12 text-foreground">
-          How It Works
+      <div className="container mx-auto px-4 text-center max-w-2xl">
+        <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-foreground">
+          Do you have any questions?
         </h2>
-        
-        {/* Mobile: Steps first, then video */}
-        <div className="md:hidden mb-12">
-          <div className="space-y-8 mb-8">
-            {steps.map((step) => (
-              <div key={step.number} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-medium mx-auto mb-4">
-                  {step.number}
-                </div>
-                <h3 className="text-xl font-medium mb-2 text-foreground">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="rounded-lg overflow-hidden shadow-lg aspect-[9/16]">
-            <video
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
+        <div className="flex flex-col items-center gap-4">
+          <Button 
+            size="lg" 
+            className="font-sans font-medium"
+            asChild
+          >
+            <a 
+              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1L2ygxB574Er3ifWJWFVA6V6p1mzpW3p2UMhDFNsd6iq8F3gkELDTYcmGvBiRxn_8u-yOdTFLb" 
+              target="_blank" 
+              rel="noopener noreferrer"
             >
-              <source src="/how-it-works-video.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
-
-        {/* Desktop: Video left, title and steps right */}
-        <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
-          <div className="rounded-lg overflow-hidden shadow-lg aspect-[9/16]">
-            <video
-              muted
-              loop
-              autoPlay
-              playsInline
-              className="w-full h-full object-cover"
-            >
-              <source src="/how-it-works-video.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <div>
-            <h2 className="text-3xl md:text-5xl font-semibold mb-8 text-foreground">
-              How It Works
-            </h2>
-            <div className="space-y-8">
-              {steps.map((step) => (
-                <div key={step.number} className="flex gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-medium flex-shrink-0">
-                    {step.number}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2 text-foreground">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+              Schedule Free Sauna Fit Check
+              <ArrowRight className="ml-2" size={20} />
+            </a>
+          </Button>
+          <p className="text-muted-foreground font-sans text-[14px] font-normal max-w-md">
+            We confirm fit, electrical, and recommend the right model, no pressure.
+          </p>
         </div>
       </div>
     </section>
