@@ -48,11 +48,11 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px]">
-        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[12px] font-normal mb-8">
+        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[13px] font-normal mb-8 -mt-12">
           <span>Loved by 42+ San Franciscans</span>
           <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={13} />
+              <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={14} />
             ))}
           </div>
         </div>
