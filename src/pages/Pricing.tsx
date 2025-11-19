@@ -69,6 +69,8 @@ const commonFeatures = [
   "Standard 120V",
   "Pickup included",
   "24/7 support",
+  "2 person capacity",
+  "Equipment included",
 ];
 
 const Pricing = () => {
@@ -89,7 +91,7 @@ const Pricing = () => {
 
           {/* Common Features */}
           <div className="bg-card rounded-lg p-6 mb-12 max-w-2xl mx-auto border border-border">
-            <h3 className="text-lg font-semibold mb-4 text-center text-card-foreground">All plans include:</h3>
+            <h3 className="text-lg font-semibold mb-4 text-center text-card-foreground">All plans:</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {commonFeatures.map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2">
@@ -117,9 +119,17 @@ const Pricing = () => {
                   </video>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
                     <div className="p-6 w-full">
-                      <h2 className="text-2xl md:text-3xl font-semibold text-white">
+                      <h2 className="text-2xl md:text-3xl font-semibold text-white mb-2">
                         {sauna.type}
                       </h2>
+                      <div className="flex items-center gap-2 text-white/90 text-sm">
+                        <img src={thermometerIcon} alt="Temperature" className="w-5 h-5 brightness-0 invert" />
+                        <span>
+                          {sauna.type === "Finnish Dry Sauna" 
+                            ? "170 - 194°F (77 - 90°C)" 
+                            : "150°F (65°C)"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -129,26 +139,6 @@ const Pricing = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {sauna.variants.map((variant, variantIndex) => (
                       <div key={variantIndex} className="space-y-4">
-                        {/* Sauna Specifications */}
-                        <div className="flex flex-col gap-2 mb-2">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <img src={thermometerIcon} alt="Temperature" className="w-5 h-5" />
-                            <span>
-                              {variant.name === "Indoor Finnish Dry" || variant.name === "Outdoor Finnish Dry" 
-                                ? "170 - 194°F (77 - 90°C)" 
-                                : "150°F (65°C)"}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <img src={peopleIcon} alt="Capacity" className="w-5 h-5" />
-                            <span>2 person</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <img src={saunaIcon} alt="Equipment" className="w-5 h-5" />
-                            <span>Equipment included</span>
-                          </div>
-                        </div>
-                        
                         <div>
                           <h3 className="text-xl font-semibold text-card-foreground mb-1">
                             {variant.name}

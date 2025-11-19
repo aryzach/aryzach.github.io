@@ -19,7 +19,7 @@ const Gallery = () => {
           Indoor & Outdoor Saunas
         </h2>
         <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Infrared or Finnish dry sauna options available. See real installations across the Bay Area.
+          Infrared or Finnish dry sauna options available.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
