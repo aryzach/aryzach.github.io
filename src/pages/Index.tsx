@@ -18,12 +18,12 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
+        <Gallery />
         <HowItWorks />
         <WhySFSauna />
         <HealthBenefits />
         <GoogleReviews />
         <Packages />
-        <Gallery />
         <SocialProof />
         <ServiceArea />
         <FAQ />
