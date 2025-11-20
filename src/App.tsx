@@ -14,6 +14,7 @@ import LearnHub from "./pages/LearnHub";
 import Contact from "./pages/Contact";
 import Media from "./pages/Media";
 import LearnMore from "./pages/LearnMore";
+import SaunaSanFrancisco from "./pages/SaunaSanFrancisco";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -74,6 +75,7 @@ const App = () => (
           <Route path="/reserve-your-sauna" element={<Contact />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/media" element={<Media />} />
+          <Route path="/sauna-san-francisco" element={<SaunaSanFrancisco />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
