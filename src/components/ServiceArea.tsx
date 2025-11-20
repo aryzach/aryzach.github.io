@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 const serviceAreas = [
   {
     name: "San Francisco",
-    description: "Free delivery and installation",
+    description: "$150 delivery & installation — waived with a 6+ month lease",
   },
   {
     name: "Rest of the Bay Area",
-    description: "Delivery fee may apply, contact us for pricing",
+    description: "$200 delivery & installation — waived with a 6+ month lease",
   },
 ];
 

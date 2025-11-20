@@ -65,7 +65,6 @@ const saunaData = [
 ];
 
 const commonFeatures = [
-  "Full setup included",
   "Standard 120V",
   "Pickup included",
   "24/7 support",
@@ -185,6 +184,19 @@ const Pricing = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Delivery & Installation Info */}
+          <div className="bg-card rounded-lg p-6 my-12 max-w-2xl mx-auto border border-border">
+            <h3 className="text-lg font-semibold mb-4 text-center text-card-foreground">Delivery & Installation</h3>
+            <div className="space-y-2 text-center">
+              <p className="text-card-foreground">
+                <span className="font-semibold">San Francisco:</span> $150 delivery & installation — waived with a 6+ month lease
+              </p>
+              <p className="text-card-foreground">
+                <span className="font-semibold">Rest of the Bay Area:</span> $200 delivery & installation — waived with a 6+ month lease
+              </p>
+            </div>
           </div>
 
           {/* Installation Requirements */}

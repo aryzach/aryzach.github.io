@@ -43,6 +43,9 @@ const Header = () => {
             <Link to="/how-it-works" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
               How It Works
             </Link>
+            <Link to="/how-it-started" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
+              How It Started
+            </Link>
             <Link to="/pricing" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
               Pricing
             </Link>
@@ -77,6 +80,9 @@ const Header = () => {
             <div className="flex flex-col gap-4">
               <Link to="/how-it-works" className="text-left text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 How It Works
+              </Link>
+              <Link to="/how-it-started" className="text-left text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                How It Started
               </Link>
               <Link to="/pricing" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
