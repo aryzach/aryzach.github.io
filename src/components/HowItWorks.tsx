@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 
 const HowItWorks = () => {
@@ -16,22 +17,32 @@ const HowItWorks = () => {
             <source src="/media/lindsey-sauna.mp4" type="video/mp4" />
           </video>
         </div>
-        <div className="flex flex-col items-center gap-4">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+            if (email) {
+              window.location.href = '/learn-more';
+            }
+          }}
+          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
+        >
+          <Input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            className="flex-1 h-12 px-4 text-base"
+          />
           <Button 
+            type="submit"
             size="lg" 
-            className="font-sans font-medium"
-            asChild
+            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
           >
-            <a 
-              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1L2ygxB574Er3ifWJWFVA6V6p1mzpW3p2UMhDFNsd6iq8F3gkELDTYcmGvBiRxn_8u-yOdTFLb" 
-              target="_blank" 
-              rel="noopener noreferrer"
-            >
-              Schedule Free Sauna Fit Check
-              <ArrowRight className="ml-2" size={20} />
-            </a>
+            Learn More
+            <ArrowRight className="ml-2" size={20} />
           </Button>
-        </div>
+        </form>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -76,21 +77,32 @@ const Hero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-4">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+            if (email) {
+              window.location.href = '/learn-more';
+            }
+          }}
+          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
+        >
+          <Input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
+          />
           <Button 
+            type="submit"
             size="lg" 
-            className="font-sans font-medium"
-            asChild
+            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
           >
-            <a href="https://calendar.app.google/15uxvc8nue1YjcYt9" target="_blank" rel="noopener noreferrer">
-              Schedule Free Sauna Fit Check
-              <ArrowRight className="ml-2" size={20} />
-            </a>
+            Learn More
+            <ArrowRight className="ml-2" size={20} />
           </Button>
-          <p className="text-white/80 font-sans text-[14px] font-normal max-w-md">
-            We confirm fit, electrical, and recommend the right model, no pressure.
-          </p>
-        </div>
+        </form>
       </div>
     </section>
   );
