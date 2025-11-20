@@ -29,8 +29,14 @@ const InfraredSaunaSF = () => {
   };
 
   const testimonials = [
-    "Infrared is so easy to use daily. Game-changer.",
-    "I didn't think it'd fit in my apartment. It fits."
+    {
+      name: "Jerry Cheung",
+      text: "The sauna was super clean, great quality, and just felt amazing to use. It was so easy to have it at home and chill"
+    },
+    {
+      name: "Liam Bailey",
+      text: "this shit is hot. the guy was solid as well."
+    }
   ];
 
   const benefits = [
@@ -136,9 +142,9 @@ const InfraredSaunaSF = () => {
                 {testimonials.map((testimonial, index) => (
                   <div key={index} className="bg-card rounded-lg p-6 border border-border">
                     <p className="text-muted-foreground leading-relaxed italic">
-                      "{testimonial}"
+                      "{testimonial.text}"
                     </p>
-                    <p className="text-foreground font-medium mt-4">— Customer</p>
+                    <p className="text-foreground font-medium mt-4">— {testimonial.name}</p>
                   </div>
                 ))}
               </div>

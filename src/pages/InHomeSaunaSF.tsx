@@ -29,9 +29,18 @@ const InHomeSaunaSF = () => {
   };
 
   const testimonials = [
-    "Best thing I've ever added to my apartment. I use it every night.",
-    "Install took an hour. The team handled everything.",
-    "Way cheaper than Equinox + spa visits. And no waiting for people to get out."
+    {
+      name: "Mackenzie Croxdale",
+      text: "I love having a sauna at home! I rent and might move in a year or two, so this was much easier and more accessible for me"
+    },
+    {
+      name: "Jackson Harris",
+      text: "Was honestly impressed with how seamless the installation was. Zach seems like a great guy."
+    },
+    {
+      name: "Elliot Verduzco",
+      text: "Been renting a sauna from SF Sauna Rental for 3 months. Zach set it up in my apartment and I use it after workouts."
+    }
   ];
 
   const benefits = [
@@ -201,9 +210,9 @@ const InHomeSaunaSF = () => {
                 {testimonials.map((testimonial, index) => (
                   <div key={index} className="bg-card rounded-lg p-6 border border-border">
                     <p className="text-muted-foreground leading-relaxed italic">
-                      "{testimonial}"
+                      "{testimonial.text}"
                     </p>
-                    <p className="text-foreground font-medium mt-4">— Customer</p>
+                    <p className="text-foreground font-medium mt-4">— {testimonial.name}</p>
                   </div>
                 ))}
               </div>
