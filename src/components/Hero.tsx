@@ -71,8 +71,8 @@ const Hero = () => {
             <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
             <span>Enjoy daily sauna at home, no commute</span>
           </div>
-          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6]">
-            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+          <div className="flex items-start gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6]">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0 mt-0.5" size={18} />
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>

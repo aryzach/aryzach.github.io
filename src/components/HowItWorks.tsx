@@ -16,9 +16,6 @@ const HowItWorks = () => {
             <source src="/media/lindsey-sauna.mp4" type="video/mp4" />
           </video>
         </div>
-        <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-foreground">
-          Do you have any questions?
-        </h2>
         <div className="flex flex-col items-center gap-4">
           <Button 
             size="lg" 
@@ -34,9 +31,6 @@ const HowItWorks = () => {
               <ArrowRight className="ml-2" size={20} />
             </a>
           </Button>
-          <p className="text-muted-foreground font-sans text-[14px] font-normal max-w-md">
-            We confirm fit, electrical, and recommend the right model, no pressure.
-          </p>
         </div>
       </div>
     </section>
