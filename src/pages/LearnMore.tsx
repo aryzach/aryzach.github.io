@@ -54,10 +54,10 @@ const LearnMore = () => {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-foreground">
-              Contact Us
+              Ask a Question
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
-              Have questions? Want to learn more? Drop us a message and we'll get back to you.
+              Have questions? We're here to help. Fill out the form below and we'll get back to you soon.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,27 +72,21 @@ const LearnMore = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">
-                  Email <span className="text-destructive">*</span>
-                </Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   type="email"
                   id="email"
                   name="email"
-                  required
                   placeholder="your@email.com"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">
-                  Phone <span className="text-destructive">*</span>
-                </Label>
+                <Label htmlFor="phone">Phone</Label>
                 <Input
                   type="tel"
                   id="phone"
                   name="phone"
-                  required
                   placeholder="(555) 555-5555"
                 />
               </div>
