@@ -15,6 +15,10 @@ import Contact from "./pages/Contact";
 import Media from "./pages/Media";
 import LearnMore from "./pages/LearnMore";
 import SaunaSanFrancisco from "./pages/SaunaSanFrancisco";
+import InHomeSaunaSF from "./pages/InHomeSaunaSF";
+import InfraredSaunaSF from "./pages/InfraredSaunaSF";
+import FinnishSaunaSF from "./pages/FinnishSaunaSF";
+import SaunaRentalSF from "./pages/SaunaRentalSF";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -76,6 +80,10 @@ const App = () => (
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/media" element={<Media />} />
           <Route path="/sauna-san-francisco" element={<SaunaSanFrancisco />} />
+          <Route path="/in-home-sauna-san-francisco" element={<InHomeSaunaSF />} />
+          <Route path="/infrared-sauna-san-francisco" element={<InfraredSaunaSF />} />
+          <Route path="/finnish-sauna-san-francisco" element={<FinnishSaunaSF />} />
+          <Route path="/sauna-rental-sf" element={<SaunaRentalSF />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
