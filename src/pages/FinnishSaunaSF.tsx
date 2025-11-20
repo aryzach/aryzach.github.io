@@ -168,6 +168,45 @@ const FinnishSaunaSF = () => {
                 </Button>
               </Link>
             </div>
+
+            {/* Schema Markup */}
+            <div dangerouslySetInnerHTML={{
+              __html: `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Finnish Sauna Rental",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "SF Sauna Rental",
+    "url": "https://sfsaunarental.com/finnish-sauna-san-francisco/",
+    "email": "sfsaunarental@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "San Francisco",
+      "addressRegion": "CA",
+      "addressCountry": "US"
+    }
+  },
+  "description": "High-heat Finnish sauna rentals in San Francisco. Real Nordic-style heat delivered and installed in your home.",
+  "areaServed": [
+    "San Francisco",
+    "Marin",
+    "Oakland",
+    "Berkeley",
+    "Peninsula Cities"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "price": "Varies",
+    "description": "Monthly Finnish sauna rental with delivery, installation, and ongoing support."
+  }
+}
+</script>
+              `
+            }} />
           </div>
         </article>
       </main>
