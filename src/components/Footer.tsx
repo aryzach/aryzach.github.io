@@ -48,18 +48,19 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-4 text-accent">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
-            <form action="https://formspree.io/f/meovlkjw" method="POST" className="flex gap-2">
+            <div className="flex gap-2">
               <Input
                 type="email"
                 name="email"
                 placeholder="Your email"
-                required
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
               />
-              <Button type="submit" size="sm" className="bg-accent hover:bg-accent/90">
-                Join
-              </Button>
-            </form>
+              <Link to="/learn-more">
+                <Button type="button" size="sm" className="bg-accent hover:bg-accent/90">
+                  Join
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 

@@ -77,32 +77,29 @@ const Hero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
-            if (email) {
-              window.location.href = '/learn-more';
-            }
-          }}
-          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
-        >
-          <Input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
-          />
-          <Button 
-            type="submit"
-            size="lg" 
-            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
+        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto w-full">
+          <form 
+            action="https://formspree.io/f/mzzyagpw"
+            method="POST"
+            className="flex flex-col sm:flex-row gap-3"
           >
-            Learn More
-            <ArrowRight className="ml-2" size={20} />
-          </Button>
-        </form>
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+              className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
+            />
+            <Button 
+              type="submit"
+              size="lg" 
+              className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
+            >
+              Learn More
+              <ArrowRight className="ml-2" size={20} />
+            </Button>
+          </form>
+        </div>
       </div>
     </section>
   );
