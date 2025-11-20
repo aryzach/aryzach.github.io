@@ -181,6 +181,59 @@ const SaunaRentalSF = () => {
                 </Button>
               </Link>
             </div>
+
+            {/* Schema Markup */}
+            <div dangerouslySetInnerHTML={{
+              __html: `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "SF Sauna Rental",
+  "url": "https://sfsaunarental.com/sauna-rental-sf/",
+  "email": "sfsaunarental@gmail.com",
+  "image": "https://sfsaunarental.com/YOUR-HERO.jpg",
+  "description": "San Francisco's #1 sauna rental service. We deliver and install infrared and Finnish saunas in apartments, homes, and backyards.",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "San Francisco",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    "San Francisco",
+    "Marin",
+    "Berkeley",
+    "Oakland",
+    "South SF",
+    "San Mateo County"
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Sauna Rental",
+        "description": "Full-service sauna rental with delivery and installation."
+      }
+    }
+  ],
+  "review": [
+    {
+      "@type": "Review",
+      "author": "Customer Name",
+      "reviewBody": "Amazing service. Installation was fast and the sauna works perfectly.",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5"
+      }
+    }
+  ]
+}
+</script>
+              `
+            }} />
           </div>
         </article>
       </main>

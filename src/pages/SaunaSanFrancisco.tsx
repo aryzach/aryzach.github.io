@@ -129,6 +129,56 @@ const SaunaSanFrancisco = () => {
                 </Button>
               </Link>
             </div>
+
+            {/* Schema Markup */}
+            <div dangerouslySetInnerHTML={{
+              __html: `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "SF Sauna Rental",
+  "image": "https://sfsaunarental.com/YOUR-HERO-IMAGE.jpg",
+  "@id": "https://sfsaunarental.com/sauna-san-francisco/",
+  "url": "https://sfsaunarental.com/sauna-san-francisco/",
+  "telephone": "",
+  "email": "sfsaunarental@gmail.com",
+  "priceRange": "$$",
+  "description": "In-home sauna rental in San Francisco. We deliver, install, and maintain infrared and Finnish saunas for apartments, homes, and backyard spaces.",
+  "areaServed": [
+    "San Francisco",
+    "Marin County",
+    "Berkeley",
+    "Oakland",
+    "San Mateo County",
+    "Palo Alto",
+    "Menlo Park",
+    "Redwood City",
+    "Daly City"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "San Francisco",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://www.instagram.com/YOURHANDLE"
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "In-Home Sauna Rental",
+        "description": "Full-service infrared and Finnish sauna rental with delivery, installation, and maintenance."
+      }
+    }
+  ]
+}
+</script>
+              `
+            }} />
           </div>
         </article>
       </main>

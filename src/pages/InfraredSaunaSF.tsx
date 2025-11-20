@@ -179,6 +179,45 @@ const InfraredSaunaSF = () => {
                 </Button>
               </Link>
             </div>
+
+            {/* Schema Markup */}
+            <div dangerouslySetInnerHTML={{
+              __html: `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Infrared Sauna Rental",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "SF Sauna Rental",
+    "url": "https://sfsaunarental.com/infrared-sauna-san-francisco/",
+    "email": "sfsaunarental@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "San Francisco",
+      "addressRegion": "CA",
+      "addressCountry": "US"
+    }
+  },
+  "description": "Infrared sauna rentals in San Francisco with free fit check, delivery, installation, and support.",
+  "areaServed": [
+    "San Francisco",
+    "Marin County",
+    "Berkeley",
+    "Oakland",
+    "San Mateo County"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "price": "Varies",
+    "description": "Monthly infrared sauna rental including delivery, installation, and teardown."
+  }
+}
+</script>
+              `
+            }} />
           </div>
         </article>
       </main>
