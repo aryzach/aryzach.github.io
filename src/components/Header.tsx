@@ -40,9 +40,9 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 font-sans">
-            <button onClick={() => scrollToSection("how-it-works")} className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
+            <Link to="/how-it-works" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
               How It Works
-            </button>
+            </Link>
             <Link to="/pricing" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
               Pricing
             </Link>
@@ -75,9 +75,9 @@ const Header = () => {
         {isMobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-[hsl(var(--color-ui))] font-sans">
             <div className="flex flex-col gap-4">
-              <button onClick={() => scrollToSection("how-it-works")} className="text-left text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors">
+              <Link to="/how-it-works" className="text-left text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 How It Works
-              </button>
+              </Link>
               <Link to="/pricing" className="text-[hsl(var(--color-text))] hover:text-[hsl(var(--color-accent))] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
               </Link>

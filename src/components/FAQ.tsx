@@ -55,6 +55,10 @@ const faqs = [
     question: "What happens after the initial lease period?",
     answer: "After your lease ends, your plan switches to simple month-to-month. You keep the sauna as long as you'd like. If you want to end your rental, just let us know and we'll schedule pickup and remove the sauna within 30 days.",
   },
+  {
+    question: "How does this affect my electric bill?",
+    answer: "Sauna sessions cost $0.50–$1.50 in electricity. SF rates are about $0.30/kWh, our units draw 1.5–3 kW, and total running time for each sauna session is 40-90 minutes (heating time + use time).",
+  },
 ];
 
 const FAQ = () => {
