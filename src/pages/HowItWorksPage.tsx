@@ -7,23 +7,29 @@ const HowItWorksPage = () => {
   const steps = [
     {
       number: "1",
-      title: "Schedule Free Fit Check",
-      description: "Book a quick call where we confirm your space, electrical setup, and recommend the perfect sauna model for your needs.",
+      title: "Schedule Your Free Fit Check",
+      description: "Book a quick call so we can confirm your space, electrical setup, and recommend the right infrared or Finnish dry sauna for your home, no pressure.",
+      showButton: true,
     },
     {
       number: "2",
       title: "Choose Your Sauna",
-      description: "Select from infrared or Finnish dry saunas, indoor or outdoor models, and pick a rental term that works for you.",
+      description: "Pick from infrared or Finnish dry heat, indoor or outdoor models, and a rental term that fits your goals. We'll help you choose if you're unsure.",
     },
     {
       number: "3",
-      title: "Professional Installation",
-      description: "Our team delivers and installs your sauna in about 1 hour. We handle everything—you just plug it in and enjoy.",
+      title: "Professional Delivery & Installation",
+      description: "Our team brings everything to your home and completes a full 2–3 hour installation. No electrical work, no tools, we handle everything.",
     },
     {
       number: "4",
-      title: "Daily Heat Therapy",
-      description: "Use your sauna whenever you want. No commute, no membership fees, no scheduling conflicts. Just pure relaxation at home.",
+      title: "Enjoy Daily Heat Therapy at Home",
+      description: "Use your sauna whenever you want. Morning before work, nightly wind-down, or weekend sessions. No commute, no scheduling, no shared spaces. Just consistent, effortless heat therapy at home.",
+    },
+    {
+      number: "5",
+      title: "Month-to-Month After Your Lease",
+      description: "Your plan rolls into simple monthly billing. When you're done, you cancel and we schedule pickup.",
     },
   ];
 
@@ -69,6 +75,22 @@ const HowItWorksPage = () => {
                       <p className="text-muted-foreground leading-relaxed">
                         {step.description}
                       </p>
+                      {step.showButton && (
+                        <Button 
+                          size="sm" 
+                          className="font-sans font-medium mt-4"
+                          asChild
+                        >
+                          <a 
+                            href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1L2ygxB574Er3ifWJWFVA6V6p1mzpW3p2UMhDFNsd6iq8F3gkELDTYcmGvBiRxn_8u-yOdTFLb" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          >
+                            Schedule Free Sauna Fit Check
+                            <ArrowRight className="ml-2" size={16} />
+                          </a>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
