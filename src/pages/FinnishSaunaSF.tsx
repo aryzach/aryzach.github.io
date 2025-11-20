@@ -28,8 +28,14 @@ const FinnishSaunaSF = () => {
   };
 
   const testimonials = [
-    "This is the closest thing to a real Nordic sauna I've had in the States.",
-    "I use mine 5–6 nights a week."
+    {
+      name: "Suraj Srivats",
+      text: "Great quality saunas. Visited the shop and tried out a custom Finnish sauna made by the sauna man of sf (himself). High quality, short quantity, get your rental asap!"
+    },
+    {
+      name: "Skye Vanderlinden",
+      text: "Zach is incredibly kind and accommodating! 10/10 recommend!"
+    }
   ];
 
   return (
@@ -125,9 +131,9 @@ const FinnishSaunaSF = () => {
                 {testimonials.map((testimonial, index) => (
                   <div key={index} className="bg-card rounded-lg p-6 border border-border">
                     <p className="text-muted-foreground leading-relaxed italic">
-                      "{testimonial}"
+                      "{testimonial.text}"
                     </p>
-                    <p className="text-foreground font-medium mt-4">— Customer</p>
+                    <p className="text-foreground font-medium mt-4">— {testimonial.name}</p>
                   </div>
                 ))}
               </div>

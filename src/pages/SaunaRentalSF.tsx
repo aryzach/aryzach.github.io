@@ -29,8 +29,14 @@ const SaunaRentalSF = () => {
   };
 
   const testimonials = [
-    "I rent and never thought I could have a real sauna at home.",
-    "Best health investment I've made."
+    {
+      name: "satya kamdar",
+      text: "Life with Sauna, is way better than life without. Thanks to Zach, I was able to rent a sauna which makes way more sense, since I'm renting my apartment. Setup, delivery, and customer service were impeccable. Thank you!"
+    },
+    {
+      name: "Rahul Batra",
+      text: "Zach's installation was seamless and he provided incredible service and good communication throughout. He has one very happy customer in me."
+    }
   ];
 
   const rentalBenefits = [
@@ -138,9 +144,9 @@ const SaunaRentalSF = () => {
                 {testimonials.map((testimonial, index) => (
                   <div key={index} className="bg-card rounded-lg p-6 border border-border">
                     <p className="text-muted-foreground leading-relaxed italic">
-                      "{testimonial}"
+                      "{testimonial.text}"
                     </p>
-                    <p className="text-foreground font-medium mt-4">— Customer</p>
+                    <p className="text-foreground font-medium mt-4">— {testimonial.name}</p>
                   </div>
                 ))}
               </div>
