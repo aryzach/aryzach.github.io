@@ -72,7 +72,7 @@ const Contact = () => {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-foreground">
-              Reserve Your Sauna
+              Check Availability
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
               Fill out the form below and we'll get back to you to confirm your installation date.
