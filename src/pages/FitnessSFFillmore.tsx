@@ -32,6 +32,7 @@ const FitnessSFFillmore = () => {
             <h1 className="text-4xl md:text-5xl font-semibold mb-2 text-[hsl(var(--color-heading))]">
               Fitness SF — Fillmore
             </h1>
+            <p className="text-sm text-[hsl(var(--color-text))]/60 mb-2">1455 Fillmore St, SF 94115</p>
             <p className="text-xl text-[hsl(var(--color-text))] mb-2">Sauna Review</p>
             <p className="text-sm text-[hsl(var(--color-text))]/60 mb-12">Category: Gym Sauna (Dry Electric)</p>
 
