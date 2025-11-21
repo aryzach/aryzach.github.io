@@ -10,12 +10,24 @@ const SouthEndRowingClub = () => {
       <main>
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 max-w-3xl">
-            <Link
-              to="/sauna-directory"
-              className="inline-flex items-center text-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-dark))] mb-8"
-            >
-              ← Back to Directory
-            </Link>
+            <div className="mb-8 space-y-2">
+              <Link
+                to="/sauna-directory"
+                className="inline-flex items-center text-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-dark))]"
+              >
+                ← Back to Directory
+              </Link>
+              <div>
+                <a
+                  href="https://serc.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-dark))] text-sm"
+                >
+                  Visit Website →
+                </a>
+              </div>
+            </div>
 
             <h1 className="text-4xl md:text-5xl font-semibold mb-2 text-[hsl(var(--color-heading))]">
               South End Rowing Club

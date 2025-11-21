@@ -12,6 +12,15 @@ const SaunaDirectory = () => {
       access: "$13 at the door (Tue/Thu/Sat)",
       slug: "/sauna-review/south-end-rowing-club",
       rating: "8.5/10"
+    },
+    {
+      name: "Fitness SF — Fillmore",
+      location: "Fillmore District, SF",
+      type: "Gym Sauna (Dry Electric)",
+      temp: "175–180°F",
+      access: "~$120/mo membership",
+      slug: "/sauna-review/fitness-sf-fillmore",
+      rating: "6.2/10"
     }
   ];
 
@@ -24,9 +33,17 @@ const SaunaDirectory = () => {
             <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-[hsl(var(--color-heading))]">
               The Bay Area Sauna Directory
             </h1>
-            <p className="text-lg text-[hsl(var(--color-text))] mb-12">
+            <p className="text-lg text-[hsl(var(--color-text))] mb-8">
               A curated guide to public and semi-public saunas across the Bay Area.
             </p>
+            <a
+              href="https://www.sfsaunarental.com/sfsaunamap/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-dark))] mb-12 font-medium"
+            >
+              View Bay Area Sauna Directory Map →
+            </a>
 
             <div className="space-y-6">
               {saunas.map((sauna, index) => (
