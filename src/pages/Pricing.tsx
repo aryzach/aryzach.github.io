@@ -146,7 +146,7 @@ const Pricing = () => {
                         </div>
 
                         {/* Pricing Table */}
-                        <div className="mb-4">
+                        <div className="mb-4 ml-8">
                           <div className="grid grid-cols-3 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
                             <span className="text-sm font-semibold text-muted-foreground col-span-2">Price</span>
