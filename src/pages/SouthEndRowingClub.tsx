@@ -32,6 +32,7 @@ const SouthEndRowingClub = () => {
             <h1 className="text-4xl md:text-5xl font-semibold mb-2 text-[hsl(var(--color-heading))]">
               South End Rowing Club
             </h1>
+            <p className="text-sm text-[hsl(var(--color-text))]/60 mb-2">500 Jefferson St, SF 94109</p>
             <p className="text-xl text-[hsl(var(--color-text))] mb-12">Sauna Review</p>
 
             {/* Stats Grid */}
