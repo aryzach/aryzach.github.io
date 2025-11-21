@@ -146,8 +146,8 @@ const Pricing = () => {
                         </div>
 
                         {/* Pricing Table */}
-                        <div className="mb-4">
-                          <div className="flex justify-between mb-2 pb-2 border-b border-border">
+                        <div className="mb-4 max-w-xs">
+                          <div className="flex gap-8 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
                             <span className="text-sm font-semibold text-muted-foreground">Price</span>
                           </div>
@@ -155,7 +155,7 @@ const Pricing = () => {
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="flex justify-between items-center py-1"
+                                className="flex gap-8 items-center py-1"
                               >
                                 <span className="font-semibold text-card-foreground">
                                   {plan.duration}
