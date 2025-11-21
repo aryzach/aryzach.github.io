@@ -1,51 +1,11 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useToast } from "@/hooks/use-toast";
 
 const LearnMore = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch("https://formspree.io/f/mzzyagpw", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Message sent!",
-          description: "We'll get back to you soon.",
-        });
-        form.reset();
-      } else {
-        throw new Error("Form submission failed");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,7 +20,14 @@ const LearnMore = () => {
               Have questions? We're here to help. Fill out the form below and we'll get back to you soon.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              action="https://api.web3forms.com/submit"
+              method="POST"
+              className="space-y-6"
+            >
+              <input type="hidden" name="access_key" value="0fd02492-4a8f-4c11-b60e-a2485315ef72" />
+              <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
+
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -105,9 +72,8 @@ const LearnMore = () => {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                Send Message
               </Button>
             </form>
           </div>
