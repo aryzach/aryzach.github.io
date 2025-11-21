@@ -23,6 +23,7 @@ const HowItWorks = () => {
           className="flex flex-col gap-4 max-w-md mx-auto w-full"
         >
           <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
+          <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
           
           <Input
             type="text"
@@ -43,7 +44,7 @@ const HowItWorks = () => {
           <Input
             type="text"
             name="message"
-            placeholder="What are you interested in?"
+            placeholder="Do you have any questions?"
             required
             className="h-12 px-4 text-base"
           />
