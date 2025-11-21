@@ -46,7 +46,6 @@ const Footer = () => {
               <li><Link to="/infrared-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Infrared Sauna SF</Link></li>
               <li><Link to="/finnish-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Finnish Sauna SF</Link></li>
               <li><Link to="/sauna-rental-sf" className="text-white/70 hover:text-white transition-colors">Sauna Rental SF</Link></li>
-              <li><Link to="/how-it-started" className="text-white/70 hover:text-white transition-colors">How It Started</Link></li>
             </ul>
           </div>
 
