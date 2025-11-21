@@ -18,22 +18,36 @@ const HowItWorks = () => {
           </video>
         </div>
         <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
-            if (email) {
-              window.location.href = '/learn-more';
-            }
-          }}
-          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
+          action="https://api.web3forms.com/submit" 
+          method="POST"
+          className="flex flex-col gap-4 max-w-md mx-auto w-full"
         >
+          <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
+          
+          <Input
+            type="text"
+            name="name"
+            placeholder="Your name"
+            required
+            className="h-12 px-4 text-base"
+          />
+          
           <Input
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="your@email.com"
             required
-            className="flex-1 h-12 px-4 text-base"
+            className="h-12 px-4 text-base"
           />
+          
+          <Input
+            type="text"
+            name="message"
+            placeholder="What are you interested in?"
+            required
+            className="h-12 px-4 text-base"
+          />
+          
           <Button 
             type="submit"
             size="lg" 
