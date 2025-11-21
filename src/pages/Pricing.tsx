@@ -147,20 +147,20 @@ const Pricing = () => {
 
                         {/* Pricing Table */}
                         <div className="mb-4">
-                          <div className="flex justify-between mb-2 pb-2 border-b border-border px-4">
+                          <div className="grid grid-cols-3 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
-                            <span className="text-sm font-semibold text-muted-foreground">Price</span>
+                            <span className="text-sm font-semibold text-muted-foreground col-span-2">Price</span>
                           </div>
                           <div className="space-y-2">
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="flex justify-between items-center py-1 px-4"
+                                className="grid grid-cols-3 items-center py-1"
                               >
                                 <span className="font-semibold text-card-foreground">
                                   {plan.duration}
                                 </span>
-                                <div>
+                                <div className="col-span-2">
                                   <span className="text-xl font-semibold text-card-foreground">
                                     {plan.price}
                                   </span>
