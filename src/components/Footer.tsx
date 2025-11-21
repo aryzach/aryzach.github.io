@@ -16,7 +16,7 @@ const Footer = () => {
   return (
     <footer className="bg-charcoal text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
           <div>
             <h3 className="text-2xl font-semibold mb-4 text-accent">SF Sauna</h3>
@@ -33,6 +33,20 @@ const Footer = () => {
               <li><Link to="/#service-area" className="text-white/70 hover:text-white transition-colors">Service Areas</Link></li>
               <li><Link to="/install-power" className="text-white/70 hover:text-white transition-colors">Installation Guide</Link></li>
               <li><Link to="/learn-more" className="text-white/70 hover:text-white transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Blog */}
+          <div>
+            <h4 className="font-medium mb-4 text-accent">Blog</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/sauna-directory" className="text-white/70 hover:text-white transition-colors">Sauna Directory</Link></li>
+              <li><Link to="/sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Sauna San Francisco</Link></li>
+              <li><Link to="/in-home-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">In-Home Sauna SF</Link></li>
+              <li><Link to="/infrared-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Infrared Sauna SF</Link></li>
+              <li><Link to="/finnish-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Finnish Sauna SF</Link></li>
+              <li><Link to="/sauna-rental-sf" className="text-white/70 hover:text-white transition-colors">Sauna Rental SF</Link></li>
+              <li><Link to="/how-it-started" className="text-white/70 hover:text-white transition-colors">How It Started</Link></li>
             </ul>
           </div>
 
