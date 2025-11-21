@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
+import indoorInfraredImg from "@/assets/indoorinfrared.png";
+import outdoorInfraredImg from "@/assets/outdoorinfrared.png";
+import outdoorInfrared2Img from "@/assets/outdoorinfrared2.png";
 
 const InHomeSaunaSF = () => {
   const neighborhoods = {
@@ -90,18 +93,14 @@ const InHomeSaunaSF = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-20">
-        {/* Hero Video */}
+        {/* Hero Image */}
         <section className="w-full bg-background">
           <div className="container mx-auto px-4 max-w-5xl py-12">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
+            <img
+              src={indoorInfraredImg}
+              alt="In-home sauna rental"
               className="w-full rounded-lg"
-            >
-              <source src="/media/0804_1-2.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
         </section>
 
@@ -123,14 +122,18 @@ const InHomeSaunaSF = () => {
               </p>
             </div>
 
-            {/* Video Grid */}
+            {/* Image Grid */}
             <div className="grid md:grid-cols-2 gap-6 my-12">
-              <video autoPlay muted loop playsInline className="w-full rounded-lg">
-                <source src="/media/0804_3-2.mp4" type="video/mp4" />
-              </video>
-              <video autoPlay muted loop playsInline className="w-full rounded-lg">
-                <source src="/media/0804_5-2.mp4" type="video/mp4" />
-              </video>
+              <img
+                src={outdoorInfraredImg}
+                alt="Outdoor sauna installation"
+                className="w-full rounded-lg"
+              />
+              <img
+                src={outdoorInfrared2Img}
+                alt="Outdoor infrared sauna"
+                className="w-full rounded-lg"
+              />
             </div>
 
             <section className="mt-16">

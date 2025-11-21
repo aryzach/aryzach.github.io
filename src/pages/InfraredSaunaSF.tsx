@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
+import indoorInfraredImg from "@/assets/indoorinfrared.png";
+import infraredImg from "@/assets/infraredd1.png";
 
 const InfraredSaunaSF = () => {
   const neighborhoods = {
@@ -53,18 +55,14 @@ const InfraredSaunaSF = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-20">
-        {/* Hero Video */}
+        {/* Hero Image */}
         <section className="w-full bg-background">
           <div className="container mx-auto px-4 max-w-5xl py-12">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
+            <img
+              src={indoorInfraredImg}
+              alt="Indoor infrared sauna"
               className="w-full rounded-lg"
-            >
-              <source src="/media/indoorinfrared-2.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
         </section>
 
@@ -91,11 +89,13 @@ const InfraredSaunaSF = () => {
               </p>
             </section>
 
-            {/* Video */}
+            {/* Image */}
             <div className="my-12">
-              <video autoPlay muted loop playsInline className="w-full rounded-lg">
-                <source src="/media/0804_8-2.mp4" type="video/mp4" />
-              </video>
+              <img
+                src={infraredImg}
+                alt="Infrared sauna experience"
+                className="w-full rounded-lg"
+              />
             </div>
 
             <section className="mt-16">

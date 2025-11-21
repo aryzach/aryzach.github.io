@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import finnishHeaterImg from "@/assets/finnishheater.png";
 
 const FinnishSaunaSF = () => {
   const neighborhoods = {
@@ -42,18 +43,14 @@ const FinnishSaunaSF = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-20">
-        {/* Hero Video */}
+        {/* Hero Image */}
         <section className="w-full bg-background">
           <div className="container mx-auto px-4 max-w-5xl py-12">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
+            <img
+              src={finnishHeaterImg}
+              alt="Finnish sauna heater"
               className="w-full rounded-lg"
-            >
-              <source src="/media/0804_9-2.mp4" type="video/mp4" />
-            </video>
+            />
           </div>
         </section>
 
