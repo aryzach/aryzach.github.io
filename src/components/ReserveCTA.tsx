@@ -12,17 +12,12 @@ const ReserveCTA = () => {
         <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
           Join the many San Franciscans enjoying daily heat therapy at home
         </p>
-        <div className="flex flex-col items-center gap-3">
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
-            <Link to="/reserve-your-sauna">
-              Schedule Free Sauna Fit Check
-              <ArrowRight className="ml-2" size={20} />
-            </Link>
-          </Button>
-          <p className="text-primary-foreground/80 text-sm max-w-md">
-            We confirm fit, electrical, and recommend the right model, no pressure.
-          </p>
-        </div>
+        <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8">
+          <Link to="/reserve-your-sauna">
+            Reserve Your Sauna Now
+            <ArrowRight className="ml-2" size={20} />
+          </Link>
+        </Button>
       </div>
     </section>
   );
