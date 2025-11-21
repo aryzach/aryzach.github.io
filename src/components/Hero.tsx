@@ -83,7 +83,7 @@ const Hero = () => {
           className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
         >
           <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
-          <input type="hidden" name="redirect" value="https://sfsaunarental.com/learn-more.html" />
+          <input type="hidden" name="redirect" value="https://sfsaunarental.com/email-more-info" />
           <Input
             type="email"
             name="email"
