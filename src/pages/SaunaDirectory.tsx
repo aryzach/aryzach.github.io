@@ -183,6 +183,14 @@ const SaunaDirectory = () => {
       temp: "—",
       access: "—",
       website: "https://good-hot.com"
+    },
+    {
+      name: "Wanna Sauna",
+      location: "Tiburon, CA 94920 (mobile/pop-up throughout Bay Area)",
+      type: "Mobile wood-fire sauna rentals + pop-ups + home sauna builds",
+      temp: "—",
+      access: "—",
+      websites: ["https://mobilesaunatiburon.com", "https://wannasauna.rest"]
     }
   ];
 
@@ -227,6 +235,22 @@ const SaunaDirectory = () => {
                           >
                             Visit Website →
                           </a>
+                        )}
+                        {sauna.websites && (
+                          <div className="flex gap-2 mt-1">
+                            {sauna.websites.map((url: string, idx: number) => (
+                              <a
+                                key={idx}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-dark))] inline-block"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {url.replace('https://', '').replace('www.', '')} →
+                              </a>
+                            ))}
+                          </div>
                         )}
                       </div>
                       {sauna.rating && (
