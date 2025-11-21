@@ -10,60 +10,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState<Date>();
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    
-    // Add the selected values to form data
-    formData.append("sauna_type", saunaType);
-    formData.append("location", location);
-    if (date) {
-      formData.append("preferred_date", format(date, "PPP"));
-    }
-
-    try {
-      const response = await fetch("https://formspree.io/f/xwpawzwg", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Reservation request sent!",
-          description: "We'll get back to you soon to confirm your installation date.",
-        });
-        form.reset();
-        setSaunaType("");
-        setLocation("");
-        setDate(undefined);
-      } else {
-        throw new Error("Form submission failed");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -78,7 +29,13 @@ const Contact = () => {
               Fill out the form below and we'll get back to you to confirm your installation date.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form action="https://api.web3forms.com/submit" method="POST" className="space-y-6">
+              <input type="hidden" name="access_key" value="c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef" />
+              <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
+              <input type="hidden" name="sauna_type" value={saunaType} />
+              <input type="hidden" name="location" value={location} />
+              <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
+              
               <div className="space-y-2">
                 <Label htmlFor="name">
                   Name <span className="text-destructive">*</span>
@@ -195,9 +152,9 @@ const Contact = () => {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={isSubmitting || !saunaType || !location || !date}
+                disabled={!saunaType || !location || !date}
               >
-                {isSubmitting ? "Sending..." : "Reserve Now"}
+                Reserve Now
               </Button>
             </form>
           </div>
