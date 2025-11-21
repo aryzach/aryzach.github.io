@@ -22,6 +22,8 @@ import SaunaRentalSF from "./pages/SaunaRentalSF";
 import SaunaDirectory from "./pages/SaunaDirectory";
 import SouthEndRowingClub from "./pages/SouthEndRowingClub";
 import FitnessSFFillmore from "./pages/FitnessSFFillmore";
+import EmailMoreInfo from "./pages/EmailMoreInfo";
+import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -90,6 +92,8 @@ const App = () => (
           <Route path="/sauna-directory" element={<SaunaDirectory />} />
           <Route path="/sauna-review/south-end-rowing-club" element={<SouthEndRowingClub />} />
           <Route path="/sauna-review/fitness-sf-fillmore" element={<FitnessSFFillmore />} />
+          <Route path="/email-more-info" element={<EmailMoreInfo />} />
+          <Route path="/thank-you" element={<ThankYou />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
