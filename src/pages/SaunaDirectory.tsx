@@ -159,6 +159,30 @@ const SaunaDirectory = () => {
       temp: "—",
       access: "—",
       website: "https://touchstoneclimbing.com/mission-cliffs"
+    },
+    {
+      name: "Albany Sauna, Massage & Hot Tubs",
+      location: "1002 Solano Ave, Albany, CA 94706",
+      type: "Review coming soon",
+      temp: "—",
+      access: "—",
+      website: "https://albanysauna.com"
+    },
+    {
+      name: "Fjord (floating sauna)",
+      location: "2310 Marinship Way, Sausalito, CA (Richardson Bay)",
+      type: "Review coming soon",
+      temp: "—",
+      access: "—",
+      website: "https://thisisfjord.com"
+    },
+    {
+      name: "Good Hot",
+      location: "1950 Stenmark Dr., Richmond, CA 94801",
+      type: "Review coming soon",
+      temp: "—",
+      access: "—",
+      website: "https://good-hot.com"
     }
   ];
 
