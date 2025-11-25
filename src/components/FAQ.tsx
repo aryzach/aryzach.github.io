@@ -59,6 +59,10 @@ const faqs = [
     question: "How does this affect my electric bill?",
     answer: "Sauna sessions cost $0.50–$1.50 in electricity. SF rates are about $0.30/kWh, our units draw 1.5–3 kW, and total running time for each sauna session is 40-90 minutes (heating time + use time).",
   },
+  {
+    question: "Can I buy out the sauna at the end of my lease?",
+    answer: "Yep. Once your initial lease term is up, you can buy out the unit you've been using. We credit 30% of your lease payments toward the purchase. Infrared models: current retail prices are listed on the manufacturer site: goldendesigninc.com/collections/maxxus-saunas. Finnish dry saunas (built in-house): Indoor $6499, Outdoor $8499. Add $459 if your unit includes the extra heater.",
+  },
 ];
 
 const FAQ = () => {
