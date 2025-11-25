@@ -15,6 +15,7 @@ const Contact = () => {
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState<Date>();
+  const [coldPlunge, setColdPlunge] = useState("");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,10 +32,11 @@ const Contact = () => {
 
             <form action="https://api.web3forms.com/submit" method="POST" className="space-y-6">
               <input type="hidden" name="access_key" value="c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef" />
-              <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
+              <input type="hidden" name="redirect" value="https://sfsaunarental.com/reservation-payment-or-schedule-call" />
               <input type="hidden" name="sauna_type" value={saunaType} />
               <input type="hidden" name="location" value={location} />
               <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
+              <input type="hidden" name="cold_plunge" value={coldPlunge} />
               
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -105,11 +107,11 @@ const Contact = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="location">
-                  Location <span className="text-destructive">*</span>
+                  Indoor / Outdoor <span className="text-destructive">*</span>
                 </Label>
                 <Select value={location} onValueChange={setLocation} required>
                   <SelectTrigger id="location">
-                    <SelectValue placeholder="Select location" />
+                    <SelectValue placeholder="Select Indoor / Outdoor" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="indoor">Indoor</SelectItem>
@@ -145,7 +147,22 @@ const Contact = () => {
                       className={cn("p-3 pointer-events-auto")}
                     />
                   </PopoverContent>
-                </Popover>
+              </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cold-plunge">
+                  Interested in a cold plunge for $60/mo?
+                </Label>
+                <Select value={coldPlunge} onValueChange={setColdPlunge}>
+                  <SelectTrigger id="cold-plunge">
+                    <SelectValue placeholder="Select option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <Button
