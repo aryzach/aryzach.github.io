@@ -26,14 +26,14 @@ const Gallery = () => {
           {galleryItems.map((item, index) => (
             <div
               key={index}
-              className="overflow-hidden aspect-[9/16]"
+              className={`overflow-hidden aspect-[9/16] ${index === 1 ? 'bg-black' : ''}`}
             >
               {item.type === "image" ? (
                 <img
                   src={item.src}
                   alt={`SF Sauna installation ${index + 1}`}
                   loading="lazy"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  className={`w-full h-full ${index === 1 ? 'object-contain' : 'object-cover hover:scale-105 transition-transform duration-300'}`}
                 />
               ) : (
                 <video
