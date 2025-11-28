@@ -149,7 +149,7 @@ const Pricing = () => {
                         <div className="mb-4 ml-0 md:ml-8">
                           <div className="grid grid-cols-[60px_1fr_1fr_1fr] gap-4 md:gap-8 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
-                            <span className="text-sm font-semibold text-muted-foreground">Price</span>
+                            <span className="text-sm font-semibold text-muted-foreground">Monthly Rate</span>
                             <span className="text-sm font-semibold text-primary">Holiday Special</span>
                             <span className="text-sm font-semibold text-muted-foreground">Installation Fee</span>
                           </div>
@@ -166,16 +166,10 @@ const Pricing = () => {
                                   <span className="text-xl font-semibold text-muted-foreground line-through">
                                     {plan.price}
                                   </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {plan.priceDetail}
-                                  </span>
                                 </div>
                                 <div>
                                   <span className="text-xl font-semibold text-primary">
                                     {plan.holidayPrice}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {plan.priceDetail}
                                   </span>
                                 </div>
                                 <div>
