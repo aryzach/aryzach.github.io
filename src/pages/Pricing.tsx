@@ -18,20 +18,20 @@ const saunaData = [
         name: "Indoor Finnish Dry",
         availability: "Available within two weeks",
         pricing: [
-          { duration: "1", price: "$599", priceDetail: "/mo" },
-          { duration: "3", price: "$359", priceDetail: "/mo" },
-          { duration: "6", price: "$319", priceDetail: "/mo" },
-          { duration: "12", price: "$299", priceDetail: "/mo" },
+          { duration: "1", price: "$599", priceDetail: "/mo", holidayPrice: "$499" },
+          { duration: "3", price: "$359", priceDetail: "/mo", holidayPrice: "$329" },
+          { duration: "6", price: "$319", priceDetail: "/mo", holidayPrice: "$279" },
+          { duration: "12", price: "$299", priceDetail: "/mo", holidayPrice: "$199" },
         ],
       },
       {
         name: "Outdoor Finnish Dry",
         availability: "Available in 2 months",
         pricing: [
-          { duration: "1", price: "$679", priceDetail: "/mo" },
-          { duration: "3", price: "$399", priceDetail: "/mo" },
-          { duration: "6", price: "$349", priceDetail: "/mo" },
-          { duration: "12", price: "$319", priceDetail: "/mo" },
+          { duration: "1", price: "$679", priceDetail: "/mo", holidayPrice: "$499" },
+          { duration: "3", price: "$399", priceDetail: "/mo", holidayPrice: "$329" },
+          { duration: "6", price: "$349", priceDetail: "/mo", holidayPrice: "$279" },
+          { duration: "12", price: "$319", priceDetail: "/mo", holidayPrice: "$199" },
         ],
       },
     ],
@@ -44,10 +44,10 @@ const saunaData = [
         name: "Indoor Infrared",
         availability: "Available within a week",
         pricing: [
-          { duration: "1", price: "$449", priceDetail: "/mo" },
-          { duration: "3", price: "$259", priceDetail: "/mo" },
-          { duration: "6", price: "$229", priceDetail: "/mo" },
-          { duration: "12", price: "$199", priceDetail: "/mo" },
+          { duration: "1", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
+          { duration: "3", price: "$259", priceDetail: "/mo", holidayPrice: "$299" },
+          { duration: "6", price: "$229", priceDetail: "/mo", holidayPrice: "$249" },
+          { duration: "12", price: "$199", priceDetail: "/mo", holidayPrice: "$169" },
         ],
       },
       {
@@ -147,22 +147,31 @@ const Pricing = () => {
 
                         {/* Pricing Table */}
                         <div className="mb-4 ml-8">
-                          <div className="grid grid-cols-3 gap-12 mb-2 pb-2 border-b border-border">
+                          <div className="grid grid-cols-[auto_1fr_1fr] gap-8 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground text-right">Months</span>
-                            <span className="text-sm font-semibold text-muted-foreground col-span-2">Price</span>
+                            <span className="text-sm font-semibold text-muted-foreground">Price</span>
+                            <span className="text-sm font-semibold text-primary">Holiday Special</span>
                           </div>
                           <div className="space-y-2">
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="grid grid-cols-3 gap-12 items-center py-1"
+                                className="grid grid-cols-[auto_1fr_1fr] gap-8 items-center py-1"
                               >
                                 <span className="font-semibold text-card-foreground text-right">
                                   {plan.duration}
                                 </span>
-                                <div className="col-span-2">
-                                  <span className="text-xl font-semibold text-card-foreground">
+                                <div>
+                                  <span className="text-xl font-semibold text-muted-foreground line-through">
                                     {plan.price}
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {plan.priceDetail}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-xl font-semibold text-primary">
+                                    {plan.holidayPrice}
                                   </span>
                                   <span className="text-xs text-muted-foreground">
                                     {plan.priceDetail}
