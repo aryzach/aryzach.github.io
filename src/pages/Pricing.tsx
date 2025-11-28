@@ -147,21 +147,22 @@ const Pricing = () => {
 
                         {/* Pricing Table */}
                         <div className="mb-4 ml-8">
-                          <div className="grid grid-cols-[auto_1fr_1fr] gap-8 mb-2 pb-2 border-b border-border">
-                            <span className="text-sm font-semibold text-muted-foreground text-right">Months</span>
-                            <span className="text-sm font-semibold text-muted-foreground">Price</span>
-                            <span className="text-sm font-semibold text-primary">Holiday Special</span>
+                          <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 mb-2 pb-2 border-b border-border">
+                            <span className="text-sm font-semibold text-muted-foreground text-center">Months</span>
+                            <span className="text-sm font-semibold text-muted-foreground text-center">Price</span>
+                            <span className="text-sm font-semibold text-primary text-center">Holiday Special</span>
+                            <span className="text-sm font-semibold text-muted-foreground text-center">Installation Fee</span>
                           </div>
                           <div className="space-y-2">
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="grid grid-cols-[auto_1fr_1fr] gap-8 items-center py-1"
+                                className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 items-center py-1"
                               >
-                                <span className="font-semibold text-card-foreground text-right">
+                                <span className="font-semibold text-card-foreground text-center">
                                   {plan.duration}
                                 </span>
-                                <div>
+                                <div className="text-center">
                                   <span className="text-xl font-semibold text-muted-foreground line-through">
                                     {plan.price}
                                   </span>
@@ -169,12 +170,19 @@ const Pricing = () => {
                                     {plan.priceDetail}
                                   </span>
                                 </div>
-                                <div>
+                                <div className="text-center">
                                   <span className="text-xl font-semibold text-primary">
                                     {plan.holidayPrice}
                                   </span>
                                   <span className="text-xs text-muted-foreground">
                                     {plan.priceDetail}
+                                  </span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-sm font-semibold text-card-foreground">
+                                    {plan.duration === "1" || plan.duration === "3" 
+                                      ? "$150" 
+                                      : "Free installation"}
                                   </span>
                                 </div>
                               </div>
