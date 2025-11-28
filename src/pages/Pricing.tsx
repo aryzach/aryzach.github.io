@@ -54,10 +54,10 @@ const saunaData = [
         name: "Outdoor Infrared",
         availability: "Available within a month",
         pricing: [
-          { duration: "1", price: "$499", priceDetail: "/mo" },
-          { duration: "3", price: "$359", priceDetail: "/mo" },
-          { duration: "6", price: "$329", priceDetail: "/mo" },
-          { duration: "12", price: "$299", priceDetail: "/mo" },
+          { duration: "1", price: "$499", priceDetail: "/mo", holidayPrice: "$479" },
+          { duration: "3", price: "$359", priceDetail: "/mo", holidayPrice: "$349" },
+          { duration: "6", price: "$329", priceDetail: "/mo", holidayPrice: "$319" },
+          { duration: "12", price: "$299", priceDetail: "/mo", holidayPrice: "$289" },
         ],
       },
     ],
@@ -148,10 +148,10 @@ const Pricing = () => {
                         {/* Pricing Table */}
                         <div className="mb-4 ml-8">
                           <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 mb-2 pb-2 border-b border-border">
-                            <span className="text-sm font-semibold text-muted-foreground text-center">Months</span>
-                            <span className="text-sm font-semibold text-muted-foreground text-center">Price</span>
-                            <span className="text-sm font-semibold text-primary text-center">Holiday Special</span>
-                            <span className="text-sm font-semibold text-muted-foreground text-center">Installation Fee</span>
+                            <span className="text-sm font-semibold text-muted-foreground">Months</span>
+                            <span className="text-sm font-semibold text-muted-foreground">Price</span>
+                            <span className="text-sm font-semibold text-primary">Holiday Special</span>
+                            <span className="text-sm font-semibold text-muted-foreground">Installation Fee</span>
                           </div>
                           <div className="space-y-2">
                             {variant.pricing.map((plan, idx) => (
@@ -159,10 +159,10 @@ const Pricing = () => {
                                 key={idx}
                                 className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 items-center py-1"
                               >
-                                <span className="font-semibold text-card-foreground text-center">
+                                <span className="font-semibold text-card-foreground">
                                   {plan.duration}
                                 </span>
-                                <div className="text-center">
+                                <div>
                                   <span className="text-xl font-semibold text-muted-foreground line-through">
                                     {plan.price}
                                   </span>
@@ -170,7 +170,7 @@ const Pricing = () => {
                                     {plan.priceDetail}
                                   </span>
                                 </div>
-                                <div className="text-center">
+                                <div>
                                   <span className="text-xl font-semibold text-primary">
                                     {plan.holidayPrice}
                                   </span>
@@ -178,7 +178,7 @@ const Pricing = () => {
                                     {plan.priceDetail}
                                   </span>
                                 </div>
-                                <div className="text-center">
+                                <div>
                                   <span className="text-sm font-semibold text-card-foreground">
                                     {plan.duration === "1" || plan.duration === "3" 
                                       ? "$150" 
