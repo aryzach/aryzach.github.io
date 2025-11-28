@@ -146,8 +146,8 @@ const Pricing = () => {
                         </div>
 
                         {/* Pricing Table */}
-                        <div className="mb-4 ml-8">
-                          <div className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 mb-2 pb-2 border-b border-border">
+                        <div className="mb-4 ml-0 md:ml-8">
+                          <div className="grid grid-cols-[60px_1fr_1fr_1fr] gap-4 md:gap-8 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
                             <span className="text-sm font-semibold text-muted-foreground">Price</span>
                             <span className="text-sm font-semibold text-primary">Holiday Special</span>
@@ -157,7 +157,7 @@ const Pricing = () => {
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="grid grid-cols-[auto_1fr_1fr_1fr] gap-8 items-center py-1"
+                                className="grid grid-cols-[60px_1fr_1fr_1fr] gap-4 md:gap-8 items-center py-1"
                               >
                                 <span className="font-semibold text-card-foreground">
                                   {plan.duration}
