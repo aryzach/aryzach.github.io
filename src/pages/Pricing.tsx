@@ -179,10 +179,10 @@ const Pricing = () => {
                                   </span>
                                 </div>
                                 <div>
-                                  <span className="text-sm font-semibold text-card-foreground">
+                                  <span className="text-xs md:text-sm font-semibold text-card-foreground">
                                     {plan.duration === "1" || plan.duration === "3" 
                                       ? "$150" 
-                                      : "Free installation"}
+                                      : "Free Installation"}
                                   </span>
                                 </div>
                               </div>
