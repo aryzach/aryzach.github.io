@@ -21,8 +21,8 @@ const serviceAreas = [
   },
   {
     title: "Marin County",
-    description: "Coming soon",
-    link: null,
+    description: "Serving Mill Valley, Sausalito, Tiburon, Larkspur, and more",
+    link: "/sauna-rental-marin",
   },
   {
     title: "East Bay (other cities)",
