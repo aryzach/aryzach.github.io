@@ -1,8 +1,10 @@
+import { Moon, RefreshCcw, Home } from "lucide-react";
+
 const HealthBenefits = () => {
   const benefits = [
-    "Better sleep + stress reduction",
-    "Consistent daily recovery",
-    "Enjoy a warm ritual in cold SF homes",
+    { text: "Better sleep + stress reduction", icon: Moon },
+    { text: "Consistent daily recovery", icon: RefreshCcw },
+    { text: "Enjoy a warm ritual in cold SF homes", icon: Home },
   ];
 
   return (
@@ -12,11 +14,15 @@ const HealthBenefits = () => {
           Why people rent a home sauna
         </h3>
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-          {benefits.map((benefit, idx) => (
-            <div key={idx} className="text-muted-foreground">
-              {benefit}
-            </div>
-          ))}
+          {benefits.map((benefit, idx) => {
+            const IconComponent = benefit.icon;
+            return (
+              <div key={idx} className="flex flex-col items-center gap-2 text-muted-foreground">
+                <IconComponent size={28} className="text-accent" strokeWidth={1.5} />
+                <span>{benefit.text}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
