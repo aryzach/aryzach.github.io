@@ -26,7 +26,7 @@ const Gallery = () => {
           {galleryItems.map((item, index) => (
             <div
               key={index}
-              className={`overflow-hidden aspect-[9/16] ${index === 1 ? 'bg-black' : ''}`}
+              className={`overflow-hidden aspect-[9/16] relative ${index === 1 ? 'bg-black' : ''}`}
             >
               {item.type === "image" ? (
                 <img
@@ -55,6 +55,8 @@ const Gallery = () => {
                   <source src={item.src} type="video/mp4" />
                 </video>
               )}
+              {/* Tan overlay on first 3 images */}
+              <div className="absolute inset-0 bg-accent/10 pointer-events-none" />
             </div>
           ))}
         </div>
