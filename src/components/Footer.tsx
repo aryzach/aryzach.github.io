@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Instagram } from "lucide-react";
+import { Instagram, MapPin, Phone, Mail } from "lucide-react";
 
 const Footer = () => {
   const location = useLocation();
@@ -16,13 +16,57 @@ const Footer = () => {
   return (
     <footer className="bg-charcoal text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-5 gap-8 mb-8">
+        <div className="grid md:grid-cols-6 gap-8 mb-8">
           {/* Brand */}
           <div>
             <h3 className="text-2xl font-semibold mb-4 text-accent">SF Sauna</h3>
             <p className="text-white/70 text-sm">
               Premium in-home sauna rentals in the San Francisco Bay Area
             </p>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-medium mb-4 text-accent">Contact</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a 
+                  href="tel:+14154890261" 
+                  className="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                  itemProp="telephone"
+                >
+                  <Phone size={14} />
+                  (415) 489-0261
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://share.google/veQFqIFODS6dBdPmM"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/70 hover:text-white transition-colors flex items-start gap-2"
+                  itemProp="address"
+                  itemScope
+                  itemType="https://schema.org/PostalAddress"
+                >
+                  <MapPin size={14} className="mt-0.5 flex-shrink-0" />
+                  <span>
+                    <span itemProp="streetAddress">1618 McAllister St</span><br />
+                    <span itemProp="addressLocality">San Francisco</span>, <span itemProp="addressRegion">CA</span> <span itemProp="postalCode">94115</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="mailto:sfsaunarental@gmail.com" 
+                  className="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                  itemProp="email"
+                >
+                  <Mail size={14} />
+                  sfsaunarental@gmail.com
+                </a>
+              </li>
+            </ul>
           </div>
 
           {/* Links */}
@@ -94,9 +138,14 @@ const Footer = () => {
             </a>
           </div>
 
-          <p className="text-white/70 text-sm">
-            📍 San Francisco, CA | 📧 sfsaunarental@gmail.com
-          </p>
+          <a 
+            href="https://share.google/veQFqIFODS6dBdPmM"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/70 hover:text-white transition-colors text-sm"
+          >
+            View on Google Maps →
+          </a>
         </div>
       </div>
     </footer>
