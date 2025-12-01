@@ -45,7 +45,7 @@ const saunaData = [
         availability: "Available within a week",
         pricing: [
           { duration: "1", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
-          { duration: "3", price: "$259", priceDetail: "/mo", holidayPrice: "$299" },
+          { duration: "3", price: "$349", priceDetail: "/mo", holidayPrice: "$299" },
           { duration: "6", price: "$229", priceDetail: "/mo", holidayPrice: "$249" },
           { duration: "12", price: "$199", priceDetail: "/mo", holidayPrice: "$169" },
         ],
