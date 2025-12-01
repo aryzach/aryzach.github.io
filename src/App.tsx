@@ -22,6 +22,7 @@ import SaunaRentalSF from "./pages/SaunaRentalSF";
 import SaunaRentalSanFrancisco from "./pages/SaunaRentalSanFrancisco";
 import SaunaRentalOakland from "./pages/SaunaRentalOakland";
 import SaunaRentalBerkeley from "./pages/SaunaRentalBerkeley";
+import SaunaRentalMarin from "./pages/SaunaRentalMarin";
 import ServiceAreas from "./pages/ServiceAreas";
 import SaunaDirectory from "./pages/SaunaDirectory";
 import SouthEndRowingClub from "./pages/SouthEndRowingClub";
@@ -112,6 +113,7 @@ const App = () => (
           <Route path="/sauna-rental-san-francisco" element={<SaunaRentalSanFrancisco />} />
           <Route path="/sauna-rental-oakland" element={<SaunaRentalOakland />} />
           <Route path="/sauna-rental-berkeley" element={<SaunaRentalBerkeley />} />
+          <Route path="/sauna-rental-marin" element={<SaunaRentalMarin />} />
           <Route path="/service-areas" element={<ServiceAreas />} />
           <Route path="/sauna-directory" element={<SaunaDirectory />} />
           <Route path="/sauna-review/south-end-rowing-club" element={<SouthEndRowingClub />} />
