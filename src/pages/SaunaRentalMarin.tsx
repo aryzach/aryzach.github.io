@@ -228,7 +228,7 @@ const SaunaRentalMarin = () => {
                   alt="Sauna installation on Mill Valley deck" 
                   className="w-full h-64 object-cover rounded-lg mb-3"
                 />
-                <p className="text-sm text-muted-foreground text-center">Mill Valley deck installation</p>
+                <p className="text-sm text-muted-foreground text-center">Mill Valley workout room installation</p>
               </div>
               <div>
                 <img 
