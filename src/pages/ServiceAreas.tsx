@@ -25,12 +25,22 @@ const serviceAreas = [
     link: "/sauna-rental-marin",
   },
   {
+    title: "Palo Alto & Menlo Park",
+    description: "Serving Crescent Park, Professorville, Allied Arts, Sharon Heights, and more",
+    link: "/sauna-rental-palo-alto",
+  },
+  {
+    title: "Mountain View & Los Altos",
+    description: "Serving Cuesta Park, Waverly Park, Old Los Altos, and more",
+    link: "/sauna-rental-mountain-view",
+  },
+  {
     title: "East Bay (other cities)",
     description: "Coming soon",
     link: null,
   },
   {
-    title: "Peninsula",
+    title: "Peninsula (other cities)",
     description: "Coming soon",
     link: null,
   },
