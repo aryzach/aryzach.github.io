@@ -49,9 +49,9 @@ const Header = () => {
             <Link to="/pricing" className="text-white/70 hover:text-white transition-colors">
               Pricing
             </Link>
-            <button onClick={() => scrollToSection("service-area")} className="text-white/70 hover:text-white transition-colors">
+            <Link to="/service-areas" className="text-white/70 hover:text-white transition-colors">
               Service Areas
-            </button>
+            </Link>
             <Link to="/media" className="text-white/70 hover:text-white transition-colors">
               Media
             </Link>
@@ -87,9 +87,9 @@ const Header = () => {
               <Link to="/pricing" className="text-white/70 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Pricing
               </Link>
-              <button onClick={() => scrollToSection("service-area")} className="text-left text-white/70 hover:text-white transition-colors">
+              <Link to="/service-areas" className="text-white/70 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Service Areas
-              </button>
+              </Link>
               <Link to="/media" className="text-white/70 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Media
               </Link>

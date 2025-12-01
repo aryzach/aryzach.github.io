@@ -19,6 +19,8 @@ import InHomeSaunaSF from "./pages/InHomeSaunaSF";
 import InfraredSaunaSF from "./pages/InfraredSaunaSF";
 import FinnishSaunaSF from "./pages/FinnishSaunaSF";
 import SaunaRentalSF from "./pages/SaunaRentalSF";
+import SaunaRentalSanFrancisco from "./pages/SaunaRentalSanFrancisco";
+import ServiceAreas from "./pages/ServiceAreas";
 import SaunaDirectory from "./pages/SaunaDirectory";
 import SouthEndRowingClub from "./pages/SouthEndRowingClub";
 import FitnessSFFillmore from "./pages/FitnessSFFillmore";
@@ -105,6 +107,8 @@ const App = () => (
           <Route path="/infrared-sauna-san-francisco" element={<InfraredSaunaSF />} />
           <Route path="/finnish-sauna-san-francisco" element={<FinnishSaunaSF />} />
           <Route path="/sauna-rental-sf" element={<SaunaRentalSF />} />
+          <Route path="/sauna-rental-san-francisco" element={<SaunaRentalSanFrancisco />} />
+          <Route path="/service-areas" element={<ServiceAreas />} />
           <Route path="/sauna-directory" element={<SaunaDirectory />} />
           <Route path="/sauna-review/south-end-rowing-club" element={<SouthEndRowingClub />} />
           <Route path="/sauna-review/fitness-sf-fillmore" element={<FitnessSFFillmore />} />
