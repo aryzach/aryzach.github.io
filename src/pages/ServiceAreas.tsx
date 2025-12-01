@@ -34,16 +34,6 @@ const serviceAreas = [
     description: "Serving Cuesta Park, Waverly Park, Old Los Altos, and more",
     link: "/sauna-rental-mountain-view",
   },
-  {
-    title: "East Bay (other cities)",
-    description: "Coming soon",
-    link: null,
-  },
-  {
-    title: "Peninsula (other cities)",
-    description: "Coming soon",
-    link: null,
-  },
 ];
 
 const ServiceAreas = () => {

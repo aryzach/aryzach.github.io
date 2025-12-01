@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import heroImage from "@/assets/sauna-rental-palo-alto-backyard.jpeg";
 import indoorImage from "@/assets/indoor-sauna-install-palo-alto-home.avif";
 import installImage1 from "@/assets/sauna-install-old-palo-alto-garage.jpg";
@@ -17,6 +19,7 @@ import {
 const SaunaRentalPaloAlto = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
@@ -337,6 +340,8 @@ const SaunaRentalPaloAlto = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };

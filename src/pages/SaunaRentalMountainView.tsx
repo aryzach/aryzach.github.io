@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import heroImage from "@/assets/sauna-rental-mountain-view-backyard.webp";
 import indoorImage from "@/assets/indoor-sauna-install-mountain-view-apartment.jpg";
 import installImage1 from "@/assets/sauna-install-waverly-park-garage.avif";
@@ -17,6 +19,7 @@ import {
 const SaunaRentalMountainView = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
@@ -186,7 +189,7 @@ const SaunaRentalMountainView = () => {
                 alt="Sauna installation in Waverly Park garage"
                 className="w-full h-64 object-cover rounded-lg"
               />
-              <p className="text-sm text-text text-center">Waverly Park garage installation</p>
+              <p className="text-sm text-text text-center">Waverly Park ADU installation</p>
             </div>
             <div className="space-y-4">
               <img
@@ -202,7 +205,7 @@ const SaunaRentalMountainView = () => {
                 alt="Sauna installation in Monta Loma office"
                 className="w-full h-64 object-cover rounded-lg"
               />
-              <p className="text-sm text-text text-center">Monta Loma office nook installation</p>
+              <p className="text-sm text-text text-center">Monta Loma hallway installation</p>
             </div>
           </div>
         </div>
@@ -332,6 +335,8 @@ const SaunaRentalMountainView = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };
