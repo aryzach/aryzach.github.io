@@ -10,12 +10,17 @@ const serviceAreas = [
     link: "/sauna-rental-san-francisco",
   },
   {
+    title: "Oakland",
+    description: "Serving 30+ neighborhoods from Rockridge to Montclair",
+    link: "/sauna-rental-oakland",
+  },
+  {
     title: "Marin County",
     description: "Coming soon",
     link: null,
   },
   {
-    title: "East Bay",
+    title: "East Bay (other cities)",
     description: "Coming soon",
     link: null,
   },
