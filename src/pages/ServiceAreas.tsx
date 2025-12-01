@@ -15,6 +15,11 @@ const serviceAreas = [
     link: "/sauna-rental-oakland",
   },
   {
+    title: "Berkeley",
+    description: "Serving 26 neighborhoods from North Berkeley to Ashby",
+    link: "/sauna-rental-berkeley",
+  },
+  {
     title: "Marin County",
     description: "Coming soon",
     link: null,
