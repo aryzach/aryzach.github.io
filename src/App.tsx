@@ -12,6 +12,7 @@ import InstallPower from "./pages/InstallPower";
 import Policies from "./pages/Policies";
 import LearnHub from "./pages/LearnHub";
 import Contact from "./pages/Contact";
+import ContactPage from "./pages/ContactPage";
 import Media from "./pages/Media";
 import LearnMore from "./pages/LearnMore";
 import SaunaSanFrancisco from "./pages/SaunaSanFrancisco";
@@ -106,6 +107,7 @@ const App = () => (
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/reserve-your-sauna" element={<Contact />} />
           <Route path="/learn-more" element={<LearnMore />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/media" element={<Media />} />
           <Route path="/sauna-san-francisco" element={<SaunaSanFrancisco />} />
           <Route path="/in-home-sauna-san-francisco" element={<InHomeSaunaSF />} />
