@@ -122,7 +122,7 @@ const Pricing = () => {
                         {sauna.type}
                       </h2>
                       <div className="flex items-center gap-2 text-white/90 text-sm">
-                        <img src={thermometerIcon} alt="Temperature" className="w-5 h-5 brightness-0 invert" />
+                        <img src={thermometerIcon} alt="Sauna temperature range indicator" className="w-5 h-5 brightness-0 invert" />
                         <span>
                           {sauna.type === "Finnish Dry Sauna" 
                             ? "170 - 194°F (77 - 90°C)" 

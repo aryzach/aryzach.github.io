@@ -8,6 +8,7 @@ const blogPosts = [
     title: "Infrared vs Finnish Sauna: Which Is Right for You?",
     excerpt: "Understanding the key differences between traditional Finnish saunas and modern infrared technology. Learn about heat types, health benefits, and which might be best for your home.",
     image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80",
+    alt: "Interior of traditional Finnish sauna with wooden benches in San Francisco home",
     date: "March 15, 2024",
     readTime: "5 min read",
   },
@@ -15,6 +16,7 @@ const blogPosts = [
     title: "The Real Cost of Running a Home Sauna",
     excerpt: "Break down the actual electricity costs of daily sauna use in San Francisco. Spoiler: it's less than you think! Plus tips for maximizing efficiency.",
     image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
+    alt: "Home sauna energy efficiency and electricity cost calculator concept",
     date: "March 10, 2024",
     readTime: "4 min read",
   },
@@ -22,6 +24,7 @@ const blogPosts = [
     title: "Landlord-Safe Home Wellness: Renter's Guide",
     excerpt: "How to set up a home sauna in your rental without violating your lease. Everything you need to know about permissions, placement, and portable wellness solutions.",
     image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80",
+    alt: "Portable plug-in sauna installed in San Francisco apartment rental",
     date: "March 5, 2024",
     readTime: "6 min read",
   },
@@ -50,7 +53,7 @@ const LearnHub = () => {
               >
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={post.alt}
                   className="w-full h-48 object-cover"
                   loading="lazy"
                 />

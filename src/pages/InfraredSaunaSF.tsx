@@ -60,7 +60,7 @@ const InfraredSaunaSF = () => {
           <div className="container mx-auto px-4 max-w-5xl py-12">
             <img
               src={indoorInfraredImg}
-              alt="Indoor infrared sauna"
+              alt="Infrared sauna installed in San Francisco apartment bedroom"
               className="w-full rounded-lg"
             />
           </div>
@@ -93,7 +93,7 @@ const InfraredSaunaSF = () => {
             <div className="my-12">
               <img
                 src={infraredImg}
-                alt="Infrared sauna experience"
+                alt="Indoor infrared sauna rental glowing in Bay Area home"
                 className="w-full rounded-lg"
               />
             </div>

@@ -79,7 +79,7 @@ const FitnessSFFillmore = () => {
             <div className="mb-12">
               <img
                 src={fitnessSFImage}
-                alt="Fitness SF Fillmore exterior"
+                alt="Fitness SF Fillmore gym sauna facility in San Francisco"
                 className="w-full rounded-lg"
               />
             </div>
