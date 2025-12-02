@@ -13,11 +13,11 @@ const faqs = [
   },
   {
     question: "How much space do I need?",
-    answer: "The sauna footprint is 48\" × 42\".",
+    answer: "Our indoor saunas are 48\" W × 42\" D x 76\" H, and our outdoor saunas are 58\" W x 46\" D x 85\" H",
   },
   {
     question: "How long does setup take?",
-    answer: "Our team completes the entire setup in about 1 hour. We'll position it, connect it, and show you how to use it.",
+    answer: "Our team completes the entire setup in about 1-2 hours. We'll position it, connect it, and show you how to use it.",
   },
   {
     question: "Can I use it indoors and outdoors?",
@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     question: "How long does the sauna take to heat up?",
-    answer: "Our infrared saunas heat to 150°F in 30 minutes. Our Finnish dry saunas reach 175-194°F in 20-60 minutes, depending on what heaters you choose.",
+    answer: "Our infrared saunas heat to 150°F in 30 minutes. Our Finnish dry saunas reach 170-194°F in 20-60 minutes, depending on what heaters you choose.",
   },
   {
     question: "Is this landlord-friendly?",
@@ -61,7 +61,7 @@ const faqs = [
   },
   {
     question: "Can I buy out the sauna at the end of my lease?",
-    answer: "Yep. Once your initial lease term is up, you can buy out the unit you've been using. We credit 30% of your lease payments toward the purchase. Infrared models: current retail prices are listed on the manufacturer site: goldendesigninc.com/collections/maxxus-saunas. Finnish dry saunas (built in-house): Indoor $6499, Outdoor $8499. Add $459 if your unit includes the extra heater.",
+    answer: "Yep. Once your initial lease term is up, you can buy out the unit you've been using. We credit 30% of your lease payments toward the purchase. Infrared models are sold at the current retail prices listed on the manufacturer site: goldendesigninc.com/collections/maxxus-saunas. Finnish dry saunas (built in-house): Indoor $6,499, Outdoor $8,499. Add $459 if your unit includes the extra heater.",
   },
   {
     question: "Can a sauna damage my wood floor?",
