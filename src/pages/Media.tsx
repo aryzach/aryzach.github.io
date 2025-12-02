@@ -12,12 +12,12 @@ const Media = () => {
     { type: "video", src: "/media/IMG_6475_2.mp4" },
     { type: "video", src: "/media/0804.mp4" },
     { type: "video", src: "/media/IMG_6591.mp4" },
-    { type: "image", src: gallery1 },
+    { type: "image", src: gallery1, alt: "Indoor infrared sauna installed in San Francisco apartment" },
     { type: "video", src: "/media/0804_3.mp4" },
-    { type: "image", src: gallery2 },
+    { type: "image", src: gallery2, alt: "Finnish dry sauna rental in Bay Area home" },
     { type: "video", src: "/media/0804_4.mp4" },
     { type: "video", src: "/media/gallery-video.mp4" },
-    { type: "image", src: gallery4 },
+    { type: "image", src: gallery4, alt: "Outdoor home sauna installation in Marin County" },
     { type: "video", src: "/media/0804_5.mp4" },
     { type: "video", src: "/media/IMG_6595.mp4" },
     { type: "video", src: "/media/0804_8.mp4" },
@@ -48,7 +48,7 @@ const Media = () => {
                   {item.type === "image" ? (
                     <img
                       src={item.src}
-                      alt={`SF Sauna ${index + 1}`}
+                      alt={item.alt || "Sauna rental installation in San Francisco Bay Area"}
                       loading="lazy"
                       className="w-full h-auto"
                     />

@@ -98,7 +98,7 @@ const InHomeSaunaSF = () => {
           <div className="container mx-auto px-4 max-w-5xl py-12">
             <img
               src={indoorInfraredImg}
-              alt="In-home sauna rental"
+              alt="Indoor infrared sauna rental installed in San Francisco apartment"
               className="w-full rounded-lg"
             />
           </div>
@@ -126,12 +126,12 @@ const InHomeSaunaSF = () => {
             <div className="grid md:grid-cols-2 gap-6 my-12">
               <img
                 src={outdoorInfraredImg}
-                alt="Outdoor sauna installation"
+                alt="Outdoor infrared sauna installed in Bay Area backyard"
                 className="w-full rounded-lg"
               />
               <img
                 src={outdoorInfrared2Img}
-                alt="Outdoor infrared sauna"
+                alt="Outdoor home sauna rental on San Francisco deck"
                 className="w-full rounded-lg"
               />
             </div>

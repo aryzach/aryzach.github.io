@@ -70,7 +70,7 @@ const SouthEndRowingClub = () => {
             <div className="mb-12">
               <img
                 src={southEndImage}
-                alt="South End Rowing Club sauna control panel"
+                alt="South End Rowing Club Finnish dry sauna interior in San Francisco"
                 className="w-full rounded-lg"
               />
             </div>

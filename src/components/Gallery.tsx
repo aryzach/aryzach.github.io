@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const galleryItems = [
-  { type: "image", src: gallery3 },
-  { type: "image", src: saunaTemp },
-  { type: "image", src: lindseySauna },
+  { type: "image", src: gallery3, alt: "Finnish dry sauna rental installed in SF home" },
+  { type: "image", src: saunaTemp, alt: "Infrared sauna temperature display in San Francisco apartment" },
+  { type: "image", src: lindseySauna, alt: "Customer using indoor home sauna in Marin" },
 ];
 
 const Gallery = () => {
@@ -31,7 +31,7 @@ const Gallery = () => {
               {item.type === "image" ? (
                 <img
                   src={item.src}
-                  alt={`SF Sauna installation ${index + 1}`}
+                  alt={item.alt}
                   loading="lazy"
                   className={`w-full h-full ${index === 1 ? 'object-contain' : 'object-cover hover:scale-105 transition-transform duration-300'}`}
                 />

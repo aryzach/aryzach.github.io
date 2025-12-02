@@ -48,7 +48,7 @@ const FinnishSaunaSF = () => {
           <div className="container mx-auto px-4 max-w-5xl py-12">
             <img
               src={finnishHeaterImg}
-              alt="Finnish sauna heater"
+              alt="Finnish dry sauna heater with hot rocks in SF home rental"
               className="w-full rounded-lg"
             />
           </div>
