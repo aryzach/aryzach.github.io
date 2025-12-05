@@ -156,9 +156,25 @@ async function prerender() {
     console.log('========================================\n');
     
   } finally {
+    console.log('Cleaning up...');
     await browser.close();
-    server.kill();
+    
+    // Force kill the server process and any children
+    try {
+      server.kill('SIGTERM');
+      // Give it a moment to terminate gracefully
+      await sleep(500);
+      server.kill('SIGKILL');
+    } catch (e) {
+      // Ignore errors if already dead
+    }
+    
+    console.log('Cleanup complete. Exiting.');
+    process.exit(0);
   }
 }
 
-prerender().catch(console.error);
+prerender().catch((err) => {
+  console.error('Prerender failed:', err);
+  process.exit(1);
+});
