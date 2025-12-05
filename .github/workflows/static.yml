@@ -32,10 +32,16 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: |
-          npm run build
-          # ensure SPA works for all paths (GitHub Pages 404 hack)
-          cp dist/index.html dist/404.html
+        run: npm run build
+
+      - name: Pre-render all routes
+        run: node scripts/prerender.mjs
+
+      - name: Copy 404 fallback
+        run: cp dist/index.html dist/404.html
+
+      - name: List generated files
+        run: find dist -name "index.html" | head -50
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
