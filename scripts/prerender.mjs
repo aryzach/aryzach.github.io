@@ -71,63 +71,89 @@ async function startServer() {
 
 async function prerender() {
   console.log('Starting prerender process...');
+  console.log(`Routes to prerender: ${routes.length}`);
   
   // Start local server
   console.log('Starting local server...');
   const server = await startServer();
-  await sleep(2000);
+  await sleep(3000); // Give server more time to start
   
-  // Launch browser
+  // Launch browser with robust CI configuration
   console.log('Launching browser...');
   const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-software-rasterizer',
+      '--disable-extensions',
+      '--single-process',
+    ],
   });
+
+  let successCount = 0;
+  let failedRoutes = [];
 
   try {
     for (const route of routes) {
-      console.log(`Pre-rendering: ${route}`);
-      
-      const page = await browser.newPage();
-      
-      // Navigate to route
-      const url = `http://localhost:${PORT}${route}`;
-      await page.goto(url, { 
-        waitUntil: 'networkidle0',
-        timeout: 30000 
-      });
-      
-      // Wait for React to render
-      await sleep(1000);
-      
-      // Get the rendered HTML
-      const html = await page.content();
-      
-      // Determine output path
-      let outputPath;
-      if (route === '/') {
-        outputPath = path.join(distDir, 'index.html');
-      } else {
-        const routePath = route.replace(/^\//, '');
-        const dirPath = path.join(distDir, routePath);
+      try {
+        console.log(`Pre-rendering: ${route}`);
         
-        // Create directory if it doesn't exist
-        if (!fs.existsSync(dirPath)) {
-          fs.mkdirSync(dirPath, { recursive: true });
+        const page = await browser.newPage();
+        
+        // Set viewport
+        await page.setViewport({ width: 1280, height: 800 });
+        
+        // Navigate to route with increased timeout
+        const url = `http://localhost:${PORT}${route}`;
+        await page.goto(url, { 
+          waitUntil: 'networkidle0',
+          timeout: 60000 
+        });
+        
+        // Wait for React to render
+        await sleep(2000);
+        
+        // Get the rendered HTML
+        const html = await page.content();
+        
+        // Determine output path
+        let outputPath;
+        if (route === '/') {
+          outputPath = path.join(distDir, 'index.html');
+        } else {
+          const routePath = route.replace(/^\//, '');
+          const dirPath = path.join(distDir, routePath);
+          
+          // Create directory if it doesn't exist
+          if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+          }
+          
+          outputPath = path.join(dirPath, 'index.html');
         }
         
-        outputPath = path.join(dirPath, 'index.html');
+        // Write the HTML file
+        fs.writeFileSync(outputPath, html);
+        console.log(`  ✓ Written: ${outputPath}`);
+        successCount++;
+        
+        await page.close();
+      } catch (routeError) {
+        console.error(`  ✗ Failed to prerender ${route}: ${routeError.message}`);
+        failedRoutes.push(route);
       }
-      
-      // Write the HTML file
-      fs.writeFileSync(outputPath, html);
-      console.log(`  Written: ${outputPath}`);
-      
-      await page.close();
     }
     
-    console.log('\nPrerender complete!');
-    console.log(`Generated ${routes.length} static HTML files.`);
+    console.log('\n========================================');
+    console.log(`Prerender complete!`);
+    console.log(`Successfully generated: ${successCount}/${routes.length} pages`);
+    if (failedRoutes.length > 0) {
+      console.log(`Failed routes: ${failedRoutes.join(', ')}`);
+    }
+    console.log('========================================\n');
     
   } finally {
     await browser.close();
