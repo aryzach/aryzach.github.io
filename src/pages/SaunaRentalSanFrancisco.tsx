@@ -15,6 +15,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const neighborhoods = [
   "Noe Valley", "Castro", "Mission District", "Bernal Heights", "Glen Park",
@@ -27,6 +29,7 @@ const neighborhoods = [
 ];
 
 const SaunaRentalSanFrancisco = () => {
+  useSEO(seoData.saunaRentalSanFrancisco);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";

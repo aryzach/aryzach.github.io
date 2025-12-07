@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Calendar } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const ReservationPaymentOrScheduleCall = () => {
+  useSEO(seoData.reservationPayment);
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

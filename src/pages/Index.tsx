@@ -11,8 +11,11 @@ import FAQ from "@/components/FAQ";
 import ReserveCTA from "@/components/ReserveCTA";
 import GoogleReviews from "@/components/GoogleReviews";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const Index = () => {
+  useSEO(seoData.home);
   useEffect(() => {
     const jsonLd = {
       "@context": "https://schema.org",

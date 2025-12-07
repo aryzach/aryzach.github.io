@@ -12,6 +12,8 @@ import saunaInstallTemescal from "@/assets/sauna-install-temescal-bedroom.webp";
 import saunaInstallMontclair from "@/assets/sauna-install-montclair-backyard.jpg";
 import saunaDeliveryOakland from "@/assets/sauna-delivery-oakland-crew.webp";
 import customerUsingOakland from "@/assets/customer-using-sauna-oakland.webp";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const neighborhoods = [
   "Rockridge", "Temescal", "Piedmont Avenue", "Grand Lake", "Lakeshore", "Montclair",
@@ -66,6 +68,7 @@ const faqs = [
 ];
 
 const SaunaRentalOakland = () => {
+  useSEO(seoData.saunaRentalOakland);
   return (
     <div className="min-h-screen bg-background">
         <Header />

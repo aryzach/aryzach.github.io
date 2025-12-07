@@ -5,8 +5,11 @@ import { Link } from "react-router-dom";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const Media = () => {
+  useSEO(seoData.media);
   const mediaItems = [
     { type: "video", src: "/media/0804_1.mp4" },
     { type: "video", src: "/media/IMG_6475_2.mp4" },

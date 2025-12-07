@@ -2,6 +2,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const blogPosts = [
   {
@@ -31,6 +33,7 @@ const blogPosts = [
 ];
 
 const LearnHub = () => {
+  useSEO(seoData.learnHub);
   return (
     <div className="min-h-screen">
       <Header />

@@ -11,6 +11,8 @@ import elmwoodBedroom from "@/assets/sauna-install-elmwood-bedroom.jpg";
 import berkeleyHillsBackyard from "@/assets/sauna-install-berkeley-hills-backyard.webp";
 import deliveryCrew from "@/assets/sauna-delivery-oakland-crew.webp";
 import customerUsingSauna from "@/assets/customer-using-sauna-oakland.webp";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const neighborhoods = [
   "North Berkeley",
@@ -85,6 +87,7 @@ const faqs = [
 ];
 
 const SaunaRentalBerkeley = () => {
+  useSEO(seoData.saunaRentalBerkeley);
   return (
     <div className="min-h-screen bg-background">
       <Header />

@@ -10,8 +10,11 @@ import sausalitoBedroom from "@/assets/sauna-install-sausalito-bedroom.avif";
 import tiburonGarage from "@/assets/sauna-install-tiburon-garage.webp";
 import crewImage from "@/assets/sauna-delivery-san-francisco-crew.jpeg";
 import customerImage from "@/assets/customer-using-sauna-oakland.webp";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const SaunaRentalMarin = () => {
+  useSEO(seoData.saunaRentalMarin);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

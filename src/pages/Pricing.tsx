@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import thermometerIcon from "@/assets/thermometer.svg";
 import peopleIcon from "@/assets/2-people.svg";
 import saunaIcon from "@/assets/sauna.svg";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const saunaData = [
   {
@@ -73,6 +75,8 @@ const commonFeatures = [
 ];
 
 const Pricing = () => {
+  useSEO(seoData.pricing);
+  
   return (
     <div className="min-h-screen">
       <Header />

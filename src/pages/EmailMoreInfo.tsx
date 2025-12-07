@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ExternalLink } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const EmailMoreInfo = () => {
+  useSEO(seoData.emailMoreInfo);
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />

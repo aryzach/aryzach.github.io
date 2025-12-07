@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const SaunaDirectory = () => {
+  useSEO(seoData.saunaDirectory);
   const saunas = [
     {
       name: "South End Rowing Club",

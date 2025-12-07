@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import fitnessSFImage from "@/assets/fitness-sf-fillmore.png";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const FitnessSFFillmore = () => {
+  useSEO(seoData.fitnessSFFillmore);
   return (
     <div className="min-h-screen">
       <Header />

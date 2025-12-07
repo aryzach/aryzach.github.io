@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Zap, Volume2, Droplet, Ruler } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const InstallPower = () => {
+  useSEO(seoData.installPower);
   return (
     <div className="min-h-screen">
       <Header />

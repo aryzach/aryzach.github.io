@@ -5,8 +5,11 @@ import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const ContactPage = () => {
+  useSEO(seoData.contact);
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
