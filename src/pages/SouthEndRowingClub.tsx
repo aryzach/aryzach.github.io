@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import southEndImage from "@/assets/south-end-rowing-club.png";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const SouthEndRowingClub = () => {
+  useSEO(seoData.southEndRowingClub);
   return (
     <div className="min-h-screen">
       <Header />

@@ -4,8 +4,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const LearnMore = () => {
+  useSEO(seoData.learnMore);
 
   return (
     <div className="min-h-screen flex flex-col">

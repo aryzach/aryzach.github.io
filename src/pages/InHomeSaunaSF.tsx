@@ -6,8 +6,11 @@ import { Check } from "lucide-react";
 import indoorInfraredImg from "@/assets/indoorinfrared.png";
 import outdoorInfraredImg from "@/assets/outdoorinfrared.png";
 import outdoorInfrared2Img from "@/assets/outdoorinfrared2.png";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const InHomeSaunaSF = () => {
+  useSEO(seoData.inHomeSaunaSF);
   const neighborhoods = {
     "San Francisco": [
       "Mission", "Noe Valley", "Castro", "SoMa", "Mission Bay", "Hayes Valley", 

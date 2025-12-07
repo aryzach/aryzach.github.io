@@ -1,7 +1,10 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const Policies = () => {
+  useSEO(seoData.policies);
   return (
     <div className="min-h-screen">
       <Header />

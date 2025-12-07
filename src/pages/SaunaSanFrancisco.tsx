@@ -3,8 +3,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const SaunaSanFrancisco = () => {
+  useSEO(seoData.saunaSanFrancisco);
   const neighborhoods = {
     "San Francisco": [
       "Mission", "Mission Bay", "SOMA", "Hayes Valley", "NoPa", "Noe Valley", 

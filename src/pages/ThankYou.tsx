@@ -3,8 +3,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const ThankYou = () => {
+  useSEO(seoData.thankYou);
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />

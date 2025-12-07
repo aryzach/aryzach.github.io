@@ -10,8 +10,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const Contact = () => {
+  useSEO(seoData.reserveYourSauna);
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState<Date>();

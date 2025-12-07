@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const HowItWorksPage = () => {
+  useSEO(seoData.howItWorks);
   const steps = [
     {
       number: "1",

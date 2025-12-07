@@ -2,6 +2,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const serviceAreas = [
   {
@@ -37,6 +39,7 @@ const serviceAreas = [
 ];
 
 const ServiceAreas = () => {
+  useSEO(seoData.serviceAreas);
   return (
     <div className="min-h-screen bg-background">
       <Header />

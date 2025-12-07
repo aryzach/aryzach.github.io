@@ -15,8 +15,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const SaunaRentalPaloAlto = () => {
+  useSEO(seoData.saunaRentalPaloAlto);
   return (
     <div className="min-h-screen bg-background">
       <Header />

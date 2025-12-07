@@ -3,8 +3,11 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import finnishHeaterImg from "@/assets/finnishheater.png";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const FinnishSaunaSF = () => {
+  useSEO(seoData.finnishSaunaSF);
   const neighborhoods = {
     "San Francisco": [
       "Mission", "Noe Valley", "Castro", "SoMa", "Mission Bay", "Hayes Valley", 

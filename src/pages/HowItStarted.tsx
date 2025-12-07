@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import zachPortrait from "@/assets/zach-portrait.png";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
 
 const HowItStarted = () => {
+  useSEO(seoData.howItStarted);
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
