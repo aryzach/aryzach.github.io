@@ -165,7 +165,7 @@ const Index = () => {
               "name": "Can I buy out the sauna later?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail (goldendesigninc.com). Finnish saunas: Indoor $6,499, Outdoor $8,499 (+$459 if you have the extra heater)."
+                "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail (https://goldendesigninc.com/collections/maxxus-saunas). Finnish saunas: Indoor $6,499, Outdoor $8,499 (+$459 if you have the extra heater)."
               }
             },
             {
