@@ -71,6 +71,8 @@ const LearnMore = () => {
                 />
               </div>
 
+              <div className="cf-turnstile" data-sitekey="0x4AAAAAACFs3jTy8S0VihmG" data-theme="light"></div>
+
               <Button
                 type="submit"
                 size="lg"
