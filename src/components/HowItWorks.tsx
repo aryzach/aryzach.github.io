@@ -1,8 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
+import { useRef } from "react";
+import { TurnstileWidget, TurnstileWidgetRef } from "./TurnstileWidget";
 
 const HowItWorks = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<TurnstileWidgetRef>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    turnstileRef.current?.execute();
+  };
+
+  const handleTurnstileSuccess = () => {
+    formRef.current?.submit();
+  };
+
   return (
     <section id="how-it-works" className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4 text-center max-w-2xl">
@@ -18,8 +32,10 @@ const HowItWorks = () => {
           </video>
         </div>
         <form 
+          ref={formRef}
           action="https://api.web3forms.com/submit" 
           method="POST"
+          onSubmit={handleSubmit}
           className="flex flex-col gap-4 max-w-md mx-auto w-full"
         >
           <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
@@ -49,7 +65,7 @@ const HowItWorks = () => {
             className="h-12 px-4 text-base"
           />
           
-          <div className="cf-turnstile" data-sitekey="0x4AAAAAACFs3jTy8S0VihmG" data-theme="light"></div>
+          <TurnstileWidget ref={turnstileRef} onSuccess={handleTurnstileSuccess} />
           <Button 
             type="submit"
             size="lg" 
