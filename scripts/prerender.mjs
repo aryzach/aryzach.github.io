@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
 
-// All routes to pre-render
 const routes = [
   '/',
   '/pricing',
@@ -64,7 +63,7 @@ async function startServer() {
       console.error('Server error:', data.toString());
     });
 
-    // Give it time to start
+    // Fallback: just assume it's up after 3s
     setTimeout(() => resolve(server), 3000);
   });
 }
@@ -72,13 +71,11 @@ async function startServer() {
 async function prerender() {
   console.log('Starting prerender process...');
   console.log(`Routes to prerender: ${routes.length}`);
-  
-  // Start local server
+
   console.log('Starting local server...');
   const server = await startServer();
-  await sleep(3000); // Give server more time to start
-  
-  // Launch browser with robust CI configuration
+  await sleep(2000); // tiny extra buffer
+
   console.log('Launching browser...');
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -93,82 +90,87 @@ async function prerender() {
     ],
   });
 
+  // lower default nav timeout
+  browser.defaultBrowserContext().overridePermissions(`http://localhost:${PORT}`, []);
   let successCount = 0;
-  let failedRoutes = [];
+  const failedRoutes = [];
 
   try {
     for (const route of routes) {
+      const url = `http://localhost:${PORT}${route}`;
+      console.log(`Pre-rendering: ${route} (${url})`);
+
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1280, height: 800 });
+      page.setDefaultNavigationTimeout(12000); // 12s cap per route
+
+      // optional: don't waste time on analytics/fonts if you add them later
+      await page.setRequestInterception(true);
+      page.on('request', (req) => {
+        const rurl = req.url();
+        if (
+          rurl.includes('googletagmanager.com') ||
+          rurl.includes('google-analytics.com') ||
+          rurl.includes('facebook.net') ||
+          rurl.includes('fonts.googleapis.com') ||
+          rurl.includes('challenges.cloudflare.com')
+        ) {
+          return req.abort();
+        }
+        req.continue();
+      });
+
       try {
-        console.log(`Pre-rendering: ${route}`);
-        
-        const page = await browser.newPage();
-        
-        // Set viewport
-        await page.setViewport({ width: 1280, height: 800 });
-        
-        // Navigate to route with increased timeout
-        const url = `http://localhost:${PORT}${route}`;
-        await page.goto(url, { 
-          waitUntil: 'networkidle0',
-          timeout: 60000 
+        await page.goto(url, {
+          waitUntil: 'domcontentloaded', // much faster + good enough for SEO
+          timeout: 12000,
         });
-        
-        // Wait for React to render
-        await sleep(2000);
-        
-        // Get the rendered HTML
+
+        // tiny extra wait to let React hydrate main content
+        await sleep(1000);
+
         const html = await page.content();
-        
-        // Determine output path
+
         let outputPath;
         if (route === '/') {
           outputPath = path.join(distDir, 'index.html');
         } else {
           const routePath = route.replace(/^\//, '');
           const dirPath = path.join(distDir, routePath);
-          
-          // Create directory if it doesn't exist
           if (!fs.existsSync(dirPath)) {
             fs.mkdirSync(dirPath, { recursive: true });
           }
-          
           outputPath = path.join(dirPath, 'index.html');
         }
-        
-        // Write the HTML file
+
         fs.writeFileSync(outputPath, html);
         console.log(`  ✓ Written: ${outputPath}`);
         successCount++;
-        
-        await page.close();
       } catch (routeError) {
         console.error(`  ✗ Failed to prerender ${route}: ${routeError.message}`);
         failedRoutes.push(route);
+      } finally {
+        await page.close();
       }
     }
-    
+
     console.log('\n========================================');
-    console.log(`Prerender complete!`);
+    console.log('Prerender complete!');
     console.log(`Successfully generated: ${successCount}/${routes.length} pages`);
     if (failedRoutes.length > 0) {
       console.log(`Failed routes: ${failedRoutes.join(', ')}`);
     }
     console.log('========================================\n');
-    
   } finally {
     console.log('Cleaning up...');
     await browser.close();
-    
-    // Force kill the server process and any children
     try {
       server.kill('SIGTERM');
-      // Give it a moment to terminate gracefully
       await sleep(500);
       server.kill('SIGKILL');
     } catch (e) {
-      // Ignore errors if already dead
+      // ignore
     }
-    
     console.log('Cleanup complete. Exiting.');
     process.exit(0);
   }
