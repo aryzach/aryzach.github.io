@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
-import { TurnstileWidget, TurnstileWidgetRef } from "@/components/TurnstileWidget";
 
 const Contact = () => {
   useSEO(seoData.reserveYourSauna);
@@ -20,17 +19,6 @@ const Contact = () => {
   const [location, setLocation] = useState("");
   const [date, setDate] = useState<Date>();
   const [coldPlunge, setColdPlunge] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
-  const turnstileRef = useRef<TurnstileWidgetRef>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    turnstileRef.current?.execute();
-  };
-
-  const handleTurnstileSuccess = () => {
-    formRef.current?.submit();
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -46,10 +34,8 @@ const Contact = () => {
             </p>
 
             <form 
-              ref={formRef}
               action="https://api.web3forms.com/submit" 
               method="POST" 
-              onSubmit={handleSubmit}
               className="space-y-6"
             >
               <input type="hidden" name="access_key" value="c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef" />
@@ -185,8 +171,6 @@ const Contact = () => {
                   </SelectContent>
                 </Select>
               </div>
-
-              <TurnstileWidget ref={turnstileRef} onSuccess={handleTurnstileSuccess} />
 
               <Button
                 type="submit"
