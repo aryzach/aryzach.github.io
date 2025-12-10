@@ -105,19 +105,24 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-4 text-accent">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
-            <div className="flex gap-2">
+            <form 
+              action="https://api.web3forms.com/submit" 
+              method="POST"
+              className="flex gap-2"
+            >
+              <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
+              <input type="hidden" name="redirect" value="https://www.sfsaunarental.com/email-more-info/" />
               <Input
                 type="email"
                 name="email"
+                required
                 placeholder="Your email"
                 className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
               />
-              <Link to="/learn-more">
-                <Button type="button" size="sm" className="bg-accent hover:bg-accent/90">
-                  Join
-                </Button>
-              </Link>
-            </div>
+              <Button type="submit" size="sm" className="bg-accent hover:bg-accent/90">
+                Join
+              </Button>
+            </form>
           </div>
         </div>
 
