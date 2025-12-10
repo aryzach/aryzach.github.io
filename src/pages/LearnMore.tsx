@@ -6,9 +6,22 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { useRef } from "react";
+import { TurnstileWidget, TurnstileWidgetRef } from "@/components/TurnstileWidget";
 
 const LearnMore = () => {
   useSEO(seoData.learnMore);
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<TurnstileWidgetRef>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    turnstileRef.current?.execute();
+  };
+
+  const handleTurnstileSuccess = () => {
+    formRef.current?.submit();
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -24,8 +37,10 @@ const LearnMore = () => {
             </p>
 
             <form
+              ref={formRef}
               action="https://api.web3forms.com/submit"
               method="POST"
+              onSubmit={handleSubmit}
               className="space-y-6"
             >
               <input type="hidden" name="access_key" value="0fd02492-4a8f-4c11-b60e-a2485315ef72" />
@@ -71,7 +86,7 @@ const LearnMore = () => {
                 />
               </div>
 
-              <div className="cf-turnstile" data-sitekey="0x4AAAAAACFs3jTy8S0VihmG" data-theme="light"></div>
+              <TurnstileWidget ref={turnstileRef} onSuccess={handleTurnstileSuccess} />
 
               <Button
                 type="submit"

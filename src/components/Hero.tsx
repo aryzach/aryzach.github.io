@@ -2,9 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { TurnstileWidget, TurnstileWidgetRef } from "./TurnstileWidget";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<TurnstileWidgetRef>(null);
   const [zipCode, setZipCode] = useState<string>("your area");
 
   useEffect(() => {
@@ -27,6 +30,15 @@ const Hero = () => {
         console.log("Failed to fetch zip code:", error);
       });
   }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    turnstileRef.current?.execute();
+  };
+
+  const handleTurnstileSuccess = () => {
+    formRef.current?.submit();
+  };
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -78,8 +90,10 @@ const Hero = () => {
           </div>
         </div>
         <form 
+          ref={formRef}
           action="https://api.web3forms.com/submit"
           method="POST"
+          onSubmit={handleSubmit}
           className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full"
         >
           <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
@@ -91,7 +105,7 @@ const Hero = () => {
             required
             className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
           />
-          <div className="cf-turnstile" data-sitekey="0x4AAAAAACFs3jTy8S0VihmG" data-theme="light"></div>
+          <TurnstileWidget ref={turnstileRef} onSuccess={handleTurnstileSuccess} />
           <Button 
             type="submit"
             size="lg" 
