@@ -30,9 +30,9 @@ const saunaData = [
         name: "Outdoor Finnish Dry",
         availability: "Available in 2 months",
         pricing: [
-          { duration: "1", price: "$649", priceDetail: "/mo", holidayPrice: "$599" },
-          { duration: "3", price: "$499", priceDetail: "/mo", holidayPrice: "$399" },
-          { duration: "6", price: "$399", priceDetail: "/mo", holidayPrice: "$349" },
+          { duration: "1", price: "$699", priceDetail: "/mo", holidayPrice: "$649" },
+          { duration: "3", price: "$549", priceDetail: "/mo", holidayPrice: "$449" },
+          { duration: "6", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
           { duration: "12", price: "$349", priceDetail: "/mo", holidayPrice: "$249" },
         ],
       },
