@@ -23,11 +23,13 @@ const Index = () => {
         {
           "@type": ["LocalBusiness", "HealthAndBeautyBusiness"],
           "@id": "https://www.sfsaunarental.com/#business",
-          "name": "SF Sauna",
-          "url": "https://www.sfsaunarental.com/",
+          "name": "SF Sauna Rental",
+          "url": "https://sfsaunarental.com/",
           "image": "https://www.sfsaunarental.com/assets/gallery-3-Cj0B_JUQ.jpg",
-          "telephone": "+1-415-489-0261",
+          "telephone": "(415) 489-0261",
           "priceRange": "$$",
+          "description": "Monthly sauna rentals for SF Bay Area homes and backyards. Dry and infrared saunas on 120V power with fast delivery, setup, and ongoing support.",
+          "foundingDate": "2025-12-12",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "1618 McAllister St",
