@@ -21,7 +21,7 @@ const Index = () => {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": ["LocalBusiness", "HealthAndBeautyBusiness"],
+          "@type": "LocalBusiness",
           "@id": "https://www.sfsaunarental.com/#business",
           "name": "SF Sauna Rental",
           "url": "https://sfsaunarental.com/",
