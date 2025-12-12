@@ -21,12 +21,21 @@ const Index = () => {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "LocalBusiness",
+          "@type": "WebSite",
+          "@id": "https://www.sfsaunarental.com/#website",
+          "url": "https://www.sfsaunarental.com/",
+          "name": "SF Sauna",
+          "publisher": {
+            "@id": "https://www.sfsaunarental.com/#business"
+          }
+        },
+        {
+          "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
           "@id": "https://www.sfsaunarental.com/#business",
           "name": "SF Sauna Rental",
-          "url": "https://sfsaunarental.com/",
+          "url": "https://www.sfsaunarental.com/",
           "image": "https://www.sfsaunarental.com/assets/gallery-3-Cj0B_JUQ.jpg",
-          "telephone": "(415) 489-0261",
+          "telephone": "+1-415-489-0261",
           "priceRange": "$$",
           "description": "Monthly sauna rentals for SF Bay Area homes and backyards. Dry and infrared saunas on 120V power with fast delivery, setup, and ongoing support.",
           "foundingDate": "2025-12-12",
@@ -43,15 +52,97 @@ const Index = () => {
             { "@type": "City", "name": "Oakland" },
             { "@type": "AdministrativeArea", "name": "Marin County" },
             { "@type": "AdministrativeArea", "name": "San Mateo County" }
+          ],
+          "sameAs": [
+            "https://sfsaunarental.com/"
           ]
         },
         {
-          "@type": "WebSite",
-          "@id": "https://www.sfsaunarental.com/#website",
-          "url": "https://www.sfsaunarental.com/",
-          "name": "SF Sauna",
-          "publisher": {
-            "@id": "https://www.sfsaunarental.com/#business"
+          "@type": "Service",
+          "@id": "https://www.sfsaunarental.com/#indoor-infrared-rental",
+          "serviceType": "Indoor infrared sauna rental",
+          "provider": { "@id": "https://www.sfsaunarental.com/#business" },
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "description": "Indoor infrared sauna rental plans",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 199,
+              "maxPrice": 679,
+              "unitCode": "MON"
+            }
+          }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://www.sfsaunarental.com/#outdoor-infrared-rental",
+          "serviceType": "Outdoor infrared sauna rental",
+          "provider": { "@id": "https://www.sfsaunarental.com/#business" },
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "description": "Outdoor infrared sauna rental plans",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 259,
+              "maxPrice": 679,
+              "unitCode": "MON"
+            }
+          }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://www.sfsaunarental.com/#indoor-finnish-rental",
+          "serviceType": "Indoor Finnish dry sauna rental",
+          "provider": { "@id": "https://www.sfsaunarental.com/#business" },
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "description": "Indoor Finnish dry sauna rental plans",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 299,
+              "maxPrice": 679,
+              "unitCode": "MON"
+            }
+          }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://www.sfsaunarental.com/#outdoor-finnish-rental",
+          "serviceType": "Outdoor Finnish dry sauna rental",
+          "provider": { "@id": "https://www.sfsaunarental.com/#business" },
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "description": "Outdoor Finnish dry sauna rental plans",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 299,
+              "maxPrice": 679,
+              "unitCode": "MON"
+            }
           }
         },
         {
@@ -159,7 +250,7 @@ const Index = () => {
               "name": "How much does it add to my electric bill?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Usually $0.50–$1.50 per session. SF electricity is ~$0.30/kWh, and sessions run 40–90 minutes total."
+                "text": "Usually $0.50–$1.50 per session. SF electricity is about $0.30/kWh, and sessions run 40–90 minutes total."
               }
             },
             {
@@ -167,7 +258,7 @@ const Index = () => {
               "name": "Can I buy out the sauna later?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail (https://goldendesigninc.com/collections/maxxus-saunas). Finnish saunas: Indoor $6,499, Outdoor $8,499 (+$459 if you have the extra heater)."
+                "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail listings; Finnish saunas are Indoor $6,499 and Outdoor $8,499 (+$459 if you have the extra heater)."
               }
             },
             {
