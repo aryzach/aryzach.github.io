@@ -46,10 +46,10 @@ const saunaData = [
         name: "Indoor Infrared",
         availability: "Available within a week",
         pricing: [
-          { duration: "1", price: "$549", priceDetail: "/mo", holidayPrice: "$499" },
-          { duration: "3", price: "$399", priceDetail: "/mo", holidayPrice: "$349" },
-          { duration: "6", price: "$349", priceDetail: "/mo", holidayPrice: "$299" },
-          { duration: "12", price: "$249", priceDetail: "/mo", holidayPrice: "$199" },
+          { duration: "1", price: "$549", priceDetail: "/mo", holidayPrice: "$349" },
+          { duration: "3", price: "$399", priceDetail: "/mo", holidayPrice: "$249" },
+          { duration: "6", price: "$349", priceDetail: "/mo", holidayPrice: "$199" },
+          { duration: "12", price: "$249", priceDetail: "/mo", holidayPrice: "$169" },
         ],
       },
       {
