@@ -44,7 +44,7 @@ const saunaData = [
     variants: [
       {
         name: "Indoor Infrared",
-        availability: "Available within a week",
+        availability: "Get the next available and reserve an infrared sauna today",
         pricing: [
           { duration: "1", price: "$549", priceDetail: "/mo", holidayPrice: "$349" },
           { duration: "3", price: "$399", priceDetail: "/mo", holidayPrice: "$249" },
@@ -54,7 +54,7 @@ const saunaData = [
       },
       {
         name: "Outdoor Infrared",
-        availability: "Available within a month",
+        availability: "Get the next available infrared sauna and reserve one today",
         pricing: [
           { duration: "1", price: "$599", priceDetail: "/mo", holidayPrice: "$549" },
           { duration: "3", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
