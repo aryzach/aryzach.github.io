@@ -20,20 +20,20 @@ const saunaData = [
         name: "Indoor Finnish Dry",
         availability: "Available in 2 months — 6/10 outdoor dry saunas left for pre-order",
         pricing: [
-          { duration: "1", price: "$649", priceDetail: "/mo", holidayPrice: "$599" },
-          { duration: "3", price: "$499", priceDetail: "/mo", holidayPrice: "$399" },
-          { duration: "6", price: "$399", priceDetail: "/mo", holidayPrice: "$349" },
-          { duration: "12", price: "$349", priceDetail: "/mo", holidayPrice: "$249" },
+          { duration: "1", price: "$649", priceDetail: "/mo" },
+          { duration: "3", price: "$449", priceDetail: "/mo" },
+          { duration: "6", price: "$399", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
         ],
       },
       {
         name: "Outdoor Finnish Dry",
         availability: "Available in 2 months — 6/10 outdoor dry saunas left for pre-order",
         pricing: [
-          { duration: "1", price: "$699", priceDetail: "/mo", holidayPrice: "$649" },
-          { duration: "3", price: "$549", priceDetail: "/mo", holidayPrice: "$449" },
-          { duration: "6", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
-          { duration: "12", price: "$349", priceDetail: "/mo", holidayPrice: "$249" },
+          { duration: "1", price: "$649", priceDetail: "/mo" },
+          { duration: "3", price: "$499", priceDetail: "/mo" },
+          { duration: "6", price: "$399", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
         ],
       },
     ],
@@ -46,20 +46,20 @@ const saunaData = [
         name: "Indoor Infrared",
         availability: "Get the next available and reserve an infrared sauna today",
         pricing: [
-          { duration: "1", price: "$549", priceDetail: "/mo", holidayPrice: "$349" },
-          { duration: "3", price: "$399", priceDetail: "/mo", holidayPrice: "$249" },
-          { duration: "6", price: "$349", priceDetail: "/mo", holidayPrice: "$199" },
-          { duration: "12", price: "$249", priceDetail: "/mo", holidayPrice: "$169" },
+          { duration: "1", price: "$549", priceDetail: "/mo" },
+          { duration: "3", price: "$349", priceDetail: "/mo" },
+          { duration: "6", price: "$249", priceDetail: "/mo" },
+          { duration: "12", price: "$199", priceDetail: "/mo" },
         ],
       },
       {
         name: "Outdoor Infrared",
         availability: "Get the next available infrared sauna and reserve one today",
         pricing: [
-          { duration: "1", price: "$599", priceDetail: "/mo", holidayPrice: "$549" },
-          { duration: "3", price: "$449", priceDetail: "/mo", holidayPrice: "$399" },
-          { duration: "6", price: "$399", priceDetail: "/mo", holidayPrice: "$349" },
-          { duration: "12", price: "$349", priceDetail: "/mo", holidayPrice: "$299" },
+          { duration: "1", price: "$599", priceDetail: "/mo" },
+          { duration: "3", price: "$399", priceDetail: "/mo" },
+          { duration: "6", price: "$349", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
         ],
       },
     ],
@@ -151,29 +151,23 @@ const Pricing = () => {
 
                         {/* Pricing Table */}
                         <div className="mb-4 ml-0 md:ml-8">
-                          <div className="grid grid-cols-[60px_1fr_1fr_1fr] gap-4 md:gap-8 mb-2 pb-2 border-b border-border">
+                          <div className="grid grid-cols-[60px_1fr_1fr] gap-4 md:gap-8 mb-2 pb-2 border-b border-border">
                             <span className="text-sm font-semibold text-muted-foreground">Months</span>
                             <span className="text-sm font-semibold text-muted-foreground">Monthly Rate</span>
-                            <span className="text-sm font-semibold text-primary">Holiday Special</span>
                             <span className="text-sm font-semibold text-muted-foreground">Installation Fee</span>
                           </div>
                           <div className="space-y-2">
                             {variant.pricing.map((plan, idx) => (
                               <div
                                 key={idx}
-                                className="grid grid-cols-[60px_1fr_1fr_1fr] gap-4 md:gap-8 items-center py-1"
+                                className="grid grid-cols-[60px_1fr_1fr] gap-4 md:gap-8 items-center py-1"
                               >
                                 <span className="font-semibold text-card-foreground">
                                   {plan.duration}
                                 </span>
                                 <div>
-                                  <span className="text-xl font-semibold text-muted-foreground line-through">
+                                  <span className="text-xl font-semibold text-card-foreground">
                                     {plan.price}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-xl font-semibold text-primary">
-                                    {plan.holidayPrice}
                                   </span>
                                 </div>
                                 <div>
