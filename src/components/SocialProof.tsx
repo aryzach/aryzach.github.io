@@ -40,7 +40,7 @@ const SocialProof = () => {
               />
             </a>
             <a 
-              href="https://vitalitydigest.com" 
+              href="https://www.sherisesstudios.com/product-page/vitality-digest-magazine-january-2026-edition" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-block hover:opacity-80 transition-opacity"
