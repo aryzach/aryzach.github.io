@@ -18,7 +18,6 @@ const Contact = () => {
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState<Date>();
-  const [coldPlunge, setColdPlunge] = useState("");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -43,7 +42,6 @@ const Contact = () => {
               <input type="hidden" name="sauna_type" value={saunaType} />
               <input type="hidden" name="location" value={location} />
               <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
-              <input type="hidden" name="cold_plunge" value={coldPlunge} />
               
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -132,7 +130,7 @@ const Contact = () => {
                   Preferred Installation Date <span className="text-destructive">*</span>
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Dry saunas will be available in 2 months, and infrared saunas are available periodically. Pre-order a dry sauna today, or get on the waitlist for the next available infrared sauna.
+                  Dry saunas will be available in 3 months, and infrared saunas are available periodically. Pre-order a dry sauna today, or get on the waitlist for the next available infrared sauna.
                 </p>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -158,21 +156,6 @@ const Contact = () => {
                     />
                   </PopoverContent>
               </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="cold-plunge">
-                  Interested in a cold plunge for $60/mo?
-                </Label>
-                <Select value={coldPlunge} onValueChange={setColdPlunge}>
-                  <SelectTrigger id="cold-plunge">
-                    <SelectValue placeholder="Select option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <Button

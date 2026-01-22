@@ -18,7 +18,7 @@ const saunaData = [
     variants: [
       {
         name: "Indoor Finnish Dry",
-        availability: "Available in 2 months — 7/20 outdoor dry saunas left for pre-order",
+        availability: "Available in 3 months — 7/20 outdoor dry saunas left for pre-order",
         pricing: [
           { duration: "1", price: "$649", priceDetail: "/mo" },
           { duration: "3", price: "$449", priceDetail: "/mo" },
@@ -28,7 +28,7 @@ const saunaData = [
       },
       {
         name: "Outdoor Finnish Dry",
-        availability: "Available in 2 months — 7/20 outdoor dry saunas left for pre-order",
+        availability: "Available in 3 months — 7/20 outdoor dry saunas left for pre-order",
         pricing: [
           { duration: "1", price: "$649", priceDetail: "/mo" },
           { duration: "3", price: "$499", priceDetail: "/mo" },
