@@ -33,6 +33,7 @@ import FitnessSFFillmore from "./pages/FitnessSFFillmore";
 import EmailMoreInfo from "./pages/EmailMoreInfo";
 import ThankYou from "./pages/ThankYou";
 import ReservationPaymentOrScheduleCall from "./pages/ReservationPaymentOrScheduleCall";
+import IndoorInfraredLanding from "./pages/IndoorInfraredLanding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -127,6 +128,7 @@ const App = () => (
           <Route path="/email-more-info" element={<EmailMoreInfo />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/reservation-payment-or-schedule-call" element={<ReservationPaymentOrScheduleCall />} />
+          <Route path="/indoor-infrared-sauna-rental" element={<IndoorInfraredLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
