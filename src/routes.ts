@@ -31,6 +31,7 @@ export const routes = [
   { path: '/email-more-info', priority: 0.5, changefreq: 'monthly' },
   { path: '/thank-you', priority: 0.3, changefreq: 'monthly' },
   { path: '/reservation-payment-or-schedule-call', priority: 0.6, changefreq: 'monthly' },
+  { path: '/indoor-infrared-sauna-rental', priority: 0.8, changefreq: 'monthly' },
 ] as const;
 
 export const routePaths = routes.map(r => r.path);

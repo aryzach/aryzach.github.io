@@ -156,4 +156,11 @@ export const seoData = {
     description: "See our saunas in action across San Francisco Bay Area homes. Photos and videos of infrared and Finnish sauna installations.",
     canonical: "https://sfsaunarental.com/media"
   },
+
+  // Google Ads Landing Pages
+  indoorInfraredLanding: {
+    title: "Indoor Infrared Sauna Rental | SF Sauna Rental",
+    description: "Rent an indoor infrared sauna for your San Francisco home. 150°F deep heat, 120V plug-in, 45-minute setup. Monthly plans from $199/mo with free installation.",
+    canonical: "https://sfsaunarental.com/indoor-infrared-sauna-rental"
+  },
 };
