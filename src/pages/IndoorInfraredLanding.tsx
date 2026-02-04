@@ -18,11 +18,10 @@ const IndoorInfraredLanding = () => {
   ];
 
   const benefits = [
-    "Lower temperature (150°F) — comfortable for longer sessions",
+    "Comfortable 150°F heat — great for longer sessions",
     "Faster warmup time — ready in 15-20 minutes",
     "Perfect for apartments and bedrooms",
     "Deep tissue heat for muscle recovery",
-    "Lower electricity cost than Finnish saunas",
   ];
 
   return (
@@ -32,8 +31,8 @@ const IndoorInfraredLanding = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-accent/10 text-accent-foreground px-4 py-2 rounded-full text-sm font-medium">
-                <Thermometer className="w-4 h-4" />
+              <div className="inline-flex items-center gap-2 bg-[hsl(var(--color-accent))]/20 text-foreground px-4 py-2 rounded-full text-sm font-medium">
+                <Thermometer className="w-4 h-4 text-[hsl(var(--color-accent))]" />
                 150°F Infrared Heat
               </div>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight">
