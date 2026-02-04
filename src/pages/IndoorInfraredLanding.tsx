@@ -3,8 +3,8 @@ import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
 import { Link } from "react-router-dom";
 import { Check, Thermometer, Users, Zap, Clock, Shield } from "lucide-react";
+import lindseyLivingRoom from "@/assets/lindsey-sauna-living-room.png";
 import indoorInfraredImg from "@/assets/indoorinfrared.png";
-import infraredImg2 from "@/assets/infraredd1.png";
 import GoogleReviews from "@/components/GoogleReviews";
 
 const IndoorInfraredLanding = () => {
@@ -53,8 +53,8 @@ const IndoorInfraredLanding = () => {
             </div>
             <div className="relative">
               <img
-                src={indoorInfraredImg}
-                alt="Indoor infrared sauna installed in a home"
+                src={lindseyLivingRoom}
+                alt="Indoor infrared sauna installed in a living room"
                 className="rounded-2xl shadow-xl w-full"
               />
             </div>
@@ -85,8 +85,8 @@ const IndoorInfraredLanding = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
               <img
-                src={infraredImg2}
-                alt="Infrared sauna interior with warm lighting"
+                src={indoorInfraredImg}
+                alt="Indoor infrared sauna installed in a home"
                 className="rounded-2xl shadow-xl w-full"
               />
             </div>
