@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
@@ -9,6 +10,13 @@ import GoogleReviews from "@/components/GoogleReviews";
 
 const IndoorInfraredLanding = () => {
   useSEO(seoData.indoorInfraredLanding);
+
+  // Google Ads conversion tracking
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'ads_conversion_Submit_lead_form_1', {});
+    }
+  }, []);
 
   const pricing = [
     { duration: "1 month", price: "$549", priceDetail: "/mo", installFee: "$150 install" },
