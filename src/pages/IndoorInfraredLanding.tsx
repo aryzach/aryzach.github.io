@@ -22,7 +22,7 @@ const IndoorInfraredLanding = () => {
     { duration: "1 month", price: "$549", priceDetail: "/mo", installFee: "$150 install" },
     { duration: "3 months", price: "$349", priceDetail: "/mo", installFee: "$150 install" },
     { duration: "6 months", price: "$249", priceDetail: "/mo", installFee: "Free install", popular: true },
-    { duration: "12 months", price: "$199", priceDetail: "/mo", installFee: "Free install" },
+      { duration: "12 months", price: "$169", priceDetail: "/mo", installFee: "Free install" },
   ];
 
   const benefits = [
