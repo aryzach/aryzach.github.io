@@ -79,7 +79,7 @@ const InfraredSaunaSF = () => {
             
             <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
               <p>
-                Infrared saunas are the go-to for people who want daily recovery without the blast-furnace vibe of a Finnish heater. Lower temps, deeper heat penetration, faster warm-up, and they run on any 120V outlet in SF.
+                Infrared saunas are the go-to for people who want daily recovery without the blast-furnace vibe of a steam sauna heater. Lower temps, deeper heat penetration, faster warm-up, and they run on any 120V outlet in SF.
               </p>
             </div>
 

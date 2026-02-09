@@ -40,7 +40,7 @@ const SaunaSanFrancisco = () => {
     },
     {
       name: "Peter Wong",
-      text: "Honestly amazing. The Finnish sauna / dry sauna got warm super quick and managed to fit two people in very comfortably."
+      text: "Honestly amazing. The steam sauna got warm super quick and managed to fit two people in very comfortably."
     },
     {
       name: "Vicky Rusconi",
@@ -147,7 +147,7 @@ const SaunaSanFrancisco = () => {
   "telephone": "",
   "email": "sfsaunarental@gmail.com",
   "priceRange": "$$",
-  "description": "In-home sauna rental in San Francisco. We deliver, install, and maintain infrared and Finnish saunas for apartments, homes, and backyard spaces.",
+  "description": "In-home sauna rental in San Francisco. We deliver, install, and maintain infrared and steam saunas for apartments, homes, and backyard spaces.",
   "areaServed": [
     "San Francisco",
     "Marin County",
@@ -174,7 +174,7 @@ const SaunaSanFrancisco = () => {
       "itemOffered": {
         "@type": "Service",
         "name": "In-Home Sauna Rental",
-        "description": "Full-service infrared and Finnish sauna rental with delivery, installation, and maintenance."
+        "description": "Full-service infrared and steam sauna rental with delivery, installation, and maintenance."
       }
     }
   ]

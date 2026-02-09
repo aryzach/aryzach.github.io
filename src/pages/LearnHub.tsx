@@ -7,10 +7,10 @@ import { seoData } from "@/lib/seoData";
 
 const blogPosts = [
   {
-    title: "Infrared vs Finnish Sauna: Which Is Right for You?",
-    excerpt: "Understanding the key differences between traditional Finnish saunas and modern infrared technology. Learn about heat types, health benefits, and which might be best for your home.",
+    title: "Infrared vs Steam Sauna: Which Is Right for You?",
+    excerpt: "Understanding the key differences between traditional steam saunas and modern infrared technology. Learn about heat types, health benefits, and which might be best for your home.",
     image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80",
-    alt: "Interior of traditional Finnish sauna with wooden benches in San Francisco home",
+    alt: "Interior of traditional steam sauna with wooden benches in San Francisco home",
     date: "March 15, 2024",
     readTime: "5 min read",
   },

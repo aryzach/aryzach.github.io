@@ -13,12 +13,12 @@ import { seoData } from "@/lib/seoData";
 
 const saunaData = [
   {
-    type: "Finnish Dry Sauna",
+    type: "Steam Sauna",
     video: "/videos/pricing-finnish.mp4",
     variants: [
       {
-        name: "Indoor Finnish Dry",
-        availability: "Available in 3 months — 7/20 outdoor dry saunas left for pre-order",
+        name: "Indoor Steam",
+        availability: "Available in 3 months — 7/20 outdoor steam saunas left for pre-order",
         pricing: [
           { duration: "1", price: "$649", priceDetail: "/mo" },
           { duration: "3", price: "$449", priceDetail: "/mo" },
@@ -27,8 +27,8 @@ const saunaData = [
         ],
       },
       {
-        name: "Outdoor Finnish Dry",
-        availability: "Available in 3 months — 7/20 outdoor dry saunas left for pre-order",
+        name: "Outdoor Steam",
+        availability: "Available in 3 months — 7/20 outdoor steam saunas left for pre-order",
         pricing: [
           { duration: "1", price: "$649", priceDetail: "/mo" },
           { duration: "3", price: "$499", priceDetail: "/mo" },
@@ -128,7 +128,7 @@ const Pricing = () => {
                       <div className="flex items-center gap-2 text-white/90 text-sm">
                         <img src={thermometerIcon} alt="Sauna temperature range indicator" className="w-5 h-5 brightness-0 invert" />
                         <span>
-                          {sauna.type === "Finnish Dry Sauna" 
+                          {sauna.type === "Steam Sauna" 
                             ? "170 - 194°F (77 - 90°C)" 
                             : "150°F (65°C)"}
                         </span>

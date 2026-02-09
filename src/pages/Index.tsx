@@ -103,8 +103,8 @@ const Index = () => {
         },
         {
           "@type": "Service",
-          "@id": "https://www.sfsaunarental.com/#indoor-finnish-rental",
-          "serviceType": "Indoor Finnish dry sauna rental",
+           "@id": "https://www.sfsaunarental.com/#indoor-steam-rental",
+           "serviceType": "Indoor steam sauna rental",
           "provider": { "@id": "https://www.sfsaunarental.com/#business" },
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
@@ -113,7 +113,7 @@ const Index = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "USD",
-            "description": "Indoor Finnish dry sauna rental plans",
+            "description": "Indoor steam sauna rental plans",
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
@@ -125,8 +125,8 @@ const Index = () => {
         },
         {
           "@type": "Service",
-          "@id": "https://www.sfsaunarental.com/#outdoor-finnish-rental",
-          "serviceType": "Outdoor Finnish dry sauna rental",
+           "@id": "https://www.sfsaunarental.com/#outdoor-steam-rental",
+           "serviceType": "Outdoor steam sauna rental",
           "provider": { "@id": "https://www.sfsaunarental.com/#business" },
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
@@ -135,7 +135,7 @@ const Index = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "USD",
-            "description": "Outdoor Finnish dry sauna rental plans",
+            "description": "Outdoor steam sauna rental plans",
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
@@ -151,10 +151,10 @@ const Index = () => {
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "What's the difference between infrared and Finnish dry saunas?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Infrared heats your body directly for a gentler sweat at 150°F. Finnish dry saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel."
+               "name": "What's the difference between infrared and steam saunas?",
+               "acceptedAnswer": {
+                 "@type": "Answer",
+                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel."
               }
             },
             {
@@ -202,7 +202,7 @@ const Index = () => {
               "name": "How long does it take to heat up?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Infrared reaches ~150°F in ~30 minutes. Finnish dry saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose."
+                "text": "Infrared reaches ~150°F in ~30 minutes. Steam saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose."
               }
             },
             {
@@ -258,7 +258,7 @@ const Index = () => {
               "name": "Can I buy out the sauna later?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail listings; Finnish saunas are Indoor $6,499 and Outdoor $8,499 (+$459 if you have the extra heater)."
+                 "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail listings; steam saunas are Indoor $6,499 and Outdoor $8,499 (+$459 if you have the extra heater)."
               }
             },
             {

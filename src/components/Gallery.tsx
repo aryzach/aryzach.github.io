@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const galleryItems = [
-  { type: "image", src: gallery3, alt: "Finnish dry sauna rental installed in SF home" },
+  { type: "image", src: gallery3, alt: "Steam sauna rental installed in SF home" },
   { type: "image", src: saunaTemp, alt: "Infrared sauna temperature display in San Francisco apartment" },
   { type: "image", src: lindseySauna, alt: "Customer using indoor home sauna in Marin" },
 ];
@@ -19,7 +19,7 @@ const Gallery = () => {
           Indoor & Outdoor Saunas
         </h2>
         <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Infrared and Finnish dry sauna options available.
+          Infrared and steam sauna options available.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

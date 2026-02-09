@@ -105,7 +105,7 @@ const Contact = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="infrared">Infrared Sauna</SelectItem>
-                    <SelectItem value="finnish">Finnish Dry Sauna</SelectItem>
+                    <SelectItem value="finnish">Steam Sauna</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -130,7 +130,7 @@ const Contact = () => {
                   Preferred Installation Date <span className="text-destructive">*</span>
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Dry saunas will be available in 3 months, and infrared saunas are available periodically. Pre-order a dry sauna today, or get on the waitlist for the next available infrared sauna.
+                  Steam saunas will be available in 3 months, and infrared saunas are available periodically. Pre-order a steam sauna today, or get on the waitlist for the next available infrared sauna.
                 </p>
                 <Popover>
                   <PopoverTrigger asChild>

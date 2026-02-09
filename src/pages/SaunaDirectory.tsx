@@ -10,7 +10,7 @@ const SaunaDirectory = () => {
     {
       name: "South End Rowing Club",
       location: "500 Jefferson St, SF 94109",
-      type: "Finnish Dry Sauna",
+      type: "Steam Sauna",
       temp: "~170°F",
       access: "$13 at the door (Tue/Thu/Sat)",
       slug: "/sauna-review/south-end-rowing-club",

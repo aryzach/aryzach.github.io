@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const faqs = [
   {
-    question: "What's the difference between infrared and Finnish dry saunas?",
-    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Finnish dry saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel.",
+    question: "What's the difference between infrared and steam saunas?",
+    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel.",
   },
   {
     question: "What power do they need? Will this overload my apartment?",
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "How long does it take to heat up?",
-    answer: "Infrared reaches ~150°F in ~30 minutes. Finnish dry saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose.",
+    answer: "Infrared reaches ~150°F in ~30 minutes. Steam saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose.",
   },
   {
     question: "Do I need to leave it running?",
@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     question: "Can I buy out the sauna later?",
-    answer: "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared sauna pricing follows retail (https://goldendesigninc.com/collections/maxxus-saunas). Our dry saunas are $8,499 (+$889 if you have the extra heater).",
+    answer: "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared sauna pricing follows retail (https://goldendesigninc.com/collections/maxxus-saunas). Our steam saunas are $8,499 (+$889 if you have the extra heater).",
   },
   {
     question: "Who handles maintenance?",

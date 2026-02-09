@@ -60,7 +60,7 @@ const SouthEndRowingClub = () => {
                 </div>
                 <div>
                   <span className="text-[hsl(var(--color-text))]/60">Type</span>
-                  <p className="text-[hsl(var(--color-text))] font-medium">Classic Finnish dry sauna</p>
+                  <p className="text-[hsl(var(--color-text))] font-medium">Classic steam sauna</p>
                 </div>
                 <div>
                   <span className="text-[hsl(var(--color-text))]/60">Amenities</span>
@@ -73,7 +73,7 @@ const SouthEndRowingClub = () => {
             <div className="mb-12">
               <img
                 src={southEndImage}
-                alt="South End Rowing Club Finnish dry sauna interior in San Francisco"
+                alt="South End Rowing Club steam sauna interior in San Francisco"
                 className="w-full rounded-lg"
               />
             </div>

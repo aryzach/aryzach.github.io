@@ -302,7 +302,7 @@ const SaunaRentalMarin = () => {
               </p>
 
               <p>
-                Once we're inside, setup takes about 45 minutes. We assemble the panels, install the heater (infrared or Finnish depending on your model), connect the electrical components, and test everything to make sure it's running correctly. You don't need to provide any tools or help with assembly—we handle it all. All you need is a cleared space and access to one standard 120V outlet on a 15-amp circuit. If you're not sure whether your outlet meets that requirement, we can help you check during the scheduling call.
+                Once we're inside, setup takes about 45 minutes. We assemble the panels, install the heater (infrared or steam depending on your model), connect the electrical components, and test everything to make sure it's running correctly. You don't need to provide any tools or help with assembly—we handle it all. All you need is a cleared space and access to one standard 120V outlet on a 15-amp circuit. If you're not sure whether your outlet meets that requirement, we can help you check during the scheduling call.
               </p>
 
               <p>
@@ -367,7 +367,7 @@ const SaunaRentalMarin = () => {
                   Is the sauna quiet enough for shared-wall condos?
                 </h3>
                 <p className="text-foreground leading-relaxed">
-                  Yes. Our saunas operate very quietly. The infrared models are virtually silent, and the Finnish dry saunas produce only a low hum from the heater fan—similar to a household fan. We've installed in many shared-wall buildings in Sausalito, Larkspur, and Corte Madera without any noise complaints.
+                  Yes. Our saunas operate very quietly. The infrared models are virtually silent, and the steam saunas produce only a low hum from the heater fan—similar to a household fan. We've installed in many shared-wall buildings in Sausalito, Larkspur, and Corte Madera without any noise complaints.
                 </p>
               </div>
 
@@ -412,7 +412,7 @@ const SaunaRentalMarin = () => {
                   How durable are these saunas in Marin's moisture?
                 </h3>
                 <p className="text-foreground leading-relaxed">
-                  Very durable. Both our infrared and Finnish models are built with moisture-resistant materials, and the outdoor versions feature weatherproof cedar exteriors designed specifically for coastal climates. Marin's fog and humidity are well within normal operating conditions, and many of our long-term customers are in foggy Mill Valley, Sausalito, and Tiburon locations without any issues.
+                  Very durable. Both our infrared and steam models are built with moisture-resistant materials, and the outdoor versions feature weatherproof cedar exteriors designed specifically for coastal climates. Marin's fog and humidity are well within normal operating conditions, and many of our long-term customers are in foggy Mill Valley, Sausalito, and Tiburon locations without any issues.
                 </p>
               </div>
             </div>
