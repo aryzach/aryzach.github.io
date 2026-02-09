@@ -11,13 +11,13 @@ const HowItWorksPage = () => {
     {
       number: "1",
       title: "Schedule Your Free Fit Check",
-      description: "Book a quick call so we can confirm your space, electrical setup, and recommend the right infrared or Finnish dry sauna for your home, no pressure.",
+      description: "Book a quick call so we can confirm your space, electrical setup, and recommend the right infrared or steam sauna for your home, no pressure.",
       showButton: true,
     },
     {
       number: "2",
       title: "Choose Your Sauna",
-      description: "Pick from infrared or Finnish dry heat, indoor or outdoor models, and a rental term that fits your goals. We'll help you choose if you're unsure.",
+      description: "Pick from infrared or steam heat, indoor or outdoor models, and a rental term that fits your goals. We'll help you choose if you're unsure.",
     },
     {
       number: "3",

@@ -17,7 +17,7 @@ const Media = () => {
     { type: "video", src: "/media/IMG_6591.mp4" },
     { type: "image", src: gallery1, alt: "Indoor infrared sauna installed in San Francisco apartment" },
     { type: "video", src: "/media/0804_3.mp4" },
-    { type: "image", src: gallery2, alt: "Finnish dry sauna rental in Bay Area home" },
+    { type: "image", src: gallery2, alt: "Steam sauna rental in Bay Area home" },
     { type: "video", src: "/media/0804_4.mp4" },
     { type: "video", src: "/media/gallery-video.mp4" },
     { type: "image", src: gallery4, alt: "Outdoor home sauna installation in Marin County" },

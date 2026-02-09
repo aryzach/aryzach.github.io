@@ -34,7 +34,7 @@ const FinnishSaunaSF = () => {
   const testimonials = [
     {
       name: "Suraj Srivats",
-      text: "Great quality saunas. Visited the shop and tried out a custom Finnish sauna made by the sauna man of sf (himself). High quality, short quantity, get your rental asap!"
+      text: "Great quality saunas. Visited the shop and tried out a custom steam sauna made by the sauna man of sf (himself). High quality, short quantity, get your rental asap!"
     },
     {
       name: "Skye Vanderlinden",
@@ -51,7 +51,7 @@ const FinnishSaunaSF = () => {
           <div className="container mx-auto px-4 max-w-5xl py-12">
             <img
               src={finnishHeaterImg}
-              alt="Finnish dry sauna heater with hot rocks in SF home rental"
+              alt="Steam sauna heater with hot rocks in SF home rental"
               className="w-full rounded-lg"
             />
           </div>
@@ -61,13 +61,13 @@ const FinnishSaunaSF = () => {
           <div className="container mx-auto px-4 max-w-4xl">
             <header className="mb-12">
               <h1 className="text-4xl md:text-5xl font-semibold mb-6 text-foreground leading-tight">
-                Finnish Sauna Rental in SF
+                Steam Sauna Rental in SF
               </h1>
             </header>
             
-            <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
-              <p>
-                For people who want the Real Heat — the traditional dry sauna experience — Finnish units deliver. Higher temps, that crisp dry air, and the sensation you can't fake with anything IR-adjacent.
+             <div className="prose prose-lg max-w-none space-y-6 text-muted-foreground">
+               <p>
+                 For people who want the Real Heat — the traditional steam sauna experience — these units deliver. Higher temps, that crisp dry air, and the sensation you can't fake with anything IR-adjacent.
               </p>
             </div>
 
@@ -76,7 +76,7 @@ const FinnishSaunaSF = () => {
                 Real Heat, Real Sweat
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Finnish saunas hit 170–195°F depending on the model. It's the gold standard for para-sympathetic down-regulation and actual heat shock protein activation.
+                Steam saunas hit 170–195°F depending on the model. It's the gold standard for para-sympathetic down-regulation and actual heat shock protein activation.
               </p>
             </section>
 
@@ -91,9 +91,9 @@ const FinnishSaunaSF = () => {
               <h2 className="text-3xl font-semibold mb-6 text-foreground">
                 Perfect for Homes & Apartments
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                People assume a Finnish sauna will nuke their drywall. Reality: no. With correct installation (we do it), zero issues. No moisture spillage, no steam, no landlord freakouts.
-              </p>
+               <p className="text-muted-foreground leading-relaxed">
+                 People assume a steam sauna will nuke their drywall. Reality: no. With correct installation (we do it), zero issues. No moisture spillage, no steam, no landlord freakouts.
+               </p>
             </section>
 
             <section className="mt-16">
@@ -107,14 +107,14 @@ const FinnishSaunaSF = () => {
 
             <section className="mt-16">
               <h2 className="text-3xl font-semibold mb-6 text-foreground">
-                Finnish vs Infrared
+                Infrared vs Steam
               </h2>
               <div className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed">
                   <strong className="text-foreground">Infrared</strong> = gentle, recovery-oriented
                 </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground">Finnish</strong> = high heat, ritual energy, closer to Nordic tradition
+                 <p className="text-muted-foreground leading-relaxed">
+                   <strong className="text-foreground">Steam</strong> = high heat, ritual energy, closer to Nordic tradition
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
                   Both work. You just choose your vibe.
@@ -176,7 +176,7 @@ const FinnishSaunaSF = () => {
 {
   "@context": "https://schema.org",
   "@type": "Service",
-  "serviceType": "Finnish Sauna Rental",
+  "serviceType": "Steam Sauna Rental",
   "provider": {
     "@type": "LocalBusiness",
     "name": "SF Sauna Rental",
@@ -189,7 +189,7 @@ const FinnishSaunaSF = () => {
       "addressCountry": "US"
     }
   },
-  "description": "High-heat Finnish sauna rentals in San Francisco. Real Nordic-style heat delivered and installed in your home.",
+  "description": "High-heat steam sauna rentals in San Francisco. Real Nordic-style heat delivered and installed in your home.",
   "areaServed": [
     "San Francisco",
     "Marin",
@@ -201,7 +201,7 @@ const FinnishSaunaSF = () => {
     "@type": "Offer",
     "priceCurrency": "USD",
     "price": "Varies",
-    "description": "Monthly Finnish sauna rental with delivery, installation, and ongoing support."
+    "description": "Monthly steam sauna rental with delivery, installation, and ongoing support."
   }
 }
 </script>

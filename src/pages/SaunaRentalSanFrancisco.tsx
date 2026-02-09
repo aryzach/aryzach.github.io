@@ -186,7 +186,7 @@ const SaunaRentalSanFrancisco = () => {
                 In the Inner Sunset, we transformed a small spare bedroom on the second floor of a classic SF row house. The narrow stairwell and vintage hardwood floors required extra care during transport, but our team used protective padding and carried each panel up carefully. The homeowner simply needed to ensure they had a standard 120V outlet on a dedicated 15A circuit—which they did. The entire setup took about 40 minutes, and now they have a personal sauna sanctuary just steps from their bedroom.
               </p>
               <p>
-                Out in the Richmond District, we installed an outdoor Finnish sauna on a backyard deck overlooking the fog rolling in from Ocean Beach. The customer already had the electrical outlet in place from their old patio heater, making it a straightforward install. We navigated the side gate with our dolly system, assembled the modular panels on-site, and they were enjoying their first session that same afternoon.
+                Out in the Richmond District, we installed an outdoor steam sauna on a backyard deck overlooking the fog rolling in from Ocean Beach. The customer already had the electrical outlet in place from their old patio heater, making it a straightforward install. We navigated the side gate with our dolly system, assembled the modular panels on-site, and they were enjoying their first session that same afternoon.
               </p>
               <p>
                 San Francisco's architecture presents unique challenges—older buildings, steep staircases, limited access points, and uneven backyards—but our modular design and experienced installation team handle them routinely. Whether you're in a fourth-floor walk-up in Russian Hill, a basement ADU in Glen Park, or a Marina flat with a shared entryway, we've likely done similar installs. Most setups take 30 to 50 minutes, and the only thing you need to prepare is ensuring you have a standard 120V outlet nearby.
@@ -332,7 +332,7 @@ const SaunaRentalSanFrancisco = () => {
                   How quiet is the sauna (for shared walls)?
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  Very quiet. Infrared saunas have no moving parts and produce virtually no noise. Finnish dry saunas have a small fan inside the heater, which creates a low hum similar to a refrigerator—barely noticeable and unlikely to disturb neighbors through shared walls.
+                  Very quiet. Infrared saunas have no moving parts and produce virtually no noise. Steam saunas have a small fan inside the heater, which creates a low hum similar to a refrigerator—barely noticeable and unlikely to disturb neighbors through shared walls.
                 </AccordionContent>
               </AccordionItem>
 

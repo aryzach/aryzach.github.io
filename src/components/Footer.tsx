@@ -88,7 +88,7 @@ const Footer = () => {
               <li><Link to="/sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Sauna San Francisco</Link></li>
               <li><Link to="/in-home-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">In-Home Sauna SF</Link></li>
               <li><Link to="/infrared-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Infrared Sauna SF</Link></li>
-              <li><Link to="/finnish-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Finnish Sauna SF</Link></li>
+              <li><Link to="/finnish-sauna-san-francisco" className="text-white/70 hover:text-white transition-colors">Steam Sauna SF</Link></li>
               <li><Link to="/sauna-rental-sf" className="text-white/70 hover:text-white transition-colors">Sauna Rental SF</Link></li>
             </ul>
           </div>

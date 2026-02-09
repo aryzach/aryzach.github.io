@@ -5,12 +5,12 @@ export const seoData = {
   // Main Pages
   home: {
     title: "SF Sauna Rental",
-    description: "Monthly sauna rentals for SF Bay Area homes and backyards. Dry and infrared saunas on 120V power with fast delivery, setup, and ongoing support.",
+    description: "Monthly sauna rentals for SF Bay Area homes and backyards. Steam and infrared saunas on 120V power with fast delivery, setup, and ongoing support.",
     canonical: "https://sfsaunarental.com/"
   },
   pricing: {
     title: "Sauna Rental Pricing | SF Sauna Rental",
-    description: "View monthly pricing for infrared and Finnish dry sauna rentals in San Francisco. Indoor and outdoor options starting at $169/mo. Free installation on 6+ month leases.",
+    description: "View monthly pricing for infrared and steam sauna rentals in San Francisco. Indoor and outdoor options starting at $169/mo. Free installation on 6+ month leases.",
     canonical: "https://sfsaunarental.com/pricing"
   },
   howItWorks: {
@@ -40,7 +40,7 @@ export const seoData = {
   },
   reserveYourSauna: {
     title: "Reserve Your Sauna | SF Sauna Rental",
-    description: "Check availability and reserve your home sauna rental in San Francisco. Choose infrared or Finnish dry, indoor or outdoor. Fast delivery and professional installation.",
+    description: "Check availability and reserve your home sauna rental in San Francisco. Choose infrared or steam, indoor or outdoor. Fast delivery and professional installation.",
     canonical: "https://sfsaunarental.com/reserve-your-sauna"
   },
   learnMore: {
@@ -52,12 +52,12 @@ export const seoData = {
   // SEO/Location Pages
   saunaSanFrancisco: {
     title: "Sauna Rental San Francisco | In-Home Sauna Delivery & Setup",
-    description: "In-home sauna rental in San Francisco. We deliver, install, and maintain infrared and Finnish saunas for apartments, homes, and backyards. Month-to-month plans available.",
+    description: "In-home sauna rental in San Francisco. We deliver, install, and maintain infrared and steam saunas for apartments, homes, and backyards. Month-to-month plans available.",
     canonical: "https://sfsaunarental.com/sauna-san-francisco"
   },
   inHomeSaunaSF: {
     title: "In-Home Sauna Rental SF | Daily Heat Therapy at Home",
-    description: "Rent a sauna for your San Francisco home. Infrared or Finnish dry saunas delivered and installed. Perfect for renters—no permanent modifications, 120V power.",
+    description: "Rent a sauna for your San Francisco home. Infrared or steam saunas delivered and installed. Perfect for renters—no permanent modifications, 120V power.",
     canonical: "https://sfsaunarental.com/in-home-sauna-san-francisco"
   },
   infraredSaunaSF: {
@@ -65,14 +65,14 @@ export const seoData = {
     description: "Rent an infrared sauna in San Francisco. Lower temps, faster warmup, perfect for apartments. 120V plug-in with delivery, installation, and maintenance included.",
     canonical: "https://sfsaunarental.com/infrared-sauna-san-francisco"
   },
-  finnishSaunaSF: {
-    title: "Finnish Sauna Rental San Francisco | Traditional Dry Heat",
-    description: "Rent a Finnish dry sauna in San Francisco. Traditional high-heat experience at 170-194°F. Professional delivery and installation for homes and backyards.",
-    canonical: "https://sfsaunarental.com/finnish-sauna-san-francisco"
+   finnishSaunaSF: {
+     title: "Steam Sauna Rental San Francisco | Traditional Heat",
+     description: "Rent a steam sauna in San Francisco. Traditional high-heat experience at 170-194°F. Professional delivery and installation for homes and backyards.",
+     canonical: "https://sfsaunarental.com/finnish-sauna-san-francisco"
   },
   saunaRentalSF: {
     title: "Sauna Rental SF | At-Home Sauna Delivery & Setup",
-    description: "SF's full-service sauna rental. We deliver infrared and Finnish saunas to your home, set them up, and provide ongoing support. Flexible monthly plans for renters.",
+    description: "SF's full-service sauna rental. We deliver infrared and steam saunas to your home, set them up, and provide ongoing support. Flexible monthly plans for renters.",
     canonical: "https://sfsaunarental.com/sauna-rental-sf"
   },
   saunaRentalSanFrancisco: {
@@ -114,7 +114,7 @@ export const seoData = {
   },
   southEndRowingClub: {
     title: "South End Rowing Club Sauna Review | 8.5/10 Rating",
-    description: "South End Rowing Club sauna review. Classic Finnish dry sauna at 170°F with bay access. $13 drop-in on Tue/Thu/Sat. A culturally rich SF sauna experience.",
+    description: "South End Rowing Club sauna review. Classic steam sauna at 170°F with bay access. $13 drop-in on Tue/Thu/Sat. A culturally rich SF sauna experience.",
     canonical: "https://sfsaunarental.com/sauna-review/south-end-rowing-club"
   },
   fitnessSFFillmore: {
@@ -148,12 +148,12 @@ export const seoData = {
   },
   learnHub: {
     title: "Learn About Home Saunas | SF Sauna Rental",
-    description: "Expert guides on infrared vs Finnish saunas, electricity costs, and landlord-friendly wellness solutions. Tips for getting the most from your home sauna.",
+    description: "Expert guides on infrared vs steam saunas, electricity costs, and landlord-friendly wellness solutions. Tips for getting the most from your home sauna.",
     canonical: "https://sfsaunarental.com/learn"
   },
   media: {
     title: "Media Gallery | SF Sauna Rental",
-    description: "See our saunas in action across San Francisco Bay Area homes. Photos and videos of infrared and Finnish sauna installations.",
+    description: "See our saunas in action across San Francisco Bay Area homes. Photos and videos of infrared and steam sauna installations.",
     canonical: "https://sfsaunarental.com/media"
   },
 

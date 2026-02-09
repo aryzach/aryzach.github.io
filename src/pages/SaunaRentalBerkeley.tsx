@@ -50,7 +50,7 @@ const faqs = [
   },
   {
     question: "Will a sauna overload my 120V circuit?",
-    answer: "No. Our units are designed to run safely on standard household circuits. Infrared saunas draw about 1,500 watts, while Finnish dry saunas use around 1,800 watts—well within the capacity of a typical 15-amp circuit. Just avoid running other high-draw appliances on the same circuit during use."
+    answer: "No. Our units are designed to run safely on standard household circuits. Infrared saunas draw about 1,500 watts, while steam saunas use around 1,800 watts—well within the capacity of a typical 15-amp circuit. Just avoid running other high-draw appliances on the same circuit during use."
   },
   {
     question: "Can you install in Berkeley ADUs, backyard studios, or in-law units?",
@@ -74,7 +74,7 @@ const faqs = [
   },
   {
     question: "Is the sauna quiet enough for shared-wall units?",
-    answer: "Yes. Infrared saunas are virtually silent. Finnish dry saunas have a small heater fan, but it's quieter than a typical bathroom exhaust fan. Neighbors won't hear it through walls, making it ideal for Berkeley apartments, duplexes, and multiplexes."
+    answer: "Yes. Infrared saunas are virtually silent. Steam saunas have a small heater fan, but it's quieter than a typical bathroom exhaust fan. Neighbors won't hear it through walls, making it ideal for Berkeley apartments, duplexes, and multiplexes."
   },
   {
     question: "How do you handle parking challenges in busy areas?",
@@ -228,7 +228,7 @@ const SaunaRentalBerkeley = () => {
                 Setup typically takes 30–50 minutes. We arrive with all the tools, assemble the panels on-site, plug the sauna into a standard 120V outlet (same outlet your microwave or hairdryer uses—no electrician required), test the heat, and walk you through the controls. That's it. No construction, no mess, no waiting weeks for permits or contractor schedules.
               </p>
               <p>
-                Most customers just need one thing ready: a standard 120V outlet on a dedicated or lightly-used 15-amp circuit. Infrared saunas draw about 1,500 watts; Finnish dry saunas use around 1,800 watts—both well within the capacity of a typical household circuit. We'll confirm your electrical setup during scheduling, and if anything needs adjustment, it's usually minor.
+                Most customers just need one thing ready: a standard 120V outlet on a dedicated or lightly-used 15-amp circuit. Infrared saunas draw about 1,500 watts; steam saunas use around 1,800 watts—both well within the capacity of a typical household circuit. We'll confirm your electrical setup during scheduling, and if anything needs adjustment, it's usually minor.
               </p>
               <p>
                 Berkeley-specific delivery considerations? We handle them daily. Hills, one-way streets, limited street parking, tight driveways, steep outdoor steps, narrow side gates, basement entries—it's all part of the routine. Our crew brings dollies, plans the route ahead of time, and works efficiently to get the sauna exactly where you want it.

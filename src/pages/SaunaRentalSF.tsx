@@ -114,7 +114,7 @@ const SaunaRentalSF = () => {
 
             <section className="mt-16">
               <h2 className="text-3xl font-semibold mb-6 text-foreground">
-                Infrared or Finnish — Your Choice
+                Infrared or Steam — Your Choice
               </h2>
               <p className="text-muted-foreground leading-relaxed">
                 You choose the heat flavor. Both run on standard 120V. Both fit into SF apartments shockingly well.
@@ -196,7 +196,7 @@ const SaunaRentalSF = () => {
   "url": "https://sfsaunarental.com/sauna-rental-sf/",
   "email": "sfsaunarental@gmail.com",
   "image": "https://sfsaunarental.com/YOUR-HERO.jpg",
-  "description": "San Francisco's #1 sauna rental service. We deliver and install infrared and Finnish saunas in apartments, homes, and backyards.",
+  "description": "San Francisco's #1 sauna rental service. We deliver and install infrared and steam saunas in apartments, homes, and backyards.",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",

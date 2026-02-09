@@ -84,7 +84,7 @@ const InHomeSaunaSF = () => {
     },
     {
       q: "How fast do they heat?",
-      a: "Infrared: ~20–30 min. Finnish: ~30–60 min depending on model."
+      a: "Infrared: ~20–30 min. Steam: ~30–60 min depending on model."
     },
     {
       q: "Can I turn it on in the morning and leave it running?",
@@ -147,7 +147,7 @@ const InHomeSaunaSF = () => {
                 Consistency is the whole ballgame. A 20–30 minute session you can do before bed or right after coffee is 10x more sustainable than scheduling spa trips or commuting to a gym. Having the unit in your home means the friction is basically zero. Flip it on, let it heat while you make tea, step in, step out, done.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                We rent both infrared and Finnish dry saunas, each with indoor and outdoor options depending on your space. No noisy fans, no sketchy Amazon saunas. Legit units. Legit heat.
+                We rent both infrared and steam saunas, each with indoor and outdoor options depending on your space. No noisy fans, no sketchy Amazon saunas. Legit units. Legit heat.
               </p>
             </section>
 
