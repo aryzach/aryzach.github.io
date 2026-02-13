@@ -54,7 +54,7 @@ const Hero = () => {
           A personal sauna — in your home this week.
         </h1>
         <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[14px] font-normal mb-8 -mt-16 order-1">
-          <a href="https://share.google/bqGJ8MiXfwNgvigwm" target="_blank" rel="noopener noreferrer" className="hover:underline">Loved by 19+ San Franciscans</a>
+          <a href="https://share.google/bqGJ8MiXfwNgvigwm" target="_blank" rel="noopener noreferrer" className="hover:underline"><a href="https://share.google/bqGJ8MiXfwNgvigwm" target="_blank" rel="noopener noreferrer" className="hover:underline">Loved by 22+ San Franciscans</a></a>
           <div className="flex">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={14} />
