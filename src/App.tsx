@@ -69,21 +69,24 @@ const ScrollToHash = () => {
     const hash = location.hash;
     if (!hash) return;
 
-    const timeout = setTimeout(() => {
-      const el = document.querySelector(hash);
-      if (el) {
-        const headerOffset = 80;
-        const elementPosition = el.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
-      }
-    }, 200);
+    const delays = [200, 1000, 2000];
+    const timeouts = delays.map((delay) =>
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) {
+          const headerOffset = 80;
+          const elementPosition = el.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-    return () => clearTimeout(timeout);
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, delay)
+    );
+
+    return () => timeouts.forEach(clearTimeout);
   }, [location.pathname, location.hash]);
 
   return null;
