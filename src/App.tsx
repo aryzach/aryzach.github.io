@@ -69,7 +69,7 @@ const ScrollToHash = () => {
     const hash = location.hash;
     if (!hash) return;
 
-    const delays = [200, 1000, 2000];
+    const delays = [200, 1000, 2000, 3500];
     const timeouts = delays.map((delay) =>
       setTimeout(() => {
         const el = document.querySelector(hash);
