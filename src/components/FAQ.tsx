@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const faqs = [
   {
     question: "What's the difference between infrared and steam saunas?",
-    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel.",
+    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 160–194°F for a more classic feel.",
   },
   {
     question: "What power do they need? Will this overload my apartment?",
@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "How long does it take to heat up?",
-    answer: "Infrared reaches ~150°F in ~30 minutes. Steam saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose.",
+    answer: "Infrared reaches ~150°F in ~30-40 minutes. Steam saunas hit 160–194°F in 20–60 minutes depending on the heaters you choose.",
   },
   {
     question: "Do I need to leave it running?",
