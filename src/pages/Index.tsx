@@ -154,7 +154,7 @@ const Index = () => {
                "name": "What's the difference between infrared and steam saunas?",
                "acceptedAnswer": {
                  "@type": "Answer",
-                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 170–200°F for a more classic feel."
+                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 160–194°F for a more classic feel."
               }
             },
             {
@@ -202,7 +202,7 @@ const Index = () => {
               "name": "How long does it take to heat up?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Infrared reaches ~150°F in ~30 minutes. Steam saunas hit 170–194°F in 20–60 minutes depending on the heaters you choose."
+                "text": "Infrared reaches ~150°F in ~30-40 minutes. Steam saunas hit 160–194°F in 20–60 minutes depending on the heaters you choose."
               }
             },
             {
