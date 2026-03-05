@@ -7,12 +7,10 @@ import { Check, Wrench, Zap, ArrowDownToLine, BookOpen } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
 
-const heroImage = "/images/installation-IMG_9647.HEIC";
-const galleryImage1 = "/images/installation-IMG_7239.HEIC";
-const galleryImage2 = "/images/installation-IMG_9650.HEIC";
-const galleryImage3 = "/images/installation-IMG_9652.HEIC";
-const galleryImage4 = "/images/installation-IMG_9645.HEIC";
-const galleryImage5 = "/images/installation-IMG_7238.HEIC";
+const heroImage = "/images/installation-IMG_9652.png";
+const galleryImage1 = "/images/installation-IMG_7239.png";
+const galleryImage2 = "/images/installation-IMG_9650.png";
+const galleryImage3 = "/images/installation-IMG_9647.png";
 
 const PrefabSaunaInstallation = () => {
   useSEO(seoData.prefabSaunaInstallation);
@@ -74,12 +72,10 @@ const PrefabSaunaInstallation = () => {
   ];
 
   const galleryImages = [
-    { src: galleryImage1, alt: "Prefab sauna installation in Bay Area home", caption: "Indoor prefab sauna install" },
-    { src: heroImage, alt: "Professional sauna assembly in San Francisco", caption: "Sauna assembly in progress" },
-    { src: galleryImage2, alt: "Sauna electrical hookup in Bay Area residence", caption: "Electrical hookup and wiring" },
-    { src: galleryImage3, alt: "Completed sauna installation in San Francisco home", caption: "Completed installation" },
-    { src: galleryImage4, alt: "Infrared sauna setup in Bay Area apartment", caption: "Infrared sauna setup" },
-    { src: galleryImage5, alt: "Sauna placement and leveling during Bay Area install", caption: "Placement and leveling" },
+    { src: galleryImage1, alt: "Sauna roof installation in San Francisco backyard", caption: "Roof assembly in progress" },
+    { src: galleryImage2, alt: "Prefab sauna being assembled on Bay Area patio", caption: "Outdoor sauna assembly" },
+    { src: galleryImage3, alt: "Interior cedar wall detail of sauna installation", caption: "Interior cedar finishing" },
+    { src: heroImage, alt: "Completed custom sauna installation in San Francisco home", caption: "Completed installation" },
   ];
 
   return (
