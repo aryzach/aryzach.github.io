@@ -1,0 +1,210 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Check, Wrench, Zap, ArrowDownToLine, BookOpen } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
+import { seoData } from "@/lib/seoData";
+
+const heroImage = "/images/installation-IMG_9647.HEIC";
+const galleryImage1 = "/images/installation-IMG_7239.HEIC";
+const galleryImage2 = "/images/installation-IMG_9650.HEIC";
+const galleryImage3 = "/images/installation-IMG_9652.HEIC";
+const galleryImage4 = "/images/installation-IMG_9645.HEIC";
+const galleryImage5 = "/images/installation-IMG_7238.HEIC";
+
+const PrefabSaunaInstallation = () => {
+  useSEO(seoData.prefabSaunaInstallation);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "SF Sauna",
+      "description": "Professional sauna installation services in the San Francisco Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas.",
+      "url": "https://sfsaunarental.com",
+      "telephone": "+1-415-489-0261",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1618 McAllister St",
+        "addressLocality": "San Francisco",
+        "addressRegion": "CA",
+        "postalCode": "94115",
+        "addressCountry": "US"
+      },
+      "areaServed": [
+        "San Francisco", "Oakland", "Berkeley", "Marin County",
+        "Palo Alto", "Mountain View", "San Mateo County"
+      ],
+      "serviceType": "Sauna Installation Service"
+    });
+    document.head.appendChild(script);
+    return () => {
+      if (document.head.contains(script)) document.head.removeChild(script);
+    };
+  }, []);
+
+  const services = [
+    {
+      title: "Prefab Indoor Saunas",
+      description: "We assemble modular, pre-built sauna kits inside your home — bedrooms, garages, basements, or spare rooms."
+    },
+    {
+      title: "Barrel Saunas",
+      description: "Full assembly and placement of barrel saunas for backyards, patios, and decks across the Bay Area."
+    },
+    {
+      title: "Infrared Saunas",
+      description: "Professional setup and wiring for infrared sauna cabins, including 120V and 240V configurations."
+    },
+    {
+      title: "Custom / Cut-and-Assemble Saunas",
+      description: "Have a custom kit or cut-and-assemble sauna? We handle the build-out, wiring, and finishing."
+    }
+  ];
+
+  const includedSteps = [
+    { icon: Wrench, title: "Full unit assembly", description: "We build your sauna on-site from panels, kits, or custom components." },
+    { icon: Zap, title: "Electrical hookup and 240V wiring", description: "We connect your sauna to the appropriate circuit and coordinate 240V wiring when needed." },
+    { icon: ArrowDownToLine, title: "Placement and leveling", description: "We position your sauna precisely and ensure it's level and stable on any surface." },
+    { icon: BookOpen, title: "Post-install walkthrough", description: "We walk you through operation, maintenance, and best practices before we leave." }
+  ];
+
+  const galleryImages = [
+    { src: galleryImage1, alt: "Prefab sauna installation in Bay Area home", caption: "Indoor prefab sauna install" },
+    { src: heroImage, alt: "Professional sauna assembly in San Francisco", caption: "Sauna assembly in progress" },
+    { src: galleryImage2, alt: "Sauna electrical hookup in Bay Area residence", caption: "Electrical hookup and wiring" },
+    { src: galleryImage3, alt: "Completed sauna installation in San Francisco home", caption: "Completed installation" },
+    { src: galleryImage4, alt: "Infrared sauna setup in Bay Area apartment", caption: "Infrared sauna setup" },
+    { src: galleryImage5, alt: "Sauna placement and leveling during Bay Area install", caption: "Placement and leveling" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-semibold mb-6 text-heading tracking-tight leading-tight">
+              Professional Sauna Installation in the Bay Area
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl">
+              We handle the full installation — assembly, electrical hookup, and setup — so your sauna is ready to use from day one.
+            </p>
+            <Button asChild size="lg" className="text-lg px-8">
+              <Link to="/pre-fab-sauna-installation-form">Request a Free Quote</Link>
+            </Button>
+          </div>
+
+          <div className="max-w-5xl mx-auto mt-12">
+            <img
+              src={heroImage}
+              alt="Professional sauna installation in San Francisco Bay Area home"
+              className="w-full rounded-lg shadow-lg"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-16 md:py-24 bg-cedar-section">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-semibold mb-10 text-heading">
+              What We Install
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {services.map((service, index) => (
+                <div key={index} className="bg-card rounded-lg border border-border p-6 md:p-8">
+                  <h3 className="text-xl font-heading font-semibold mb-3 text-heading">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What's Included Section */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-semibold mb-10 text-heading">
+              What's Included
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              {includedSteps.map((step, index) => (
+                <div key={index} className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <step.icon className="text-accent" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-heading font-semibold mb-1 text-heading">
+                      {step.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-10 text-muted-foreground text-center italic">
+              Every project is different. Contact us for a free quote.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Photo Gallery */}
+      <section className="py-16 md:py-24 bg-cedar-section">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-heading font-semibold mb-10 text-heading">
+              Recent Installations
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {galleryImages.map((image, index) => (
+                <div key={index}>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-full h-64 object-cover rounded-lg shadow-lg mb-3"
+                  />
+                  <p className="text-sm text-muted-foreground text-center">{image.caption}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer CTA Strip */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-heading font-semibold mb-6 text-heading">
+              Ready to get your sauna installed?
+            </h2>
+            <Button asChild size="lg" className="text-lg px-8">
+              <Link to="/pre-fab-sauna-installation-form">Request a Free Quote</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default PrefabSaunaInstallation;

@@ -163,4 +163,16 @@ export const seoData = {
     description: "Rent an indoor infrared sauna for your San Francisco home. 150°F deep heat, 120V plug-in, 45-minute setup. Monthly plans from $199/mo with free installation.",
     canonical: "https://sfsaunarental.com/indoor-infrared-sauna-rental"
   },
+
+  // Installation Pages
+  prefabSaunaInstallation: {
+    title: "Prefab Sauna Installation Services | Bay Area | SF Sauna",
+    description: "SF Sauna offers professional sauna installation across San Francisco and the Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas. Request a free quote.",
+    canonical: "https://sfsaunarental.com/pre-fab-sauna-installation"
+  },
+  prefabSaunaInstallationForm: {
+    title: "Request a Free Sauna Installation Quote | SF Sauna",
+    description: "Request a free quote for professional sauna installation in San Francisco and the Bay Area. Prefab, barrel, infrared, and custom sauna assembly and wiring.",
+    canonical: "https://sfsaunarental.com/pre-fab-sauna-installation-form"
+  },
 };
