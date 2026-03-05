@@ -16,32 +16,142 @@ const PrefabSaunaInstallation = () => {
   useSEO(seoData.prefabSaunaInstallation);
 
   useEffect(() => {
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
+          "@id": "https://www.sfsaunarental.com/#business",
+          "name": "SF Sauna",
+          "url": "https://www.sfsaunarental.com/",
+          "image": "https://www.sfsaunarental.com/images/installation-IMG_9652.png",
+          "telephone": "+1-415-489-0261",
+          "priceRange": "$$",
+          "description": "Professional sauna installation services in the San Francisco Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas.",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "1618 McAllister St",
+            "addressLocality": "San Francisco",
+            "addressRegion": "CA",
+            "postalCode": "94115",
+            "addressCountry": "US"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 37.7749,
+            "longitude": -122.4389
+          },
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" },
+            { "@type": "City", "name": "Berkeley" },
+            { "@type": "AdministrativeArea", "name": "Marin County" },
+            { "@type": "City", "name": "Palo Alto" },
+            { "@type": "City", "name": "Mountain View" },
+            { "@type": "AdministrativeArea", "name": "San Mateo County" }
+          ],
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "09:00",
+            "closes": "18:00"
+          },
+          "sameAs": ["https://sfsaunarental.com/"]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://www.sfsaunarental.com/pre-fab-sauna-installation/#service",
+          "name": "Professional Sauna Installation",
+          "serviceType": "Sauna Installation Service",
+          "provider": { "@id": "https://www.sfsaunarental.com/#business" },
+          "description": "Full-service sauna installation including assembly, electrical hookup, 240V wiring, placement, leveling, and post-install walkthrough for prefab, barrel, infrared, and custom saunas.",
+          "areaServed": [
+            { "@type": "City", "name": "San Francisco" },
+            { "@type": "City", "name": "Oakland" },
+            { "@type": "City", "name": "Berkeley" },
+            { "@type": "AdministrativeArea", "name": "Marin County" },
+            { "@type": "City", "name": "Palo Alto" },
+            { "@type": "City", "name": "Mountain View" },
+            { "@type": "AdministrativeArea", "name": "San Mateo County" }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Sauna Installation Services",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Prefab Indoor Sauna Installation" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Barrel Sauna Assembly" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Infrared Sauna Installation" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom Sauna Build-Out" } }
+            ]
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.sfsaunarental.com/pre-fab-sauna-installation/#webpage",
+          "url": "https://www.sfsaunarental.com/pre-fab-sauna-installation",
+          "name": "Prefab Sauna Installation Services | Bay Area | SF Sauna",
+          "description": "SF Sauna offers professional sauna installation across San Francisco and the Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas.",
+          "isPartOf": { "@id": "https://www.sfsaunarental.com/#website" },
+          "about": { "@id": "https://www.sfsaunarental.com/pre-fab-sauna-installation/#service" },
+          "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "https://www.sfsaunarental.com/images/installation-IMG_9652.png"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.sfsaunarental.com/pre-fab-sauna-installation/#breadcrumb",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.sfsaunarental.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Sauna Installation", "item": "https://www.sfsaunarental.com/pre-fab-sauna-installation" }
+          ]
+        },
+        {
+          "@type": "ImageGallery",
+          "@id": "https://www.sfsaunarental.com/pre-fab-sauna-installation/#gallery",
+          "name": "Recent Sauna Installations",
+          "image": [
+            {
+              "@type": "ImageObject",
+              "url": "https://www.sfsaunarental.com/images/installation-IMG_9652.png",
+              "name": "Completed custom sauna installation in San Francisco home",
+              "caption": "Completed installation"
+            },
+            {
+              "@type": "ImageObject",
+              "url": "https://www.sfsaunarental.com/images/installation-IMG_7239.png",
+              "name": "Sauna roof installation in San Francisco backyard",
+              "caption": "Roof assembly in progress"
+            },
+            {
+              "@type": "ImageObject",
+              "url": "https://www.sfsaunarental.com/images/installation-IMG_9650.png",
+              "name": "Prefab sauna being assembled on Bay Area patio",
+              "caption": "Outdoor sauna assembly"
+            },
+            {
+              "@type": "ImageObject",
+              "url": "https://www.sfsaunarental.com/images/installation-IMG_9647.png",
+              "name": "Interior cedar wall detail of sauna installation",
+              "caption": "Interior cedar finishing"
+            }
+          ]
+        }
+      ]
+    };
+
     const script = document.createElement("script");
     script.type = "application/ld+json";
-    script.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "SF Sauna",
-      "description": "Professional sauna installation services in the San Francisco Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas.",
-      "url": "https://sfsaunarental.com",
-      "telephone": "+1-415-489-0261",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "1618 McAllister St",
-        "addressLocality": "San Francisco",
-        "addressRegion": "CA",
-        "postalCode": "94115",
-        "addressCountry": "US"
-      },
-      "areaServed": [
-        "San Francisco", "Oakland", "Berkeley", "Marin County",
-        "Palo Alto", "Mountain View", "San Mateo County"
-      ],
-      "serviceType": "Sauna Installation Service"
-    });
+    script.text = JSON.stringify(jsonLd);
+    script.id = "installation-jsonld";
+
+    const existing = document.getElementById("installation-jsonld");
+    if (existing) existing.remove();
+
     document.head.appendChild(script);
     return () => {
-      if (document.head.contains(script)) document.head.removeChild(script);
+      const el = document.getElementById("installation-jsonld");
+      if (el) el.remove();
     };
   }, []);
 
