@@ -17,6 +17,7 @@ const Contact = () => {
   useSEO(seoData.reserveYourSauna);
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
+  const [region, setRegion] = useState("");
   const [date, setDate] = useState<Date>();
 
   return (
@@ -41,6 +42,7 @@ const Contact = () => {
               <input type="hidden" name="redirect" value="https://sfsaunarental.com/reservation-payment-or-schedule-call" />
               <input type="hidden" name="sauna_type" value={saunaType} />
               <input type="hidden" name="location" value={location} />
+              <input type="hidden" name="region" value={region} />
               <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
               
               <div className="space-y-2">
@@ -93,6 +95,21 @@ const Contact = () => {
                   required
                   placeholder="San Francisco"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="region">
+                  Location <span className="text-destructive">*</span>
+                </Label>
+                <Select value={region} onValueChange={setRegion} required>
+                  <SelectTrigger id="region">
+                    <SelectValue placeholder="Select your area" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sf-bay-area">San Francisco Bay Area</SelectItem>
+                    <SelectItem value="los-angeles">Los Angeles</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -162,7 +179,7 @@ const Contact = () => {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={!saunaType || !location || !date}
+                disabled={!saunaType || !location || !region || !date}
               >
                 Reserve Now
               </Button>
