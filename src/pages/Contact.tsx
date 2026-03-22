@@ -179,7 +179,7 @@ const Contact = () => {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={!saunaType || !location || !date}
+                disabled={!saunaType || !location || !region || !date}
               >
                 Reserve Now
               </Button>
