@@ -42,6 +42,7 @@ const Contact = () => {
               <input type="hidden" name="redirect" value="https://sfsaunarental.com/reservation-payment-or-schedule-call" />
               <input type="hidden" name="sauna_type" value={saunaType} />
               <input type="hidden" name="location" value={location} />
+              <input type="hidden" name="region" value={region} />
               <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
               
               <div className="space-y-2">
