@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     question: "Can I buy out the sauna later?",
-    answer: "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared sauna pricing follows retail (https://goldendesigninc.com/collections/maxxus-saunas). Our steam saunas are $8,499 (+$889 if you have the extra heater).",
+    answer: "Yes.\n\nAfter your lease term, you can purchase the unit with 30% of your rental payments credited.\n\nHere is our pricing structure (tax exclusive):\n• Indoor infrared sauna: $2,399\n• Outdoor infrared sauna: $2,978\n• Indoor steam sauna: $7,499\n• Outdoor steam sauna: $8,299",
   },
   {
     question: "Who handles maintenance?",
