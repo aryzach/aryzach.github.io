@@ -98,6 +98,21 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="region">
+                  Location <span className="text-destructive">*</span>
+                </Label>
+                <Select value={region} onValueChange={setRegion} required>
+                  <SelectTrigger id="region">
+                    <SelectValue placeholder="Select your area" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sf-bay-area">San Francisco Bay Area</SelectItem>
+                    <SelectItem value="los-angeles">Los Angeles</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="sauna-type">
                   Sauna Type <span className="text-destructive">*</span>
                 </Label>
