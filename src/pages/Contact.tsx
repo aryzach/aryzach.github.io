@@ -17,6 +17,7 @@ const Contact = () => {
   useSEO(seoData.reserveYourSauna);
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
+  const [region, setRegion] = useState("");
   const [date, setDate] = useState<Date>();
 
   return (
