@@ -173,7 +173,7 @@ const Pricing = () => {
                                 <div>
                                   <span className="text-xs md:text-sm font-semibold text-card-foreground">
                                     {plan.duration === "1" || plan.duration === "3" 
-                                      ? "$150" 
+                                      ? (sauna.type === "Steam Sauna" ? "$250" : "$150")
                                       : "Free Installation"}
                                   </span>
                                 </div>
