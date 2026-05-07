@@ -47,8 +47,8 @@ const saunaData = [
         availability: "Get the next available and reserve an infrared sauna today",
         pricing: [
           { duration: "1", price: "$549", priceDetail: "/mo" },
-          { duration: "3", price: "$349", priceDetail: "/mo" },
-          { duration: "6", price: "$249", priceDetail: "/mo" },
+          { duration: "3", price: "$399", priceDetail: "/mo" },
+          { duration: "6", price: "$299", priceDetail: "/mo" },
           { duration: "12", price: "$199", priceDetail: "/mo" },
         ],
       },
