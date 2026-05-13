@@ -19,6 +19,12 @@ const saunaData = [
       {
         name: "Indoor Steam",
         availability: "Next Available in July — Reserve Yours Now",
+        pricing: [
+          { duration: "1", price: "$649", priceDetail: "/mo" },
+          { duration: "3", price: "$499", priceDetail: "/mo" },
+          { duration: "6", price: "$399", priceDetail: "/mo" },
+          { duration: "12", price: "$299", priceDetail: "/mo" },
+        ],
       },
       {
         name: "Outdoor Steam",
