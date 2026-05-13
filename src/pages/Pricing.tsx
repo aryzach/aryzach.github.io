@@ -18,21 +18,15 @@ const saunaData = [
     variants: [
       {
         name: "Indoor Steam",
-        availability: "Early May Install — 7 of 20 Units Available — Reserve Yours Now",
-        pricing: [
-          { duration: "1", price: "$649", priceDetail: "/mo" },
-          { duration: "3", price: "$499", priceDetail: "/mo" },
-          { duration: "6", price: "$399", priceDetail: "/mo" },
-          { duration: "12", price: "$299", priceDetail: "/mo" },
-        ],
+        availability: "Next Available in July — Reserve Yours Now",
       },
       {
         name: "Outdoor Steam",
-        availability: "Early May Install — 7 of 20 Units Available — Reserve Yours Now",
+        availability: "Early June Install — 2 of 14 Units Available — Reserve Yours Now",
         pricing: [
           { duration: "1", price: "$699", priceDetail: "/mo" },
-          { duration: "3", price: "$549", priceDetail: "/mo" },
-          { duration: "6", price: "$449", priceDetail: "/mo" },
+          { duration: "3", price: "$599", priceDetail: "/mo" },
+          { duration: "6", price: "$499", priceDetail: "/mo" },
           { duration: "12", price: "$349", priceDetail: "/mo" },
         ],
       },
