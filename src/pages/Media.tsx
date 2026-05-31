@@ -13,7 +13,7 @@ const Media = () => {
   const mediaItems = [
     { type: "image", src: "/media/upload-10.jpeg", alt: "Outdoor steam sauna installation beside SF home with cedar siding" },
     { type: "image", src: "/media/upload-11.jpeg", alt: "SF Sauna branded outdoor steam sauna in San Francisco side yard" },
-    { type: "image", src: "/media/upload-12.jpeg", alt: "Lush ivy-covered garden entrance at Bay Area sauna rental location" },
+    { type: "video", src: "/media/0531_1.mp4" },
     { type: "image", src: "/media/upload-13.jpeg", alt: "Sliding glass door entry to backyard with outdoor sauna in San Francisco" },
     { type: "image", src: "/media/upload-14.jpeg", alt: "Sunlit San Francisco backyard with hot tub and outdoor sauna setup" },
     { type: "image", src: "/media/upload-15.jpeg", alt: "Outdoor steam sauna in Marin backyard surrounded by Japanese maple" },
