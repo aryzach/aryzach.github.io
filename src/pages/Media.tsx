@@ -11,6 +11,15 @@ import { seoData } from "@/lib/seoData";
 const Media = () => {
   useSEO(seoData.media);
   const mediaItems = [
+    { type: "image", src: "/media/upload-1.jpeg", alt: "Outdoor steam sauna installed beside San Francisco home" },
+    { type: "image", src: "/media/upload-2.jpeg", alt: "Interior cedar walls of outdoor steam sauna in Bay Area backyard" },
+    { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor steam sauna rental in San Francisco garden" },
+    { type: "image", src: "/media/upload-4.jpeg", alt: "Outdoor steam sauna with copper roof in SF backyard" },
+    { type: "image", src: "/media/upload-5.jpeg", alt: "SF Sauna branded outdoor steam sauna installed on patio" },
+    { type: "image", src: "/media/upload-6.jpeg", alt: "Close-up of cedar outdoor sauna door in San Francisco" },
+    { type: "image", src: "/media/upload-7.jpeg", alt: "SF Sauna team installing outdoor steam sauna on rooftop" },
+    { type: "image", src: "/media/upload-8.jpeg", alt: "Outdoor steam sauna installed in lush Bay Area backyard" },
+    { type: "image", src: "/media/upload-9.jpeg", alt: "Rooftop outdoor steam sauna with San Francisco skyline view" },
     { type: "video", src: "/media/0804_1.mp4" },
     { type: "video", src: "/media/IMG_6475_2.mp4" },
     { type: "video", src: "/media/0804.mp4" },
