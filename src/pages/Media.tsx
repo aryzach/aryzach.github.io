@@ -23,7 +23,7 @@ const Media = () => {
     { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor steam sauna rental in San Francisco garden" },
     { type: "image", src: "/media/upload-4.jpeg", alt: "Outdoor steam sauna with copper roof in SF backyard" },
     { type: "image", src: "/media/upload-5.jpeg", alt: "SF Sauna branded outdoor steam sauna installed on patio" },
-    { type: "image", src: "/media/upload-6.jpeg", alt: "Close-up of cedar outdoor sauna door in San Francisco" },
+    { type: "video", src: "/media/billwalkthrough.mp4" },
     { type: "video", src: "/media/dylantimelapse.mp4" },
     { type: "image", src: "/media/upload-8.jpeg", alt: "Outdoor steam sauna installed in lush Bay Area backyard" },
     { type: "image", src: "/media/upload-9.jpeg", alt: "Rooftop outdoor steam sauna with San Francisco skyline view" },
