@@ -11,6 +11,10 @@ import { seoData } from "@/lib/seoData";
 const Media = () => {
   useSEO(seoData.media);
   const mediaItems = [
+    { type: "video", src: "/media/billwalkthrough.mp4" },
+    { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor steam sauna rental in San Francisco garden" },
+    { type: "image", src: "/media/upload-4.jpeg", alt: "Outdoor steam sauna with copper roof in SF backyard" },
+    { type: "image", src: "/media/upload-2.jpeg", alt: "Interior cedar walls of outdoor steam sauna in Bay Area backyard" },
     { type: "image", src: "/media/upload-10.jpeg", alt: "Outdoor steam sauna installation beside SF home with cedar siding" },
     { type: "image", src: "/media/upload-11.jpeg", alt: "SF Sauna branded outdoor steam sauna in San Francisco side yard" },
     { type: "video", src: "/media/0531_1.mp4" },
@@ -18,11 +22,7 @@ const Media = () => {
     { type: "image", src: "/media/upload-15.jpeg", alt: "Outdoor steam sauna rental in San Francisco backyard with garden patio" },
     { type: "image", src: "/media/upload-16.jpeg", alt: "Outdoor steam sauna with red roof on Bay Area deck with treetop views" },
     { type: "image", src: "/media/upload-1.jpeg", alt: "Outdoor steam sauna installed beside San Francisco home" },
-    { type: "image", src: "/media/upload-2.jpeg", alt: "Interior cedar walls of outdoor steam sauna in Bay Area backyard" },
-    { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor steam sauna rental in San Francisco garden" },
-    { type: "image", src: "/media/upload-4.jpeg", alt: "Outdoor steam sauna with copper roof in SF backyard" },
     { type: "image", src: "/media/upload-5.jpeg", alt: "SF Sauna branded outdoor steam sauna installed on patio" },
-    { type: "video", src: "/media/billwalkthrough.mp4" },
     { type: "video", src: "/media/dylantimelapse.mp4" },
     { type: "image", src: "/media/upload-8.jpeg", alt: "Outdoor steam sauna installed in lush Bay Area backyard" },
     { type: "image", src: "/media/upload-9.jpeg", alt: "Rooftop outdoor steam sauna with San Francisco skyline view" },
