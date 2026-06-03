@@ -63,6 +63,10 @@ const faqs = [
     question: "Who handles maintenance?",
     answer: "We handle all normal maintenance, repairs, parts, and troubleshooting for the sauna, no charge. If something fails under normal use, we fix it or replace the unit.",
   },
+  {
+    question: "Is SF Sauna insured?",
+    answer: "Yes. SF Sauna carries commercial liability insurance. A Certificate of Insurance (COI) is available upon request.",
+  },
 ];
 
 const FAQ = () => {
