@@ -20,20 +20,20 @@ const saunaData = [
         name: "Indoor Steam",
         availability: "Next Available in July — Reserve Yours Now",
         pricing: [
-          { duration: "1", price: "$649", priceDetail: "/mo" },
-          { duration: "3", price: "$499", priceDetail: "/mo" },
-          { duration: "6", price: "$399", priceDetail: "/mo" },
-          { duration: "12", price: "$299", priceDetail: "/mo" },
+          { duration: "1", price: "$1199", priceDetail: "/mo" },
+          { duration: "3", price: "$599", priceDetail: "/mo" },
+          { duration: "6", price: "$499", priceDetail: "/mo" },
+          { duration: "12", price: "$399", priceDetail: "/mo" },
         ],
       },
       {
         name: "Outdoor Steam",
         availability: "Early June Install — 2 of 14 Units Available — Reserve Yours Now",
         pricing: [
-          { duration: "1", price: "$699", priceDetail: "/mo" },
+          { duration: "1", price: "$1199", priceDetail: "/mo" },
           { duration: "3", price: "$599", priceDetail: "/mo" },
           { duration: "6", price: "$499", priceDetail: "/mo" },
-          { duration: "12", price: "$349", priceDetail: "/mo" },
+          { duration: "12", price: "$399", priceDetail: "/mo" },
         ],
       },
     ],
@@ -173,7 +173,7 @@ const Pricing = () => {
                                 <div>
                                   <span className="text-xs md:text-sm font-semibold text-card-foreground">
                                     {plan.duration === "1" || plan.duration === "3" 
-                                      ? (sauna.type === "Steam Sauna" ? "$250" : "$150")
+                                      ? (sauna.type === "Steam Sauna" ? "$350" : "$150")
                                       : "Free Installation"}
                                   </span>
                                 </div>
