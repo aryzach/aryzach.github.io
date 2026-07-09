@@ -1,0 +1,1 @@
+ALTER VIEW public.paid_reservation_consumption SET (security_invoker = false);
