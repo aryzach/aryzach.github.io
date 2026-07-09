@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { computeAvailability, formatDatePretty, type AvailabilityEvent, type ConsumptionRow } from "@/lib/availability";
+import { rowToStatus, formatDatePretty, type PublicAvailabilityRow } from "@/lib/availability";
 import ReservationDialog from "@/components/reservation/ReservationDialog";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -29,24 +29,24 @@ const ReservationSystem = () => {
   });
 
   const [types, setTypes] = useState<SaunaType[]>([]);
-  const [events, setEvents] = useState<AvailabilityEvent[]>([]);
-  const [consumption, setConsumption] = useState<ConsumptionRow[]>([]);
+  const [availability, setAvailability] = useState<PublicAvailabilityRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<SaunaType | null>(null);
 
   useEffect(() => {
     (async () => {
-      const [typesRes, eventsRes, consRes] = await Promise.all([
+      const [typesRes, availRes] = await Promise.all([
         supabase.from("sauna_types").select("*").order("sort_order"),
-        supabase.from("availability_events").select("sauna_type_id, quantity, available_starting_date"),
-        supabase.from("paid_reservation_consumption").select("*"),
+        supabase.from("public_sauna_availability").select("*"),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
-      if (eventsRes.data) setEvents(eventsRes.data as AvailabilityEvent[]);
-      if (consRes.data) setConsumption(consRes.data as ConsumptionRow[]);
+      if (availRes.data) setAvailability(availRes.data as PublicAvailabilityRow[]);
       setLoading(false);
     })();
   }, []);
+
+  const availabilityFor = (id: string) =>
+    rowToStatus(availability.find((a) => a.sauna_type_id === id));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -67,7 +67,7 @@ const ReservationSystem = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {types.map((t) => {
-                const avail = computeAvailability(t.id, events, consumption);
+                const avail = availabilityFor(t.id);
                 const fee = `$${(t.reservation_fee_cents / 100).toFixed(0)}`;
                 return (
                   <Card key={t.id} className="flex flex-col">
@@ -126,7 +126,7 @@ const ReservationSystem = () => {
       {selected && (
         <ReservationDialog
           saunaType={selected}
-          availability={computeAvailability(selected.id, events, consumption)}
+          availability={availabilityFor(selected.id)}
           onClose={() => setSelected(null)}
         />
       )}
