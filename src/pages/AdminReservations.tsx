@@ -751,14 +751,18 @@ const TextCell = ({ value, onSave, mono }: { value: string; onSave: (v: string) 
 const DateCell = ({ value, onSave }: { value: string | null; onSave: (v: string | null) => void }) => {
   const [local, setLocal] = useState(value || "");
   const ref = useRef(value || "");
+  const [focused, setFocused] = useState(false);
   useEffect(() => { setLocal(value || ""); ref.current = value || ""; }, [value]);
+  const showAsDate = focused || !!local;
   return (
     <input
-      type="date"
+      type={showAsDate ? "date" : "text"}
       className="w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none"
       value={local}
+      readOnly={!showAsDate}
       onChange={(e) => setLocal(e.target.value)}
-      onBlur={() => { if (local !== ref.current) onSave(local || null); }}
+      onFocus={() => setFocused(true)}
+      onBlur={() => { setFocused(false); if (local !== ref.current) onSave(local || null); }}
     />
   );
 };
@@ -771,7 +775,7 @@ const SelectCell = ({
   badgeClass,
 }: {
   value: string;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; className?: string }[];
   onSave: (v: string) => void;
   capitalize?: boolean;
   badgeClass?: string;
@@ -782,7 +786,7 @@ const SelectCell = ({
       value={value}
       onChange={(e) => onSave(e.target.value)}
     >
-      {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      {options.map((o) => <option key={o.value} value={o.value} className={o.className}>{o.label}</option>)}
     </select>
   );
 };
