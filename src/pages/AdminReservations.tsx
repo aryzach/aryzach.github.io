@@ -447,6 +447,29 @@ const AdminReservations = () => {
     }
   };
 
+  // Location and Style both feed sauna_type_id; recompute and patch together.
+  const updateLocationOrStyle = async (
+    row: InventoryRow,
+    which: "location" | "style",
+    value: "indoor" | "outdoor" | "either" | StyleValue,
+  ) => {
+    const nextElig = which === "location" ? (value as "indoor" | "outdoor" | "either") : row.indoor_outdoor_eligibility;
+    const nextStyle = which === "style" ? (value as StyleValue) : styleFor(row.sauna_type_id);
+    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig);
+    if (!nextTypeId) {
+      toast.error(`No sauna type for ${nextStyle} + ${ELIG_LABEL[nextElig]}.`);
+      return;
+    }
+    const patch = { indoor_outdoor_eligibility: nextElig, sauna_type_id: nextTypeId };
+    setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
+    try {
+      await callAdmin({ action: "update_inventory", id: row.id, patch });
+    } catch (e) {
+      toast.error((e as Error).message || "Save failed");
+      await loadAll();
+    }
+  };
+
   if (!authed) {
     return (
       <div className="min-h-screen flex flex-col">
