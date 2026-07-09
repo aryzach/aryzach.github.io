@@ -782,7 +782,7 @@ const SelectCell = ({
 }) => {
   return (
     <select
-      className={`w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none ${capitalize ? "capitalize" : ""} ${badgeClass || ""}`}
+      className={`w-full h-7 px-1.5 text-xs border border-transparent hover:border-border focus:border-primary rounded-sm outline-none ${capitalize ? "capitalize" : ""} ${badgeClass ? `font-medium ${badgeClass}` : "bg-transparent focus:bg-background"}`}
       value={value}
       onChange={(e) => onSave(e.target.value)}
     >
