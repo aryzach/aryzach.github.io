@@ -183,6 +183,99 @@ const AdminReservations = () => {
   const [draftErrorField, setDraftErrorField] = useState<string | null>(null);
   const [savingDraft, setSavingDraft] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<null | { ok: number; errors: { row: number; message: string }[] }>(null);
+
+  const downloadTemplate = () => {
+    const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes"];
+    const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", ""];
+    const csv = headers.join(",") + "\n" + sample.join(",") + "\n";
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sauna-inventory-template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = async (file: File) => {
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const text = await file.text();
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error("CSV is empty.");
+      const headers = rows[0].map((h) => h.trim().toLowerCase());
+      const idx = (name: string) => headers.indexOf(name.toLowerCase());
+      const col = {
+        id: idx("ID"),
+        location: idx("Location"),
+        style: idx("Style"),
+        model: idx("Model"),
+        status: idx("Status"),
+        customer: idx("Customer"),
+        install: idx("Install"),
+        available: idx("Available"),
+        notes: idx("Notes"),
+      };
+      let ok = 0;
+      const errors: { row: number; message: string }[] = [];
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        if (r.every((c) => !c.trim())) continue;
+        const get = (k: number) => (k >= 0 ? (r[k] || "").trim() : "");
+        try {
+          const locRaw = get(col.location).toLowerCase();
+          const styleRaw = get(col.style).toLowerCase();
+          const elig = LOCATION_TO_ELIG[locRaw];
+          if (!elig) throw new Error(`Invalid Location "${get(col.location)}" (use Indoor, Outdoor, or Both)`);
+          if (!styleRaw) throw new Error("Missing Style");
+          const typeKey = `${styleRaw}|${elig}`;
+          const sauna_type_id = STYLE_LOC_TO_TYPE[typeKey];
+          if (!sauna_type_id) throw new Error(`No sauna type for Style="${get(col.style)}" + Location="${get(col.location)}"`);
+
+          const statusRaw = get(col.status);
+          const status = statusRaw
+            ? (STATUSES.find((s) => s.toLowerCase() === statusRaw.toLowerCase()) || null)
+            : "Available";
+          if (!status) throw new Error(`Invalid Status "${statusRaw}"`);
+
+          const install_date = normalizeDate(get(col.install));
+          if (get(col.install) && !install_date) throw new Error(`Invalid Install date "${get(col.install)}"`);
+          const available_date = normalizeDate(get(col.available));
+          if (get(col.available) && !available_date) throw new Error(`Invalid Available date "${get(col.available)}"`);
+
+          await callAdmin({
+            action: "create_inventory",
+            unit_code: get(col.id) || "",
+            sauna_type_id,
+            model: get(col.model) || "",
+            indoor_outdoor_eligibility: elig,
+            status,
+            current_customer: get(col.customer) || "",
+            install_date: install_date || "",
+            available_date: available_date || "",
+            admin_notes: get(col.notes) || "",
+          });
+          ok++;
+        } catch (e) {
+          errors.push({ row: i + 1, message: (e as Error).message });
+        }
+      }
+      setImportResult({ ok, errors });
+      if (ok > 0) toast.success(`Imported ${ok} sauna${ok === 1 ? "" : "s"}`);
+      if (errors.length) toast.error(`${errors.length} row${errors.length === 1 ? "" : "s"} failed`);
+      await loadAll();
+    } catch (e) {
+      toast.error((e as Error).message || "Import failed");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   const startDraft = () => {
     setDraftError(null);
     setDraftErrorField(null);
