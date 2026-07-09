@@ -548,7 +548,14 @@ const AdminReservations = () => {
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
+                              <Select value={draft.model} onValueChange={(v) => setD("model", v)}>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "model" ? "border-destructive" : ""}`}>
+                                  <SelectValue placeholder="Model" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {MODELS.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
@@ -608,7 +615,11 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.model || ""} onSave={(v) => updateCell(r.id, "model", v || null)} />
+                            <SelectCell
+                              value={r.model || ""}
+                              options={[{ value: "", label: "—" }, ...MODELS.map((m) => ({ value: m, label: m }))]}
+                              onSave={(v) => updateCell(r.id, "model", v || null)}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <SelectCell
