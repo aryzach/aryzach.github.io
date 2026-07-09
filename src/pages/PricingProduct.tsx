@@ -88,11 +88,6 @@ const PricingProduct = () => {
               </p>
               <div className="space-y-3 mb-8">
                 <AvailabilityLine status={status} size="md" />
-                <div className="text-sm text-muted-foreground">
-                  Reservation fee:{" "}
-                  <span className="text-foreground font-medium">${product.reservationFee}</span>{" "}
-                  · applied toward payments with a 6+ month commitment.
-                </div>
               </div>
               <Button size="lg" onClick={handleReserve} disabled={!canReserve}>
                 {canReserve ? "Reserve" : "Currently unavailable"}
@@ -173,17 +168,13 @@ const TierCard = ({ tier, reservationFee, onReserve, disabled }: TierProps) => {
             {tier.installFee === 0 ? "Free" : `$${tier.installFee}`}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Reservation fee</span>
-          <span className="font-medium text-card-foreground">${reservationFee}</span>
-        </div>
         {tier.months >= 6 ? (
           <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-            Reservation fee is applied toward your monthly payments.
+            Installation fee is applied toward your monthly payments.
           </p>
         ) : (
           <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-            Reservation fee is applied toward payments when committing to 6+ months.
+            Installation fee is applied toward payments when committing to 6+ months.
           </p>
         )}
       </div>

@@ -63,8 +63,8 @@ const INFRARED_OUTDOOR_TIERS: PricingTier[] = [
 const ORIGINAL_TIERS: PricingTier[] = [
   { months: 1, monthly: 899, installFee: 350 },
   { months: 3, monthly: 499, installFee: 350 },
-  { months: 6, monthly: 399, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 299, installFee: 0, badge: "Best Value" },
+  { months: 6, monthly: 349, installFee: 0, badge: "Most Popular" },
+  { months: 12, monthly: 249, installFee: 0, badge: "Best Value" },
 ];
 
 // Portrait placeholder imagery — swap for real photography later.
@@ -84,7 +84,7 @@ export const products: Product[] = [
     placement: "Indoor",
     shortDescription: "2-person traditional sauna, built for living rooms, garages, and studio apartments.",
     longDescription:
-      "Our 2-person indoor traditional sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, cedar interior, and delivered fully assembled.",
+      "Our 2-person indoor traditional sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, and delivered fully assembled.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(350),
@@ -113,7 +113,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
     longDescription:
-      "An earlier-generation traditional sauna converted from one of our infrared models. Full stones, cedar interior, and the same authentic traditional experience at a lower monthly price.",
+      "An earlier-generation traditional sauna converted from one of our infrared models. Full stones and the same authentic traditional experience at a lower monthly price.",
     image: IMG_ORIGINAL_COLLECTION,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
@@ -128,7 +128,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
     longDescription:
-      "An earlier-generation outdoor traditional sauna converted from one of our infrared models. Real stones, cedar interior, and the same authentic experience at a lower price point.",
+      "An earlier-generation outdoor traditional sauna converted from one of our infrared models. Real stones and the same authentic experience at a lower price point.",
     image: IMG_ORIGINAL_COLLECTION,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
