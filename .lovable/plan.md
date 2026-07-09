@@ -1,27 +1,87 @@
+# Reservation System MVP
 
-# Fix FAQ Scroll Position When Navigating From Other Pages
+Build a new `/reservation-system` page plus a password-protected `/admin-reservations` page, backed by Lovable Cloud (Supabase). Availability is tracked at the sauna-type level via availability events, minus paid active reservations.
 
-## Problem
-When clicking "FAQ" from a non-homepage route, the app navigates to `/#faq` and scrolls down. But the Elfsight review widgets (GoogleReviews and SocialProof) load dynamically and expand the page height *after* the scroll calculation runs. This means the scroll lands too high -- by the time the reviews finish loading and push content down, the FAQ section has shifted further down the page.
+## Scope
 
-## Solution (Two-Part Fix)
+- Customer flow: browse sauna types → reserve → pay via Stripe link (placeholder) → confirmation with Cal.com scheduling links (placeholders).
+- Admin flow: password gate → manage availability events + reservations statuses.
+- No webhooks, no accounts, no contracts/ID/waitlist.
 
-### 1. Reserve space for dynamically-loaded review widgets
-Add a `min-height` to the GoogleReviews component container so the page layout is stable before the widget loads. The SocialProof component already has `min-h-[400px]` but GoogleReviews has no height reservation at all.
+## Backend (Lovable Cloud)
 
-- **GoogleReviews.tsx**: Add `min-h-[300px] md:min-h-[400px]` to the widget container div so the browser reserves vertical space upfront.
+Enable Lovable Cloud, then create three tables:
 
-### 2. Improve ScrollToHash to retry after dynamic content loads
-The current `ScrollToHash` component in `App.tsx` only scrolls once after a 200ms delay. This is not enough time for the Elfsight widgets to load and render. Instead of guessing a single delay, implement a retry mechanism that re-scrolls a couple of times over a longer window (e.g., at 200ms, 1s, and 2s) to account for late-loading content. Each retry will only scroll if the element's position has shifted from the last attempt.
+1. `sauna_types` (seeded, read-only from client)
+   - `id` (text PK, e.g. `indoor_infrared`)
+   - `name`, `description`, `placement` ('indoor'|'outdoor'|'either')
+   - `reservation_fee_cents`, `stripe_payment_link` (placeholder URL)
+2. `availability_events`
+   - `id` uuid, `sauna_type_id`, `quantity` int, `available_starting_date` date, `reason`, `notes`, `created_at`
+3. `reservations`
+   - contact fields, `sauna_type_id`, `placement_choice`, `access_notes`, `min_commitment_months`, `preferred_install_at` timestamptz
+   - status enums: `reservation_status`, `payment_status`, `contract_status`, `id_status`, `consult_status`
+   - `admin_notes`, `created_at`
 
-- **App.tsx (ScrollToHash)**: Add additional delayed scroll attempts at ~1000ms and ~2000ms after navigation, checking if the element position has changed before re-scrolling.
+RLS: 
+- `sauna_types` + `availability_events`: public SELECT (needed to compute availability on customer page).
+- `reservations`: anonymous INSERT only (no SELECT for anon). Admin reads via edge function using service role.
+- All admin mutations go through an edge function `admin-api` that checks a shared password header against `ADMIN_PASSWORD` secret.
 
----
+Grants: SELECT to anon/authenticated on sauna_types + availability_events; INSERT to anon on reservations; service_role full.
 
-### Technical Details
+## Edge function `admin-api`
 
-**GoogleReviews.tsx change:**
-Add `min-h-[300px] md:min-h-[400px]` to the Elfsight widget div to reserve layout space.
+Single function, actions via body:
+- `login` (verify password → returns ok)
+- `list_reservations`, `update_reservation` (patch statuses/notes)
+- `list_events`, `create_event`, `update_event`, `delete_event`
 
-**App.tsx ScrollToHash change:**
-Replace the single `setTimeout` with multiple staggered timeouts (200ms, 1000ms, 2000ms). Each timeout scrolls to the target element, which naturally accounts for layout shifts from dynamically loaded content. The later timeouts act as corrections if the page height changed.
+Header `x-admin-password` required on every call. Client stores password in sessionStorage after successful login.
+
+## Customer page `/reservation-system`
+
+- Grid of cards, one per sauna type (fetched from DB).
+- Availability computed client-side: sum event quantities where `available_starting_date <= today` minus paid-active reservations on/before today → if >0 "Available immediately"; else earliest future date; else "Currently unavailable".
+- Paid-active reservations are computed via a public SQL view `paid_reservation_consumption` exposing only `(sauna_type_id, preferred_install_date)` — no PII.
+- Reserve button opens a dialog with the reservation form (react-hook-form + zod).
+- On submit: insert into `reservations` with `reservation_status='Pending Payment'`, `payment_status='Pending'`, then redirect to the sauna type's Stripe link, appending `?client_reference_id={reservation_id}` for future webhook wiring.
+
+## Confirmation page `/reservation-system/confirmation`
+
+Shown after form submit (before Stripe redirect, opened in same tab after return isn't guaranteed, so we render this page first with the "Pay Reservation Fee" button, then Cal.com links). Route: `/reservation-confirmation?id=…`.
+- Reservation received notice + payment reminder.
+- Buttons: Pay Reservation Fee (Stripe link), Schedule Video Consultation, Schedule Installation.
+
+## Admin page `/admin-reservations`
+
+- Password prompt (calls `admin-api` `login`).
+- After auth: tabs/sections per sauna type showing available-now qty and future events (edit/delete/add).
+- Reservations table with inline dropdowns to update each status + notes textarea (save button).
+
+## Placeholders (constants in `src/lib/reservationConfig.ts`)
+
+```
+INFRARED_STRIPE_PAYMENT_LINK
+TRADITIONAL_STRIPE_PAYMENT_LINK
+CALCOM_VIDEO_CONSULT_LINK
+CALCOM_INSTALLATION_LINK
+```
+
+Seed the 5 sauna types with their payment link (infrared vs traditional) and fees ($200 / $500).
+
+## Design
+
+Match existing brand (Tailwind + shadcn, semantic tokens from `index.css`). Mobile-first cards. No new fonts/colors.
+
+## Routes added
+
+- `/reservation-system` (customer)
+- `/reservation-confirmation` (post-submit)
+- `/admin-reservations` (admin)
+
+Add to `App.tsx` + `src/routes.ts` + `vite.config.ts` prerender list (skip admin from sitemap priority).
+
+## Out of scope
+
+Stripe webhooks, accounts, contracts, ID upload, waitlist, physical unit tracking, HubSpot.
