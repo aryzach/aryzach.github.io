@@ -33,8 +33,8 @@ const schema = z.object({
   access_notes: z.string().trim().max(500).optional().default(""),
   min_commitment_months: z.enum(["1", "3", "6", "12"]),
   preferred_install_at: z.string().min(1, "Required"),
-  ack_consult: z.literal<boolean>(true, { errorMap: () => ({ message: "Required" }) }),
-  ack_fee_applied: z.literal<boolean>(true, { errorMap: () => ({ message: "Required" }) }),
+  ack_consult: z.boolean().refine((v) => v === true, { message: "Required" }),
+  ack_fee_applied: z.boolean().refine((v) => v === true, { message: "Required" }),
 });
 
 type FormValues = z.infer<typeof schema>;
