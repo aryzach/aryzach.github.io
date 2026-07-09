@@ -52,7 +52,7 @@ const Pricing = () => {
                 <Link
                   key={key}
                   to={`/pricing/${key}`}
-                  className="group block rounded-3xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow duration-300"
+                  className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-border hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-muted">
                     <img
@@ -62,7 +62,7 @@ const Pricing = () => {
                       loading="lazy"
                     />
                   </div>
-                  <div className="p-6 md:p-8">
+                  <div className="p-6 md:p-8 flex flex-col flex-grow">
                     <h2 className="text-2xl md:text-3xl font-semibold text-card-foreground mb-2">
                       {title}
                     </h2>
@@ -78,7 +78,7 @@ const Pricing = () => {
                       <AvailabilityLine status={indoorStatus} label="Indoor" />
                       <AvailabilityLine status={outdoorStatus} label="Outdoor" />
                     </div>
-                    <Button className="w-full" size="lg">
+                    <Button className="w-full mt-auto" size="lg">
                       View Pricing & Reserve
                     </Button>
                   </div>
