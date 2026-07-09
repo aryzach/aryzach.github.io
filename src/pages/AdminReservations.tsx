@@ -158,7 +158,78 @@ const AdminReservations = () => {
   const [fCondition, setFCondition] = useState<string>("");
 
   const [editing, setEditing] = useState<InventoryRow | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [draft, setDraft] = useState<null | {
+    sauna_type_id: string;
+    model: string;
+    indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
+    status: SaunaStatus;
+    current_customer: string;
+    install_date: string;
+    available_date: string;
+    location: string;
+    condition: string;
+    admin_notes: string;
+  }>(null);
+  const [draftError, setDraftError] = useState<string | null>(null);
+  const [draftErrorField, setDraftErrorField] = useState<string | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+
+  const startDraft = () => {
+    setDraftError(null);
+    setDraftErrorField(null);
+    setDraft({
+      sauna_type_id: types[0]?.id || "",
+      model: "",
+      indoor_outdoor_eligibility: "either",
+      status: "Available",
+      current_customer: "",
+      install_date: "",
+      available_date: "",
+      location: "",
+      condition: "",
+      admin_notes: "",
+    });
+  };
+
+  const setD = <K extends keyof NonNullable<typeof draft>>(k: K, v: NonNullable<typeof draft>[K]) =>
+    setDraft((p) => (p ? { ...p, [k]: v } : p));
+
+  const saveDraft = async () => {
+    if (!draft) return;
+    setDraftError(null);
+    setDraftErrorField(null);
+    if (!draft.sauna_type_id) {
+      setDraftError("Sauna type is required.");
+      setDraftErrorField("sauna_type_id");
+      return;
+    }
+    setSavingDraft(true);
+    try {
+      await callAdmin({ action: "create_inventory", ...draft });
+      toast.success("Added");
+      setDraft(null);
+      await loadAll();
+    } catch (e) {
+      const msg = (e as Error).message || "Failed to save.";
+      // Try to map Postgres errors to a field
+      const fieldMatches: [RegExp, string][] = [
+        [/install_date/i, "install_date"],
+        [/available_date/i, "available_date"],
+        [/sauna_type_id/i, "sauna_type_id"],
+        [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
+        [/status/i, "status"],
+        [/current_customer/i, "current_customer"],
+        [/location/i, "location"],
+        [/condition/i, "condition"],
+        [/model/i, "model"],
+      ];
+      const hit = fieldMatches.find(([re]) => re.test(msg));
+      setDraftErrorField(hit ? hit[1] : null);
+      setDraftError(msg);
+    } finally {
+      setSavingDraft(false);
+    }
+  };
 
   const callAdmin = useCallback(
     async (body: Record<string, unknown>) => {
