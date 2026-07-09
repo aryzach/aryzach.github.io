@@ -330,10 +330,7 @@ const AdminReservations = () => {
                         <th className="text-left px-3 py-2">Status</th>
                         <th className="text-left px-3 py-2">Customer</th>
                         <th className="text-left px-3 py-2">Install</th>
-                        <th className="text-left px-3 py-2">Min term ends</th>
-                        <th className="text-left px-3 py-2">Notice</th>
                         <th className="text-left px-3 py-2">Available</th>
-                        <th className="text-left px-3 py-2">ETA</th>
                         <th className="text-left px-3 py-2">Location</th>
                         <th className="text-left px-3 py-2">Condition</th>
                         <th className="text-left px-3 py-2">Timeline</th>
@@ -344,7 +341,7 @@ const AdminReservations = () => {
                     </thead>
                     <tbody>
                       {filtered.length === 0 && (
-                        <tr><td colSpan={17} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border">
@@ -359,10 +356,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-3 py-2">{r.current_customer || "—"}</td>
                           <td className="px-3 py-2">{fmtDate(r.install_date)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.minimum_term_ends)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.notice_received_date)}</td>
                           <td className="px-3 py-2">{fmtDate(r.available_date)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.incoming_eta)}</td>
                           <td className="px-3 py-2">{r.location || "—"}</td>
                           <td className="px-3 py-2">{r.condition || "—"}</td>
                           <td className="px-3 py-2 text-xs">{timelineFor(r)}</td>
