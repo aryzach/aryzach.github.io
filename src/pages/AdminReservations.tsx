@@ -233,6 +233,48 @@ const AdminReservations = () => {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<null | { ok: number; errors: { row: number; message: string }[] }>(null);
 
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<SaunaStatus | "">("");
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const toggleSelect = (id: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const bulkDelete = async () => {
+    if (!selectedIds.size) return;
+    if (!confirm(`Delete ${selectedIds.size} sauna${selectedIds.size === 1 ? "" : "s"}?`)) return;
+    setBulkBusy(true);
+    let ok = 0; let fail = 0;
+    for (const id of Array.from(selectedIds)) {
+      try { await callAdmin({ action: "delete_inventory", id }); ok++; }
+      catch { fail++; }
+    }
+    setBulkBusy(false);
+    clearSelection();
+    if (ok) toast.success(`Deleted ${ok}`);
+    if (fail) toast.error(`${fail} failed`);
+    await loadAll();
+  };
+
+  const bulkSetStatus = async () => {
+    if (!selectedIds.size || !bulkStatus) return;
+    setBulkBusy(true);
+    let ok = 0; let fail = 0;
+    for (const id of Array.from(selectedIds)) {
+      try { await callAdmin({ action: "update_inventory", id, patch: { status: bulkStatus } }); ok++; }
+      catch { fail++; }
+    }
+    setBulkBusy(false);
+    if (ok) toast.success(`Updated ${ok}`);
+    if (fail) toast.error(`${fail} failed`);
+    setBulkStatus("");
+    await loadAll();
+  };
+
   const downloadTemplate = () => {
     const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes"];
     const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", ""];
@@ -605,6 +647,25 @@ const AdminReservations = () => {
                 </ul>
               )}
               <button className="text-xs text-muted-foreground underline mt-2" onClick={() => setImportResult(null)}>Dismiss</button>
+            </div>
+          )}
+
+          {selectedIds.size > 0 && (
+            <div className="mb-3 p-2 rounded-md border border-primary bg-primary/5 flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-medium">{selectedIds.size} selected</span>
+              <div className="flex items-center gap-1">
+                <select
+                  className="h-7 px-1.5 text-xs bg-background border border-border rounded-sm"
+                  value={bulkStatus}
+                  onChange={(e) => setBulkStatus(e.target.value as SaunaStatus | "")}
+                >
+                  <option value="">Set status…</option>
+                  {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <Button size="sm" className="h-7 text-xs px-2" disabled={!bulkStatus || bulkBusy} onClick={bulkSetStatus}>Apply</Button>
+              </div>
+              <Button size="sm" variant="destructive" className="h-7 text-xs px-2" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
+              <Button size="sm" variant="ghost" className="h-7 text-xs px-2 ml-auto" onClick={clearSelection}>Clear</Button>
             </div>
           )}
 
