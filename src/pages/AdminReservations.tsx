@@ -62,10 +62,7 @@ interface InventoryRow {
   status: SaunaStatus;
   current_customer: string | null;
   install_date: string | null;
-  minimum_term_ends: string | null;
-  notice_received_date: string | null;
   available_date: string | null;
-  incoming_eta: string | null;
   location: string | null;
   condition: string | null;
   admin_notes: string | null;
