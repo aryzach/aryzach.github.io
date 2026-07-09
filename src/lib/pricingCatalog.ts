@@ -5,6 +5,13 @@ import traditionalOutdoorAsset from "@/assets/traditional-outdoor.png.asset.json
 import originalCollectionAsset from "@/assets/original-collection.png.asset.json";
 import infraredOutdoorAsset from "@/assets/infrared-outdoor.png.asset.json";
 
+// Lovable CDN assets are served from the Lovable-hosted origin. When this
+// site is deployed to GitHub Pages, the `/__l5e/...` path doesn't exist on
+// that host, so we always resolve asset URLs against the Lovable origin.
+const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
+const assetUrl = (a: { url: string }) =>
+  a.url.startsWith("http") ? a.url : `${LOVABLE_ASSET_ORIGIN}${a.url}`;
+
 export type Category = "traditional" | "infrared";
 
 export interface PricingTier {
@@ -60,10 +67,10 @@ const ORIGINAL_TIERS: PricingTier[] = [
 
 // Portrait placeholder imagery — swap for real photography later.
 const PLACEHOLDER_TRAD_INDOOR = "https://images.unsplash.com/photo-1613767973936-64d1e34d8484?auto=format&fit=crop&w=1200&q=80";
-const PLACEHOLDER_TRAD_OUTDOOR = traditionalOutdoorAsset.url;
-const IMG_ORIGINAL_COLLECTION = originalCollectionAsset.url;
+const PLACEHOLDER_TRAD_OUTDOOR = assetUrl(traditionalOutdoorAsset);
+const IMG_ORIGINAL_COLLECTION = assetUrl(originalCollectionAsset);
 const PLACEHOLDER_INFRARED_INDOOR = "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=1200&q=80";
-const PLACEHOLDER_INFRARED_OUTDOOR = infraredOutdoorAsset.url;
+const PLACEHOLDER_INFRARED_OUTDOOR = assetUrl(infraredOutdoorAsset);
 
 export const products: Product[] = [
   {
