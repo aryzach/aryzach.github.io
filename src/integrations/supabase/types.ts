@@ -106,58 +106,55 @@ export type Database = {
         Row: {
           admin_notes: string | null
           available_date: string | null
-          condition: string | null
           created_at: string
           current_customer: string | null
           id: string
           incoming_eta: string | null
           indoor_outdoor_eligibility: string
           install_date: string | null
-          location: string | null
           minimum_term_ends: string | null
           model: string | null
           notice_received_date: string | null
           reservation_id: string | null
           sauna_type_id: string
           status: string
+          unit_code: string | null
           updated_at: string
         }
         Insert: {
           admin_notes?: string | null
           available_date?: string | null
-          condition?: string | null
           created_at?: string
           current_customer?: string | null
           id?: string
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
           install_date?: string | null
-          location?: string | null
           minimum_term_ends?: string | null
           model?: string | null
           notice_received_date?: string | null
           reservation_id?: string | null
           sauna_type_id: string
           status?: string
+          unit_code?: string | null
           updated_at?: string
         }
         Update: {
           admin_notes?: string | null
           available_date?: string | null
-          condition?: string | null
           created_at?: string
           current_customer?: string | null
           id?: string
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
           install_date?: string | null
-          location?: string | null
           minimum_term_ends?: string | null
           model?: string | null
           notice_received_date?: string | null
           reservation_id?: string | null
           sauna_type_id?: string
           status?: string
+          unit_code?: string | null
           updated_at?: string
         }
         Relationships: [

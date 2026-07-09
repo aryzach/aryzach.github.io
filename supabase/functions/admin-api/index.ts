@@ -91,10 +91,10 @@ Deno.serve(async (req) => {
 
       case "create_inventory": {
         const allowed = [
-          "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
+          "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
           "current_customer", "install_date",
           "available_date",
-          "location", "condition", "admin_notes",
+          "admin_notes",
         ];
         const clean: Record<string, unknown> = {};
         for (const k of allowed) {
@@ -115,10 +115,10 @@ Deno.serve(async (req) => {
       case "update_inventory": {
         const { id, patch } = payload;
         const allowed = [
-          "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
+          "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
           "current_customer", "install_date",
           "available_date",
-          "location", "condition", "admin_notes",
+          "admin_notes",
         ];
         const clean: Record<string, unknown> = {};
         for (const k of allowed) if (k in patch) clean[k] = patch[k] === "" ? null : patch[k];
