@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
+import PricingOld from "./pages/PricingOld";
+import PricingCategory from "./pages/PricingCategory";
+import PricingProduct from "./pages/PricingProduct";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import HowItStarted from "./pages/HowItStarted";
 import InstallPower from "./pages/InstallPower";
@@ -109,6 +112,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/pricing-old" element={<PricingOld />} />
+          <Route path="/pricing/:category" element={<PricingCategory />} />
+          <Route path="/pricing/:category/:product" element={<PricingProduct />} />
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/how-it-started" element={<HowItStarted />} />
           <Route path="/install-power" element={<InstallPower />} />
