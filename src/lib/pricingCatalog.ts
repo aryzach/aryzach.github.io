@@ -107,6 +107,8 @@ export const products: Product[] = [
   },
   {
     slug: "original-indoor",
+    // Slug retained as `original-indoor` (not `indoor`) so lookups within the
+    // "original" category remain unique when combined with future variants.
     saunaTypeId: "indoor_traditional",
     name: "Original Collection — Indoor",
     category: "original",
@@ -188,5 +190,10 @@ export const categoryHero: Record<Category, { image: string; blurb: string }> = 
     image: assetUrl(infraredHeroAsset),
     blurb:
       "Gentle, low-EMF radiant heat. Choose indoor or outdoor.",
+  },
+  original: {
+    image: IMG_ORIGINAL_COLLECTION,
+    blurb:
+      "Earlier-generation traditional saunas converted from infrared models. Same authentic experience at a lower monthly price.",
   },
 };
