@@ -52,6 +52,63 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
 
+// Map CSV "Style" + "Location" to a sauna_type_id in the DB.
+const STYLE_LOC_TO_TYPE: Record<string, string> = {
+  "infrared|indoor": "indoor_infrared",
+  "infrared|outdoor": "outdoor_infrared",
+  "traditional|indoor": "indoor_traditional",
+  "traditional|outdoor": "outdoor_traditional_latest",
+  "traditional|either": "indoor_outdoor_traditional_latest",
+};
+
+const LOCATION_TO_ELIG: Record<string, "indoor" | "outdoor" | "either"> = {
+  indoor: "indoor",
+  outdoor: "outdoor",
+  both: "either",
+  either: "either",
+};
+
+// Minimal CSV parser supporting quoted fields and escaped quotes.
+function parseCSV(text: string): string[][] {
+  const rows: string[][] = [];
+  let cur: string[] = [];
+  let field = "";
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else { inQuotes = false; }
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ",") { cur.push(field); field = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        cur.push(field); field = "";
+        if (cur.length > 1 || cur[0] !== "") rows.push(cur);
+        cur = [];
+      } else field += c;
+    }
+  }
+  if (field !== "" || cur.length) { cur.push(field); rows.push(cur); }
+  return rows;
+}
+
+function normalizeDate(v: string): string | null {
+  const s = v.trim();
+  if (!s) return null;
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return null;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 interface InventoryRow {
   id: string;
   unit_code: string | null;
