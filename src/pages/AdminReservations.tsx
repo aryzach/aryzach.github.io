@@ -675,6 +675,17 @@ const AdminReservations = () => {
                   <table className="w-full text-xs border-collapse">
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
+                        <th className="px-2 py-1.5 border-r border-border w-8">
+                          <input
+                            type="checkbox"
+                            aria-label="Select all"
+                            checked={filtered.length > 0 && filtered.every((r) => selectedIds.has(r.id))}
+                            onChange={(e) => {
+                              if (e.target.checked) setSelectedIds(new Set(filtered.map((r) => r.id)));
+                              else clearSelection();
+                            }}
+                          />
+                        </th>
                         {([
                           ["id", "ID"],
                           ["location", "Location"],
@@ -704,6 +715,7 @@ const AdminReservations = () => {
                         <th className="text-left px-2 py-1.5"></th>
                       </tr>
                       <tr className="border-t border-border bg-muted/30">
+                        <th className="px-2 py-1 border-r border-border"></th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.id} onChange={(e) => setColFilter("id", e.target.value)} />
                         </th>
@@ -756,6 +768,7 @@ const AdminReservations = () => {
                       {draft && (
                         <>
                           <tr className="border-t border-border bg-primary/5">
+                            <td className="px-2 py-1 border-r border-border"></td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input className={`h-7 text-xs font-mono ${draftErrorField === "unit_code" ? "border-destructive" : ""}`} value={draft.unit_code} onChange={(e) => setD("unit_code", e.target.value)} placeholder="ID" />
                             </td>
@@ -814,7 +827,7 @@ const AdminReservations = () => {
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={12} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={13} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -822,10 +835,18 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={12} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={13} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border hover:bg-muted/20">
+                          <td className="px-2 py-0.5 border-r border-border">
+                            <input
+                              type="checkbox"
+                              aria-label={`Select ${r.unit_code || r.id}`}
+                              checked={selectedIds.has(r.id)}
+                              onChange={() => toggleSelect(r.id)}
+                            />
+                          </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.unit_code || ""} mono onSave={(v) => updateCell(r.id, "unit_code", v || null)} />
                           </td>
