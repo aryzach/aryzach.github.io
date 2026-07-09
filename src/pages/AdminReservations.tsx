@@ -450,11 +450,36 @@ const AdminReservations = () => {
             <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
             <div className="flex gap-2">
               <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+                {importing ? "Importing…" : "Import CSV"}
+              </Button>
+              <Button variant="outline" onClick={downloadTemplate}>Template</Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                className="hidden"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }}
+              />
               <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
             </div>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
+
+          {importResult && (
+            <div className="mb-4 p-3 rounded-md border border-border bg-card text-sm">
+              <div className="font-medium mb-1">Import result: {importResult.ok} added, {importResult.errors.length} failed</div>
+              {importResult.errors.length > 0 && (
+                <ul className="text-xs text-destructive space-y-0.5 max-h-40 overflow-auto">
+                  {importResult.errors.map((er, i) => (
+                    <li key={i}>Row {er.row}: {er.message}</li>
+                  ))}
+                </ul>
+              )}
+              <button className="text-xs text-muted-foreground underline mt-2" onClick={() => setImportResult(null)}>Dismiss</button>
+            </div>
+          )}
 
           <section className="mb-10">
             <div className="space-y-3">
