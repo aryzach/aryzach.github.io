@@ -14,44 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      availability_events: {
-        Row: {
-          available_starting_date: string
-          created_at: string
-          id: string
-          notes: string | null
-          quantity: number
-          reason: string
-          sauna_type_id: string
-        }
-        Insert: {
-          available_starting_date: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          quantity: number
-          reason: string
-          sauna_type_id: string
-        }
-        Update: {
-          available_starting_date?: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          quantity?: number
-          reason?: string
-          sauna_type_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "availability_events_sauna_type_id_fkey"
-            columns: ["sauna_type_id"]
-            isOneToOne: false
-            referencedRelation: "sauna_types"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       reservations: {
         Row: {
           access_notes: string | null
@@ -71,6 +33,7 @@ export type Database = {
           placement_choice: string
           preferred_install_at: string
           reservation_status: string
+          sauna_inventory_id: string | null
           sauna_type_id: string
         }
         Insert: {
@@ -91,6 +54,7 @@ export type Database = {
           placement_choice: string
           preferred_install_at: string
           reservation_status?: string
+          sauna_inventory_id?: string | null
           sauna_type_id: string
         }
         Update: {
@@ -111,11 +75,101 @@ export type Database = {
           placement_choice?: string
           preferred_install_at?: string
           reservation_status?: string
+          sauna_inventory_id?: string | null
           sauna_type_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "reservations_sauna_inventory_id_fkey"
+            columns: ["sauna_inventory_id"]
+            isOneToOne: false
+            referencedRelation: "sauna_inventory"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "reservations_sauna_type_id_fkey"
+            columns: ["sauna_type_id"]
+            isOneToOne: false
+            referencedRelation: "public_sauna_availability"
+            referencedColumns: ["sauna_type_id"]
+          },
+          {
+            foreignKeyName: "reservations_sauna_type_id_fkey"
+            columns: ["sauna_type_id"]
+            isOneToOne: false
+            referencedRelation: "sauna_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sauna_inventory: {
+        Row: {
+          admin_notes: string | null
+          available_date: string | null
+          condition: string | null
+          created_at: string
+          current_customer: string | null
+          id: string
+          incoming_eta: string | null
+          indoor_outdoor_eligibility: string
+          install_date: string | null
+          location: string | null
+          minimum_term_ends: string | null
+          model: string | null
+          notice_received_date: string | null
+          reservation_id: string | null
+          sauna_type_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          available_date?: string | null
+          condition?: string | null
+          created_at?: string
+          current_customer?: string | null
+          id?: string
+          incoming_eta?: string | null
+          indoor_outdoor_eligibility?: string
+          install_date?: string | null
+          location?: string | null
+          minimum_term_ends?: string | null
+          model?: string | null
+          notice_received_date?: string | null
+          reservation_id?: string | null
+          sauna_type_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          available_date?: string | null
+          condition?: string | null
+          created_at?: string
+          current_customer?: string | null
+          id?: string
+          incoming_eta?: string | null
+          indoor_outdoor_eligibility?: string
+          install_date?: string | null
+          location?: string | null
+          minimum_term_ends?: string | null
+          model?: string | null
+          notice_received_date?: string | null
+          reservation_id?: string | null
+          sauna_type_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sauna_inventory_sauna_type_id_fkey"
+            columns: ["sauna_type_id"]
+            isOneToOne: false
+            referencedRelation: "public_sauna_availability"
+            referencedColumns: ["sauna_type_id"]
+          },
+          {
+            foreignKeyName: "sauna_inventory_sauna_type_id_fkey"
             columns: ["sauna_type_id"]
             isOneToOne: false
             referencedRelation: "sauna_types"
@@ -158,32 +212,31 @@ export type Database = {
       }
     }
     Views: {
-      paid_reservation_consumption: {
+      public_sauna_availability: {
         Row: {
-          preferred_install_date: string | null
+          available_now: number | null
+          next_available_date: string | null
           sauna_type_id: string | null
         }
-        Insert: {
-          preferred_install_date?: never
-          sauna_type_id?: string | null
-        }
-        Update: {
-          preferred_install_date?: never
-          sauna_type_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reservations_sauna_type_id_fkey"
-            columns: ["sauna_type_id"]
-            isOneToOne: false
-            referencedRelation: "sauna_types"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Functions: {
-      [_ in never]: never
+      create_reservation_with_hold: {
+        Args: {
+          p_access_notes: string
+          p_email: string
+          p_first_name: string
+          p_install_address: string
+          p_last_name: string
+          p_min_commitment_months: number
+          p_phone: string
+          p_placement_choice: string
+          p_preferred_install_at: string
+          p_sauna_type_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
