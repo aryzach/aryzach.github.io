@@ -1,0 +1,2 @@
+ALTER TABLE public.sauna_inventory DROP CONSTRAINT IF EXISTS sauna_inventory_model_check;
+ALTER TABLE public.sauna_inventory ADD CONSTRAINT sauna_inventory_model_check CHECK (model IS NULL OR model IN ('Standard','Prototype'));

@@ -51,6 +51,8 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
+const MODELS = ["Standard", "Prototype"] as const;
+type ModelValue = typeof MODELS[number];
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
 const STYLE_LOC_TO_TYPE: Record<string, string> = {
@@ -247,11 +249,17 @@ const AdminReservations = () => {
           const available_date = normalizeDate(get(col.available));
           if (get(col.available) && !available_date) throw new Error(`Invalid Available date "${get(col.available)}"`);
 
+          const modelRaw = get(col.model);
+          const model = modelRaw
+            ? (MODELS.find((m) => m.toLowerCase() === modelRaw.toLowerCase()) || null)
+            : "";
+          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Prototype)`);
+
           await callAdmin({
             action: "create_inventory",
             unit_code: get(col.id) || "",
             sauna_type_id,
-            model: get(col.model) || "",
+            model: model || "",
             indoor_outdoor_eligibility: elig,
             status,
             current_customer: get(col.customer) || "",
@@ -546,7 +554,14 @@ const AdminReservations = () => {
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
+                              <Select value={draft.model} onValueChange={(v) => setD("model", v)}>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "model" ? "border-destructive" : ""}`}>
+                                  <SelectValue placeholder="Model" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {MODELS.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                                </SelectContent>
+                              </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
@@ -606,7 +621,11 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.model || ""} onSave={(v) => updateCell(r.id, "model", v || null)} />
+                            <SelectCell
+                              value={r.model || ""}
+                              options={[{ value: "", label: "—" }, ...MODELS.map((m) => ({ value: m, label: m }))]}
+                              onSave={(v) => updateCell(r.id, "model", v || null)}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <SelectCell
