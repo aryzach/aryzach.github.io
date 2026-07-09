@@ -52,6 +52,63 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
 
+// Map CSV "Style" + "Location" to a sauna_type_id in the DB.
+const STYLE_LOC_TO_TYPE: Record<string, string> = {
+  "infrared|indoor": "indoor_infrared",
+  "infrared|outdoor": "outdoor_infrared",
+  "traditional|indoor": "indoor_traditional",
+  "traditional|outdoor": "outdoor_traditional_latest",
+  "traditional|either": "indoor_outdoor_traditional_latest",
+};
+
+const LOCATION_TO_ELIG: Record<string, "indoor" | "outdoor" | "either"> = {
+  indoor: "indoor",
+  outdoor: "outdoor",
+  both: "either",
+  either: "either",
+};
+
+// Minimal CSV parser supporting quoted fields and escaped quotes.
+function parseCSV(text: string): string[][] {
+  const rows: string[][] = [];
+  let cur: string[] = [];
+  let field = "";
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else { inQuotes = false; }
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ",") { cur.push(field); field = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        cur.push(field); field = "";
+        if (cur.length > 1 || cur[0] !== "") rows.push(cur);
+        cur = [];
+      } else field += c;
+    }
+  }
+  if (field !== "" || cur.length) { cur.push(field); rows.push(cur); }
+  return rows;
+}
+
+function normalizeDate(v: string): string | null {
+  const s = v.trim();
+  if (!s) return null;
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return null;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 interface InventoryRow {
   id: string;
   unit_code: string | null;
@@ -125,6 +182,99 @@ const AdminReservations = () => {
   const [draftError, setDraftError] = useState<string | null>(null);
   const [draftErrorField, setDraftErrorField] = useState<string | null>(null);
   const [savingDraft, setSavingDraft] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<null | { ok: number; errors: { row: number; message: string }[] }>(null);
+
+  const downloadTemplate = () => {
+    const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes"];
+    const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", ""];
+    const csv = headers.join(",") + "\n" + sample.join(",") + "\n";
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sauna-inventory-template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = async (file: File) => {
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const text = await file.text();
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error("CSV is empty.");
+      const headers = rows[0].map((h) => h.trim().toLowerCase());
+      const idx = (name: string) => headers.indexOf(name.toLowerCase());
+      const col = {
+        id: idx("ID"),
+        location: idx("Location"),
+        style: idx("Style"),
+        model: idx("Model"),
+        status: idx("Status"),
+        customer: idx("Customer"),
+        install: idx("Install"),
+        available: idx("Available"),
+        notes: idx("Notes"),
+      };
+      let ok = 0;
+      const errors: { row: number; message: string }[] = [];
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        if (r.every((c) => !c.trim())) continue;
+        const get = (k: number) => (k >= 0 ? (r[k] || "").trim() : "");
+        try {
+          const locRaw = get(col.location).toLowerCase();
+          const styleRaw = get(col.style).toLowerCase();
+          const elig = LOCATION_TO_ELIG[locRaw];
+          if (!elig) throw new Error(`Invalid Location "${get(col.location)}" (use Indoor, Outdoor, or Both)`);
+          if (!styleRaw) throw new Error("Missing Style");
+          const typeKey = `${styleRaw}|${elig}`;
+          const sauna_type_id = STYLE_LOC_TO_TYPE[typeKey];
+          if (!sauna_type_id) throw new Error(`No sauna type for Style="${get(col.style)}" + Location="${get(col.location)}"`);
+
+          const statusRaw = get(col.status);
+          const status = statusRaw
+            ? (STATUSES.find((s) => s.toLowerCase() === statusRaw.toLowerCase()) || null)
+            : "Available";
+          if (!status) throw new Error(`Invalid Status "${statusRaw}"`);
+
+          const install_date = normalizeDate(get(col.install));
+          if (get(col.install) && !install_date) throw new Error(`Invalid Install date "${get(col.install)}"`);
+          const available_date = normalizeDate(get(col.available));
+          if (get(col.available) && !available_date) throw new Error(`Invalid Available date "${get(col.available)}"`);
+
+          await callAdmin({
+            action: "create_inventory",
+            unit_code: get(col.id) || "",
+            sauna_type_id,
+            model: get(col.model) || "",
+            indoor_outdoor_eligibility: elig,
+            status,
+            current_customer: get(col.customer) || "",
+            install_date: install_date || "",
+            available_date: available_date || "",
+            admin_notes: get(col.notes) || "",
+          });
+          ok++;
+        } catch (e) {
+          errors.push({ row: i + 1, message: (e as Error).message });
+        }
+      }
+      setImportResult({ ok, errors });
+      if (ok > 0) toast.success(`Imported ${ok} sauna${ok === 1 ? "" : "s"}`);
+      if (errors.length) toast.error(`${errors.length} row${errors.length === 1 ? "" : "s"} failed`);
+      await loadAll();
+    } catch (e) {
+      toast.error((e as Error).message || "Import failed");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const startDraft = () => {
     setDraftError(null);
@@ -300,11 +450,36 @@ const AdminReservations = () => {
             <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
             <div className="flex gap-2">
               <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+                {importing ? "Importing…" : "Import CSV"}
+              </Button>
+              <Button variant="outline" onClick={downloadTemplate}>Template</Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                className="hidden"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImportFile(f); }}
+              />
               <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
             </div>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
+
+          {importResult && (
+            <div className="mb-4 p-3 rounded-md border border-border bg-card text-sm">
+              <div className="font-medium mb-1">Import result: {importResult.ok} added, {importResult.errors.length} failed</div>
+              {importResult.errors.length > 0 && (
+                <ul className="text-xs text-destructive space-y-0.5 max-h-40 overflow-auto">
+                  {importResult.errors.map((er, i) => (
+                    <li key={i}>Row {er.row}: {er.message}</li>
+                  ))}
+                </ul>
+              )}
+              <button className="text-xs text-muted-foreground underline mt-2" onClick={() => setImportResult(null)}>Dismiss</button>
+            </div>
+          )}
 
           <section className="mb-10">
             <div className="space-y-3">
