@@ -38,6 +38,9 @@ interface Reservation {
   email: string;
   phone: string;
   sauna_type_id: string;
+  install_address: string;
+  placement_choice: string;
+  access_notes: string | null;
   min_commitment_months: number;
   preferred_install_at: string;
   reservation_status: string;
@@ -274,6 +277,7 @@ const AdminReservations = () => {
                 <ReservationRow
                   key={r.id}
                   reservation={r}
+                  saunaTypes={types}
                   onUpdate={async (patch) => {
                     try {
                       const res = await callAdmin({ action: "update_reservation", id: r.id, patch });
