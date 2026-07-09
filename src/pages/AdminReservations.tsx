@@ -544,9 +544,9 @@ const AdminReservations = () => {
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
                         <th className="text-left px-2 py-1.5 border-r border-border">ID</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Type</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Location</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Style</th>
                         <th className="text-left px-2 py-1.5 border-r border-border">Model</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">In/Out</th>
                         <th className="text-left px-2 py-1.5 border-r border-border">Status</th>
                         <th className="text-left px-2 py-1.5 border-r border-border">Customer</th>
                         <th className="text-left px-2 py-1.5 border-r border-border">Install</th>
@@ -565,12 +565,18 @@ const AdminReservations = () => {
                               <Input className={`h-7 text-xs font-mono ${draftErrorField === "unit_code" ? "border-destructive" : ""}`} value={draft.unit_code} onChange={(e) => setD("unit_code", e.target.value)} placeholder="ID" />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Select value={draft.sauna_type_id} onValueChange={(v) => setD("sauna_type_id", v)}>
-                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "sauna_type_id" ? "border-destructive" : ""}`}>
-                                  <SelectValue placeholder="Type" />
+                              <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "indoor_outdoor_eligibility" || draftErrorField === "style" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e}>{ELIG_LABEL[e]}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-1 py-1 border-r border-border">
+                              <Select value={draft.style} onValueChange={(v) => setD("style", v as StyleValue)}>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "style" ? "border-destructive" : ""}`}>
+                                  <SelectValue placeholder="Style" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                                  {STYLES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                                 </SelectContent>
                               </Select>
                             </td>
@@ -582,12 +588,6 @@ const AdminReservations = () => {
                                 <SelectContent>
                                   {MODELS.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
                                 </SelectContent>
-                              </Select>
-                            </td>
-                            <td className="px-1 py-1 border-r border-border">
-                              <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
-                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "indoor_outdoor_eligibility" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
-                                <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
@@ -636,9 +636,16 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <SelectCell
-                              value={r.sauna_type_id}
-                              options={types.map((t) => ({ value: t.id, label: t.name }))}
-                              onSave={(v) => updateCell(r.id, "sauna_type_id", v)}
+                              value={r.indoor_outdoor_eligibility}
+                              options={ELIGIBILITY.map((e) => ({ value: e, label: ELIG_LABEL[e] }))}
+                              onSave={(v) => updateLocationOrStyle(r, "location", v as "indoor" | "outdoor" | "either")}
+                            />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <SelectCell
+                              value={styleFor(r.sauna_type_id)}
+                              options={STYLES.map((s) => ({ value: s, label: s }))}
+                              onSave={(v) => updateLocationOrStyle(r, "style", v as StyleValue)}
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
@@ -646,14 +653,6 @@ const AdminReservations = () => {
                               value={r.model || ""}
                               options={[{ value: "", label: "—" }, ...MODELS.map((m) => ({ value: m, label: m }))]}
                               onSave={(v) => updateCell(r.id, "model", v || null)}
-                            />
-                          </td>
-                          <td className="px-1 py-0.5 border-r border-border">
-                            <SelectCell
-                              value={r.indoor_outdoor_eligibility}
-                              options={ELIGIBILITY.map((e) => ({ value: e, label: e }))}
-                              onSave={(v) => updateCell(r.id, "indoor_outdoor_eligibility", v)}
-                              capitalize
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
