@@ -835,6 +835,8 @@ const AdminReservations = () => {
                 </div>
             </div>
           </section>
+            </>
+          )}
         </div>
       </main>
       <Footer />
