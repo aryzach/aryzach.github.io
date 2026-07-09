@@ -26,7 +26,7 @@ type SaunaStatus =
   | "Returning"
   | "Maintenance"
   | "Incoming"
-  | "Sold / Retired";
+  | "Sold";
 
 const STATUSES: SaunaStatus[] = [
   "Available",
@@ -36,7 +36,7 @@ const STATUSES: SaunaStatus[] = [
   "Returning",
   "Maintenance",
   "Incoming",
-  "Sold / Retired",
+  "Sold",
 ];
 
 const STATUS_STYLES: Record<SaunaStatus, string> = {
@@ -47,7 +47,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
   "Returning": "bg-yellow-100 text-yellow-800 border-yellow-300",
   "Maintenance": "bg-orange-100 text-orange-800 border-orange-300",
   "Incoming": "bg-sky-100 text-sky-800 border-sky-300",
-  "Sold / Retired": "bg-gray-200 text-gray-700 border-gray-300",
+  "Sold": "bg-gray-200 text-gray-700 border-gray-300",
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
@@ -148,8 +148,8 @@ function timelineFor(row: InventoryRow): string {
       return `Maintenance · available ${fmtDate(row.available_date)}`;
     case "Incoming":
       return `Incoming · available ${fmtDate(row.available_date)}`;
-    case "Sold / Retired":
-      return "Retired";
+    case "Sold":
+      return "Sold";
   }
 }
 
