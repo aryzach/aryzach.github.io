@@ -50,6 +50,16 @@ Deno.serve(async (req) => {
       case "update_reservation": {
         const { id, patch } = payload;
         const allowed = [
+          "first_name",
+          "last_name",
+          "email",
+          "phone",
+          "sauna_type_id",
+          "install_address",
+          "placement_choice",
+          "access_notes",
+          "min_commitment_months",
+          "preferred_install_at",
           "reservation_status",
           "payment_status",
           "contract_status",
