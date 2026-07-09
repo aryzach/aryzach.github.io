@@ -411,7 +411,72 @@ const AdminReservations = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filtered.length === 0 && (
+                      {draft && (
+                        <>
+                          <tr className="border-t border-border bg-primary/5 align-top">
+                            <td className="px-2 py-2 font-mono text-xs text-muted-foreground">new</td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.sauna_type_id} onValueChange={(v) => setD("sauna_type_id", v)}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "sauna_type_id" ? "border-destructive" : ""}`}>
+                                  <SelectValue placeholder="Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "indoor_outdoor_eligibility" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.status} onValueChange={(v) => setD("status", v as SaunaStatus)}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "status" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input type="date" className={`h-8 ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input type="date" className={`h-8 ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "location" ? "border-destructive" : ""}`} value={draft.location} onChange={(e) => setD("location", e.target.value)} placeholder="Location" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "condition" ? "border-destructive" : ""}`} value={draft.condition} onChange={(e) => setD("condition", e.target.value)} placeholder="Condition" />
+                            </td>
+                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
+                            <td className="px-2 py-2">
+                              <Input className="h-8" value={draft.admin_notes} onChange={(e) => setD("admin_notes", e.target.value)} placeholder="Notes" />
+                            </td>
+                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
+                            <td className="px-2 py-2">
+                              <div className="flex gap-1">
+                                <Button size="sm" onClick={saveDraft} disabled={savingDraft}>{savingDraft ? "…" : "Save"}</Button>
+                                <Button size="sm" variant="ghost" onClick={() => { setDraft(null); setDraftError(null); setDraftErrorField(null); }}>Cancel</Button>
+                              </div>
+                            </td>
+                          </tr>
+                          {draftError && (
+                            <tr className="bg-destructive/10">
+                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
+                                {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
+                              </td>
+                            </tr>
+                          )}
+                        </>
+                      )}
+                      {filtered.length === 0 && !draft && (
                         <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
