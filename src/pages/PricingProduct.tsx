@@ -101,7 +101,7 @@ const PricingProduct = () => {
               Choose your commitment
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Longer commitments unlock lower monthly rates and free installation.
+              Longer commitments unlock lower monthly rates and free installation. Once your initial term ends, simply continue month-to-month.
             </p>
           </div>
 
@@ -162,21 +162,9 @@ const TierCard = ({ tier, reservationFee, onReserve, disabled }: TierProps) => {
       </div>
 
       <div className="space-y-2 text-sm mb-6 flex-grow">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Installation</span>
-          <span className="font-medium text-card-foreground">
-            {tier.installFee === 0 ? "Free" : `$${tier.installFee}`}
-          </span>
+        <div className="font-medium text-card-foreground">
+          {tier.installFee === 0 ? "Free installation" : `$${tier.installFee} installation`}
         </div>
-        {tier.months >= 6 ? (
-          <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-            Installation fee is applied toward your monthly payments.
-          </p>
-        ) : (
-          <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-            Installation fee is applied toward payments when committing to 6+ months.
-          </p>
-        )}
       </div>
 
       <Button
