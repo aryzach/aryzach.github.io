@@ -182,6 +182,11 @@ const AdminReservations = () => {
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<"inventory" | "calendar">("inventory");
+  const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
+    const d = new Date();
+    return { y: d.getFullYear(), m: d.getMonth() };
+  });
 
   // Per-column filters
   type ColKey =
