@@ -1,6 +1,10 @@
 // Catalog for the new /pricing experience.
 // Maps product URL slugs -> sauna_types.id in the database + display data.
 
+import traditionalOutdoorAsset from "@/assets/traditional-outdoor.png.asset.json";
+import originalCollectionAsset from "@/assets/original-collection.png.asset.json";
+import infraredOutdoorAsset from "@/assets/infrared-outdoor.png.asset.json";
+
 export type Category = "traditional" | "infrared";
 
 export interface PricingTier {
@@ -56,9 +60,10 @@ const ORIGINAL_TIERS: PricingTier[] = [
 
 // Portrait placeholder imagery — swap for real photography later.
 const PLACEHOLDER_TRAD_INDOOR = "https://images.unsplash.com/photo-1613767973936-64d1e34d8484?auto=format&fit=crop&w=1200&q=80";
-const PLACEHOLDER_TRAD_OUTDOOR = "https://images.unsplash.com/photo-1614846384571-1e31b5384f4c?auto=format&fit=crop&w=1200&q=80";
+const PLACEHOLDER_TRAD_OUTDOOR = traditionalOutdoorAsset.url;
+const IMG_ORIGINAL_COLLECTION = originalCollectionAsset.url;
 const PLACEHOLDER_INFRARED_INDOOR = "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=1200&q=80";
-const PLACEHOLDER_INFRARED_OUTDOOR = "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1200&q=80";
+const PLACEHOLDER_INFRARED_OUTDOOR = infraredOutdoorAsset.url;
 
 export const products: Product[] = [
   {
@@ -68,9 +73,9 @@ export const products: Product[] = [
     category: "traditional",
     categoryLabel: "Traditional",
     placement: "Indoor",
-    shortDescription: "Latest-generation steam sauna, built for indoor living rooms and studios.",
+    shortDescription: "2-person traditional sauna, built for living rooms, garages, and studio apartments.",
     longDescription:
-      "Our latest 2-person traditional steam sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, cedar interior, and delivered fully assembled.",
+      "Our 2-person indoor traditional sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, cedar interior, and delivered fully assembled.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(350),
@@ -82,9 +87,9 @@ export const products: Product[] = [
     category: "traditional",
     categoryLabel: "Traditional",
     placement: "Outdoor",
-    shortDescription: "Weatherproof steam sauna for backyards, patios, and decks.",
+    shortDescription: "2-person traditional sauna for backyards, patios, and decks.",
     longDescription:
-      "Our latest 2-person outdoor steam sauna, weather-sealed for year-round Bay Area use. Runs on standard 120V power with real stones for authentic löyly.",
+      "Our 2-person outdoor traditional sauna, weather-sealed for year-round Bay Area use. Runs on standard 120V power with real stones for authentic löyly.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(350),
@@ -97,10 +102,10 @@ export const products: Product[] = [
     categoryLabel: "Traditional",
     placement: "Indoor",
     shortDescription:
-      "Earlier-generation indoor steam sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
+      "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
     longDescription:
       "An earlier-generation traditional sauna converted from one of our infrared models. Full stones, cedar interior, and the same authentic traditional experience at a lower monthly price.",
-    image: PLACEHOLDER_TRAD_INDOOR,
+    image: IMG_ORIGINAL_COLLECTION,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
   },
@@ -112,10 +117,10 @@ export const products: Product[] = [
     categoryLabel: "Traditional",
     placement: "Outdoor",
     shortDescription:
-      "Earlier-generation outdoor steam sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
+      "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
     longDescription:
       "An earlier-generation outdoor traditional sauna converted from one of our infrared models. Real stones, cedar interior, and the same authentic experience at a lower price point.",
-    image: PLACEHOLDER_TRAD_OUTDOOR,
+    image: IMG_ORIGINAL_COLLECTION,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
   },

@@ -233,6 +233,48 @@ const AdminReservations = () => {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<null | { ok: number; errors: { row: number; message: string }[] }>(null);
 
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<SaunaStatus | "">("");
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const toggleSelect = (id: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const bulkDelete = async () => {
+    if (!selectedIds.size) return;
+    if (!confirm(`Delete ${selectedIds.size} sauna${selectedIds.size === 1 ? "" : "s"}?`)) return;
+    setBulkBusy(true);
+    let ok = 0; let fail = 0;
+    for (const id of Array.from(selectedIds)) {
+      try { await callAdmin({ action: "delete_inventory", id }); ok++; }
+      catch { fail++; }
+    }
+    setBulkBusy(false);
+    clearSelection();
+    if (ok) toast.success(`Deleted ${ok}`);
+    if (fail) toast.error(`${fail} failed`);
+    await loadAll();
+  };
+
+  const bulkSetStatus = async () => {
+    if (!selectedIds.size || !bulkStatus) return;
+    setBulkBusy(true);
+    let ok = 0; let fail = 0;
+    for (const id of Array.from(selectedIds)) {
+      try { await callAdmin({ action: "update_inventory", id, patch: { status: bulkStatus } }); ok++; }
+      catch { fail++; }
+    }
+    setBulkBusy(false);
+    if (ok) toast.success(`Updated ${ok}`);
+    if (fail) toast.error(`${fail} failed`);
+    setBulkStatus("");
+    await loadAll();
+  };
+
   const downloadTemplate = () => {
     const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes"];
     const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", ""];
@@ -608,12 +650,42 @@ const AdminReservations = () => {
             </div>
           )}
 
+          {selectedIds.size > 0 && (
+            <div className="mb-3 p-2 rounded-md border border-primary bg-primary/5 flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-medium">{selectedIds.size} selected</span>
+              <div className="flex items-center gap-1">
+                <select
+                  className="h-7 px-1.5 text-xs bg-background border border-border rounded-sm"
+                  value={bulkStatus}
+                  onChange={(e) => setBulkStatus(e.target.value as SaunaStatus | "")}
+                >
+                  <option value="">Set status…</option>
+                  {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+                <Button size="sm" className="h-7 text-xs px-2" disabled={!bulkStatus || bulkBusy} onClick={bulkSetStatus}>Apply</Button>
+              </div>
+              <Button size="sm" variant="destructive" className="h-7 text-xs px-2" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
+              <Button size="sm" variant="ghost" className="h-7 text-xs px-2 ml-auto" onClick={clearSelection}>Clear</Button>
+            </div>
+          )}
+
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
                   <table className="w-full text-xs border-collapse">
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
+                        <th className="px-2 py-1.5 border-r border-border w-8">
+                          <input
+                            type="checkbox"
+                            aria-label="Select all"
+                            checked={filtered.length > 0 && filtered.every((r) => selectedIds.has(r.id))}
+                            onChange={(e) => {
+                              if (e.target.checked) setSelectedIds(new Set(filtered.map((r) => r.id)));
+                              else clearSelection();
+                            }}
+                          />
+                        </th>
                         {([
                           ["id", "ID"],
                           ["location", "Location"],
@@ -643,6 +715,7 @@ const AdminReservations = () => {
                         <th className="text-left px-2 py-1.5"></th>
                       </tr>
                       <tr className="border-t border-border bg-muted/30">
+                        <th className="px-2 py-1 border-r border-border"></th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.id} onChange={(e) => setColFilter("id", e.target.value)} />
                         </th>
@@ -695,6 +768,7 @@ const AdminReservations = () => {
                       {draft && (
                         <>
                           <tr className="border-t border-border bg-primary/5">
+                            <td className="px-2 py-1 border-r border-border"></td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input className={`h-7 text-xs font-mono ${draftErrorField === "unit_code" ? "border-destructive" : ""}`} value={draft.unit_code} onChange={(e) => setD("unit_code", e.target.value)} placeholder="ID" />
                             </td>
@@ -753,7 +827,7 @@ const AdminReservations = () => {
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={12} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={13} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -761,10 +835,18 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={12} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={13} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border hover:bg-muted/20">
+                          <td className="px-2 py-0.5 border-r border-border">
+                            <input
+                              type="checkbox"
+                              aria-label={`Select ${r.unit_code || r.id}`}
+                              checked={selectedIds.has(r.id)}
+                              onChange={() => toggleSelect(r.id)}
+                            />
+                          </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.unit_code || ""} mono onSave={(v) => updateCell(r.id, "unit_code", v || null)} />
                           </td>
