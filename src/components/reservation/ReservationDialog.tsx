@@ -219,7 +219,7 @@ const ReservationDialog = ({ saunaType, availability, onClose }: Props) => {
             <label className="flex items-start gap-2 text-sm">
               <Checkbox
                 checked={watch("ack_consult") || false}
-                onCheckedChange={(c) => setValue("ack_consult", c === true as any)}
+                onCheckedChange={(c) => setValue("ack_consult", c === true, { shouldValidate: true })}
               />
               <span>
                 Final installation timing is subject to video consultation and manual confirmation. Please schedule your installation at least 2 days after your video consultation.
@@ -230,7 +230,7 @@ const ReservationDialog = ({ saunaType, availability, onClose }: Props) => {
             <label className="flex items-start gap-2 text-sm">
               <Checkbox
                 checked={watch("ack_fee_applied") || false}
-                onCheckedChange={(c) => setValue("ack_fee_applied", c === true as any)}
+                onCheckedChange={(c) => setValue("ack_fee_applied", c === true, { shouldValidate: true })}
               />
               <span>Reservation fee is applied to monthly payments if you commit to 6+ months.</span>
             </label>
