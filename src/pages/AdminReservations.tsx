@@ -201,7 +201,7 @@ const AdminReservations = () => {
     customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const [sortCol, setSortCol] = useState<ColKey | null>(null);
+  const [sortCol, setSortCol] = useState<ColKey | null>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const toggleSort = (k: ColKey) => {
     if (sortCol !== k) { setSortCol(k); setSortDir("asc"); }
