@@ -10,7 +10,7 @@ import AvailabilityLine from "@/components/pricing/AvailabilityLine";
 const CATEGORY_META: Record<Category, { title: string; subtitle: string }> = {
   traditional: {
     title: "Traditional Sauna",
-    subtitle: "Authentic löyly with real stones. Choose the placement that fits your home.",
+    subtitle: "Authentic löyly with real stones powered from a standard home outlet. Choose the placement that fits your home.",
   },
   infrared: {
     title: "Infrared Sauna",
