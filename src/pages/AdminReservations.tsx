@@ -681,7 +681,7 @@ const AdminReservations = () => {
                           <td className="px-1 py-0.5 border-r border-border">
                             <SelectCell
                               value={r.status}
-                              options={STATUSES.map((s) => ({ value: s, label: s }))}
+                              options={STATUSES.map((s) => ({ value: s, label: s, className: STATUS_STYLES[s] }))}
                               onSave={(v) => updateCell(r.id, "status", v)}
                               badgeClass={STATUS_STYLES[r.status]}
                             />
