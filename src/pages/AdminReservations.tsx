@@ -460,10 +460,7 @@ const InventoryDialog = ({
     status: initial?.status || ("Available" as SaunaStatus),
     current_customer: initial?.current_customer || "",
     install_date: initial?.install_date || "",
-    minimum_term_ends: initial?.minimum_term_ends || "",
-    notice_received_date: initial?.notice_received_date || "",
     available_date: initial?.available_date || "",
-    incoming_eta: initial?.incoming_eta || "",
     location: initial?.location || "",
     condition: initial?.condition || "",
     admin_notes: initial?.admin_notes || "",
@@ -513,20 +510,8 @@ const InventoryDialog = ({
             <Input type="date" value={form.install_date} onChange={(e) => setF("install_date", e.target.value)} />
           </div>
           <div>
-            <Label className="text-xs">Minimum term ends</Label>
-            <Input type="date" value={form.minimum_term_ends} onChange={(e) => setF("minimum_term_ends", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Notice received date</Label>
-            <Input type="date" value={form.notice_received_date} onChange={(e) => setF("notice_received_date", e.target.value)} />
-          </div>
-          <div>
             <Label className="text-xs">Available date</Label>
             <Input type="date" value={form.available_date} onChange={(e) => setF("available_date", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Incoming ETA</Label>
-            <Input type="date" value={form.incoming_eta} onChange={(e) => setF("incoming_eta", e.target.value)} />
           </div>
           <div>
             <Label className="text-xs">Location</Label>
