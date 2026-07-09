@@ -12,12 +12,9 @@ const AvailabilityLine = ({ status, size = "sm", label }: Props) => {
 
   if (status.status === "available") {
     return (
-      <div className={`inline-flex items-center gap-2 ${textSize}`}>
-        <span className="w-2 h-2 rounded-full bg-green-500" />
-        <span>
-          {labelNode}
-          <span className="font-medium text-green-600 dark:text-green-500">Available immediately</span>
-        </span>
+      <div className={textSize}>
+        {labelNode}
+        <span className="font-medium text-green-600 dark:text-green-500">Available immediately</span>
       </div>
     );
   }
