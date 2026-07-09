@@ -566,8 +566,34 @@ const AdminReservations = () => {
             </div>
           </div>
 
+          <div className="mb-4 inline-flex rounded-md border border-border bg-card p-0.5">
+            <button
+              type="button"
+              className={`px-3 py-1.5 text-sm rounded ${tab === "inventory" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              onClick={() => setTab("inventory")}
+            >Inventory</button>
+            <button
+              type="button"
+              className={`px-3 py-1.5 text-sm rounded ${tab === "calendar" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              onClick={() => setTab("calendar")}
+            >Calendar</button>
+          </div>
+
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
+          {tab === "calendar" && (
+            <CalendarView
+              inventory={inventory}
+              types={types}
+              month={calMonth}
+              onPrev={() => setCalMonth((c) => (c.m === 0 ? { y: c.y - 1, m: 11 } : { y: c.y, m: c.m - 1 }))}
+              onNext={() => setCalMonth((c) => (c.m === 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m: c.m + 1 }))}
+              onToday={() => { const d = new Date(); setCalMonth({ y: d.getFullYear(), m: d.getMonth() }); }}
+            />
+          )}
+
+          {tab === "inventory" && (
+            <>
           {importResult && (
             <div className="mb-4 p-3 rounded-md border border-border bg-card text-sm">
               <div className="font-medium mb-1">Import result: {importResult.ok} added, {importResult.errors.length} failed</div>
