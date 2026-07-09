@@ -47,7 +47,7 @@ const Header = () => {
               How It Started
             </Link>
             <Link to="/pricing" className="text-white/70 hover:text-white transition-colors">
-              Pricing
+              Options & Pricing
             </Link>
             <Link to="/service-areas" className="text-white/70 hover:text-white transition-colors">
               Service Areas
@@ -85,7 +85,7 @@ const Header = () => {
                 How It Started
               </Link>
               <Link to="/pricing" className="text-white/70 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                Pricing
+                Options & Pricing
               </Link>
               <Link to="/service-areas" className="text-white/70 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                 Service Areas

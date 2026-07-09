@@ -66,7 +66,7 @@ const Pricing = () => {
                     <h2 className="text-2xl md:text-3xl font-semibold text-card-foreground mb-2">
                       {title}
                     </h2>
-                    <p className="text-muted-foreground text-base leading-relaxed mb-5">
+                    <p className="text-muted-foreground text-base leading-relaxed mb-5 flex-grow">
                       {hero.blurb}
                     </p>
                     <div className="flex items-baseline gap-2 mb-3">
