@@ -88,9 +88,12 @@ const ReservationDialog = ({ saunaType, availability, onClose }: Props) => {
     }
 
     setSubmitting(true);
-    const { data, error } = await supabase
+
+    const reservationId = crypto.randomUUID();
+    const { error } = await supabase
       .from("reservations")
       .insert({
+        id: reservationId,
         sauna_type_id: saunaType.id,
         first_name: values.first_name,
         last_name: values.last_name,
@@ -101,19 +104,17 @@ const ReservationDialog = ({ saunaType, availability, onClose }: Props) => {
         access_notes: values.access_notes || null,
         min_commitment_months: parseInt(values.min_commitment_months, 10),
         preferred_install_at: new Date(values.preferred_install_at).toISOString(),
-      })
-      .select("id")
-      .single();
+      });
 
     setSubmitting(false);
 
-    if (error || !data) {
+    if (error) {
       console.error(error);
       toast.error("Could not submit reservation. Please try again.");
       return;
     }
 
-    navigate(`/reservation-confirmation?id=${data.id}&type=${saunaType.id}`);
+    navigate(`/reservation-confirmation?id=${reservationId}&type=${saunaType.id}`);
   };
 
   return (
