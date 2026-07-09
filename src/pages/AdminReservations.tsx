@@ -40,14 +40,14 @@ const STATUSES: SaunaStatus[] = [
 ];
 
 const STATUS_STYLES: Record<SaunaStatus, string> = {
-  "Available": "bg-green-100 text-green-800 border-green-300",
-  "Reservation Hold": "bg-blue-100 text-blue-800 border-blue-300",
-  "Reservation Confirmed": "bg-purple-100 text-purple-800 border-purple-300",
-  "Installed": "bg-slate-800 text-white border-slate-800",
-  "Returning": "bg-yellow-100 text-yellow-800 border-yellow-300",
-  "Maintenance": "bg-orange-100 text-orange-800 border-orange-300",
-  "Incoming": "bg-sky-100 text-sky-800 border-sky-300",
-  "Sold": "bg-gray-200 text-gray-700 border-gray-300",
+  "Available": "bg-green-100 text-green-900 border-green-200",
+  "Reservation Hold": "bg-blue-100 text-blue-900 border-blue-200",
+  "Reservation Confirmed": "bg-purple-100 text-purple-900 border-purple-200",
+  "Installed": "bg-slate-200 text-slate-900 border-slate-300",
+  "Returning": "bg-yellow-100 text-yellow-900 border-yellow-200",
+  "Maintenance": "bg-orange-100 text-orange-900 border-orange-200",
+  "Incoming": "bg-sky-100 text-sky-900 border-sky-200",
+  "Sold": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
