@@ -905,3 +905,117 @@ const SelectCell = ({
 };
 
 export default AdminReservations;
+
+// ---------- Calendar View ----------
+
+function isoDate(y: number, m: number, d: number): string {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+function isAvailableOn(row: InventoryRow, dayIso: string): boolean {
+  // Not available if installed on or before this day (occupied by customer)
+  if (row.install_date && row.install_date <= dayIso) {
+    // if there's a later available_date after install, treat as available from that date
+    if (row.available_date && row.available_date <= dayIso) return true;
+    return false;
+  }
+  if (row.available_date) return row.available_date <= dayIso;
+  return row.status === "Available";
+}
+
+const CalendarView = ({
+  inventory,
+  types,
+  month,
+  onPrev,
+  onNext,
+  onToday,
+}: {
+  inventory: InventoryRow[];
+  types: SaunaType[];
+  month: { y: number; m: number };
+  onPrev: () => void;
+  onNext: () => void;
+  onToday: () => void;
+}) => {
+  const { y, m } = month;
+  const firstDay = new Date(y, m, 1);
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const startWeekday = firstDay.getDay(); // 0=Sun
+  const todayIso = isoDate(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  const monthLabel = firstDay.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  const typesToShow = types.length ? types : Array.from(new Set(inventory.map((r) => r.sauna_type_id))).map((id) => ({ id, name: id, sort_order: 0 }));
+
+  const shortName = (n: string) => n.replace(/\s*sauna\s*/i, "").trim();
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < startWeekday; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  return (
+    <section className="mb-10">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onPrev}>‹</Button>
+          <Button variant="outline" size="sm" onClick={onToday}>Today</Button>
+          <Button variant="outline" size="sm" onClick={onNext}>›</Button>
+          <h2 className="text-lg font-semibold ml-2">{monthLabel}</h2>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full bg-green-500" /> Installation</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full bg-red-500" /> Returning</span>
+          <span className="inline-flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full bg-blue-500" /> Incoming</span>
+        </div>
+      </div>
+
+      <div className="border border-border rounded-md bg-card overflow-hidden">
+        <div className="grid grid-cols-7 bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
+          {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
+            <div key={d} className="px-2 py-1.5 border-r border-border last:border-r-0">{d}</div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7">
+          {cells.map((day, i) => {
+            if (day === null) {
+              return <div key={i} className="min-h-[110px] border-r border-b border-border bg-muted/20 last:border-r-0" />;
+            }
+            const dayIso = isoDate(y, m, day);
+            const installs = inventory.filter((r) => r.install_date === dayIso);
+            const returning = inventory.filter((r) => r.status === "Returning" && r.available_date === dayIso);
+            const incoming = inventory.filter((r) => r.status === "Incoming" && r.available_date === dayIso);
+            const isToday = dayIso === todayIso;
+            return (
+              <div
+                key={i}
+                className={`min-h-[110px] p-1.5 border-r border-b border-border last:border-r-0 ${isToday ? "bg-primary/5" : ""}`}
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className={`text-xs font-medium ${isToday ? "text-primary" : "text-foreground"}`}>{day}</span>
+                  <div className="flex gap-0.5">
+                    {installs.length > 0 && <span title={`${installs.length} installation${installs.length===1?"":"s"}`} className="inline-block w-2 h-2 rounded-full bg-green-500" />}
+                    {returning.length > 0 && <span title={`${returning.length} returning`} className="inline-block w-2 h-2 rounded-full bg-red-500" />}
+                    {incoming.length > 0 && <span title={`${incoming.length} incoming`} className="inline-block w-2 h-2 rounded-full bg-blue-500" />}
+                  </div>
+                </div>
+                <div className="space-y-0.5">
+                  {typesToShow.map((t) => {
+                    const count = inventory.filter((r) => r.sauna_type_id === t.id && isAvailableOn(r, dayIso)).length;
+                    if (count === 0) return null;
+                    return (
+                      <div key={t.id} className="text-[10px] leading-tight text-muted-foreground flex justify-between gap-1">
+                        <span className="truncate">{shortName(t.name)}</span>
+                        <span className="font-medium text-foreground">{count}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
