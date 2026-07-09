@@ -183,10 +183,31 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Filters
-  const [fType, setFType] = useState<string>("all");
-  const [fStatus, setFStatus] = useState<string>("all");
-  const [fCustomer, setFCustomer] = useState<string>("");
+  // Per-column filters
+  type ColKey =
+    | "id"
+    | "location"
+    | "style"
+    | "model"
+    | "status"
+    | "customer"
+    | "install"
+    | "available"
+    | "timeline"
+    | "notes"
+    | "updated";
+  const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
+    id: "", location: "", style: "", model: "", status: "",
+    customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
+  });
+  const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
+  const [sortCol, setSortCol] = useState<ColKey | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const toggleSort = (k: ColKey) => {
+    if (sortCol !== k) { setSortCol(k); setSortDir("asc"); }
+    else if (sortDir === "asc") setSortDir("desc");
+    else { setSortCol(null); setSortDir("asc"); }
+  };
 
   const [draft, setDraft] = useState<null | {
     unit_code: string;
@@ -427,14 +448,37 @@ const AdminReservations = () => {
     setPwInput("");
   };
 
+  const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
+    id: r.unit_code || "",
+    location: ELIG_LABEL[r.indoor_outdoor_eligibility],
+    style: styleFor(r.sauna_type_id),
+    model: r.model || "",
+    status: r.status,
+    customer: r.current_customer || "",
+    install: r.install_date || "",
+    available: r.available_date || "",
+    timeline: timelineFor(r),
+    notes: r.admin_notes || "",
+    updated: r.updated_at,
+  });
+
   const filtered = useMemo(() => {
-    return inventory.filter((r) => {
-      if (fType !== "all" && r.sauna_type_id !== fType) return false;
-      if (fStatus !== "all" && r.status !== fStatus) return false;
-      if (fCustomer && !(r.current_customer || "").toLowerCase().includes(fCustomer.toLowerCase())) return false;
-      return true;
+    const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
+    const rows = inventory.filter((r) => {
+      if (!active.length) return true;
+      const vals = rowValues(r);
+      return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
     });
-  }, [inventory, fType, fStatus, fCustomer]);
+    if (sortCol) {
+      rows.sort((a, b) => {
+        const av = rowValues(a)[sortCol];
+        const bv = rowValues(b)[sortCol];
+        const cmp = av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" });
+        return sortDir === "asc" ? cmp : -cmp;
+      });
+    }
+    return rows;
+  }, [inventory, colFilters, sortCol, sortDir]);
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
