@@ -342,7 +342,7 @@ const AdminReservations = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
             <div className="flex gap-2">
-              <Button onClick={() => setCreating(true)}>Add sauna</Button>
+              <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
               <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
             </div>
           </div>
@@ -488,22 +488,16 @@ const AdminReservations = () => {
       </main>
       <Footer />
 
-      {(editing || creating) && (
+      {editing && (
         <InventoryDialog
           initial={editing}
           types={types}
-          onClose={() => { setEditing(null); setCreating(false); }}
+          onClose={() => setEditing(null)}
           onSave={async (patch) => {
             try {
-              if (editing) {
-                await callAdmin({ action: "update_inventory", id: editing.id, patch });
-                toast.success("Saved");
-              } else {
-                await callAdmin({ action: "create_inventory", ...patch });
-                toast.success("Added");
-              }
+              await callAdmin({ action: "update_inventory", id: editing.id, patch });
+              toast.success("Saved");
               setEditing(null);
-              setCreating(false);
               await loadAll();
             } catch (e) { toast.error((e as Error).message); }
           }}
