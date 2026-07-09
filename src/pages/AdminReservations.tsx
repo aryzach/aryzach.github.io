@@ -387,13 +387,29 @@ const AddEventForm = ({
 
 const ReservationRow = ({
   reservation,
+  saunaTypes,
   onUpdate,
 }: {
   reservation: Reservation;
+  saunaTypes: SaunaType[];
   onUpdate: (patch: Partial<Reservation>) => Promise<void>;
 }) => {
   const r = reservation;
   const [notes, setNotes] = useState(r.admin_notes || "");
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({
+    first_name: r.first_name,
+    last_name: r.last_name,
+    email: r.email,
+    phone: r.phone,
+    sauna_type_id: r.sauna_type_id,
+    install_address: r.install_address,
+    placement_choice: r.placement_choice,
+    access_notes: r.access_notes || "",
+    min_commitment_months: String(r.min_commitment_months),
+    preferred_install_at: new Date(r.preferred_install_at).toISOString().slice(0, 16),
+  });
+  const setF = (k: keyof typeof form, v: string) => setForm((p) => ({ ...p, [k]: v }));
 
   const statusCol = (
     label: string,
@@ -423,6 +439,102 @@ const ReservationRow = ({
             Created {new Date(r.created_at).toLocaleDateString()}
           </span>
         </div>
+
+        {editing ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-md border border-border bg-muted/30">
+            <div>
+              <Label className="text-xs">First name</Label>
+              <Input value={form.first_name} onChange={(e) => setF("first_name", e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Last name</Label>
+              <Input value={form.last_name} onChange={(e) => setF("last_name", e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Email</Label>
+              <Input type="email" value={form.email} onChange={(e) => setF("email", e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Phone</Label>
+              <Input value={form.phone} onChange={(e) => setF("phone", e.target.value)} />
+            </div>
+            <div className="md:col-span-2">
+              <Label className="text-xs">Install address</Label>
+              <Input value={form.install_address} onChange={(e) => setF("install_address", e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Sauna type</Label>
+              <Select value={form.sauna_type_id} onValueChange={(v) => setF("sauna_type_id", v)}>
+                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {saunaTypes.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs">Placement</Label>
+              <Select value={form.placement_choice} onValueChange={(v) => setF("placement_choice", v)}>
+                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="indoor">Indoor</SelectItem>
+                  <SelectItem value="outdoor">Outdoor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs">Min commitment (months)</Label>
+              <Select value={form.min_commitment_months} onValueChange={(v) => setF("min_commitment_months", v)}>
+                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["1", "3", "6", "12"].map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs">Preferred install date & time</Label>
+              <Input
+                type="datetime-local"
+                value={form.preferred_install_at}
+                onChange={(e) => setF("preferred_install_at", e.target.value)}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Label className="text-xs">Access notes</Label>
+              <Textarea rows={2} value={form.access_notes} onChange={(e) => setF("access_notes", e.target.value)} />
+            </div>
+            <div className="md:col-span-2 flex gap-2 justify-end">
+              <Button variant="ghost" size="sm" onClick={() => setEditing(false)}>Cancel</Button>
+              <Button
+                size="sm"
+                onClick={async () => {
+                  await onUpdate({
+                    first_name: form.first_name,
+                    last_name: form.last_name,
+                    email: form.email,
+                    phone: form.phone,
+                    sauna_type_id: form.sauna_type_id,
+                    install_address: form.install_address,
+                    placement_choice: form.placement_choice,
+                    access_notes: form.access_notes || null,
+                    min_commitment_months: parseInt(form.min_commitment_months, 10),
+                    preferred_install_at: new Date(form.preferred_install_at).toISOString(),
+                  } as Partial<Reservation>);
+                  setEditing(false);
+                }}
+              >
+                Save details
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="space-y-0.5">
+              <div>Address: {r.install_address} ({r.placement_choice})</div>
+              {r.access_notes && <div>Access: {r.access_notes}</div>}
+            </div>
+            <Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {statusCol("Reservation", "reservation_status", RESERVATION_STATUSES)}
