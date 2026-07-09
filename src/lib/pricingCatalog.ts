@@ -87,7 +87,7 @@ export const products: Product[] = [
       "Our 2-person indoor traditional sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, and delivered fully assembled.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: 500,
-    tiers: TRAD_TIERS(350),
+    tiers: TRAD_TIERS(500),
   },
   {
     slug: "outdoor",
@@ -101,7 +101,7 @@ export const products: Product[] = [
       "Our 2-person outdoor traditional sauna, weather-sealed for year-round Bay Area use. Runs on standard 120V power with real stones for authentic löyly.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: 500,
-    tiers: TRAD_TIERS(350),
+    tiers: TRAD_TIERS(500),
   },
   {
     slug: "original-indoor",
@@ -180,7 +180,7 @@ export const categoryHero: Record<Category, { image: string; blurb: string }> = 
   traditional: {
     image: assetUrl(traditionalHeroAsset),
     blurb:
-      "Authentic löyly with real stones. Choose indoor, outdoor, or our Original Collection.",
+      "Authentic löyly with real stones powered from a standard home outlet. Choose indoor, outdoor, or our Original Collection.",
   },
   infrared: {
     image: assetUrl(infraredHeroAsset),
