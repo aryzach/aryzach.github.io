@@ -127,13 +127,13 @@ function timelineFor(row: InventoryRow): string {
     case "Reservation Confirmed":
       return `Confirmed for ${row.current_customer || "(unknown)"}`;
     case "Installed":
-      return `Installed with ${row.current_customer || "(unknown)"}${row.minimum_term_ends ? ` · min term ends ${fmtDate(row.minimum_term_ends)}` : ""}`;
+      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}`;
     case "Returning":
       return `Returning · available ${fmtDate(row.available_date)}`;
     case "Maintenance":
       return `Maintenance · available ${fmtDate(row.available_date)}`;
     case "Incoming":
-      return `Incoming · ETA ${fmtDate(row.incoming_eta)} · available ${fmtDate(row.available_date)}`;
+      return `Incoming · available ${fmtDate(row.available_date)}`;
     case "Sold / Retired":
       return "Retired";
   }
