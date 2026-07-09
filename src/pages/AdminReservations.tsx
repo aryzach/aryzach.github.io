@@ -53,6 +53,24 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
 const MODELS = ["Standard", "Prototype"] as const;
 type ModelValue = typeof MODELS[number];
+const STYLES = ["Traditional", "Infrared"] as const;
+type StyleValue = typeof STYLES[number];
+
+const ELIG_LABEL: Record<"indoor" | "outdoor" | "either", string> = {
+  indoor: "Indoor",
+  outdoor: "Outdoor",
+  either: "Both",
+};
+
+function styleFor(sauna_type_id: string): StyleValue {
+  return /infrared/i.test(sauna_type_id) ? "Infrared" : "Traditional";
+}
+
+function saunaTypeIdFor(style: StyleValue, elig: "indoor" | "outdoor" | "either"): string | null {
+  const loc = elig === "either" ? "either" : elig;
+  const key = `${style.toLowerCase()}|${loc}`;
+  return STYLE_LOC_TO_TYPE[key] ?? null;
+}
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
 const STYLE_LOC_TO_TYPE: Record<string, string> = {
@@ -172,7 +190,7 @@ const AdminReservations = () => {
 
   const [draft, setDraft] = useState<null | {
     unit_code: string;
-    sauna_type_id: string;
+    style: StyleValue;
     model: string;
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
     status: SaunaStatus;
@@ -289,7 +307,7 @@ const AdminReservations = () => {
     setDraftErrorField(null);
     setDraft({
       unit_code: "",
-      sauna_type_id: types[0]?.id || "",
+      style: "Traditional",
       model: "",
       indoor_outdoor_eligibility: "either",
       status: "Available",
@@ -307,14 +325,17 @@ const AdminReservations = () => {
     if (!draft) return;
     setDraftError(null);
     setDraftErrorField(null);
-    if (!draft.sauna_type_id) {
-      setDraftError("Sauna type is required.");
-      setDraftErrorField("sauna_type_id");
+    const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility);
+    if (!sauna_type_id) {
+      setDraftError(`No sauna type for ${draft.style} + ${ELIG_LABEL[draft.indoor_outdoor_eligibility]}.`);
+      setDraftErrorField("style");
       return;
     }
     setSavingDraft(true);
     try {
-      await callAdmin({ action: "create_inventory", ...draft });
+      const { style, ...rest } = draft;
+      void style;
+      await callAdmin({ action: "create_inventory", ...rest, sauna_type_id });
       toast.success("Added");
       setDraft(null);
       await loadAll();
