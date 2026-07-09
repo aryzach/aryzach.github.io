@@ -579,49 +579,85 @@ const AdminReservations = () => {
 
           <section className="mb-10">
             <div className="space-y-3">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  <div>
-                    <Label className="text-xs">Sauna type</Label>
-                    <Select value={fType} onValueChange={setFType}>
-                      <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All types</SelectItem>
-                        {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-xs">Status</Label>
-                    <Select value={fStatus} onValueChange={setFStatus}>
-                      <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All statuses</SelectItem>
-                        {STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-xs">Current customer</Label>
-                    <Input className="h-9" value={fCustomer} onChange={(e) => setFCustomer(e.target.value)} placeholder="Search…" />
-                  </div>
-                </div>
-
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
                   <table className="w-full text-xs border-collapse">
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
-                        <th className="text-left px-2 py-1.5 border-r border-border">ID</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Location</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Style</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Model</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Status</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Customer</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Install</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Available</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Timeline</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Notes</th>
-                        <th className="text-left px-2 py-1.5 border-r border-border">Updated</th>
+                        {([
+                          ["id", "ID"],
+                          ["location", "Location"],
+                          ["style", "Style"],
+                          ["model", "Model"],
+                          ["status", "Status"],
+                          ["customer", "Customer"],
+                          ["install", "Install"],
+                          ["available", "Available"],
+                          ["timeline", "Timeline"],
+                          ["notes", "Notes"],
+                          ["updated", "Updated"],
+                        ] as [ColKey, string][]).map(([k, label]) => (
+                          <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
+                            <button
+                              type="button"
+                              className="inline-flex items-center gap-1 uppercase hover:text-foreground"
+                              onClick={() => toggleSort(k)}
+                            >
+                              {label}
+                              <span className="text-[9px] opacity-70">
+                                {sortCol === k ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
+                              </span>
+                            </button>
+                          </th>
+                        ))}
                         <th className="text-left px-2 py-1.5"></th>
+                      </tr>
+                      <tr className="border-t border-border bg-muted/30">
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.id} onChange={(e) => setColFilter("id", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.location} onChange={(e) => setColFilter("location", e.target.value)}>
+                            <option value="">All</option>
+                            {ELIGIBILITY.map((e) => <option key={e} value={ELIG_LABEL[e]}>{ELIG_LABEL[e]}</option>)}
+                          </select>
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.style} onChange={(e) => setColFilter("style", e.target.value)}>
+                            <option value="">All</option>
+                            {STYLES.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.model} onChange={(e) => setColFilter("model", e.target.value)}>
+                            <option value="">All</option>
+                            {MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
+                          </select>
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.status} onChange={(e) => setColFilter("status", e.target.value)}>
+                            <option value="">All</option>
+                            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.install} onChange={(e) => setColFilter("install", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.available} onChange={(e) => setColFilter("available", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.timeline} onChange={(e) => setColFilter("timeline", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.notes} onChange={(e) => setColFilter("notes", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.updated} onChange={(e) => setColFilter("updated", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1"></th>
                       </tr>
                     </thead>
                     <tbody>
