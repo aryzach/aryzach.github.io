@@ -1,13 +1,11 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
@@ -56,6 +54,7 @@ const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
 
 interface InventoryRow {
   id: string;
+  unit_code: string | null;
   sauna_type_id: string;
   model: string | null;
   indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
@@ -63,53 +62,11 @@ interface InventoryRow {
   current_customer: string | null;
   install_date: string | null;
   available_date: string | null;
-  location: string | null;
-  condition: string | null;
   admin_notes: string | null;
   reservation_id: string | null;
   updated_at: string;
   created_at: string;
 }
-
-interface Reservation {
-  id: string;
-  created_at: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  sauna_type_id: string;
-  install_address: string;
-  placement_choice: string;
-  access_notes: string | null;
-  min_commitment_months: number;
-  preferred_install_at: string;
-  reservation_status: string;
-  payment_status: string;
-  contract_status: string;
-  id_status: string;
-  consult_status: string;
-  admin_notes: string | null;
-  sauna_inventory_id: string | null;
-}
-
-const RESERVATION_STATUSES = [
-  "Pending Payment",
-  "Deposit Paid",
-  "Contract Pending",
-  "ID Pending",
-  "Consult Pending",
-  "Pending Approval",
-  "Approved",
-  "Scheduled",
-  "Installed",
-  "Cancelled",
-  "Refunded",
-];
-const PAYMENT_STATUSES = ["Pending", "Paid", "Refunded"];
-const CONTRACT_STATUSES = ["Not Sent", "Sent", "Signed"];
-const ID_STATUSES = ["Not Uploaded", "Uploaded", "Reviewed"];
-const CONSULT_STATUSES = ["Not Scheduled", "Scheduled", "Complete"];
 
 function fmtDate(d: string | null): string {
   if (!d) return "—";
@@ -147,18 +104,15 @@ const AdminReservations = () => {
   const [pwInput, setPwInput] = useState("");
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Filters
   const [fType, setFType] = useState<string>("all");
   const [fStatus, setFStatus] = useState<string>("all");
   const [fCustomer, setFCustomer] = useState<string>("");
-  const [fLocation, setFLocation] = useState<string>("");
-  const [fCondition, setFCondition] = useState<string>("");
 
-  const [editing, setEditing] = useState<InventoryRow | null>(null);
   const [draft, setDraft] = useState<null | {
+    unit_code: string;
     sauna_type_id: string;
     model: string;
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
@@ -166,8 +120,6 @@ const AdminReservations = () => {
     current_customer: string;
     install_date: string;
     available_date: string;
-    location: string;
-    condition: string;
     admin_notes: string;
   }>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
@@ -178,6 +130,7 @@ const AdminReservations = () => {
     setDraftError(null);
     setDraftErrorField(null);
     setDraft({
+      unit_code: "",
       sauna_type_id: types[0]?.id || "",
       model: "",
       indoor_outdoor_eligibility: "either",
@@ -185,8 +138,6 @@ const AdminReservations = () => {
       current_customer: "",
       install_date: "",
       available_date: "",
-      location: "",
-      condition: "",
       admin_notes: "",
     });
   };
@@ -217,10 +168,9 @@ const AdminReservations = () => {
         [/available_date/i, "available_date"],
         [/sauna_type_id/i, "sauna_type_id"],
         [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
+        [/unit_code/i, "unit_code"],
         [/status/i, "status"],
         [/current_customer/i, "current_customer"],
-        [/location/i, "location"],
-        [/condition/i, "condition"],
         [/model/i, "model"],
       ];
       const hit = fieldMatches.find(([re]) => re.test(msg));
@@ -255,14 +205,12 @@ const AdminReservations = () => {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [typesRes, invRes, resRes] = await Promise.all([
+      const [typesRes, invRes] = await Promise.all([
         supabase.from("sauna_types").select("id, name, sort_order").order("sort_order"),
         callAdmin({ action: "list_inventory" }),
-        callAdmin({ action: "list_reservations" }),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
       setInventory(invRes.inventory || []);
-      setReservations(resRes.reservations || []);
     } catch (e) {
       console.error(e);
       toast.error("Failed to load admin data.");
@@ -305,11 +253,20 @@ const AdminReservations = () => {
       if (fType !== "all" && r.sauna_type_id !== fType) return false;
       if (fStatus !== "all" && r.status !== fStatus) return false;
       if (fCustomer && !(r.current_customer || "").toLowerCase().includes(fCustomer.toLowerCase())) return false;
-      if (fLocation && !(r.location || "").toLowerCase().includes(fLocation.toLowerCase())) return false;
-      if (fCondition && !(r.condition || "").toLowerCase().includes(fCondition.toLowerCase())) return false;
       return true;
     });
-  }, [inventory, fType, fStatus, fCustomer, fLocation, fCondition]);
+  }, [inventory, fType, fStatus, fCustomer]);
+
+  // Inline cell save. Optimistically update local state then send patch.
+  const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
+    setInventory((prev) => prev.map((r) => (r.id === id ? { ...r, [key]: value } as InventoryRow : r)));
+    try {
+      await callAdmin({ action: "update_inventory", id, patch: { [key]: value } });
+    } catch (e) {
+      toast.error((e as Error).message || "Save failed");
+      await loadAll();
+    }
+  };
 
   if (!authed) {
     return (
@@ -338,7 +295,7 @@ const AdminReservations = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-[1400px]">
+        <div className="container mx-auto px-3 max-w-[1600px]">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
             <div className="flex gap-2">
@@ -350,12 +307,8 @@ const AdminReservations = () => {
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
           <section className="mb-10">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Sauna inventory</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            <div className="space-y-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <div>
                     <Label className="text-xs">Sauna type</Label>
                     <Select value={fType} onValueChange={setFType}>
@@ -380,44 +333,36 @@ const AdminReservations = () => {
                     <Label className="text-xs">Current customer</Label>
                     <Input className="h-9" value={fCustomer} onChange={(e) => setFCustomer(e.target.value)} placeholder="Search…" />
                   </div>
-                  <div>
-                    <Label className="text-xs">Location</Label>
-                    <Input className="h-9" value={fLocation} onChange={(e) => setFLocation(e.target.value)} placeholder="Search…" />
-                  </div>
-                  <div>
-                    <Label className="text-xs">Condition</Label>
-                    <Input className="h-9" value={fCondition} onChange={(e) => setFCondition(e.target.value)} placeholder="Search…" />
-                  </div>
                 </div>
 
-                <div className="overflow-x-auto border border-border rounded-md">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+                <div className="overflow-x-auto border border-border rounded-md bg-card">
+                  <table className="w-full text-xs border-collapse">
+                    <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
-                        <th className="text-left px-3 py-2">ID</th>
-                        <th className="text-left px-3 py-2">Type</th>
-                        <th className="text-left px-3 py-2">Model</th>
-                        <th className="text-left px-3 py-2">In/Out</th>
-                        <th className="text-left px-3 py-2">Status</th>
-                        <th className="text-left px-3 py-2">Customer</th>
-                        <th className="text-left px-3 py-2">Install</th>
-                        <th className="text-left px-3 py-2">Available</th>
-                        <th className="text-left px-3 py-2">Location</th>
-                        <th className="text-left px-3 py-2">Condition</th>
-                        <th className="text-left px-3 py-2">Timeline</th>
-                        <th className="text-left px-3 py-2">Notes</th>
-                        <th className="text-left px-3 py-2">Updated</th>
-                        <th className="text-left px-3 py-2"></th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">ID</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Type</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Model</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">In/Out</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Status</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Customer</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Install</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Available</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Timeline</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Notes</th>
+                        <th className="text-left px-2 py-1.5 border-r border-border">Updated</th>
+                        <th className="text-left px-2 py-1.5"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {draft && (
                         <>
-                          <tr className="border-t border-border bg-primary/5 align-top">
-                            <td className="px-2 py-2 font-mono text-xs text-muted-foreground">new</td>
-                            <td className="px-2 py-2">
+                          <tr className="border-t border-border bg-primary/5">
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input className={`h-7 text-xs font-mono ${draftErrorField === "unit_code" ? "border-destructive" : ""}`} value={draft.unit_code} onChange={(e) => setD("unit_code", e.target.value)} placeholder="ID" />
+                            </td>
+                            <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.sauna_type_id} onValueChange={(v) => setD("sauna_type_id", v)}>
-                                <SelectTrigger className={`h-8 ${draftErrorField === "sauna_type_id" ? "border-destructive" : ""}`}>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "sauna_type_id" ? "border-destructive" : ""}`}>
                                   <SelectValue placeholder="Type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -425,51 +370,45 @@ const AdminReservations = () => {
                                 </SelectContent>
                               </Select>
                             </td>
-                            <td className="px-2 py-2">
-                              <Input className={`h-8 ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input className={`h-7 text-xs ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
                             </td>
-                            <td className="px-2 py-2">
+                            <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
-                                <SelectTrigger className={`h-8 ${draftErrorField === "indoor_outdoor_eligibility" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "indoor_outdoor_eligibility" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
                                 <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
-                            <td className="px-2 py-2">
+                            <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.status} onValueChange={(v) => setD("status", v as SaunaStatus)}>
-                                <SelectTrigger className={`h-8 ${draftErrorField === "status" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectTrigger className={`h-7 text-xs ${draftErrorField === "status" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
                                 <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
-                            <td className="px-2 py-2">
-                              <Input className={`h-8 ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input className={`h-7 text-xs ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
                             </td>
-                            <td className="px-2 py-2">
-                              <Input type="date" className={`h-8 ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
                             </td>
-                            <td className="px-2 py-2">
-                              <Input type="date" className={`h-8 ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input type="date" className={`h-7 text-xs ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
                             </td>
-                            <td className="px-2 py-2">
-                              <Input className={`h-8 ${draftErrorField === "location" ? "border-destructive" : ""}`} value={draft.location} onChange={(e) => setD("location", e.target.value)} placeholder="Location" />
+                            <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
+                            <td className="px-1 py-1 border-r border-border">
+                              <Input className="h-7 text-xs" value={draft.admin_notes} onChange={(e) => setD("admin_notes", e.target.value)} placeholder="Notes" />
                             </td>
-                            <td className="px-2 py-2">
-                              <Input className={`h-8 ${draftErrorField === "condition" ? "border-destructive" : ""}`} value={draft.condition} onChange={(e) => setD("condition", e.target.value)} placeholder="Condition" />
-                            </td>
-                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
-                            <td className="px-2 py-2">
-                              <Input className="h-8" value={draft.admin_notes} onChange={(e) => setD("admin_notes", e.target.value)} placeholder="Notes" />
-                            </td>
-                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
-                            <td className="px-2 py-2">
+                            <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
+                            <td className="px-1 py-1">
                               <div className="flex gap-1">
-                                <Button size="sm" onClick={saveDraft} disabled={savingDraft}>{savingDraft ? "…" : "Save"}</Button>
-                                <Button size="sm" variant="ghost" onClick={() => { setDraft(null); setDraftError(null); setDraftErrorField(null); }}>Cancel</Button>
+                                <Button size="sm" className="h-7 text-xs px-2" onClick={saveDraft} disabled={savingDraft}>{savingDraft ? "…" : "Save"}</Button>
+                                <Button size="sm" variant="ghost" className="h-7 text-xs px-2" onClick={() => { setDraft(null); setDraftError(null); setDraftErrorField(null); }}>Cancel</Button>
                               </div>
                             </td>
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={12} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -477,256 +416,137 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={12} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
-                        <tr key={r.id} className="border-t border-border">
-                          <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{r.id.slice(0, 8)}</td>
-                          <td className="px-3 py-2">{types.find((t) => t.id === r.sauna_type_id)?.name || r.sauna_type_id}</td>
-                          <td className="px-3 py-2">{r.model || "—"}</td>
-                          <td className="px-3 py-2 capitalize">{r.indoor_outdoor_eligibility}</td>
-                          <td className="px-3 py-2">
-                            <span className={`inline-block px-2 py-0.5 rounded border text-xs font-medium ${STATUS_STYLES[r.status]}`}>
-                              {r.status}
-                            </span>
+                        <tr key={r.id} className="border-t border-border hover:bg-muted/20">
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.unit_code || ""} mono onSave={(v) => updateCell(r.id, "unit_code", v || null)} />
                           </td>
-                          <td className="px-3 py-2">{r.current_customer || "—"}</td>
-                          <td className="px-3 py-2">{fmtDate(r.install_date)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.available_date)}</td>
-                          <td className="px-3 py-2">{r.location || "—"}</td>
-                          <td className="px-3 py-2">{r.condition || "—"}</td>
-                          <td className="px-3 py-2 text-xs">{timelineFor(r)}</td>
-                          <td className="px-3 py-2 text-xs max-w-[200px] truncate" title={r.admin_notes || ""}>{r.admin_notes || "—"}</td>
-                          <td className="px-3 py-2 text-xs text-muted-foreground">{new Date(r.updated_at).toLocaleDateString()}</td>
-                          <td className="px-3 py-2">
-                            <div className="flex gap-1">
-                              <Button size="sm" variant="ghost" onClick={() => setEditing(r)}>Edit</Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={async () => {
-                                  if (!confirm("Delete this sauna?")) return;
-                                  try {
-                                    await callAdmin({ action: "delete_inventory", id: r.id });
-                                    toast.success("Deleted");
-                                    await loadAll();
-                                  } catch (e) { toast.error((e as Error).message); }
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </div>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <SelectCell
+                              value={r.sauna_type_id}
+                              options={types.map((t) => ({ value: t.id, label: t.name }))}
+                              onSave={(v) => updateCell(r.id, "sauna_type_id", v)}
+                            />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.model || ""} onSave={(v) => updateCell(r.id, "model", v || null)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <SelectCell
+                              value={r.indoor_outdoor_eligibility}
+                              options={ELIGIBILITY.map((e) => ({ value: e, label: e }))}
+                              onSave={(v) => updateCell(r.id, "indoor_outdoor_eligibility", v)}
+                              capitalize
+                            />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <SelectCell
+                              value={r.status}
+                              options={STATUSES.map((s) => ({ value: s, label: s }))}
+                              onSave={(v) => updateCell(r.id, "status", v)}
+                              badgeClass={STATUS_STYLES[r.status]}
+                            />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.current_customer || ""} onSave={(v) => updateCell(r.id, "current_customer", v || null)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />
+                          </td>
+                          <td className="px-2 py-1 border-r border-border text-muted-foreground whitespace-nowrap">{timelineFor(r)}</td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.admin_notes || ""} onSave={(v) => updateCell(r.id, "admin_notes", v || null)} />
+                          </td>
+                          <td className="px-2 py-1 border-r border-border text-muted-foreground whitespace-nowrap">{new Date(r.updated_at).toLocaleDateString()}</td>
+                          <td className="px-1 py-0.5">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-6 text-xs px-2"
+                              onClick={async () => {
+                                if (!confirm("Delete this sauna?")) return;
+                                try {
+                                  await callAdmin({ action: "delete_inventory", id: r.id });
+                                  toast.success("Deleted");
+                                  await loadAll();
+                                } catch (e) { toast.error((e as Error).message); }
+                              }}
+                            >
+                              Delete
+                            </Button>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4">Reservations</h2>
-            <div className="space-y-3">
-              {reservations.length === 0 && (
-                <p className="text-muted-foreground text-sm">No reservations yet.</p>
-              )}
-              {reservations.map((r) => (
-                <ReservationRow
-                  key={r.id}
-                  reservation={r}
-                  saunaTypes={types}
-                  inventory={inventory}
-                  onUpdate={async (patch) => {
-                    try {
-                      const res = await callAdmin({ action: "update_reservation", id: r.id, patch });
-                      setReservations((prev) => prev.map((x) => (x.id === r.id ? res.reservation : x)));
-                      toast.success("Saved");
-                    } catch (e) { toast.error("Failed"); }
-                  }}
-                />
-              ))}
             </div>
           </section>
         </div>
       </main>
       <Footer />
-
-      {editing && (
-        <InventoryDialog
-          initial={editing}
-          types={types}
-          onClose={() => setEditing(null)}
-          onSave={async (patch) => {
-            try {
-              await callAdmin({ action: "update_inventory", id: editing.id, patch });
-              toast.success("Saved");
-              setEditing(null);
-              await loadAll();
-            } catch (e) { toast.error((e as Error).message); }
-          }}
-        />
-      )}
     </div>
   );
 };
 
-const InventoryDialog = ({
-  initial,
-  types,
-  onClose,
+// ---------- Spreadsheet cells ----------
+
+const TextCell = ({ value, onSave, mono }: { value: string; onSave: (v: string) => void; mono?: boolean }) => {
+  const [local, setLocal] = useState(value);
+  const ref = useRef(value);
+  useEffect(() => { setLocal(value); ref.current = value; }, [value]);
+  return (
+    <input
+      className={`w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none ${mono ? "font-mono" : ""}`}
+      value={local}
+      onChange={(e) => setLocal(e.target.value)}
+      onBlur={() => { if (local !== ref.current) onSave(local); }}
+      onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); if (e.key === "Escape") { setLocal(ref.current); (e.target as HTMLInputElement).blur(); } }}
+    />
+  );
+};
+
+const DateCell = ({ value, onSave }: { value: string | null; onSave: (v: string | null) => void }) => {
+  const [local, setLocal] = useState(value || "");
+  const ref = useRef(value || "");
+  useEffect(() => { setLocal(value || ""); ref.current = value || ""; }, [value]);
+  return (
+    <input
+      type="date"
+      className="w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none"
+      value={local}
+      onChange={(e) => setLocal(e.target.value)}
+      onBlur={() => { if (local !== ref.current) onSave(local || null); }}
+    />
+  );
+};
+
+const SelectCell = ({
+  value,
+  options,
   onSave,
+  capitalize,
+  badgeClass,
 }: {
-  initial: InventoryRow | null;
-  types: SaunaType[];
-  onClose: () => void;
-  onSave: (patch: Record<string, unknown>) => Promise<void>;
+  value: string;
+  options: { value: string; label: string }[];
+  onSave: (v: string) => void;
+  capitalize?: boolean;
+  badgeClass?: string;
 }) => {
-  const [form, setForm] = useState({
-    sauna_type_id: initial?.sauna_type_id || types[0]?.id || "",
-    model: initial?.model || "",
-    indoor_outdoor_eligibility: initial?.indoor_outdoor_eligibility || "either",
-    status: initial?.status || ("Available" as SaunaStatus),
-    current_customer: initial?.current_customer || "",
-    install_date: initial?.install_date || "",
-    available_date: initial?.available_date || "",
-    location: initial?.location || "",
-    condition: initial?.condition || "",
-    admin_notes: initial?.admin_notes || "",
-  });
-  const setF = (k: keyof typeof form, v: string) => setForm((p) => ({ ...p, [k]: v }));
-
   return (
-    <Dialog open onOpenChange={(o) => { if (!o) onClose(); }}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{initial ? "Edit sauna" : "Add sauna"}</DialogTitle>
-        </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <Label className="text-xs">Sauna type</Label>
-            <Select value={form.sauna_type_id} onValueChange={(v) => setF("sauna_type_id", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs">Model / version</Label>
-            <Input value={form.model} onChange={(e) => setF("model", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Indoor / outdoor eligibility</Label>
-            <Select value={form.indoor_outdoor_eligibility} onValueChange={(v) => setF("indoor_outdoor_eligibility", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs">Status</Label>
-            <Select value={form.status} onValueChange={(v) => setF("status", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2">
-            <Label className="text-xs">Current customer</Label>
-            <Input value={form.current_customer} onChange={(e) => setF("current_customer", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Install date</Label>
-            <Input type="date" value={form.install_date} onChange={(e) => setF("install_date", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Available date</Label>
-            <Input type="date" value={form.available_date} onChange={(e) => setF("available_date", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Location</Label>
-            <Input value={form.location} onChange={(e) => setF("location", e.target.value)} />
-          </div>
-          <div className="md:col-span-2">
-            <Label className="text-xs">Condition</Label>
-            <Input value={form.condition} onChange={(e) => setF("condition", e.target.value)} />
-          </div>
-          <div className="md:col-span-2">
-            <Label className="text-xs">Admin notes</Label>
-            <Textarea rows={3} value={form.admin_notes} onChange={(e) => setF("admin_notes", e.target.value)} />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button onClick={() => onSave(form)}>Save</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const ReservationRow = ({
-  reservation,
-  saunaTypes,
-  inventory,
-  onUpdate,
-}: {
-  reservation: Reservation;
-  saunaTypes: SaunaType[];
-  inventory: InventoryRow[];
-  onUpdate: (patch: Partial<Reservation>) => Promise<void>;
-}) => {
-  const r = reservation;
-  const [notes, setNotes] = useState(r.admin_notes || "");
-  const linkedSauna = inventory.find((i) => i.id === r.sauna_inventory_id);
-
-  const statusCol = (label: string, key: keyof Reservation, options: string[]) => (
-    <div>
-      <Label className="text-xs text-muted-foreground">{label}</Label>
-      <Select value={r[key] as string} onValueChange={(v) => onUpdate({ [key]: v } as Partial<Reservation>)}>
-        <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
-        <SelectContent>{options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
-      </Select>
-    </div>
-  );
-
-  return (
-    <Card>
-      <CardContent className="p-4 space-y-3">
-        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
-          <span className="font-semibold text-foreground">{r.first_name} {r.last_name}</span>
-          <span className="text-muted-foreground">{r.email}</span>
-          <span className="text-muted-foreground">{r.phone}</span>
-          <span className="text-muted-foreground">
-            {saunaTypes.find((s) => s.id === r.sauna_type_id)?.name || r.sauna_type_id} · {r.min_commitment_months}mo · install {new Date(r.preferred_install_at).toLocaleString()}
-          </span>
-          <span className="ml-auto text-xs text-muted-foreground">
-            Created {new Date(r.created_at).toLocaleDateString()}
-          </span>
-        </div>
-
-        <div className="text-xs text-muted-foreground">
-          Address: {r.install_address} ({r.placement_choice}){r.access_notes ? ` · access: ${r.access_notes}` : ""}
-          {linkedSauna && <> · sauna <span className="font-mono">{linkedSauna.id.slice(0, 8)}</span> ({linkedSauna.status})</>}
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {statusCol("Reservation", "reservation_status", RESERVATION_STATUSES)}
-          {statusCol("Payment", "payment_status", PAYMENT_STATUSES)}
-          {statusCol("Contract", "contract_status", CONTRACT_STATUSES)}
-          {statusCol("ID", "id_status", ID_STATUSES)}
-          {statusCol("Consult", "consult_status", CONSULT_STATUSES)}
-        </div>
-
-        <div>
-          <Label className="text-xs text-muted-foreground">Admin notes</Label>
-          <div className="flex gap-2">
-            <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
-            <Button size="sm" onClick={() => onUpdate({ admin_notes: notes })}>Save</Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <select
+      className={`w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none ${capitalize ? "capitalize" : ""} ${badgeClass || ""}`}
+      value={value}
+      onChange={(e) => onSave(e.target.value)}
+    >
+      {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+    </select>
   );
 };
 
