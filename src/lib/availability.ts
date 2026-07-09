@@ -32,7 +32,7 @@ export function rowToStatus(row: PublicAvailabilityRow | undefined | null): Avai
 export function formatDatePretty(iso: string): string {
   const [y, m, d] = iso.split("-").map((n) => parseInt(n, 10));
   const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
 
 export { todayISO };
