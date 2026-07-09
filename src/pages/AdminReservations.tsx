@@ -51,6 +51,8 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
+const MODELS = ["Standard", "Prototype"] as const;
+type ModelValue = typeof MODELS[number];
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
 const STYLE_LOC_TO_TYPE: Record<string, string> = {
