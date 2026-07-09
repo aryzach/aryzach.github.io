@@ -1,18 +1,13 @@
-export interface AvailabilityEvent {
-  sauna_type_id: string;
-  quantity: number;
-  available_starting_date: string; // yyyy-mm-dd
-}
-
-export interface ConsumptionRow {
-  sauna_type_id: string;
-  preferred_install_date: string; // yyyy-mm-dd
-}
-
 export interface AvailabilityStatus {
   availableToday: number;
-  nextAvailableDate: string | null; // ISO yyyy-mm-dd, only if not available today
+  nextAvailableDate: string | null;
   status: "available" | "future" | "unavailable";
+}
+
+export interface PublicAvailabilityRow {
+  sauna_type_id: string;
+  available_now: number;
+  next_available_date: string | null;
 }
 
 function todayISO(): string {
@@ -23,54 +18,14 @@ function todayISO(): string {
   return `${y}-${m}-${day}`;
 }
 
-/**
- * Compute availability per sauna type from events and paid-active reservations.
- * For a given date D, capacity =
- *   sum(events with available_starting_date <= D)
- *   - count(paid reservations with preferred_install_date <= D)
- * The earliest D where capacity > 0 is the next-available date.
- */
-export function computeAvailability(
-  saunaTypeId: string,
-  events: AvailabilityEvent[],
-  consumption: ConsumptionRow[],
-): AvailabilityStatus {
-  const typeEvents = events
-    .filter((e) => e.sauna_type_id === saunaTypeId)
-    .sort((a, b) => a.available_starting_date.localeCompare(b.available_starting_date));
-  const typeConsumption = consumption
-    .filter((c) => c.sauna_type_id === saunaTypeId)
-    .sort((a, b) => a.preferred_install_date.localeCompare(b.preferred_install_date));
-
-  const today = todayISO();
-
-  const capacityOn = (date: string) => {
-    const supply = typeEvents
-      .filter((e) => e.available_starting_date <= date)
-      .reduce((sum, e) => sum + e.quantity, 0);
-    const demand = typeConsumption.filter((c) => c.preferred_install_date <= date).length;
-    return supply - demand;
-  };
-
-  const todayCap = capacityOn(today);
-  if (todayCap > 0) {
-    return { availableToday: todayCap, nextAvailableDate: null, status: "available" };
+export function rowToStatus(row: PublicAvailabilityRow | undefined | null): AvailabilityStatus {
+  if (!row) return { availableToday: 0, nextAvailableDate: null, status: "unavailable" };
+  if (row.available_now > 0) {
+    return { availableToday: row.available_now, nextAvailableDate: null, status: "available" };
   }
-
-  const candidates = Array.from(
-    new Set(
-      typeEvents
-        .map((e) => e.available_starting_date)
-        .filter((d) => d > today),
-    ),
-  ).sort();
-
-  for (const d of candidates) {
-    if (capacityOn(d) > 0) {
-      return { availableToday: 0, nextAvailableDate: d, status: "future" };
-    }
+  if (row.next_available_date) {
+    return { availableToday: 0, nextAvailableDate: row.next_available_date, status: "future" };
   }
-
   return { availableToday: 0, nextAvailableDate: null, status: "unavailable" };
 }
 
