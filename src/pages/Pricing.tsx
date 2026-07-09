@@ -6,7 +6,6 @@ import { useSEO } from "@/hooks/useSEO";
 import { useAvailability } from "@/hooks/useAvailability";
 import { categoryHero, productsIn, startingPrice, type Category } from "@/lib/pricingCatalog";
 import AvailabilityLine from "@/components/pricing/AvailabilityLine";
-import { rowToStatus } from "@/lib/availability";
 
 const CATEGORIES: { key: Category; title: string }[] = [
   { key: "traditional", title: "Traditional Sauna" },
@@ -15,23 +14,18 @@ const CATEGORIES: { key: Category; title: string }[] = [
 
 const Pricing = () => {
   useSEO({
-    title: "Pricing — SF Sauna Rental",
+    title: "Options & Pricing — SF Sauna Rental",
     description:
-      "Choose the sauna that fits your home. Traditional and infrared sauna rentals with monthly pricing and reservation details.",
+      "Choose which sauna type you'd like. Pricing, availability, and reservation details are available on each product page.",
   });
 
-  const { getStatus } = useAvailability();
+  const { getStatusForIds } = useAvailability();
 
-  // Best availability across products in a category
-  const bestStatus = (category: Category) => {
-    const statuses = productsIn(category).map((p) => getStatus(p.saunaTypeId));
-    const available = statuses.find((s) => s.status === "available");
-    if (available) return available;
-    const future = statuses
-      .filter((s) => s.status === "future" && s.nextAvailableDate)
-      .sort((a, b) => (a.nextAvailableDate! < b.nextAvailableDate! ? -1 : 1))[0];
-    if (future) return future;
-    return rowToStatus(null);
+  const placementStatus = (category: Category, placement: "Indoor" | "Outdoor") => {
+    const ids = productsIn(category)
+      .filter((p) => p.placement === placement)
+      .map((p) => p.saunaTypeId);
+    return getStatusForIds(ids);
   };
 
   return (
@@ -41,16 +35,17 @@ const Pricing = () => {
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground mb-5">
-              Pricing
+              Options & Pricing
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              Choose the sauna that fits your home. Pricing, availability, and reservation details are available on each product page.
+              Choose which sauna type you'd like. Pricing, availability, and reservation details are available on each product page.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {CATEGORIES.map(({ key, title }) => {
-              const status = bestStatus(key);
+              const indoorStatus = placementStatus(key, "Indoor");
+              const outdoorStatus = placementStatus(key, "Outdoor");
               const price = startingPrice(key);
               const hero = categoryHero[key];
               return (
@@ -79,8 +74,15 @@ const Pricing = () => {
                       <span className="text-2xl font-semibold text-card-foreground">${price}</span>
                       <span className="text-sm text-muted-foreground">/ month</span>
                     </div>
-                    <div className="mb-6">
-                      <AvailabilityLine status={status} />
+                    <div className="mb-6 space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground w-16">Indoor</span>
+                        <AvailabilityLine status={indoorStatus} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground w-16">Outdoor</span>
+                        <AvailabilityLine status={outdoorStatus} />
+                      </div>
                     </div>
                     <Button className="w-full" size="lg">
                       View Pricing & Reserve
