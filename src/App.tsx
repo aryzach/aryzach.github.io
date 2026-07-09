@@ -36,6 +36,9 @@ import ReservationPaymentOrScheduleCall from "./pages/ReservationPaymentOrSchedu
 import IndoorInfraredLanding from "./pages/IndoorInfraredLanding";
 import PrefabSaunaInstallation from "./pages/PrefabSaunaInstallation";
 import PrefabSaunaInstallationForm from "./pages/PrefabSaunaInstallationForm";
+import ReservationSystem from "./pages/ReservationSystem";
+import ReservationConfirmation from "./pages/ReservationConfirmation";
+import AdminReservations from "./pages/AdminReservations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -136,6 +139,9 @@ const App = () => (
           <Route path="/indoor-infrared-sauna-rental" element={<IndoorInfraredLanding />} />
           <Route path="/pre-fab-sauna-installation" element={<PrefabSaunaInstallation />} />
           <Route path="/pre-fab-sauna-installation-form" element={<PrefabSaunaInstallationForm />} />
+          <Route path="/reservation-system" element={<ReservationSystem />} />
+          <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
+          <Route path="/admin-reservations" element={<AdminReservations />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
