@@ -92,12 +92,17 @@ Deno.serve(async (req) => {
       case "create_inventory": {
         const allowed = [
           "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
-          "current_customer", "install_date", "minimum_term_ends",
-          "notice_received_date", "available_date", "incoming_eta",
+          "current_customer", "install_date",
+          "available_date",
           "location", "condition", "admin_notes",
         ];
         const clean: Record<string, unknown> = {};
-        for (const k of allowed) if (k in payload) clean[k] = (payload as any)[k];
+        for (const k of allowed) {
+          if (k in payload) {
+            const v = (payload as any)[k];
+            clean[k] = v === "" ? null : v;
+          }
+        }
         const { data, error } = await supabase
           .from("sauna_inventory")
           .insert(clean)
@@ -111,8 +116,8 @@ Deno.serve(async (req) => {
         const { id, patch } = payload;
         const allowed = [
           "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
-          "current_customer", "install_date", "minimum_term_ends",
-          "notice_received_date", "available_date", "incoming_eta",
+          "current_customer", "install_date",
+          "available_date",
           "location", "condition", "admin_notes",
         ];
         const clean: Record<string, unknown> = {};
