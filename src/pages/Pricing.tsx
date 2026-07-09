@@ -75,14 +75,8 @@ const Pricing = () => {
                       <span className="text-sm text-muted-foreground">/ month</span>
                     </div>
                     <div className="mb-6 space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground w-16">Indoor</span>
-                        <AvailabilityLine status={indoorStatus} />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground w-16">Outdoor</span>
-                        <AvailabilityLine status={outdoorStatus} />
-                      </div>
+                      <AvailabilityLine status={indoorStatus} label="Indoor" />
+                      <AvailabilityLine status={outdoorStatus} label="Outdoor" />
                     </div>
                     <Button className="w-full" size="lg">
                       View Pricing & Reserve

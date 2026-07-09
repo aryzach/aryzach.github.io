@@ -3,28 +3,38 @@ import { formatDatePretty, type AvailabilityStatus } from "@/lib/availability";
 interface Props {
   status: AvailabilityStatus;
   size?: "sm" | "md";
+  label?: string;
 }
 
-const AvailabilityLine = ({ status, size = "sm" }: Props) => {
+const AvailabilityLine = ({ status, size = "sm", label }: Props) => {
   const textSize = size === "md" ? "text-base" : "text-sm";
+  const labelNode = label ? <span className="font-bold text-foreground">{label}: </span> : null;
 
   if (status.status === "available") {
     return (
-      <div className={`inline-flex items-center gap-2 ${textSize} font-medium text-primary`}>
-        <span className="w-2 h-2 rounded-full bg-primary" />
-        Available immediately
+      <div className={`inline-flex items-center gap-2 ${textSize}`}>
+        <span className="w-2 h-2 rounded-full bg-green-500" />
+        <span>
+          {labelNode}
+          <span className="font-medium text-green-600 dark:text-green-500">Available immediately</span>
+        </span>
       </div>
     );
   }
   if (status.status === "future" && status.nextAvailableDate) {
     return (
       <div className={`${textSize} text-foreground`}>
-        <span className="text-muted-foreground">Next available: </span>
+        {labelNode}
+        <span className="text-muted-foreground">avail. </span>
         <span className="font-medium">{formatDatePretty(status.nextAvailableDate)}</span>
       </div>
     );
   }
-  return <div className={`${textSize} text-muted-foreground`}>Currently unavailable</div>;
+  return (
+    <div className={`${textSize} text-muted-foreground`}>
+      {labelNode}Currently unavailable
+    </div>
+  );
 };
 
 export default AvailabilityLine;
