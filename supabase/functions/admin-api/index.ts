@@ -79,44 +79,57 @@ Deno.serve(async (req) => {
         return json({ reservation: data });
       }
 
-      case "list_events": {
+      case "list_inventory": {
         const { data, error } = await supabase
-          .from("availability_events")
+          .from("sauna_inventory")
           .select("*")
-          .order("available_starting_date", { ascending: true });
+          .order("sauna_type_id", { ascending: true })
+          .order("created_at", { ascending: true });
         if (error) throw error;
-        return json({ events: data });
+        return json({ inventory: data });
       }
 
-      case "create_event": {
-        const { sauna_type_id, quantity, available_starting_date, reason, notes } = payload;
+      case "create_inventory": {
+        const allowed = [
+          "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
+          "current_customer", "install_date", "minimum_term_ends",
+          "notice_received_date", "available_date", "incoming_eta",
+          "location", "condition", "admin_notes",
+        ];
+        const clean: Record<string, unknown> = {};
+        for (const k of allowed) if (k in payload) clean[k] = (payload as any)[k];
         const { data, error } = await supabase
-          .from("availability_events")
-          .insert({ sauna_type_id, quantity, available_starting_date, reason, notes })
+          .from("sauna_inventory")
+          .insert(clean)
           .select()
           .single();
         if (error) throw error;
-        return json({ event: data });
+        return json({ sauna: data });
       }
 
-      case "update_event": {
+      case "update_inventory": {
         const { id, patch } = payload;
-        const allowed = ["quantity", "available_starting_date", "reason", "notes"];
+        const allowed = [
+          "sauna_type_id", "model", "indoor_outdoor_eligibility", "status",
+          "current_customer", "install_date", "minimum_term_ends",
+          "notice_received_date", "available_date", "incoming_eta",
+          "location", "condition", "admin_notes",
+        ];
         const clean: Record<string, unknown> = {};
-        for (const k of allowed) if (k in patch) clean[k] = patch[k];
+        for (const k of allowed) if (k in patch) clean[k] = patch[k] === "" ? null : patch[k];
         const { data, error } = await supabase
-          .from("availability_events")
+          .from("sauna_inventory")
           .update(clean)
           .eq("id", id)
           .select()
           .single();
         if (error) throw error;
-        return json({ event: data });
+        return json({ sauna: data });
       }
 
-      case "delete_event": {
+      case "delete_inventory": {
         const { id } = payload;
-        const { error } = await supabase.from("availability_events").delete().eq("id", id);
+        const { error } = await supabase.from("sauna_inventory").delete().eq("id", id);
         if (error) throw error;
         return json({ ok: true });
       }
