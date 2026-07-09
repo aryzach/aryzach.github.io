@@ -25,8 +25,9 @@ const AvailabilityLine = ({ status, size = "sm", label }: Props) => {
     return (
       <div className={`${textSize} text-foreground`}>
         {labelNode}
-        <span className="text-muted-foreground">avail. </span>
-        <span className="font-medium">{formatDatePretty(status.nextAvailableDate)}</span>
+        <span className="font-medium text-green-600 dark:text-green-500">
+          Available {formatDatePretty(status.nextAvailableDate)}
+        </span>
       </div>
     );
   }
