@@ -15,7 +15,7 @@ const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
 const assetUrl = (a: { url: string }) =>
   a.url.startsWith("http") ? a.url : `${LOVABLE_ASSET_ORIGIN}${a.url}`;
 
-export type Category = "traditional" | "infrared";
+export type Category = "traditional" | "infrared" | "original";
 
 export interface PricingTier {
   months: 1 | 3 | 6 | 12;
@@ -107,10 +107,12 @@ export const products: Product[] = [
   },
   {
     slug: "original-indoor",
+    // Slug retained as `original-indoor` (not `indoor`) so lookups within the
+    // "original" category remain unique when combined with future variants.
     saunaTypeId: "indoor_traditional",
     name: "Original Collection — Indoor",
-    category: "traditional",
-    categoryLabel: "Traditional",
+    category: "original",
+    categoryLabel: "Original Collection",
     placement: "Indoor",
     shortDescription:
       "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
@@ -124,8 +126,8 @@ export const products: Product[] = [
     slug: "original-outdoor",
     saunaTypeId: null,
     name: "Original Collection — Outdoor",
-    category: "traditional",
-    categoryLabel: "Traditional",
+    category: "original",
+    categoryLabel: "Original Collection",
     placement: "Outdoor",
     shortDescription:
       "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
@@ -188,5 +190,10 @@ export const categoryHero: Record<Category, { image: string; blurb: string }> = 
     image: assetUrl(infraredHeroAsset),
     blurb:
       "Gentle, low-EMF radiant heat. Choose indoor or outdoor.",
+  },
+  original: {
+    image: IMG_ORIGINAL_COLLECTION,
+    blurb:
+      "Earlier-generation traditional saunas converted from infrared models. Same authentic experience at a lower monthly price.",
   },
 };

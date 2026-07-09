@@ -12,7 +12,7 @@ const Packages = () => {
           </h2>
           <Link to="/pricing">
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              See All Pricing
+              See All Options
             </Button>
           </Link>
         </div>
