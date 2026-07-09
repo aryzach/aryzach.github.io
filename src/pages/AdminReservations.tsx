@@ -62,10 +62,7 @@ interface InventoryRow {
   status: SaunaStatus;
   current_customer: string | null;
   install_date: string | null;
-  minimum_term_ends: string | null;
-  notice_received_date: string | null;
   available_date: string | null;
-  incoming_eta: string | null;
   location: string | null;
   condition: string | null;
   admin_notes: string | null;
@@ -130,13 +127,13 @@ function timelineFor(row: InventoryRow): string {
     case "Reservation Confirmed":
       return `Confirmed for ${row.current_customer || "(unknown)"}`;
     case "Installed":
-      return `Installed with ${row.current_customer || "(unknown)"}${row.minimum_term_ends ? ` · min term ends ${fmtDate(row.minimum_term_ends)}` : ""}`;
+      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}`;
     case "Returning":
       return `Returning · available ${fmtDate(row.available_date)}`;
     case "Maintenance":
       return `Maintenance · available ${fmtDate(row.available_date)}`;
     case "Incoming":
-      return `Incoming · ETA ${fmtDate(row.incoming_eta)} · available ${fmtDate(row.available_date)}`;
+      return `Incoming · available ${fmtDate(row.available_date)}`;
     case "Sold / Retired":
       return "Retired";
   }
@@ -161,7 +158,78 @@ const AdminReservations = () => {
   const [fCondition, setFCondition] = useState<string>("");
 
   const [editing, setEditing] = useState<InventoryRow | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [draft, setDraft] = useState<null | {
+    sauna_type_id: string;
+    model: string;
+    indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
+    status: SaunaStatus;
+    current_customer: string;
+    install_date: string;
+    available_date: string;
+    location: string;
+    condition: string;
+    admin_notes: string;
+  }>(null);
+  const [draftError, setDraftError] = useState<string | null>(null);
+  const [draftErrorField, setDraftErrorField] = useState<string | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+
+  const startDraft = () => {
+    setDraftError(null);
+    setDraftErrorField(null);
+    setDraft({
+      sauna_type_id: types[0]?.id || "",
+      model: "",
+      indoor_outdoor_eligibility: "either",
+      status: "Available",
+      current_customer: "",
+      install_date: "",
+      available_date: "",
+      location: "",
+      condition: "",
+      admin_notes: "",
+    });
+  };
+
+  const setD = <K extends keyof NonNullable<typeof draft>>(k: K, v: NonNullable<typeof draft>[K]) =>
+    setDraft((p) => (p ? { ...p, [k]: v } : p));
+
+  const saveDraft = async () => {
+    if (!draft) return;
+    setDraftError(null);
+    setDraftErrorField(null);
+    if (!draft.sauna_type_id) {
+      setDraftError("Sauna type is required.");
+      setDraftErrorField("sauna_type_id");
+      return;
+    }
+    setSavingDraft(true);
+    try {
+      await callAdmin({ action: "create_inventory", ...draft });
+      toast.success("Added");
+      setDraft(null);
+      await loadAll();
+    } catch (e) {
+      const msg = (e as Error).message || "Failed to save.";
+      // Try to map Postgres errors to a field
+      const fieldMatches: [RegExp, string][] = [
+        [/install_date/i, "install_date"],
+        [/available_date/i, "available_date"],
+        [/sauna_type_id/i, "sauna_type_id"],
+        [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
+        [/status/i, "status"],
+        [/current_customer/i, "current_customer"],
+        [/location/i, "location"],
+        [/condition/i, "condition"],
+        [/model/i, "model"],
+      ];
+      const hit = fieldMatches.find(([re]) => re.test(msg));
+      setDraftErrorField(hit ? hit[1] : null);
+      setDraftError(msg);
+    } finally {
+      setSavingDraft(false);
+    }
+  };
 
   const callAdmin = useCallback(
     async (body: Record<string, unknown>) => {
@@ -274,7 +342,7 @@ const AdminReservations = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
             <div className="flex gap-2">
-              <Button onClick={() => setCreating(true)}>Add sauna</Button>
+              <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
               <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
             </div>
           </div>
@@ -333,10 +401,7 @@ const AdminReservations = () => {
                         <th className="text-left px-3 py-2">Status</th>
                         <th className="text-left px-3 py-2">Customer</th>
                         <th className="text-left px-3 py-2">Install</th>
-                        <th className="text-left px-3 py-2">Min term ends</th>
-                        <th className="text-left px-3 py-2">Notice</th>
                         <th className="text-left px-3 py-2">Available</th>
-                        <th className="text-left px-3 py-2">ETA</th>
                         <th className="text-left px-3 py-2">Location</th>
                         <th className="text-left px-3 py-2">Condition</th>
                         <th className="text-left px-3 py-2">Timeline</th>
@@ -346,8 +411,73 @@ const AdminReservations = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filtered.length === 0 && (
-                        <tr><td colSpan={17} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                      {draft && (
+                        <>
+                          <tr className="border-t border-border bg-primary/5 align-top">
+                            <td className="px-2 py-2 font-mono text-xs text-muted-foreground">new</td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.sauna_type_id} onValueChange={(v) => setD("sauna_type_id", v)}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "sauna_type_id" ? "border-destructive" : ""}`}>
+                                  <SelectValue placeholder="Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "model" ? "border-destructive" : ""}`} value={draft.model} onChange={(e) => setD("model", e.target.value)} placeholder="Model" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.indoor_outdoor_eligibility} onValueChange={(v) => setD("indoor_outdoor_eligibility", v as "indoor" | "outdoor" | "either")}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "indoor_outdoor_eligibility" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Select value={draft.status} onValueChange={(v) => setD("status", v as SaunaStatus)}>
+                                <SelectTrigger className={`h-8 ${draftErrorField === "status" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
+                                <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                              </Select>
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input type="date" className={`h-8 ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input type="date" className={`h-8 ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "location" ? "border-destructive" : ""}`} value={draft.location} onChange={(e) => setD("location", e.target.value)} placeholder="Location" />
+                            </td>
+                            <td className="px-2 py-2">
+                              <Input className={`h-8 ${draftErrorField === "condition" ? "border-destructive" : ""}`} value={draft.condition} onChange={(e) => setD("condition", e.target.value)} placeholder="Condition" />
+                            </td>
+                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
+                            <td className="px-2 py-2">
+                              <Input className="h-8" value={draft.admin_notes} onChange={(e) => setD("admin_notes", e.target.value)} placeholder="Notes" />
+                            </td>
+                            <td className="px-2 py-2 text-xs text-muted-foreground">—</td>
+                            <td className="px-2 py-2">
+                              <div className="flex gap-1">
+                                <Button size="sm" onClick={saveDraft} disabled={savingDraft}>{savingDraft ? "…" : "Save"}</Button>
+                                <Button size="sm" variant="ghost" onClick={() => { setDraft(null); setDraftError(null); setDraftErrorField(null); }}>Cancel</Button>
+                              </div>
+                            </td>
+                          </tr>
+                          {draftError && (
+                            <tr className="bg-destructive/10">
+                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
+                                {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
+                              </td>
+                            </tr>
+                          )}
+                        </>
+                      )}
+                      {filtered.length === 0 && !draft && (
+                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border">
@@ -362,10 +492,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-3 py-2">{r.current_customer || "—"}</td>
                           <td className="px-3 py-2">{fmtDate(r.install_date)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.minimum_term_ends)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.notice_received_date)}</td>
                           <td className="px-3 py-2">{fmtDate(r.available_date)}</td>
-                          <td className="px-3 py-2">{fmtDate(r.incoming_eta)}</td>
                           <td className="px-3 py-2">{r.location || "—"}</td>
                           <td className="px-3 py-2">{r.condition || "—"}</td>
                           <td className="px-3 py-2 text-xs">{timelineFor(r)}</td>
@@ -426,22 +553,16 @@ const AdminReservations = () => {
       </main>
       <Footer />
 
-      {(editing || creating) && (
+      {editing && (
         <InventoryDialog
           initial={editing}
           types={types}
-          onClose={() => { setEditing(null); setCreating(false); }}
+          onClose={() => setEditing(null)}
           onSave={async (patch) => {
             try {
-              if (editing) {
-                await callAdmin({ action: "update_inventory", id: editing.id, patch });
-                toast.success("Saved");
-              } else {
-                await callAdmin({ action: "create_inventory", ...patch });
-                toast.success("Added");
-              }
+              await callAdmin({ action: "update_inventory", id: editing.id, patch });
+              toast.success("Saved");
               setEditing(null);
-              setCreating(false);
               await loadAll();
             } catch (e) { toast.error((e as Error).message); }
           }}
@@ -469,10 +590,7 @@ const InventoryDialog = ({
     status: initial?.status || ("Available" as SaunaStatus),
     current_customer: initial?.current_customer || "",
     install_date: initial?.install_date || "",
-    minimum_term_ends: initial?.minimum_term_ends || "",
-    notice_received_date: initial?.notice_received_date || "",
     available_date: initial?.available_date || "",
-    incoming_eta: initial?.incoming_eta || "",
     location: initial?.location || "",
     condition: initial?.condition || "",
     admin_notes: initial?.admin_notes || "",
@@ -522,20 +640,8 @@ const InventoryDialog = ({
             <Input type="date" value={form.install_date} onChange={(e) => setF("install_date", e.target.value)} />
           </div>
           <div>
-            <Label className="text-xs">Minimum term ends</Label>
-            <Input type="date" value={form.minimum_term_ends} onChange={(e) => setF("minimum_term_ends", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Notice received date</Label>
-            <Input type="date" value={form.notice_received_date} onChange={(e) => setF("notice_received_date", e.target.value)} />
-          </div>
-          <div>
             <Label className="text-xs">Available date</Label>
             <Input type="date" value={form.available_date} onChange={(e) => setF("available_date", e.target.value)} />
-          </div>
-          <div>
-            <Label className="text-xs">Incoming ETA</Label>
-            <Input type="date" value={form.incoming_eta} onChange={(e) => setF("incoming_eta", e.target.value)} />
           </div>
           <div>
             <Label className="text-xs">Location</Label>
