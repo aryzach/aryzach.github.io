@@ -2,6 +2,7 @@
 // Maps product URL slugs -> sauna_types.id in the database + display data.
 
 import originalCollectionAsset from "@/assets/original-collection.png.asset.json";
+import originalCollectionOutdoorAsset from "@/assets/original-collection-outdoor.png.asset.json";
 import infraredOutdoorAsset from "@/assets/infrared-outdoor.png.asset.json";
 import infraredHeroAsset from "@/assets/infrared-hero.jpg.asset.json";
 import traditionalHeroAsset from "@/assets/traditional-hero.png.asset.json";
@@ -71,6 +72,7 @@ const ORIGINAL_TIERS: PricingTier[] = [
 const PLACEHOLDER_TRAD_INDOOR = assetUrl(traditionalIndoorAsset);
 const PLACEHOLDER_TRAD_OUTDOOR = assetUrl(traditionalHeroAsset);
 const IMG_ORIGINAL_COLLECTION = assetUrl(originalCollectionAsset);
+const IMG_ORIGINAL_COLLECTION_OUTDOOR = assetUrl(originalCollectionOutdoorAsset);
 const PLACEHOLDER_INFRARED_INDOOR = assetUrl(infraredHeroAsset);
 const PLACEHOLDER_INFRARED_OUTDOOR = assetUrl(infraredOutdoorAsset);
 
@@ -129,7 +131,7 @@ export const products: Product[] = [
       "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
     longDescription:
       "An earlier-generation outdoor traditional sauna converted from one of our infrared models. Real stones and the same authentic experience at a lower price point.",
-    image: IMG_ORIGINAL_COLLECTION,
+    image: IMG_ORIGINAL_COLLECTION_OUTDOOR,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
   },
