@@ -249,11 +249,17 @@ const AdminReservations = () => {
           const available_date = normalizeDate(get(col.available));
           if (get(col.available) && !available_date) throw new Error(`Invalid Available date "${get(col.available)}"`);
 
+          const modelRaw = get(col.model);
+          const model = modelRaw
+            ? (MODELS.find((m) => m.toLowerCase() === modelRaw.toLowerCase()) || null)
+            : "";
+          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Prototype)`);
+
           await callAdmin({
             action: "create_inventory",
             unit_code: get(col.id) || "",
             sauna_type_id,
-            model: get(col.model) || "",
+            model: model || "",
             indoor_outdoor_eligibility: elig,
             status,
             current_customer: get(col.customer) || "",
