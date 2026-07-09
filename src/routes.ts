@@ -34,6 +34,7 @@ export const routes = [
   { path: '/indoor-infrared-sauna-rental', priority: 0.8, changefreq: 'monthly' },
   { path: '/pre-fab-sauna-installation', priority: 0.8, changefreq: 'monthly' },
   { path: '/pre-fab-sauna-installation-form', priority: 0.6, changefreq: 'monthly' },
+  { path: '/reservation-system', priority: 0.9, changefreq: 'weekly' },
 ] as const;
 
 export const routePaths = routes.map(r => r.path);
