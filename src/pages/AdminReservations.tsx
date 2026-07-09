@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { computeAvailability, formatDatePretty, type AvailabilityEvent, type ConsumptionRow } from "@/lib/availability";
 import { useSEO } from "@/hooks/useSEO";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
@@ -21,13 +20,58 @@ interface SaunaType {
   sort_order: number;
 }
 
-interface EventRow {
+type SaunaStatus =
+  | "Available"
+  | "Reservation Hold"
+  | "Reservation Confirmed"
+  | "Installed"
+  | "Returning"
+  | "Maintenance"
+  | "Incoming"
+  | "Sold / Retired";
+
+const STATUSES: SaunaStatus[] = [
+  "Available",
+  "Reservation Hold",
+  "Reservation Confirmed",
+  "Installed",
+  "Returning",
+  "Maintenance",
+  "Incoming",
+  "Sold / Retired",
+];
+
+const STATUS_STYLES: Record<SaunaStatus, string> = {
+  "Available": "bg-green-100 text-green-800 border-green-300",
+  "Reservation Hold": "bg-blue-100 text-blue-800 border-blue-300",
+  "Reservation Confirmed": "bg-purple-100 text-purple-800 border-purple-300",
+  "Installed": "bg-slate-800 text-white border-slate-800",
+  "Returning": "bg-yellow-100 text-yellow-800 border-yellow-300",
+  "Maintenance": "bg-orange-100 text-orange-800 border-orange-300",
+  "Incoming": "bg-sky-100 text-sky-800 border-sky-300",
+  "Sold / Retired": "bg-gray-200 text-gray-700 border-gray-300",
+};
+
+const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
+
+interface InventoryRow {
   id: string;
   sauna_type_id: string;
-  quantity: number;
-  available_starting_date: string;
-  reason: string;
-  notes: string | null;
+  model: string | null;
+  indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
+  status: SaunaStatus;
+  current_customer: string | null;
+  install_date: string | null;
+  minimum_term_ends: string | null;
+  notice_received_date: string | null;
+  available_date: string | null;
+  incoming_eta: string | null;
+  location: string | null;
+  condition: string | null;
+  admin_notes: string | null;
+  reservation_id: string | null;
+  updated_at: string;
+  created_at: string;
 }
 
 interface Reservation {
@@ -49,6 +93,7 @@ interface Reservation {
   id_status: string;
   consult_status: string;
   admin_notes: string | null;
+  sauna_inventory_id: string | null;
 }
 
 const RESERVATION_STATUSES = [
@@ -68,19 +113,55 @@ const PAYMENT_STATUSES = ["Pending", "Paid", "Refunded"];
 const CONTRACT_STATUSES = ["Not Sent", "Sent", "Signed"];
 const ID_STATUSES = ["Not Uploaded", "Uploaded", "Reviewed"];
 const CONSULT_STATUSES = ["Not Scheduled", "Scheduled", "Complete"];
-const REASONS = ["New inventory", "Customer cancellation", "Repair complete", "Manual adjustment"];
+
+function fmtDate(d: string | null): string {
+  if (!d) return "—";
+  const [y, m, day] = d.split("-").map((n) => parseInt(n, 10));
+  if (!y) return d;
+  return new Date(y, m - 1, day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function timelineFor(row: InventoryRow): string {
+  switch (row.status) {
+    case "Available":
+      return "Available now";
+    case "Reservation Hold":
+      return `Held for ${row.current_customer || "(unknown)"}`;
+    case "Reservation Confirmed":
+      return `Confirmed for ${row.current_customer || "(unknown)"}`;
+    case "Installed":
+      return `Installed with ${row.current_customer || "(unknown)"}${row.minimum_term_ends ? ` · min term ends ${fmtDate(row.minimum_term_ends)}` : ""}`;
+    case "Returning":
+      return `Returning · available ${fmtDate(row.available_date)}`;
+    case "Maintenance":
+      return `Maintenance · available ${fmtDate(row.available_date)}`;
+    case "Incoming":
+      return `Incoming · ETA ${fmtDate(row.incoming_eta)} · available ${fmtDate(row.available_date)}`;
+    case "Sold / Retired":
+      return "Retired";
+  }
+}
 
 const AdminReservations = () => {
-  useSEO({ title: "Admin — Reservations", description: "Internal reservation admin." });
+  useSEO({ title: "Admin — Inventory", description: "Internal sauna inventory admin." });
 
   const [password, setPassword] = useState<string>(() => sessionStorage.getItem(PASSWORD_STORAGE_KEY) || "");
   const [authed, setAuthed] = useState(false);
   const [pwInput, setPwInput] = useState("");
   const [types, setTypes] = useState<SaunaType[]>([]);
-  const [events, setEvents] = useState<EventRow[]>([]);
-  const [consumption, setConsumption] = useState<ConsumptionRow[]>([]);
+  const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Filters
+  const [fType, setFType] = useState<string>("all");
+  const [fStatus, setFStatus] = useState<string>("all");
+  const [fCustomer, setFCustomer] = useState<string>("");
+  const [fLocation, setFLocation] = useState<string>("");
+  const [fCondition, setFCondition] = useState<string>("");
+
+  const [editing, setEditing] = useState<InventoryRow | null>(null);
+  const [creating, setCreating] = useState(false);
 
   const callAdmin = useCallback(
     async (body: Record<string, unknown>) => {
@@ -106,15 +187,13 @@ const AdminReservations = () => {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [typesRes, consRes, evRes, resRes] = await Promise.all([
+      const [typesRes, invRes, resRes] = await Promise.all([
         supabase.from("sauna_types").select("id, name, sort_order").order("sort_order"),
-        supabase.from("paid_reservation_consumption").select("*"),
-        callAdmin({ action: "list_events" }),
+        callAdmin({ action: "list_inventory" }),
         callAdmin({ action: "list_reservations" }),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
-      if (consRes.data) setConsumption(consRes.data as ConsumptionRow[]);
-      setEvents(evRes.events || []);
+      setInventory(invRes.inventory || []);
       setReservations(resRes.reservations || []);
     } catch (e) {
       console.error(e);
@@ -153,6 +232,17 @@ const AdminReservations = () => {
     setPwInput("");
   };
 
+  const filtered = useMemo(() => {
+    return inventory.filter((r) => {
+      if (fType !== "all" && r.sauna_type_id !== fType) return false;
+      if (fStatus !== "all" && r.status !== fStatus) return false;
+      if (fCustomer && !(r.current_customer || "").toLowerCase().includes(fCustomer.toLowerCase())) return false;
+      if (fLocation && !(r.location || "").toLowerCase().includes(fLocation.toLowerCase())) return false;
+      if (fCondition && !(r.condition || "").toLowerCase().includes(fCondition.toLowerCase())) return false;
+      return true;
+    });
+  }, [inventory, fType, fStatus, fCustomer, fLocation, fCondition]);
+
   if (!authed) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -164,13 +254,7 @@ const AdminReservations = () => {
               <form onSubmit={handleLogin} className="space-y-3">
                 <div>
                   <Label htmlFor="pw">Password</Label>
-                  <Input
-                    id="pw"
-                    type="password"
-                    value={pwInput}
-                    onChange={(e) => setPwInput(e.target.value)}
-                    autoFocus
-                  />
+                  <Input id="pw" type="password" value={pwInput} onChange={(e) => setPwInput(e.target.value)} autoFocus />
                 </div>
                 <Button type="submit" className="w-full">Sign in</Button>
               </form>
@@ -186,85 +270,133 @@ const AdminReservations = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-semibold text-foreground">Admin — Reservations</h1>
-            <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
+        <div className="container mx-auto px-4 max-w-[1400px]">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
+            <div className="flex gap-2">
+              <Button onClick={() => setCreating(true)}>Add sauna</Button>
+              <Button variant="outline" size="sm" onClick={logout}>Sign out</Button>
+            </div>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
-          <section className="space-y-6 mb-12">
-            <h2 className="text-xl font-semibold text-foreground">Inventory by sauna type</h2>
-            {types.map((t) => {
-              const avail = computeAvailability(t.id, events, consumption);
-              const typeEvents = events.filter((e) => e.sauna_type_id === t.id);
-              return (
-                <Card key={t.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{t.name}</CardTitle>
-                      <span className="text-sm text-muted-foreground">
-                        Available now: <span className="font-medium text-foreground">{avail.availableToday}</span>
-                        {avail.status === "future" && avail.nextAvailableDate && (
-                          <> · Next: {formatDatePretty(avail.nextAvailableDate)}</>
-                        )}
-                      </span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Qty</TableHead>
-                          <TableHead>Reason</TableHead>
-                          <TableHead>Notes</TableHead>
-                          <TableHead className="w-24"></TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {typeEvents.length === 0 && (
-                          <TableRow><TableCell colSpan={5} className="text-muted-foreground text-sm">No availability events yet.</TableCell></TableRow>
-                        )}
-                        {typeEvents.map((ev) => (
-                          <EventRowEditor
-                            key={ev.id}
-                            event={ev}
-                            onSave={async (patch) => {
-                              try {
-                                await callAdmin({ action: "update_event", id: ev.id, patch });
-                                toast.success("Updated");
-                                await loadAll();
-                              } catch (e) { toast.error("Failed"); }
-                            }}
-                            onDelete={async () => {
-                              if (!confirm("Delete this availability event?")) return;
-                              try {
-                                await callAdmin({ action: "delete_event", id: ev.id });
-                                toast.success("Deleted");
-                                await loadAll();
-                              } catch (e) { toast.error("Failed"); }
-                            }}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
+          <section className="mb-10">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Sauna inventory</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  <div>
+                    <Label className="text-xs">Sauna type</Label>
+                    <Select value={fType} onValueChange={setFType}>
+                      <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All types</SelectItem>
+                        {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Status</Label>
+                    <Select value={fStatus} onValueChange={setFStatus}>
+                      <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All statuses</SelectItem>
+                        {STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-xs">Current customer</Label>
+                    <Input className="h-9" value={fCustomer} onChange={(e) => setFCustomer(e.target.value)} placeholder="Search…" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Location</Label>
+                    <Input className="h-9" value={fLocation} onChange={(e) => setFLocation(e.target.value)} placeholder="Search…" />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Condition</Label>
+                    <Input className="h-9" value={fCondition} onChange={(e) => setFCondition(e.target.value)} placeholder="Search…" />
+                  </div>
+                </div>
 
-                    <AddEventForm
-                      saunaTypeId={t.id}
-                      onCreate={async (payload) => {
-                        try {
-                          await callAdmin({ action: "create_event", ...payload });
-                          toast.success("Added");
-                          await loadAll();
-                        } catch (e) { toast.error("Failed"); }
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              );
-            })}
+                <div className="overflow-x-auto border border-border rounded-md">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+                      <tr>
+                        <th className="text-left px-3 py-2">ID</th>
+                        <th className="text-left px-3 py-2">Type</th>
+                        <th className="text-left px-3 py-2">Model</th>
+                        <th className="text-left px-3 py-2">In/Out</th>
+                        <th className="text-left px-3 py-2">Status</th>
+                        <th className="text-left px-3 py-2">Customer</th>
+                        <th className="text-left px-3 py-2">Install</th>
+                        <th className="text-left px-3 py-2">Min term ends</th>
+                        <th className="text-left px-3 py-2">Notice</th>
+                        <th className="text-left px-3 py-2">Available</th>
+                        <th className="text-left px-3 py-2">ETA</th>
+                        <th className="text-left px-3 py-2">Location</th>
+                        <th className="text-left px-3 py-2">Condition</th>
+                        <th className="text-left px-3 py-2">Timeline</th>
+                        <th className="text-left px-3 py-2">Notes</th>
+                        <th className="text-left px-3 py-2">Updated</th>
+                        <th className="text-left px-3 py-2"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.length === 0 && (
+                        <tr><td colSpan={17} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                      )}
+                      {filtered.map((r) => (
+                        <tr key={r.id} className="border-t border-border">
+                          <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{r.id.slice(0, 8)}</td>
+                          <td className="px-3 py-2">{types.find((t) => t.id === r.sauna_type_id)?.name || r.sauna_type_id}</td>
+                          <td className="px-3 py-2">{r.model || "—"}</td>
+                          <td className="px-3 py-2 capitalize">{r.indoor_outdoor_eligibility}</td>
+                          <td className="px-3 py-2">
+                            <span className={`inline-block px-2 py-0.5 rounded border text-xs font-medium ${STATUS_STYLES[r.status]}`}>
+                              {r.status}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2">{r.current_customer || "—"}</td>
+                          <td className="px-3 py-2">{fmtDate(r.install_date)}</td>
+                          <td className="px-3 py-2">{fmtDate(r.minimum_term_ends)}</td>
+                          <td className="px-3 py-2">{fmtDate(r.notice_received_date)}</td>
+                          <td className="px-3 py-2">{fmtDate(r.available_date)}</td>
+                          <td className="px-3 py-2">{fmtDate(r.incoming_eta)}</td>
+                          <td className="px-3 py-2">{r.location || "—"}</td>
+                          <td className="px-3 py-2">{r.condition || "—"}</td>
+                          <td className="px-3 py-2 text-xs">{timelineFor(r)}</td>
+                          <td className="px-3 py-2 text-xs max-w-[200px] truncate" title={r.admin_notes || ""}>{r.admin_notes || "—"}</td>
+                          <td className="px-3 py-2 text-xs text-muted-foreground">{new Date(r.updated_at).toLocaleDateString()}</td>
+                          <td className="px-3 py-2">
+                            <div className="flex gap-1">
+                              <Button size="sm" variant="ghost" onClick={() => setEditing(r)}>Edit</Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={async () => {
+                                  if (!confirm("Delete this sauna?")) return;
+                                  try {
+                                    await callAdmin({ action: "delete_inventory", id: r.id });
+                                    toast.success("Deleted");
+                                    await loadAll();
+                                  } catch (e) { toast.error((e as Error).message); }
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           </section>
 
           <section>
@@ -278,14 +410,12 @@ const AdminReservations = () => {
                   key={r.id}
                   reservation={r}
                   saunaTypes={types}
+                  inventory={inventory}
                   onUpdate={async (patch) => {
                     try {
                       const res = await callAdmin({ action: "update_reservation", id: r.id, patch });
                       setReservations((prev) => prev.map((x) => (x.id === r.id ? res.reservation : x)));
                       toast.success("Saved");
-                      // Refresh consumption view since payment/status affect it
-                      const { data } = await supabase.from("paid_reservation_consumption").select("*");
-                      if (data) setConsumption(data as ConsumptionRow[]);
                     } catch (e) { toast.error("Failed"); }
                   }}
                 />
@@ -295,130 +425,159 @@ const AdminReservations = () => {
         </div>
       </main>
       <Footer />
+
+      {(editing || creating) && (
+        <InventoryDialog
+          initial={editing}
+          types={types}
+          onClose={() => { setEditing(null); setCreating(false); }}
+          onSave={async (patch) => {
+            try {
+              if (editing) {
+                await callAdmin({ action: "update_inventory", id: editing.id, patch });
+                toast.success("Saved");
+              } else {
+                await callAdmin({ action: "create_inventory", ...patch });
+                toast.success("Added");
+              }
+              setEditing(null);
+              setCreating(false);
+              await loadAll();
+            } catch (e) { toast.error((e as Error).message); }
+          }}
+        />
+      )}
     </div>
   );
 };
 
-const EventRowEditor = ({
-  event,
+const InventoryDialog = ({
+  initial,
+  types,
+  onClose,
   onSave,
-  onDelete,
 }: {
-  event: EventRow;
-  onSave: (patch: Partial<EventRow>) => Promise<void>;
-  onDelete: () => Promise<void>;
+  initial: InventoryRow | null;
+  types: SaunaType[];
+  onClose: () => void;
+  onSave: (patch: Record<string, unknown>) => Promise<void>;
 }) => {
-  const [editing, setEditing] = useState(false);
-  const [qty, setQty] = useState(event.quantity);
-  const [date, setDate] = useState(event.available_starting_date);
-  const [reason, setReason] = useState(event.reason);
-  const [notes, setNotes] = useState(event.notes || "");
+  const [form, setForm] = useState({
+    sauna_type_id: initial?.sauna_type_id || types[0]?.id || "",
+    model: initial?.model || "",
+    indoor_outdoor_eligibility: initial?.indoor_outdoor_eligibility || "either",
+    status: initial?.status || ("Available" as SaunaStatus),
+    current_customer: initial?.current_customer || "",
+    install_date: initial?.install_date || "",
+    minimum_term_ends: initial?.minimum_term_ends || "",
+    notice_received_date: initial?.notice_received_date || "",
+    available_date: initial?.available_date || "",
+    incoming_eta: initial?.incoming_eta || "",
+    location: initial?.location || "",
+    condition: initial?.condition || "",
+    admin_notes: initial?.admin_notes || "",
+  });
+  const setF = (k: keyof typeof form, v: string) => setForm((p) => ({ ...p, [k]: v }));
 
-  if (!editing) {
-    return (
-      <TableRow>
-        <TableCell>{formatDatePretty(event.available_starting_date)}</TableCell>
-        <TableCell>{event.quantity}</TableCell>
-        <TableCell>{event.reason}</TableCell>
-        <TableCell className="max-w-xs truncate">{event.notes}</TableCell>
-        <TableCell>
-          <div className="flex gap-1">
-            <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>Edit</Button>
-            <Button size="sm" variant="ghost" onClick={onDelete}>Delete</Button>
+  return (
+    <Dialog open onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{initial ? "Edit sauna" : "Add sauna"}</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <Label className="text-xs">Sauna type</Label>
+            <Select value={form.sauna_type_id} onValueChange={(v) => setF("sauna_type_id", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {types.map((t) => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-        </TableCell>
-      </TableRow>
-    );
-  }
-
-  return (
-    <TableRow>
-      <TableCell><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></TableCell>
-      <TableCell><Input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value || "0", 10))} /></TableCell>
-      <TableCell>
-        <Select value={reason} onValueChange={setReason}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>{REASONS.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
-        </Select>
-      </TableCell>
-      <TableCell><Input value={notes} onChange={(e) => setNotes(e.target.value)} /></TableCell>
-      <TableCell>
-        <div className="flex gap-1">
-          <Button size="sm" onClick={async () => { await onSave({ quantity: qty, available_starting_date: date, reason, notes }); setEditing(false); }}>Save</Button>
-          <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>Cancel</Button>
+          <div>
+            <Label className="text-xs">Model / version</Label>
+            <Input value={form.model} onChange={(e) => setF("model", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Indoor / outdoor eligibility</Label>
+            <Select value={form.indoor_outdoor_eligibility} onValueChange={(v) => setF("indoor_outdoor_eligibility", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>{ELIGIBILITY.map((e) => <SelectItem key={e} value={e} className="capitalize">{e}</SelectItem>)}</SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className="text-xs">Status</Label>
+            <Select value={form.status} onValueChange={(v) => setF("status", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+            </Select>
+          </div>
+          <div className="md:col-span-2">
+            <Label className="text-xs">Current customer</Label>
+            <Input value={form.current_customer} onChange={(e) => setF("current_customer", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Install date</Label>
+            <Input type="date" value={form.install_date} onChange={(e) => setF("install_date", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Minimum term ends</Label>
+            <Input type="date" value={form.minimum_term_ends} onChange={(e) => setF("minimum_term_ends", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Notice received date</Label>
+            <Input type="date" value={form.notice_received_date} onChange={(e) => setF("notice_received_date", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Available date</Label>
+            <Input type="date" value={form.available_date} onChange={(e) => setF("available_date", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Incoming ETA</Label>
+            <Input type="date" value={form.incoming_eta} onChange={(e) => setF("incoming_eta", e.target.value)} />
+          </div>
+          <div>
+            <Label className="text-xs">Location</Label>
+            <Input value={form.location} onChange={(e) => setF("location", e.target.value)} />
+          </div>
+          <div className="md:col-span-2">
+            <Label className="text-xs">Condition</Label>
+            <Input value={form.condition} onChange={(e) => setF("condition", e.target.value)} />
+          </div>
+          <div className="md:col-span-2">
+            <Label className="text-xs">Admin notes</Label>
+            <Textarea rows={3} value={form.admin_notes} onChange={(e) => setF("admin_notes", e.target.value)} />
+          </div>
         </div>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-const AddEventForm = ({
-  saunaTypeId,
-  onCreate,
-}: {
-  saunaTypeId: string;
-  onCreate: (p: { sauna_type_id: string; quantity: number; available_starting_date: string; reason: string; notes: string }) => Promise<void>;
-}) => {
-  const [qty, setQty] = useState(1);
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [reason, setReason] = useState(REASONS[0]);
-  const [notes, setNotes] = useState("");
-  return (
-    <form
-      className="grid grid-cols-1 md:grid-cols-5 gap-2 mt-4 pt-4 border-t border-border"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await onCreate({ sauna_type_id: saunaTypeId, quantity: qty, available_starting_date: date, reason, notes });
-        setNotes("");
-        setQty(1);
-      }}
-    >
-      <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-      <Input type="number" min={1} value={qty} onChange={(e) => setQty(parseInt(e.target.value || "1", 10))} required />
-      <Select value={reason} onValueChange={setReason}>
-        <SelectTrigger><SelectValue /></SelectTrigger>
-        <SelectContent>{REASONS.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
-      </Select>
-      <Input placeholder="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
-      <Button type="submit">Add availability</Button>
-    </form>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button onClick={() => onSave(form)}>Save</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 const ReservationRow = ({
   reservation,
   saunaTypes,
+  inventory,
   onUpdate,
 }: {
   reservation: Reservation;
   saunaTypes: SaunaType[];
+  inventory: InventoryRow[];
   onUpdate: (patch: Partial<Reservation>) => Promise<void>;
 }) => {
   const r = reservation;
   const [notes, setNotes] = useState(r.admin_notes || "");
-  const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({
-    first_name: r.first_name,
-    last_name: r.last_name,
-    email: r.email,
-    phone: r.phone,
-    sauna_type_id: r.sauna_type_id,
-    install_address: r.install_address,
-    placement_choice: r.placement_choice,
-    access_notes: r.access_notes || "",
-    min_commitment_months: String(r.min_commitment_months),
-    preferred_install_at: new Date(r.preferred_install_at).toISOString().slice(0, 16),
-  });
-  const setF = (k: keyof typeof form, v: string) => setForm((p) => ({ ...p, [k]: v }));
+  const linkedSauna = inventory.find((i) => i.id === r.sauna_inventory_id);
 
-  const statusCol = (
-    label: string,
-    key: keyof Reservation,
-    options: string[],
-  ) => (
+  const statusCol = (label: string, key: keyof Reservation, options: string[]) => (
     <div>
       <Label className="text-xs text-muted-foreground">{label}</Label>
-      <Select value={r[key] as string} onValueChange={(v) => onUpdate({ [key]: v } as any)}>
+      <Select value={r[key] as string} onValueChange={(v) => onUpdate({ [key]: v } as Partial<Reservation>)}>
         <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
         <SelectContent>{options.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
       </Select>
@@ -433,108 +592,17 @@ const ReservationRow = ({
           <span className="text-muted-foreground">{r.email}</span>
           <span className="text-muted-foreground">{r.phone}</span>
           <span className="text-muted-foreground">
-            {r.sauna_type_id} · {r.min_commitment_months}mo · install {new Date(r.preferred_install_at).toLocaleString()}
+            {saunaTypes.find((s) => s.id === r.sauna_type_id)?.name || r.sauna_type_id} · {r.min_commitment_months}mo · install {new Date(r.preferred_install_at).toLocaleString()}
           </span>
           <span className="ml-auto text-xs text-muted-foreground">
             Created {new Date(r.created_at).toLocaleDateString()}
           </span>
         </div>
 
-        {editing ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-md border border-border bg-muted/30">
-            <div>
-              <Label className="text-xs">First name</Label>
-              <Input value={form.first_name} onChange={(e) => setF("first_name", e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs">Last name</Label>
-              <Input value={form.last_name} onChange={(e) => setF("last_name", e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs">Email</Label>
-              <Input type="email" value={form.email} onChange={(e) => setF("email", e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs">Phone</Label>
-              <Input value={form.phone} onChange={(e) => setF("phone", e.target.value)} />
-            </div>
-            <div className="md:col-span-2">
-              <Label className="text-xs">Install address</Label>
-              <Input value={form.install_address} onChange={(e) => setF("install_address", e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs">Sauna type</Label>
-              <Select value={form.sauna_type_id} onValueChange={(v) => setF("sauna_type_id", v)}>
-                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {saunaTypes.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs">Placement</Label>
-              <Select value={form.placement_choice} onValueChange={(v) => setF("placement_choice", v)}>
-                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="indoor">Indoor</SelectItem>
-                  <SelectItem value="outdoor">Outdoor</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs">Min commitment (months)</Label>
-              <Select value={form.min_commitment_months} onValueChange={(v) => setF("min_commitment_months", v)}>
-                <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {["1", "3", "6", "12"].map((n) => <SelectItem key={n} value={n}>{n}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs">Preferred install date & time</Label>
-              <Input
-                type="datetime-local"
-                value={form.preferred_install_at}
-                onChange={(e) => setF("preferred_install_at", e.target.value)}
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Label className="text-xs">Access notes</Label>
-              <Textarea rows={2} value={form.access_notes} onChange={(e) => setF("access_notes", e.target.value)} />
-            </div>
-            <div className="md:col-span-2 flex gap-2 justify-end">
-              <Button variant="ghost" size="sm" onClick={() => setEditing(false)}>Cancel</Button>
-              <Button
-                size="sm"
-                onClick={async () => {
-                  await onUpdate({
-                    first_name: form.first_name,
-                    last_name: form.last_name,
-                    email: form.email,
-                    phone: form.phone,
-                    sauna_type_id: form.sauna_type_id,
-                    install_address: form.install_address,
-                    placement_choice: form.placement_choice,
-                    access_notes: form.access_notes || null,
-                    min_commitment_months: parseInt(form.min_commitment_months, 10),
-                    preferred_install_at: new Date(form.preferred_install_at).toISOString(),
-                  } as Partial<Reservation>);
-                  setEditing(false);
-                }}
-              >
-                Save details
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="space-y-0.5">
-              <div>Address: {r.install_address} ({r.placement_choice})</div>
-              {r.access_notes && <div>Access: {r.access_notes}</div>}
-            </div>
-            <Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit details</Button>
-          </div>
-        )}
+        <div className="text-xs text-muted-foreground">
+          Address: {r.install_address} ({r.placement_choice}){r.access_notes ? ` · access: ${r.access_notes}` : ""}
+          {linkedSauna && <> · sauna <span className="font-mono">{linkedSauna.id.slice(0, 8)}</span> ({linkedSauna.status})</>}
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {statusCol("Reservation", "reservation_status", RESERVATION_STATUSES)}

@@ -89,32 +89,28 @@ const ReservationDialog = ({ saunaType, availability, onClose }: Props) => {
 
     setSubmitting(true);
 
-    const reservationId = crypto.randomUUID();
-    const { error } = await supabase
-      .from("reservations")
-      .insert({
-        id: reservationId,
-        sauna_type_id: saunaType.id,
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone: values.phone,
-        install_address: values.install_address,
-        placement_choice: values.placement_choice,
-        access_notes: values.access_notes || null,
-        min_commitment_months: parseInt(values.min_commitment_months, 10),
-        preferred_install_at: new Date(values.preferred_install_at).toISOString(),
-      });
+    const { data, error } = await supabase.rpc("create_reservation_with_hold", {
+      p_sauna_type_id: saunaType.id,
+      p_first_name: values.first_name,
+      p_last_name: values.last_name,
+      p_email: values.email,
+      p_phone: values.phone,
+      p_install_address: values.install_address,
+      p_placement_choice: values.placement_choice,
+      p_access_notes: values.access_notes || "",
+      p_min_commitment_months: parseInt(values.min_commitment_months, 10),
+      p_preferred_install_at: new Date(values.preferred_install_at).toISOString(),
+    } as never) as { data: string | null; error: { message: string } | null };
 
     setSubmitting(false);
 
-    if (error) {
+    if (error || !data) {
       console.error(error);
-      toast.error("Could not submit reservation. Please try again.");
+      toast.error(error?.message || "Could not submit reservation. Please try again.");
       return;
     }
 
-    navigate(`/reservation-confirmation?id=${reservationId}&type=${saunaType.id}`);
+    navigate(`/reservation-confirmation?id=${data}&type=${saunaType.id}`);
   };
 
   return (
