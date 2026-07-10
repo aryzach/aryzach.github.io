@@ -199,6 +199,41 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
   const saunaTypeMismatch = form.sauna_type && contract?.rental_summary_snapshot?.flags?.includes?.("sauna_type_changed_from_reservation");
 
+  const sign = async () => {
+    if (!contract) return;
+    const missing = ACKNOWLEDGMENTS.find((a) => !acks[a.key]);
+    if (missing) { toast.error("Please accept all acknowledgments to continue."); return; }
+    if (typedName.trim().toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {
+      toast.error(`Please type your full legal name exactly as shown: "${contract.customer_legal_name}".`);
+      return;
+    }
+    setSigning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("contract-api", {
+        body: {
+          action: "sign",
+          id: reservationId,
+          token,
+          contract_id: contract.id,
+          typed_legal_name: typedName.trim(),
+          acknowledgments: acks,
+          time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
+      });
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      setContract(data.contract);
+      setSignedPdfUrl(data.signed_pdf_url ?? null);
+      setStep("signed");
+      toast.success("Rental Agreement signed");
+      onSaved?.();
+    } catch (e) {
+      toast.error((e as Error).message || "Could not sign the agreement");
+    } finally {
+      setSigning(false);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-3xl overflow-y-auto p-0">
@@ -235,12 +270,23 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               isSf={isSf}
               activeVersion={activeVersion}
             />
-          ) : contract ? (
+          ) : step === "preview" && contract ? (
             <PreviewStep
               contract={contract}
               onEdit={() => setStep("configure")}
               mismatchFlag={!!saunaTypeMismatch}
             />
+          ) : step === "sign" && contract ? (
+            <SignStep
+              contract={contract}
+              typedName={typedName}
+              setTypedName={setTypedName}
+              acks={acks}
+              setAcks={setAcks}
+              masterAgreementUrl={masterAgreementUrl}
+            />
+          ) : step === "signed" && contract ? (
+            <SignedStep contract={contract} signedPdfUrl={signedPdfUrl} />
           ) : null}
         </div>
 
@@ -255,15 +301,24 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
                   )}
                 </Button>
               </>
-            ) : (
+            ) : step === "preview" ? (
               <>
                 <Button variant="ghost" onClick={() => setStep("configure")}>
                   <ChevronLeft className="mr-1" size={16} /> Edit Agreement
                 </Button>
-                <Button disabled title="Signing available soon">
-                  Continue to Sign
+                <Button onClick={() => setStep("sign")}>Continue to Sign</Button>
+              </>
+            ) : step === "sign" ? (
+              <>
+                <Button variant="ghost" onClick={() => setStep("preview")}>
+                  <ChevronLeft className="mr-1" size={16} /> Back to preview
+                </Button>
+                <Button onClick={sign} disabled={signing}>
+                  {signing ? <><Loader2 className="mr-2 animate-spin" size={16} /> Signing…</> : "Sign & Complete"}
                 </Button>
               </>
+            ) : (
+              <Button variant="ghost" className="ml-auto" onClick={() => onOpenChange(false)}>Close</Button>
             )}
           </div>
         )}
