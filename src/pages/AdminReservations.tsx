@@ -51,7 +51,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
-const MODELS = ["Standard", "Prototype"] as const;
+const MODELS = ["Standard", "Original Collection"] as const;
 type ModelValue = typeof MODELS[number];
 const STYLES = ["Traditional", "Infrared"] as const;
 type StyleValue = typeof STYLES[number];
@@ -66,7 +66,18 @@ function styleFor(sauna_type_id: string): StyleValue {
   return /infrared/i.test(sauna_type_id) ? "Infrared" : "Traditional";
 }
 
-function saunaTypeIdFor(style: StyleValue, elig: "indoor" | "outdoor" | "either"): string | null {
+function saunaTypeIdFor(
+  style: StyleValue,
+  elig: "indoor" | "outdoor" | "either",
+  model?: string | null,
+): string | null {
+  // Traditional + Original Collection routes to the original-collection sauna types
+  // so availability is tracked separately from the standard Traditional line.
+  if (style === "Traditional" && model === "Original Collection") {
+    if (elig === "indoor") return "indoor_traditional";
+    if (elig === "outdoor") return "outdoor_traditional_original";
+    return "outdoor_traditional_original";
+  }
   const loc = elig === "either" ? "either" : elig;
   const key = `${style.toLowerCase()}|${loc}`;
   return STYLE_LOC_TO_TYPE[key] ?? null;
@@ -339,12 +350,19 @@ const AdminReservations = () => {
           const model = modelRaw
             ? (MODELS.find((m) => m.toLowerCase() === modelRaw.toLowerCase()) || null)
             : "";
-          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Prototype)`);
+          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Original Collection)`);
+
+          // Re-route Traditional + Original Collection to the original-collection sauna_type_id.
+          const resolvedTypeId = saunaTypeIdFor(
+            styleRaw === "infrared" ? "Infrared" : "Traditional",
+            elig,
+            model || null,
+          ) || sauna_type_id;
 
           await callAdmin({
             action: "create_inventory",
             unit_code: get(col.id) || "",
-            sauna_type_id,
+            sauna_type_id: resolvedTypeId,
             model: model || "",
             indoor_outdoor_eligibility: elig,
             status,
@@ -393,7 +411,7 @@ const AdminReservations = () => {
     if (!draft) return;
     setDraftError(null);
     setDraftErrorField(null);
-    const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility);
+    const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility, draft.model);
     if (!sauna_type_id) {
       setDraftError(`No sauna type for ${draft.style} + ${ELIG_LABEL[draft.indoor_outdoor_eligibility]}.`);
       setDraftErrorField("style");
@@ -546,12 +564,25 @@ const AdminReservations = () => {
   ) => {
     const nextElig = which === "location" ? (value as "indoor" | "outdoor" | "either") : row.indoor_outdoor_eligibility;
     const nextStyle = which === "style" ? (value as StyleValue) : styleFor(row.sauna_type_id);
-    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig);
+    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig, row.model);
     if (!nextTypeId) {
       toast.error(`No sauna type for ${nextStyle} + ${ELIG_LABEL[nextElig]}.`);
       return;
     }
     const patch = { indoor_outdoor_eligibility: nextElig, sauna_type_id: nextTypeId };
+    setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
+    try {
+      await callAdmin({ action: "update_inventory", id: row.id, patch });
+    } catch (e) {
+      toast.error((e as Error).message || "Save failed");
+      await loadAll();
+    }
+  };
+
+  const updateModel = async (row: InventoryRow, nextModel: string | null) => {
+    const style = styleFor(row.sauna_type_id);
+    const nextTypeId = saunaTypeIdFor(style, row.indoor_outdoor_eligibility, nextModel) || row.sauna_type_id;
+    const patch = { model: nextModel, sauna_type_id: nextTypeId };
     setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
     try {
       await callAdmin({ action: "update_inventory", id: row.id, patch });
@@ -868,7 +899,7 @@ const AdminReservations = () => {
                             <SelectCell
                               value={r.model || ""}
                               options={[{ value: "", label: "—" }, ...MODELS.map((m) => ({ value: m, label: m }))]}
-                              onSave={(v) => updateCell(r.id, "model", v || null)}
+                              onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
