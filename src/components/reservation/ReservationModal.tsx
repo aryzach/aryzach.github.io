@@ -185,7 +185,9 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                   {SAUNA_TYPE_OPTIONS.map((o) => {
                     const active = selectedSaunaTypeId === o.id;
                     const optAvail = getStatus(o.id);
-                    const isTraditional = o.id.includes("traditional");
+                    const isHighDemand =
+                      o.id === "outdoor_traditional_latest" ||
+                      o.id === "indoor_outdoor_traditional_latest";
                     const availText =
                       optAvail.status === "available"
                         ? "Available now"
@@ -220,7 +222,7 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 min-w-0">
                               <div className="text-sm text-foreground truncate">{o.label}</div>
-                              {isTraditional && (
+                              {isHighDemand && (
                                 <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-red-100 text-red-700 border border-red-200">
                                   High demand
                                 </span>
