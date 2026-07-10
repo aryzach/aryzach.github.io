@@ -68,7 +68,7 @@ const Gallery = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="flex items-start gap-3">
               <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
-              <span className="text-muted-foreground">Fast SF-local delivery (1–8 weeks depending on sauna type)</span>
+              <span className="text-muted-foreground">Fast service throughout the SF Bay Area</span>
             </div>
             <div className="flex items-start gap-3">
               <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
