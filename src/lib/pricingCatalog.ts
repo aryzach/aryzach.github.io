@@ -6,6 +6,7 @@ import originalCollectionOutdoorAsset from "@/assets/original-collection-outdoor
 import originalCollectionIndoorAsset from "@/assets/original-collection-indoor.jpg.asset.json";
 import infraredOutdoorAsset from "@/assets/infrared-outdoor.png.asset.json";
 import infraredHeroAsset from "@/assets/infrared-hero.jpg.asset.json";
+import infraredIndoorAsset from "@/assets/infrared-indoor.png.asset.json";
 import traditionalHeroAsset from "@/assets/traditional-hero.png.asset.json";
 import traditionalIndoorAsset from "@/assets/traditional-indoor.jpg.asset.json";
 
@@ -75,7 +76,7 @@ const PLACEHOLDER_TRAD_OUTDOOR = assetUrl(traditionalHeroAsset);
 const IMG_ORIGINAL_COLLECTION_INDOOR = assetUrl(originalCollectionIndoorAsset);
 const IMG_ORIGINAL_COLLECTION = assetUrl(originalCollectionAsset);
 const IMG_ORIGINAL_COLLECTION_OUTDOOR = assetUrl(originalCollectionOutdoorAsset);
-const PLACEHOLDER_INFRARED_INDOOR = assetUrl(infraredHeroAsset);
+const PLACEHOLDER_INFRARED_INDOOR = assetUrl(infraredIndoorAsset);
 const PLACEHOLDER_INFRARED_OUTDOOR = assetUrl(infraredOutdoorAsset);
 
 export const products: Product[] = [
