@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
+import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
@@ -49,6 +50,8 @@ const ReservationDashboard = () => {
   const [uploadingId, setUploadingId] = useState(false);
   const idInputRef = useRef<HTMLInputElement>(null);
   const [idPhoto, setIdPhoto] = useState<{ url: string; name: string } | null>(null);
+  const [agreementOpen, setAgreementOpen] = useState(false);
+  const [contractStatus, setContractStatus] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -70,6 +73,20 @@ const ReservationDashboard = () => {
   }, [id, token]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Load contract status from contract-api so the dashboard row reflects
+  // the current contract regardless of the reservation.contract_status field.
+  const loadContract = useCallback(async () => {
+    if (!id || !token) return;
+    try {
+      const { data } = await supabase.functions.invoke("contract-api", {
+        body: { action: "get", id, token },
+      });
+      setContractStatus(data?.contract?.status ?? "Not Started");
+    } catch { /* non-fatal */ }
+  }, [id, token]);
+
+  useEffect(() => { loadContract(); }, [loadContract]);
 
   // Auto-refresh once when returning (in case payment just completed).
   useEffect(() => {
@@ -254,6 +271,28 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
+                    done={contractStatus === "Signed"}
+                    label="Complete Rental Agreement"
+                    action={
+                      <div className="flex items-center gap-2">
+                        {contractStatus && contractStatus !== "Not Started" && contractStatus !== "Signed" && (
+                          <span className="text-xs text-muted-foreground">{contractStatus}</span>
+                        )}
+                        <Button
+                          size="sm"
+                          variant={contractStatus === "Signed" ? "ghost" : "outline"}
+                          onClick={() => setAgreementOpen(true)}
+                        >
+                          <FileText className="mr-1.5" size={14} />
+                          {contractStatus === "Signed" ? "View"
+                            : contractStatus === "Draft Created" || contractStatus === "Ready to Sign"
+                              ? "Review & Sign"
+                              : "Start"}
+                        </Button>
+                      </div>
+                    }
+                  />
+                  <StepRow
                     done={installScheduled}
                     label="Schedule Installation Date"
                     action={
@@ -279,6 +318,15 @@ const ReservationDashboard = () => {
         </div>
       </main>
       <Footer />
+      {reservation && (
+        <RentalAgreementSheet
+          open={agreementOpen}
+          onOpenChange={setAgreementOpen}
+          reservationId={reservation.id}
+          token={token}
+          onSaved={loadContract}
+        />
+      )}
     </div>
   );
 };
