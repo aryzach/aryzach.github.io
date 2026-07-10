@@ -259,18 +259,6 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
-                    done={reservation.contract_status === "Complete"}
-                    label="Complete Lease Agreement"
-                    action={
-                      reservation.contract_status !== "Complete" ? (
-                        <span className="text-xs text-muted-foreground">
-                          <FileText className="inline mr-1" size={12} />
-                          We'll email you
-                        </span>
-                      ) : null
-                    }
-                  />
-                  <StepRow
                     done={contractStatus === "Signed"}
                     label="Complete Rental Agreement"
                     action={
