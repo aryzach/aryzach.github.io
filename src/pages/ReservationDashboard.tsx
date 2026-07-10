@@ -202,7 +202,7 @@ const ReservationDashboard = () => {
                     label={`Pay $${deposit?.amount ?? 0} reservation deposit`}
                     sublabel={
                       !paid
-                        ? "Paying the reservation deposit place a hold on a sauna. This deposit is applied to lease payments."
+                        ? "Deposit applied to lease payments. We will confirm receipt within 24 hours."
                         : undefined
                     }
                     action={
