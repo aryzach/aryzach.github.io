@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
@@ -52,35 +51,52 @@ const fmt = (iso: string | null) =>
       })
     : "—";
 
+const fmtDate = (iso: string | null) =>
+  iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+
 const STATUS_COLOR: Record<string, string> = {
-  "Lead": "bg-gray-200 text-gray-900",
-  "Pending Payment": "bg-yellow-100 text-yellow-900",
-  "Reservation Hold": "bg-blue-100 text-blue-900",
-  "Reservation Confirmed": "bg-purple-100 text-purple-900",
-  "Needs Manual Review": "bg-orange-100 text-orange-900",
-  "Cancelled": "bg-gray-200 text-gray-900",
-  "Refunded": "bg-gray-200 text-gray-900",
+  "Lead": "bg-gray-200 text-gray-900 border-gray-300",
+  "Pending Payment": "bg-yellow-100 text-yellow-900 border-yellow-200",
+  "Reservation Hold": "bg-blue-100 text-blue-900 border-blue-200",
+  "Reservation Confirmed": "bg-purple-100 text-purple-900 border-purple-200",
+  "Needs Manual Review": "bg-orange-100 text-orange-900 border-orange-200",
+  "Cancelled": "bg-gray-200 text-gray-900 border-gray-300",
+  "Refunded": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
-// Embeddable panel that renders the reservation list. Reuses the parent's
-// admin password via callAdmin. Used both by the standalone page and as a
-// tab inside the AdminReservations inventory page.
+const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
+
+type ColKey =
+  | "name" | "email" | "phone" | "city" | "sauna" | "style" | "install"
+  | "status" | "payment" | "consult" | "id" | "contract" | "created";
+
+// Embeddable table that lists reservations with per-column filters, sort, and
+// row-level actions (copy magic link, mark paid, confirm/extend/release, delete).
 export const ReservationsListPanel = ({
   callAdmin,
 }: {
   callAdmin: (body: Record<string, unknown>) => Promise<any>;
 }) => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [events, setEvents] = useState<ReservationEvent[]>([]);
   const [loading, setLoading] = useState(false);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
+    name: "", email: "", phone: "", city: "", sauna: "", style: "", install: "",
+    status: "", payment: "", consult: "", id: "", contract: "", created: "",
+  });
+  const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
+  const [sortCol, setSortCol] = useState<ColKey | null>("created");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const toggleSort = (k: ColKey) => {
+    if (sortCol !== k) { setSortCol(k); setSortDir("asc"); }
+    else if (sortDir === "asc") setSortDir("desc");
+    else { setSortCol(null); setSortDir("asc"); }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await callAdmin({ action: "list_reservations_with_events" });
+      const data = await callAdmin({ action: "list_reservations" });
       setReservations(data.reservations ?? []);
-      setEvents(data.events ?? []);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -111,133 +127,187 @@ export const ReservationsListPanel = ({
     }
   };
 
+  const deleteReservation = async (r: Reservation) => {
+    if (!confirm(`Delete reservation for ${r.first_name} ${r.last_name}? This cannot be undone.`)) return;
+    try {
+      await callAdmin({ action: "delete_reservation", id: r.id });
+      toast.success("Deleted");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
   const copyLink = (r: Reservation) => {
     const url = `${window.location.origin}/reservation/${r.id}?token=${encodeURIComponent(r.secure_token)}`;
     navigator.clipboard.writeText(url);
     toast.success("Reservation link copied");
   };
 
-  const eventsFor = useMemo(() => {
-    const m = new Map<string, ReservationEvent[]>();
-    for (const e of events) {
-      const arr = m.get(e.reservation_id) ?? [];
-      arr.push(e);
-      m.set(e.reservation_id, arr);
-    }
-    return m;
-  }, [events]);
+  const rowValues = (r: Reservation): Record<ColKey, string> => ({
+    name: `${r.first_name} ${r.last_name}`.trim(),
+    email: r.email,
+    phone: r.phone ?? "",
+    city: r.city ?? "",
+    sauna: saunaTypeLabel(r.sauna_type_id),
+    style: styleFor(r.sauna_type_id),
+    install: r.preferred_install_at?.slice(0, 10) ?? "",
+    status: r.reservation_status,
+    payment: r.payment_status,
+    consult: r.consult_status,
+    id: r.id_status,
+    contract: r.contract_status,
+    created: r.created_at,
+  });
 
-  const statusIcon = (done: boolean) => (done ? "✓" : "○");
-  const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
+  const filtered = useMemo(() => {
+    const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
+    const rows = reservations.filter((r) => {
+      if (!active.length) return true;
+      const vals = rowValues(r);
+      return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
+    });
+    if (sortCol) {
+      rows.sort((a, b) => {
+        const av = rowValues(a)[sortCol];
+        const bv = rowValues(b)[sortCol];
+        const cmp = av.localeCompare(bv, undefined, { numeric: true, sensitivity: "base" });
+        return sortDir === "asc" ? cmp : -cmp;
+      });
+    }
+    return rows;
+  }, [reservations, colFilters, sortCol, sortDir]);
+
+  const cols: [ColKey, string][] = [
+    ["name", "Name"], ["email", "Email"], ["phone", "Phone"], ["city", "City"],
+    ["sauna", "Sauna"], ["style", "Style"], ["install", "Install"],
+    ["status", "Status"], ["payment", "Payment"],
+    ["consult", "Consult"], ["id", "ID"], ["contract", "Contract"],
+    ["created", "Created"],
+  ];
+
+  const statusOpts = ["Lead", "Pending Payment", "Reservation Hold", "Reservation Confirmed", "Needs Manual Review", "Cancelled", "Refunded"];
+  const paymentOpts = ["Pending", "Paid", "Refunded", "Failed"];
+  const stepOpts = ["Not Scheduled", "Scheduled", "Complete", "Not Sent", "Not Uploaded"];
+  const styleOpts = ["Traditional", "Infrared"];
 
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-medium text-foreground">Magic Links</h2>
+        <h2 className="text-lg font-medium text-foreground">
+          Magic Links{" "}
+          <span className="text-sm text-muted-foreground font-normal">
+            ({filtered.length}{filtered.length !== reservations.length ? ` of ${reservations.length}` : ""})
+          </span>
+        </h2>
         <Button onClick={load} size="sm" variant="outline" disabled={loading}>
           {loading ? "Refreshing…" : "Refresh"}
         </Button>
       </div>
-      <div className="space-y-3">
-        {reservations.length === 0 && !loading && (
-          <p className="text-muted-foreground">No reservations yet.</p>
-        )}
-        {reservations.map((r) => {
-          const isOpen = expandedId === r.id;
-          const rEvents = eventsFor.get(r.id) ?? [];
-          const paid = r.payment_status === "Paid";
-          const consultDone = r.consult_status === "Scheduled" || r.consult_status === "Complete";
-          const idDone = r.id_status === "Complete";
-          const contractDone = r.contract_status === "Complete";
-          const installDone = r.reservation_status === "Reservation Confirmed";
-          return (
-            <Card key={r.id}>
-              <CardContent className="p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex-grow min-w-[240px]">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium text-foreground">
-                        {r.first_name} {r.last_name}
-                      </span>
-                      <Badge className={STATUS_COLOR[r.reservation_status] ?? "bg-gray-200"}>
-                        {r.reservation_status}
-                      </Badge>
-                      <Badge variant="outline">{styleFor(r.sauna_type_id)}</Badge>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {r.email} · {r.phone ?? "no phone"} · {r.city ?? "no city"}
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {saunaTypeLabel(r.sauna_type_id)} · install {fmt(r.preferred_install_at)}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-0.5">
-                      <span>{statusIcon(paid)} Deposit</span>
-                      <span>{statusIcon(consultDone)} Consult</span>
-                      <span>{statusIcon(idDone)} Photo ID</span>
-                      <span>{statusIcon(contractDone)} Contract</span>
-                      <span>{statusIcon(installDone)} Install scheduled</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 justify-end">
-                    <Button size="sm" variant="outline" onClick={() => copyLink(r)}>Copy Link</Button>
+
+      <div className="overflow-x-auto border border-border rounded-md bg-card">
+        <table className="w-full text-xs border-collapse">
+          <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
+            <tr>
+              {cols.map(([k, label]) => (
+                <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-1 uppercase hover:text-foreground"
+                    onClick={() => toggleSort(k)}
+                  >
+                    {label}
+                    <span className="text-[9px] opacity-70">
+                      {sortCol === k ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
+                    </span>
+                  </button>
+                </th>
+              ))}
+              <th className="text-left px-2 py-1.5">Actions</th>
+            </tr>
+            <tr className="border-t border-border bg-muted/30">
+              {cols.map(([k]) => (
+                <th key={k} className="px-1 py-1 border-r border-border">
+                  {k === "status" ? (
+                    <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.status} onChange={(e) => setColFilter("status", e.target.value)}>
+                      <option value="">All</option>
+                      {statusOpts.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  ) : k === "payment" ? (
+                    <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.payment} onChange={(e) => setColFilter("payment", e.target.value)}>
+                      <option value="">All</option>
+                      {paymentOpts.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  ) : k === "style" ? (
+                    <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.style} onChange={(e) => setColFilter("style", e.target.value)}>
+                      <option value="">All</option>
+                      {styleOpts.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  ) : k === "consult" || k === "id" || k === "contract" ? (
+                    <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters[k]} onChange={(e) => setColFilter(k, e.target.value)}>
+                      <option value="">All</option>
+                      {stepOpts.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary"
+                      placeholder={k === "install" || k === "created" ? "YYYY-MM" : "Filter…"}
+                      value={colFilters[k]}
+                      onChange={(e) => setColFilter(k, e.target.value)}
+                    />
+                  )}
+                </th>
+              ))}
+              <th className="px-1 py-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 && !loading && (
+              <tr><td colSpan={cols.length + 1} className="text-center text-muted-foreground py-6">
+                {reservations.length === 0 ? "No reservations yet." : "No matches."}
+              </td></tr>
+            )}
+            {filtered.map((r) => (
+              <tr key={r.id} className="border-t border-border hover:bg-muted/30">
+                <td className="px-2 py-1.5 border-r border-border font-medium text-foreground whitespace-nowrap">
+                  {r.first_name} {r.last_name}
+                </td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.email}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{r.phone ?? "—"}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.city ?? "—"}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{saunaTypeLabel(r.sauna_type_id)}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{styleFor(r.sauna_type_id)}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmtDate(r.preferred_install_at)}</td>
+                <td className="px-2 py-1.5 border-r border-border whitespace-nowrap">
+                  <span className={`inline-block px-1.5 py-0.5 rounded border text-[10px] ${STATUS_COLOR[r.reservation_status] ?? "bg-gray-200 text-gray-900 border-gray-300"}`}>
+                    {r.reservation_status}
+                  </span>
+                </td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.payment_status}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.consult_status}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.id_status}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.contract_status}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.created_at)}</td>
+                <td className="px-2 py-1.5 whitespace-nowrap">
+                  <div className="flex gap-1">
+                    <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => copyLink(r)}>Copy</Button>
                     {r.payment_status !== "Paid" && r.reservation_status !== "Lead" && (
-                      <Button size="sm" variant="outline" onClick={() => markPaid(r.id)}>Mark Paid</Button>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => markPaid(r.id)}>Mark Paid</Button>
                     )}
                     {r.reservation_status === "Reservation Hold" && (
                       <>
-                        <Button size="sm" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
-                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "extend", { extend_days: 5 })}>+5 days</Button>
-                        <Button size="sm" variant="destructive" onClick={() => doAction(r.id, "release")}>Release</Button>
+                        <Button size="sm" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
+                        <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "extend", { extend_days: 5 })}>+5d</Button>
+                        <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "release")}>Release</Button>
                       </>
                     )}
-                    <Button size="sm" variant="ghost" onClick={() => setExpandedId(isOpen ? null : r.id)}>
-                      {isOpen ? "Hide" : "Details"}
-                    </Button>
+                    <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button>
                   </div>
-                </div>
-
-                {isOpen && (
-                  <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Details</h4>
-                      <dl className="text-sm space-y-1">
-                        <Row k="Source" v={r.reservation_source} />
-                        <Row k="Payment" v={r.payment_status} />
-                        <Row k="Consult" v={r.consult_status} />
-                        <Row k="Contract" v={r.contract_status} />
-                        <Row k="ID" v={r.id_status} />
-                        <Row k="Created" v={fmt(r.created_at)} />
-                        {r.hold_deadline && <Row k="Hold ends" v={fmt(r.hold_deadline)} />}
-                      </dl>
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_consult")}>Mark consult</Button>
-                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_contract")}>Mark contract</Button>
-                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_id")}>Mark ID</Button>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Timeline</h4>
-                      <ol className="text-sm space-y-1.5">
-                        {rEvents.length === 0 && <li className="text-muted-foreground">No events yet.</li>}
-                        {rEvents.map((e) => (
-                          <li key={e.id} className="flex items-baseline gap-3">
-                            <span className="text-xs text-muted-foreground w-32 shrink-0">
-                              {fmt(e.created_at)}
-                            </span>
-                            <div>
-                              <div className="text-foreground font-medium">{e.event_type}</div>
-                              {e.message && <div className="text-muted-foreground text-xs">{e.message}</div>}
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
