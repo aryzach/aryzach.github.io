@@ -56,9 +56,9 @@ const PricingProduct = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-grow pt-24 md:pt-32 pb-24">
+      <main className="flex-grow pt-24 md:pt-28 pb-24">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className="mb-8">
+          <div className="mb-4">
             <Link
               to="/pricing"
               className="text-sm text-muted-foreground hover:text-foreground"
@@ -67,54 +67,41 @@ const PricingProduct = () => {
             </Link>
           </div>
 
-          {/* Hero */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center mb-20 md:mb-28">
-            <div className="rounded-3xl overflow-hidden bg-muted aspect-[4/5] order-1 md:order-none">
+          {/* Hero + pricing above the fold on desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-start mb-16">
+            <div className="md:col-span-5 rounded-2xl overflow-hidden bg-muted aspect-[4/5] md:aspect-[4/5]">
               <img
                 src={product.image}
                 alt={`${product.name} rental in San Francisco`}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div>
-              <p className="text-sm uppercase tracking-widest text-muted-foreground mb-3">
-                {product.categoryLabel} · {product.placement}
-              </p>
-              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-6">
+            <div className="md:col-span-7 flex flex-col">
+              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-3">
                 {product.name}
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4">
                 {product.longDescription}
               </p>
-              <div className="space-y-3 mb-8">
+              <div className="mb-5">
                 <AvailabilityLine status={status} size="md" />
               </div>
-              <Button size="lg" onClick={handleReserve} disabled={!canReserve}>
-                {canReserve ? "Reserve" : "Currently unavailable"}
-              </Button>
+
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                {product.tiers.map((tier) => (
+                  <TierCard
+                    key={tier.months}
+                    tier={tier}
+                    reservationFee={product.reservationFee}
+                    onReserve={handleReserve}
+                    disabled={!canReserve}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+                Longer commitments unlock lower monthly rates and free installation. After your initial term, continue month-to-month.
+              </p>
             </div>
-          </div>
-
-          {/* Pricing cards */}
-          <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
-            <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">
-              Choose your commitment
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Longer commitments unlock lower monthly rates and free installation. Once your initial term ends, simply continue month-to-month.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-            {product.tiers.map((tier) => (
-              <TierCard
-                key={tier.months}
-                tier={tier}
-                reservationFee={product.reservationFee}
-                onReserve={handleReserve}
-                disabled={!canReserve}
-              />
-            ))}
           </div>
         </div>
       </main>
@@ -142,35 +129,34 @@ const TierCard = ({ tier, reservationFee, onReserve, disabled }: TierProps) => {
   const highlighted = !!tier.badge;
   return (
     <div
-      className={`relative rounded-3xl p-6 md:p-7 flex flex-col border transition-shadow ${
+      className={`relative rounded-2xl p-4 md:p-5 flex flex-col border transition-shadow ${
         highlighted
           ? "bg-card border-primary shadow-lg"
           : "bg-card border-border"
       }`}
     >
       {tier.badge && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap">
+        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
           {tier.badge}
         </div>
       )}
-      <div className="text-sm uppercase tracking-widest text-muted-foreground mb-2">
+      <div className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
         {tier.months} {tier.months === 1 ? "Month" : "Months"}
       </div>
-      <div className="flex items-baseline gap-1 mb-6">
-        <span className="text-4xl font-semibold text-card-foreground">${tier.monthly}</span>
-        <span className="text-sm text-muted-foreground">/ month</span>
+      <div className="flex items-baseline gap-1 mb-2">
+        <span className="text-2xl md:text-3xl font-semibold text-card-foreground">${tier.monthly}</span>
+        <span className="text-xs text-muted-foreground">/ mo</span>
       </div>
 
-      <div className="space-y-2 text-sm mb-6 flex-grow">
-        <div className="font-medium text-card-foreground">
-          {tier.installFee === 0 ? "Free installation" : `$${tier.installFee} installation`}
-        </div>
+      <div className="text-xs mb-3 flex-grow text-card-foreground">
+        {tier.installFee === 0 ? "Free installation" : `$${tier.installFee} installation`}
       </div>
 
       <Button
         onClick={onReserve}
         disabled={disabled}
         variant={highlighted ? "default" : "outline"}
+        size="sm"
         className="w-full"
       >
         Reserve
