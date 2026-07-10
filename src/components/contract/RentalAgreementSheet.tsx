@@ -507,6 +507,131 @@ const PreviewStep = ({
   );
 };
 
+// ---------- Sign step ----------
+const SignStep = ({
+  contract, typedName, setTypedName, acks, setAcks, masterAgreementUrl,
+}: {
+  contract: any;
+  typedName: string;
+  setTypedName: (v: string) => void;
+  acks: Record<string, boolean>;
+  setAcks: (v: Record<string, boolean>) => void;
+  masterAgreementUrl: string | null;
+}) => {
+  const nameMatches =
+    typedName.trim().length > 0 &&
+    typedName.trim().toLowerCase() === String(contract.customer_legal_name).trim().toLowerCase();
+  return (
+    <div className="space-y-6">
+      <div className="rounded-md border border-border bg-card p-4 text-sm">
+        <p className="text-foreground font-medium mb-1">Almost done — please review and sign.</p>
+        <p className="text-muted-foreground">
+          Confirm each acknowledgment below and type your full legal name to sign the agreement electronically.
+          {masterAgreementUrl && (
+            <>
+              {" "}You can{" "}
+              <a
+                href={masterAgreementUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                open the Master Agreement in a new tab
+              </a>{" "}
+              at any time.
+            </>
+          )}
+        </p>
+      </div>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Acknowledgments</h3>
+        <div className="space-y-2">
+          {ACKNOWLEDGMENTS.map((a) => (
+            <label
+              key={a.key}
+              className={`flex items-start gap-3 rounded-md border p-3 cursor-pointer transition ${
+                acks[a.key] ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/50"
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={!!acks[a.key]}
+                onChange={(e) => setAcks({ ...acks, [a.key]: e.target.checked })}
+                className="mt-1 h-4 w-4"
+              />
+              <span className="text-sm text-foreground leading-relaxed">{a.text}</span>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Electronic signature</h3>
+        <p className="text-sm text-muted-foreground">
+          Type your full legal name exactly as it appears on the agreement:{" "}
+          <span className="text-foreground font-medium">{contract.customer_legal_name}</span>
+        </p>
+        <Input
+          value={typedName}
+          onChange={(e) => setTypedName(e.target.value)}
+          placeholder={contract.customer_legal_name}
+          className={`font-serif text-lg tracking-wide ${nameMatches ? "border-primary" : ""}`}
+        />
+        <p className="text-xs text-muted-foreground">
+          By clicking "Sign &amp; Complete", you agree that your typed name is your electronic signature and has
+          the same legal effect as a handwritten signature.
+        </p>
+      </section>
+    </div>
+  );
+};
+
+// ---------- Signed confirmation ----------
+const SignedStep = ({
+  contract, signedPdfUrl,
+}: { contract: any; signedPdfUrl: string | null }) => {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start gap-3 rounded-md border border-green-300 bg-green-50 text-green-900 p-4">
+        <CheckCircle2 size={20} className="mt-0.5 shrink-0" />
+        <div>
+          <p className="font-semibold">Rental Agreement signed</p>
+          <p className="text-sm mt-1">
+            Signed on{" "}
+            {contract.signed_at
+              ? new Date(contract.signed_at).toLocaleString("en-US", {
+                  dateStyle: "long", timeStyle: "short",
+                })
+              : "just now"}
+            . A copy is stored securely on your reservation.
+          </p>
+        </div>
+      </div>
+
+      <RentalSummaryPreview summary={contract.rental_summary_snapshot} />
+
+      {signedPdfUrl && (
+        <Card>
+          <CardContent className="pt-5 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold">Signed PDF</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Includes your Rental Summary, signature audit page, and the full Master Agreement.
+              </p>
+            </div>
+            <Button asChild variant="outline">
+              <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
+                <Download className="mr-1.5" size={14} /> Download
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
 // ---------- Small helpers ----------
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="space-y-3">
