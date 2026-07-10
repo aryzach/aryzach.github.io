@@ -300,6 +300,69 @@ export type Database = {
           },
         ]
       }
+      pricing_config: {
+        Row: {
+          description: string | null
+          key: string
+          updated_at: string
+          value_int: number
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          updated_at?: string
+          value_int: number
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          updated_at?: string
+          value_int?: number
+        }
+        Relationships: []
+      }
+      pricing_tiers: {
+        Row: {
+          badge: string | null
+          commitment_months: number
+          install_fee: number
+          monthly_price: number
+          sauna_type_id: string
+          updated_at: string
+        }
+        Insert: {
+          badge?: string | null
+          commitment_months: number
+          install_fee?: number
+          monthly_price: number
+          sauna_type_id: string
+          updated_at?: string
+        }
+        Update: {
+          badge?: string | null
+          commitment_months?: number
+          install_fee?: number
+          monthly_price?: number
+          sauna_type_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pricing_tiers_sauna_type_id_fkey"
+            columns: ["sauna_type_id"]
+            isOneToOne: false
+            referencedRelation: "public_sauna_availability"
+            referencedColumns: ["sauna_type_id"]
+          },
+          {
+            foreignKeyName: "pricing_tiers_sauna_type_id_fkey"
+            columns: ["sauna_type_id"]
+            isOneToOne: false
+            referencedRelation: "sauna_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservation_events: {
         Row: {
           created_at: string

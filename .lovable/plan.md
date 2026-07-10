@@ -1,87 +1,59 @@
-# Reservation System MVP
+# Pricing in the database, generated into code at build time
 
-Build a new `/reservation-system` page plus a password-protected `/admin-reservations` page, backed by Lovable Cloud (Supabase). Availability is tracked at the sauna-type level via availability events, minus paid active reservations.
+Goal: single source of truth for pricing in the database, zero runtime cost, no change to paint speed or SEO.
 
-## Scope
+## Approach
 
-- Customer flow: browse sauna types → reserve → pay via Stripe link (placeholder) → confirmation with Cal.com scheduling links (placeholders).
-- Admin flow: password gate → manage availability events + reservations statuses.
-- No webhooks, no accounts, no contracts/ID/waitlist.
+1. **New table `pricing_tiers`** holds every price. Admin can edit in the future via SQL or a small admin UI.
+2. **A build script** (`scripts/generate-pricing.mjs`) reads the table and writes a TypeScript file `src/lib/generatedPricing.ts` with all pricing constants.
+3. **Existing files** (`pricingCatalog.ts`, `contractConfig.ts`, `supabase/functions/_shared/pricing.ts`) import from the generated file instead of hardcoding numbers.
+4. **The script runs automatically** before `vite build` and before prerender, so deploys always pick up the latest DB values. Also runnable manually with `npm run pricing:sync`.
 
-## Backend (Lovable Cloud)
+Result: pricing pages still prerender statically with prices baked in. Paint time unchanged. To change a price, update one DB row and redeploy (~1–2 min).
 
-Enable Lovable Cloud, then create three tables:
+## Database
 
-1. `sauna_types` (seeded, read-only from client)
-   - `id` (text PK, e.g. `indoor_infrared`)
-   - `name`, `description`, `placement` ('indoor'|'outdoor'|'either')
-   - `reservation_fee_cents`, `stripe_payment_link` (placeholder URL)
-2. `availability_events`
-   - `id` uuid, `sauna_type_id`, `quantity` int, `available_starting_date` date, `reason`, `notes`, `created_at`
-3. `reservations`
-   - contact fields, `sauna_type_id`, `placement_choice`, `access_notes`, `min_commitment_months`, `preferred_install_at` timestamptz
-   - status enums: `reservation_status`, `payment_status`, `contract_status`, `id_status`, `consult_status`
-   - `admin_notes`, `created_at`
+Table `pricing_tiers`:
+- `sauna_type_id` (text, FK to `sauna_types.id`)
+- `commitment_months` (int: 1, 3, 6, or 12)
+- `monthly_price` (int, USD)
+- `install_fee` (int, USD)
+- `badge` (text, nullable: "Most Popular" | "Best Value")
+- primary key on (sauna_type_id, commitment_months)
 
-RLS: 
-- `sauna_types` + `availability_events`: public SELECT (needed to compute availability on customer page).
-- `reservations`: anonymous INSERT only (no SELECT for anon). Admin reads via edge function using service role.
-- All admin mutations go through an edge function `admin-api` that checks a shared password header against `ADMIN_PASSWORD` secret.
+Plus a small `pricing_config` table for the flat values (insurance $19, second heater $209, delivery fee $150, reservation deposits, security deposits).
 
-Grants: SELECT to anon/authenticated on sauna_types + availability_events; INSERT to anon on reservations; service_role full.
+Read access: `GRANT SELECT` to `authenticated` and `service_role` only — the build script uses the service role. Anon users never hit this table; they see the generated static values.
 
-## Edge function `admin-api`
+Seed rows: all current prices from the three code files.
 
-Single function, actions via body:
-- `login` (verify password → returns ok)
-- `list_reservations`, `update_reservation` (patch statuses/notes)
-- `list_events`, `create_event`, `update_event`, `delete_event`
+## Generated file
 
-Header `x-admin-password` required on every call. Client stores password in sessionStorage after successful login.
+`src/lib/generatedPricing.ts` — auto-generated, checked into git. Header comment: "DO NOT EDIT — run `npm run pricing:sync`". Exports:
 
-## Customer page `/reservation-system`
+- `PRICING_TIERS: Record<SaunaTypeId, Record<CommitmentMonths, { monthly, installFee, badge? }>>`
+- `INSURANCE_MONTHLY`, `SECOND_HEATER_MONTHLY`, `DELIVERY_FEE_OUTSIDE_SF`
+- `RESERVATION_DEPOSIT_INFRARED`, `RESERVATION_DEPOSIT_TRADITIONAL`, `SECURITY_DEPOSIT_INFRARED`, `SECURITY_DEPOSIT_TRADITIONAL`
 
-- Grid of cards, one per sauna type (fetched from DB).
-- Availability computed client-side: sum event quantities where `available_starting_date <= today` minus paid-active reservations on/before today → if >0 "Available immediately"; else earliest future date; else "Currently unavailable".
-- Paid-active reservations are computed via a public SQL view `paid_reservation_consumption` exposing only `(sauna_type_id, preferred_install_date)` — no PII.
-- Reserve button opens a dialog with the reservation form (react-hook-form + zod).
-- On submit: insert into `reservations` with `reservation_status='Pending Payment'`, `payment_status='Pending'`, then redirect to the sauna type's Stripe link, appending `?client_reference_id={reservation_id}` for future webhook wiring.
+The three existing pricing files become thin wrappers that import from this and keep their current exported API, so no consumer code changes.
 
-## Confirmation page `/reservation-system/confirmation`
+## Build integration
 
-Shown after form submit (before Stripe redirect, opened in same tab after return isn't guaranteed, so we render this page first with the "Pay Reservation Fee" button, then Cal.com links). Route: `/reservation-confirmation?id=…`.
-- Reservation received notice + payment reminder.
-- Buttons: Pay Reservation Fee (Stripe link), Schedule Video Consultation, Schedule Installation.
+- `scripts/generate-pricing.mjs` uses `@supabase/supabase-js` with the service role key from env.
+- `package.json`:
+  - `"pricing:sync": "node scripts/generate-pricing.mjs"`
+  - `"prebuild": "npm run pricing:sync"` (Vite runs this before `build`)
+- If the DB is unreachable during build, script fails loudly rather than shipping stale prices — but the file is committed, so local dev without DB access still works from the last synced snapshot.
+- GitHub Pages workflow gets the service role key added as a repo secret so `prebuild` can run there.
 
-## Admin page `/admin-reservations`
+## Technical details
 
-- Password prompt (calls `admin-api` `login`).
-- After auth: tabs/sections per sauna type showing available-now qty and future events (edit/delete/add).
-- Reservations table with inline dropdowns to update each status + notes textarea (save button).
+- Edge functions (`supabase/functions/_shared/pricing.ts`) will read the same generated file. Deno imports the `.ts` file directly.
+- No RLS-protected client reads needed at runtime — the browser never queries `pricing_tiers`.
+- Schema migration + seed data is one migration. Data edits after that use the insert/update flow.
+- The `sauna_types` table already exists with matching ids; `pricing_tiers.sauna_type_id` FKs to it.
 
-## Placeholders (constants in `src/lib/reservationConfig.ts`)
+## What I won't change
 
-```
-INFRARED_STRIPE_PAYMENT_LINK
-TRADITIONAL_STRIPE_PAYMENT_LINK
-CALCOM_VIDEO_CONSULT_LINK
-CALCOM_INSTALLATION_LINK
-```
-
-Seed the 5 sauna types with their payment link (infrared vs traditional) and fees ($200 / $500).
-
-## Design
-
-Match existing brand (Tailwind + shadcn, semantic tokens from `index.css`). Mobile-first cards. No new fonts/colors.
-
-## Routes added
-
-- `/reservation-system` (customer)
-- `/reservation-confirmation` (post-submit)
-- `/admin-reservations` (admin)
-
-Add to `App.tsx` + `src/routes.ts` + `vite.config.ts` prerender list (skip admin from sitemap priority).
-
-## Out of scope
-
-Stripe webhooks, accounts, contracts, ID upload, waitlist, physical unit tracking, HubSpot.
+- No client-side fetching of prices. No loading states. No SEO regression.
+- No admin UI in this pass — edits are DB-level for now. Easy to add later.

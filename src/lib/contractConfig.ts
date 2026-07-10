@@ -1,14 +1,19 @@
 // Client-side helpers for the Rental Agreement configuration flow.
-// Mirrored in supabase/functions/_shared/pricing.ts on the server; keep both
-// in sync when pricing or option values change.
+// Pricing values come from src/lib/generatedPricing.ts (synced from Lovable
+// Cloud). The server mirror is supabase/functions/_shared/pricing.ts.
 
-export type SaunaTypeId =
-  | "indoor_infrared"
-  | "outdoor_infrared"
-  | "indoor_outdoor_traditional_latest"
-  | "outdoor_traditional_latest"
-  | "indoor_traditional"
-  | "outdoor_traditional_original";
+import {
+  PRICING_TIERS,
+  INSURANCE_MONTHLY as GEN_INSURANCE_MONTHLY,
+  SECOND_HEATER_MONTHLY as GEN_SECOND_HEATER_MONTHLY,
+  SECURITY_DEPOSIT_INFRARED,
+  SECURITY_DEPOSIT_TRADITIONAL,
+  DELIVERY_FEE_OUTSIDE_SF,
+  type SaunaTypeId as GenSaunaTypeId,
+  type CommitmentMonths as GenCommitmentMonths,
+} from "./generatedPricing";
+
+export type SaunaTypeId = GenSaunaTypeId;
 
 export type Placement = "indoor" | "outdoor";
 
@@ -30,36 +35,26 @@ export const SAUNA_TYPES: SaunaTypeInfo[] = [
 ];
 
 export const COMMITMENT_MONTHS = [1, 3, 6, 12] as const;
-export type CommitmentMonths = typeof COMMITMENT_MONTHS[number];
+export type CommitmentMonths = GenCommitmentMonths;
 
-export const INSURANCE_MONTHLY = 19;
-export const SECOND_HEATER_MONTHLY = 209;
-
-// Monthly rental price by sauna type + commitment length. Mirrors
-// src/lib/pricingCatalog.ts. Kept as a flat table so the server can use it too.
-const PRICING: Record<SaunaTypeId, Record<CommitmentMonths, number>> = {
-  indoor_outdoor_traditional_latest: { 1: 1300, 3: 700, 6: 600, 12: 400 },
-  outdoor_traditional_latest:        { 1: 1300, 3: 700, 6: 600, 12: 400 },
-  indoor_infrared:                   { 1: 500,  3: 400, 6: 300, 12: 200 },
-  outdoor_infrared:                  { 1: 600,  3: 500, 6: 400, 12: 300 },
-  indoor_traditional:                { 1: 900,  3: 500, 6: 400, 12: 300 },
-  outdoor_traditional_original:      { 1: 900,  3: 500, 6: 400, 12: 300 },
-};
+export const INSURANCE_MONTHLY = GEN_INSURANCE_MONTHLY;
+export const SECOND_HEATER_MONTHLY = GEN_SECOND_HEATER_MONTHLY;
 
 export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
   return SAUNA_TYPES.find((s) => s.id === id);
 }
 
 export function getMonthlyPrice(saunaTypeId: string, months: number): number | null {
-  const table = PRICING[saunaTypeId as SaunaTypeId];
+  const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
   if (!table) return null;
-  return table[months as CommitmentMonths] ?? null;
+  const row = table[months as CommitmentMonths];
+  return row ? row.monthly : null;
 }
 
 export function getSecurityDeposit(saunaTypeId: string): number {
   const info = getSaunaTypeInfo(saunaTypeId);
   if (!info) return 0;
-  return info.family === "infrared" ? 500 : 900;
+  return info.family === "infrared" ? SECURITY_DEPOSIT_INFRARED : SECURITY_DEPOSIT_TRADITIONAL;
 }
 
 export function isSanFranciscoAddress(address: string | null | undefined): boolean {
@@ -82,7 +77,7 @@ export function isSanFranciscoCity(city: string | null | undefined): boolean {
 
 export function getDeliveryFee(cityOrAddress: string | null | undefined): number {
   if (isSanFranciscoCity(cityOrAddress)) return 0;
-  return isSanFranciscoAddress(cityOrAddress) ? 0 : 150;
+  return isSanFranciscoAddress(cityOrAddress) ? 0 : DELIVERY_FEE_OUTSIDE_SF;
 }
 
 export function formatUSD(dollars: number): string {
