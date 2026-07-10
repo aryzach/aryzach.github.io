@@ -31,7 +31,7 @@ const CATEGORIES: {
     key: "original",
     title: "Original Collection",
     blurb:
-      "1st-gen traditional saunas converted from infrared models. Same heat at a lower monthly price.",
+      "1st-gen traditional saunas converted from infrared models. Same heat at a lower price.",
     imageFrom: "Indoor",
   },
 ];
@@ -103,7 +103,7 @@ const Pricing = () => {
                   key={key}
                   className="rounded-3xl bg-card border border-border overflow-hidden flex flex-col"
                 >
-                  <div className="bg-muted aspect-[4/5]">
+                  <div className="bg-muted aspect-[4/5] shrink-0">
                     <img
                       src={imageProduct.image}
                       alt={`${title} rental in San Francisco`}
@@ -115,17 +115,17 @@ const Pricing = () => {
                     <h2 className="text-2xl md:text-3xl font-semibold text-card-foreground mb-4">
                       {title}
                     </h2>
-                    <p className="text-muted-foreground leading-relaxed mb-3">
+                    <p className="text-muted-foreground leading-relaxed mb-3 flex-grow">
                       {blurb}
                     </p>
-                    <div className="flex items-baseline gap-1 mb-8">
+                    <div className="flex items-baseline gap-1 mb-6">
                       <span className="text-sm text-muted-foreground">From</span>
                       <span className="text-2xl font-semibold text-card-foreground ml-1">
                         ${startingAt}
                       </span>
                       <span className="text-sm text-muted-foreground">/ month</span>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 mt-auto">
+                    <div className="grid grid-cols-1 gap-4">
                       {cards.map((p) => (
                         <PlacementCard
                           key={`${p.category}-${p.slug}`}
