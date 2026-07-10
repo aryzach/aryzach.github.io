@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertTriangle, ChevronLeft, Loader2, Sparkles } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -17,7 +17,7 @@ import {
   getSaunaTypeInfo,
   getSecurityDeposit,
   getDeliveryFee,
-  isSanFranciscoAddress,
+  isSanFranciscoCity,
   formatUSD,
   commitmentLabel,
 } from "@/lib/contractConfig";
@@ -38,6 +38,7 @@ interface FormState {
   phone: string;
   email: string;
   installation_address: string;
+  installation_city: string;
   sauna_type: string;
   commitment_months: number;
   insurance_selected: boolean;
@@ -50,6 +51,7 @@ const empty: FormState = {
   phone: "",
   email: "",
   installation_address: "",
+  installation_city: "",
   sauna_type: "",
   commitment_months: 6,
   insurance_selected: false,
@@ -64,6 +66,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [form, setForm] = useState<FormState>(empty);
   const [activeVersion, setActiveVersion] = useState<string>("");
   const [contract, setContract] = useState<any>(null);
+  const [masterAgreementUrl, setMasterAgreementUrl] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -75,13 +78,23 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       const r = data.reservation;
       const c = data.contract;
       setActiveVersion(data.active_agreement_version?.version_name ?? "");
+      setMasterAgreementUrl(data.master_agreement_url ?? null);
       setContract(c ?? null);
+      // Split any prior "street, city" back into fields where possible.
+      const priorAddress: string = c?.installation_address ?? r.install_address ?? "";
+      const priorStreet =
+        c?.rental_summary_snapshot?.installation_street ??
+        (priorAddress.includes(",") ? priorAddress.split(",").slice(0, -1).join(",").trim() : priorAddress);
+      const priorCity =
+        c?.rental_summary_snapshot?.installation_city ??
+        (priorAddress.includes(",") ? priorAddress.split(",").pop()!.trim() : "");
       // Prefill from existing draft when present, otherwise from reservation.
       setForm({
         customer_legal_name: c?.customer_legal_name ?? `${r.first_name} ${r.last_name}`.trim(),
         phone: c?.phone ?? r.phone ?? "",
         email: c?.email ?? r.email ?? "",
-        installation_address: c?.installation_address ?? r.install_address ?? "",
+        installation_address: priorStreet,
+        installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.sauna_type_id ?? "",
         commitment_months: c?.commitment_months ?? r.min_commitment_months ?? 6,
         insurance_selected: !!c?.insurance_selected,
@@ -105,12 +118,15 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     () => (form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null),
     [form.sauna_type, form.commitment_months],
   );
-  const deliveryFee = useMemo(() => getDeliveryFee(form.installation_address), [form.installation_address]);
+  const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
+  const deliveryFee = useMemo(
+    () => (isSf ? 0 : getDeliveryFee(`${form.installation_address}, ${form.installation_city}`)),
+    [isSf, form.installation_address, form.installation_city],
+  );
   const securityDeposit = useMemo(
     () => (form.sauna_type ? getSecurityDeposit(form.sauna_type) : 0),
     [form.sauna_type],
   );
-  const isSf = isSanFranciscoAddress(form.installation_address);
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((p) => ({ ...p, [k]: v }));
@@ -119,6 +135,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     if (form.customer_legal_name.trim().length < 2) return "Please enter your legal name.";
     if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) return "Please enter a valid email.";
     if (form.installation_address.trim().length < 5) return "Please enter your installation address.";
+    if (form.installation_city.trim().length < 2) return "Please enter your installation city.";
     if (!saunaInfo) return "Please choose a sauna type.";
     if (!form.preferred_installation_date) return "Please choose a preferred installation date.";
     return null;
@@ -138,6 +155,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           phone: form.phone.trim(),
           email: form.email.trim(),
           installation_address: form.installation_address.trim(),
+          installation_city: form.installation_city.trim(),
           sauna_type: form.sauna_type,
           commitment_months: form.commitment_months,
           insurance_selected: form.insurance_selected,
@@ -174,6 +192,16 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           <p className="text-sm text-muted-foreground">
             Review your details, then generate a draft to preview before signing.
           </p>
+          {masterAgreementUrl && (
+            <a
+              href={masterAgreementUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2 w-fit"
+            >
+              <ExternalLink size={14} /> View Master Rental Agreement
+            </a>
+          )}
         </SheetHeader>
 
         <div className="px-5 md:px-8 py-6 pb-32">
