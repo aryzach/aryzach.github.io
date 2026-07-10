@@ -86,6 +86,8 @@ export const ReservationsListPanel = ({
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
   const toggleSort = (k: ColKey) => {
     if (sortCol !== k) { setSortCol(k); setSortDir("asc"); }
     else if (sortDir === "asc") setSortDir("desc");
@@ -105,6 +107,14 @@ export const ReservationsListPanel = ({
   }, [callAdmin]);
 
   useEffect(() => { load(); }, [load]);
+
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
 
   const doAction = async (id: string, kind: string, extra: Record<string, unknown> = {}) => {
     try {
@@ -136,6 +146,55 @@ export const ReservationsListPanel = ({
     } catch (e) {
       toast.error((e as Error).message);
     }
+  };
+
+  const runBulk = async (
+    label: string,
+    fn: (r: Reservation) => Promise<unknown> | unknown,
+    confirmMsg?: string,
+  ) => {
+    const targets = filtered.filter((r) => selected.has(r.id));
+    if (targets.length === 0) { toast.error("Nothing selected"); return; }
+    if (confirmMsg && !confirm(confirmMsg.replace("{n}", String(targets.length)))) return;
+    setBulkBusy(true);
+    let ok = 0, fail = 0;
+    for (const r of targets) {
+      try { await fn(r); ok++; } catch { fail++; }
+    }
+    setBulkBusy(false);
+    if (fail === 0) toast.success(`${label}: ${ok} updated`);
+    else toast.error(`${label}: ${ok} ok, ${fail} failed`);
+    setSelected(new Set());
+    await load();
+  };
+
+  const bulkDelete = () =>
+    runBulk(
+      "Delete",
+      (r) => callAdmin({ action: "delete_reservation", id: r.id }),
+      "Delete {n} reservations? This cannot be undone.",
+    );
+  const bulkMarkPaid = () =>
+    runBulk(
+      "Mark Paid",
+      (r) => callAdmin({ action: "manual_mark_paid", id: r.id }),
+      "Manually mark {n} reservations as paid?",
+    );
+  const bulkConfirm = () =>
+    runBulk("Confirm", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "confirm" }));
+  const bulkExtend = () =>
+    runBulk("Extend", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "extend", extend_days: 5 }));
+  const bulkRelease = () =>
+    runBulk("Release", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "release" }),
+      "Release {n} holds?");
+  const bulkCopyLinks = () => {
+    const targets = filtered.filter((r) => selected.has(r.id));
+    if (!targets.length) { toast.error("Nothing selected"); return; }
+    const text = targets
+      .map((r) => `${r.first_name} ${r.last_name}\t${window.location.origin}/reservation/${r.id}?token=${encodeURIComponent(r.secure_token)}`)
+      .join("\n");
+    navigator.clipboard.writeText(text);
+    toast.success(`Copied ${targets.length} links`);
   };
 
   const copyLink = (r: Reservation) => {
@@ -178,6 +237,24 @@ export const ReservationsListPanel = ({
     return rows;
   }, [reservations, colFilters, sortCol, sortDir]);
 
+  const allSelected = filtered.length > 0 && filtered.every((r) => selected.has(r.id));
+  const someSelected = filtered.some((r) => selected.has(r.id));
+  const toggleAll = () => {
+    if (allSelected) {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (const r of filtered) next.delete(r.id);
+        return next;
+      });
+    } else {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        for (const r of filtered) next.add(r.id);
+        return next;
+      });
+    }
+  };
+
   const cols: [ColKey, string][] = [
     ["name", "Name"], ["email", "Email"], ["phone", "Phone"], ["city", "City"],
     ["sauna", "Sauna"], ["style", "Style"], ["install", "Install"],
@@ -205,10 +282,32 @@ export const ReservationsListPanel = ({
         </Button>
       </div>
 
+      {selected.size > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mb-2 p-2 border border-border rounded-md bg-muted/40">
+          <span className="text-xs text-foreground font-medium">{selected.size} selected</span>
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkCopyLinks}>Copy Links</Button>
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkMarkPaid}>Mark Paid</Button>
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkConfirm}>Confirm Hold</Button>
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkExtend}>+5d Hold</Button>
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkRelease}>Release Hold</Button>
+          <Button size="sm" variant="destructive" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
+          <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={() => setSelected(new Set())}>Clear</Button>
+        </div>
+      )}
+
       <div className="overflow-x-auto border border-border rounded-md bg-card">
         <table className="w-full text-xs border-collapse">
           <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
             <tr>
+              <th className="px-2 py-1.5 border-r border-border w-8">
+                <input
+                  type="checkbox"
+                  aria-label="Select all"
+                  checked={allSelected}
+                  ref={(el) => { if (el) el.indeterminate = !allSelected && someSelected; }}
+                  onChange={toggleAll}
+                />
+              </th>
               {cols.map(([k, label]) => (
                 <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
                   <button
@@ -226,6 +325,7 @@ export const ReservationsListPanel = ({
               <th className="text-left px-2 py-1.5">Actions</th>
             </tr>
             <tr className="border-t border-border bg-muted/30">
+              <th className="px-1 py-1 border-r border-border"></th>
               {cols.map(([k]) => (
                 <th key={k} className="px-1 py-1 border-r border-border">
                   {k === "status" ? (
@@ -263,12 +363,20 @@ export const ReservationsListPanel = ({
           </thead>
           <tbody>
             {filtered.length === 0 && !loading && (
-              <tr><td colSpan={cols.length + 1} className="text-center text-muted-foreground py-6">
+              <tr><td colSpan={cols.length + 2} className="text-center text-muted-foreground py-6">
                 {reservations.length === 0 ? "No reservations yet." : "No matches."}
               </td></tr>
             )}
             {filtered.map((r) => (
               <tr key={r.id} className="border-t border-border hover:bg-muted/30">
+                <td className="px-2 py-1.5 border-r border-border">
+                  <input
+                    type="checkbox"
+                    aria-label={`Select ${r.first_name} ${r.last_name}`}
+                    checked={selected.has(r.id)}
+                    onChange={() => toggleOne(r.id)}
+                  />
+                </td>
                 <td className="px-2 py-1.5 border-r border-border font-medium text-foreground whitespace-nowrap">
                   {r.first_name} {r.last_name}
                 </td>
