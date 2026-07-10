@@ -86,7 +86,7 @@ export const products: Product[] = [
     placement: "Indoor",
     shortDescription: "2-person traditional sauna, built for living rooms, garages, and studio apartments.",
     longDescription:
-      "Our 2-person indoor traditional sauna, engineered for quiet indoor operation on standard 120V power. Authentic löyly with real stones, installed in your home.",
+      "Our 2-person indoor traditional sauna, engineered for 200°F on standard 120V power. Authentic löyly with real stones, installed in your home.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(500),
@@ -100,7 +100,7 @@ export const products: Product[] = [
     placement: "Outdoor",
     shortDescription: "2-person traditional sauna for backyards, patios, and decks.",
     longDescription:
-      "Our 2-person outdoor traditional sauna, weather-sealed for year-round Bay Area use. Runs on standard 120V power with real stones for authentic löyly.",
+      "Our 2-person outdoor traditional sauna. 200°F on standard 120V power with real stones for authentic löyly.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(500),
