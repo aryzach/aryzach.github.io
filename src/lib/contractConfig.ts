@@ -38,12 +38,12 @@ export const SECOND_HEATER_MONTHLY = 209;
 // Monthly rental price by sauna type + commitment length. Mirrors
 // src/lib/pricingCatalog.ts. Kept as a flat table so the server can use it too.
 const PRICING: Record<SaunaTypeId, Record<CommitmentMonths, number>> = {
-  indoor_outdoor_traditional_latest: { 1: 1199, 3: 599, 6: 499, 12: 399 },
-  outdoor_traditional_latest:        { 1: 1199, 3: 599, 6: 499, 12: 399 },
-  indoor_infrared:                   { 1: 549,  3: 399, 6: 299, 12: 199 },
-  outdoor_infrared:                  { 1: 599,  3: 399, 6: 349, 12: 299 },
-  indoor_traditional:                { 1: 899,  3: 499, 6: 399, 12: 299 },
-  outdoor_traditional_original:      { 1: 899,  3: 499, 6: 399, 12: 299 },
+  indoor_outdoor_traditional_latest: { 1: 1300, 3: 700, 6: 600, 12: 500 },
+  outdoor_traditional_latest:        { 1: 1300, 3: 700, 6: 600, 12: 500 },
+  indoor_infrared:                   { 1: 500,  3: 400, 6: 300, 12: 200 },
+  outdoor_infrared:                  { 1: 600,  3: 400, 6: 300, 12: 300 },
+  indoor_traditional:                { 1: 900,  3: 500, 6: 400, 12: 300 },
+  outdoor_traditional_original:      { 1: 900,  3: 500, 6: 400, 12: 300 },
 };
 
 export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
