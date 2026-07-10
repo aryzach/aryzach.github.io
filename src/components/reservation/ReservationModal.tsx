@@ -14,7 +14,7 @@ import { SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { useAvailability } from "@/hooks/useAvailability";
 import { formatDatePretty } from "@/lib/availability";
-import { buildStripeCheckoutUrl, CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
+import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 
 export type ReservationSource =
   | "Pricing Page"
@@ -148,9 +148,8 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         toast.error("Something went wrong. Please try again.");
         return;
       }
-      // Open Stripe checkout in a new tab, then redirect the current tab
-      // to the private reservation dashboard.
-      window.open(buildStripeCheckoutUrl(data.id), "_blank", "noopener,noreferrer");
+      // Navigate to the private reservation dashboard (magic link page)
+      // where the user completes payment and the remaining steps.
       navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
       onClose();
     } finally {
@@ -303,12 +302,12 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                     ? "Working…"
                     : isWaitlistMode
                     ? `Join Waitlist for ${saunaTypeLabel(selectedSaunaTypeId)}`
-                    : "Pay $100 Reservation Deposit"}
+                    : "Submit Reservation Request"}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center leading-relaxed">
                   {isWaitlistMode
                     ? "This sauna is currently unavailable. Join the waitlist and we'll reach out as soon as one opens up."
-                    : "Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments."}
+                    : "We'll take you to your private reservation page to complete the remaining steps."}
                 </p>
               </div>
 

@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 import {
-  buildStripeCheckoutUrl,
   CALCOM_VIDEO_CONSULT_LINK,
   CALCOM_INSTALLATION_LINK,
+  reservationDepositForSaunaType,
 } from "@/lib/reservationConfig";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
@@ -139,6 +139,12 @@ const ReservationDashboard = () => {
 
   const paid = reservation?.payment_status === "Paid";
   const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
+  const deposit = reservation
+    ? reservationDepositForSaunaType(reservation.sauna_type_id)
+    : null;
+  const stripeHref = reservation && deposit
+    ? `${deposit.stripeLink}${deposit.stripeLink.includes("?") ? "&" : "?"}client_reference_id=${encodeURIComponent(reservation.id)}`
+    : "#";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -166,7 +172,7 @@ const ReservationDashboard = () => {
               <p className="text-muted-foreground mb-8">
                 {paid
                   ? "We'll be in touch after your video consultation to confirm final installation timing."
-                  : "Complete your $100 reservation payment to activate your temporary reservation hold."}
+                  : "Complete all steps on this page to complete your reservation."}
               </p>
 
               <Card className="mb-4">
@@ -193,11 +199,16 @@ const ReservationDashboard = () => {
                 <CardContent className="space-y-2">
                   <StepRow
                     done={paid}
-                    label="Pay $100 reservation deposit"
+                    label={`Pay $${deposit?.amount ?? 0} reservation deposit`}
+                    sublabel={
+                      !paid
+                        ? "Paying the reservation deposit place a hold on a sauna. This deposit is applied to lease payments."
+                        : undefined
+                    }
                     action={
                       !paid ? (
                         <Button asChild size="sm">
-                          <a href={buildStripeCheckoutUrl(reservation.id)} target="_blank" rel="noopener noreferrer">
+                          <a href={stripeHref} target="_blank" rel="noopener noreferrer">
                             Pay <ExternalLink className="ml-1.5" size={14} />
                           </a>
                         </Button>
@@ -329,10 +340,12 @@ const Detail = ({ label, value }: { label: string; value: string }) => (
 const StepRow = ({
   done,
   label,
+  sublabel,
   action,
 }: {
   done: boolean;
   label: string;
+  sublabel?: string;
   action?: React.ReactNode;
 }) => (
   <div className="flex items-center gap-3 text-sm py-1">
@@ -346,9 +359,16 @@ const StepRow = ({
     ) : (
       <Circle className="text-muted-foreground shrink-0" size={22} strokeWidth={1.5} />
     )}
-    <span className={`flex-grow ${done ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-      {label}
-    </span>
+    <div className="flex-grow min-w-0">
+      <div className={done ? "text-foreground font-medium" : "text-muted-foreground"}>
+        {label}
+      </div>
+      {sublabel && (
+        <div className="text-xs text-muted-foreground mt-0.5 leading-snug">
+          {sublabel}
+        </div>
+      )}
+    </div>
     {action}
   </div>
 );
