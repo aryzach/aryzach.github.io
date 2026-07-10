@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import heroImage from "@/assets/sauna-rental-mountain-view-backyard.webp";
@@ -20,6 +21,7 @@ import { seoData } from "@/lib/seoData";
 
 const SaunaRentalMountainView = () => {
   useSEO(seoData.saunaRentalMountainView);
+  const { open: openReservation } = useReservationModal();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -34,11 +36,9 @@ const SaunaRentalMountainView = () => {
               <p className="text-lg text-text mb-8 leading-relaxed">
                 We deliver plug-in saunas to homes and apartments across Mountain View, Los Altos, and nearby neighborhoods including Cuesta Park, Waverly Park, Old Los Altos, and more.
               </p>
-              <Link to="/reserve-your-sauna">
-                <Button size="lg" className="text-base">
-                  Check Availability in Mountain View & Los Altos
-                </Button>
-              </Link>
+              <Button size="lg" className="text-base" onClick={() => openReservation({ source: "Direct Link" })}>
+                Check Availability in Mountain View & Los Altos
+              </Button>
             </div>
             <div className="rounded-lg overflow-hidden">
               <img
@@ -327,11 +327,9 @@ const SaunaRentalMountainView = () => {
             Ready for your sauna?
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/reserve-your-sauna">
-              <Button size="lg" className="text-base">
-                Check Availability in Mountain View & Los Altos
-              </Button>
-            </Link>
+            <Button size="lg" className="text-base" onClick={() => openReservation({ source: "Direct Link" })}>
+              Check Availability in Mountain View & Los Altos
+            </Button>
             <Link to="/pricing" className="text-accent hover:text-accent-dark font-medium">
               View pricing →
             </Link>
