@@ -43,27 +43,19 @@ const PlacementCard = ({
   product: Product;
   status: AvailabilityStatus;
 }) => {
-  const startingAt = Math.min(...product.tiers.map((t) => t.monthly));
   const canReserve = status.status !== "unavailable";
   const ctaLabel = canReserve ? "View Pricing & Reserve" : "View Pricing & Inquire";
 
   return (
     <Link
       to={`/pricing/${product.category}/${product.slug}`}
-      className="group flex flex-col rounded-2xl bg-card border border-border p-5 hover:shadow-lg transition-shadow duration-300"
+      className="group flex flex-col rounded-2xl bg-background border border-border p-5 hover:shadow-lg transition-shadow duration-300"
     >
       <h3 className="text-lg font-semibold text-card-foreground mb-3">
         {product.placement}
       </h3>
       <div className="mb-3">
         <AvailabilityLine status={status} />
-      </div>
-      <div className="flex items-baseline gap-1 mb-4">
-        <span className="text-sm text-muted-foreground">From</span>
-        <span className="text-lg font-semibold text-card-foreground ml-1">
-          ${startingAt}
-        </span>
-        <span className="text-sm text-muted-foreground">/ mo</span>
       </div>
       <Button className="w-full mt-auto" size="sm">{ctaLabel}</Button>
     </Link>
@@ -102,30 +94,37 @@ const Pricing = () => {
               if (cards.length === 0) return null;
               const imageProduct =
                 items.find((p) => p.placement === imageFrom) || cards[0];
-              const reverse = idx % 2 === 1;
+              const startingAt = Math.min(
+                ...cards.flatMap((p) => p.tiers.map((t) => t.monthly)),
+              );
               return (
                 <section
                   key={key}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center"
+                  className="rounded-3xl bg-card border border-border overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch"
                 >
-                  <div className={reverse ? "md:order-2" : ""}>
-                    <div className="rounded-3xl overflow-hidden bg-muted aspect-[4/5]">
-                      <img
-                        src={imageProduct.image}
-                        alt={`${title} rental in San Francisco`}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
+                  <div className="bg-muted aspect-[4/5] md:aspect-auto md:min-h-full">
+                    <img
+                      src={imageProduct.image}
+                      alt={`${title} rental in San Francisco`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
                   </div>
-                  <div className={reverse ? "md:order-1" : ""}>
-                    <h2 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">
+                  <div className="p-6 md:p-10 flex flex-col">
+                    <h2 className="text-3xl md:text-4xl font-semibold text-card-foreground mb-4">
                       {title}
                     </h2>
-                    <p className="text-muted-foreground leading-relaxed mb-8">
+                    <p className="text-muted-foreground leading-relaxed mb-3">
                       {blurb}
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-baseline gap-1 mb-8">
+                      <span className="text-sm text-muted-foreground">From</span>
+                      <span className="text-2xl font-semibold text-card-foreground ml-1">
+                        ${startingAt}
+                      </span>
+                      <span className="text-sm text-muted-foreground">/ month</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-auto">
                       {cards.map((p) => (
                         <PlacementCard
                           key={`${p.category}-${p.slug}`}
