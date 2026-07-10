@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, CheckCircle2, Circle, Copy, ExternalLink, Loader2 } from "lucide-react";
+import { Calendar, CheckCircle2, Circle, Copy, ExternalLink, FileText, Loader2, Upload, Video } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
-import { buildStripeCheckoutUrl, CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
+import {
+  buildStripeCheckoutUrl,
+  CALCOM_VIDEO_CONSULT_LINK,
+  CALCOM_INSTALLATION_LINK,
+} from "@/lib/reservationConfig";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
 
@@ -42,6 +46,8 @@ const ReservationDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [reservation, setReservation] = useState<Reservation | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingId, setUploadingId] = useState(false);
+  const idInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -75,6 +81,40 @@ const ReservationDashboard = () => {
       toast.success("Reservation link copied");
     } catch {
       toast.error("Could not copy link");
+    }
+  };
+
+  const handleIdFile = async (file: File) => {
+    if (!id || !token) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File too large (max 10MB)");
+      return;
+    }
+    setUploadingId(true);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result));
+        r.onerror = () => reject(r.error);
+        r.readAsDataURL(file);
+      });
+      const { error } = await supabase.functions.invoke("reservation-upload-id", {
+        body: {
+          id,
+          token,
+          file_name: file.name,
+          content_type: file.type || "application/octet-stream",
+          file_base64: base64,
+        },
+      });
+      if (error) throw error;
+      toast.success("Photo ID uploaded");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message || "Upload failed");
+    } finally {
+      setUploadingId(false);
+      if (idInputRef.current) idInputRef.current.value = "";
     }
   };
 
@@ -122,16 +162,6 @@ const ReservationDashboard = () => {
                     label="Preferred installation date"
                     value={formatDatePretty(reservation.preferred_install_at.slice(0, 10))}
                   />
-                  <Detail label="$100 reservation deposit" value={paid ? "Complete" : "Pending"} />
-                  {paid && reservation.hold_deadline && (
-                    <Detail
-                      label="Reservation hold deadline"
-                      value={new Date(reservation.hold_deadline).toLocaleString("en-US", {
-                        month: "long", day: "numeric", year: "numeric",
-                        hour: "numeric", minute: "2-digit",
-                      })}
-                    />
-                  )}
                 </CardContent>
               </Card>
 
@@ -141,51 +171,100 @@ const ReservationDashboard = () => {
                     Your next steps
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1.5">
-                  <ChecklistItem done={paid} label="$100 reservation deposit" />
-                  <ChecklistItem
-                    done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
-                    label="Video Consultation Scheduled"
+                <CardContent className="space-y-2">
+                  <StepRow
+                    done={paid}
+                    label="Pay $100 reservation deposit"
+                    action={
+                      !paid ? (
+                        <Button asChild size="sm">
+                          <a href={buildStripeCheckoutUrl(reservation.id)} target="_blank" rel="noopener noreferrer">
+                            Pay <ExternalLink className="ml-1.5" size={14} />
+                          </a>
+                        </Button>
+                      ) : null
+                    }
                   />
-                  <ChecklistItem done={reservation.id_status === "Complete"} label="Photo ID uploaded" />
-                  <ChecklistItem done={reservation.contract_status === "Complete"} label="Contract Complete" />
-                  <ChecklistItem done={installScheduled} label="Installation Date Scheduled" />
+                  <StepRow
+                    done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
+                    label="Schedule Video Consultation"
+                    action={
+                      reservation.consult_status !== "Complete" ? (
+                        <Button asChild size="sm" variant="outline">
+                          <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
+                            <Video className="mr-1.5" size={14} /> Schedule
+                          </a>
+                        </Button>
+                      ) : null
+                    }
+                  />
+                  <StepRow
+                    done={reservation.id_status === "Complete"}
+                    label="Upload Photo ID"
+                    action={
+                      reservation.id_status !== "Complete" ? (
+                        <>
+                          <input
+                            ref={idInputRef}
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/heic,application/pdf"
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) handleIdFile(f);
+                            }}
+                          />
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => idInputRef.current?.click()}
+                            disabled={uploadingId}
+                          >
+                            {uploadingId ? (
+                              <Loader2 className="mr-1.5 animate-spin" size={14} />
+                            ) : (
+                              <Upload className="mr-1.5" size={14} />
+                            )}
+                            {uploadingId ? "Uploading…" : "Upload"}
+                          </Button>
+                        </>
+                      ) : null
+                    }
+                  />
+                  <StepRow
+                    done={reservation.contract_status === "Complete"}
+                    label="Complete Lease Agreement"
+                    action={
+                      reservation.contract_status !== "Complete" ? (
+                        <span className="text-xs text-muted-foreground">
+                          <FileText className="inline mr-1" size={12} />
+                          We'll email you
+                        </span>
+                      ) : null
+                    }
+                  />
+                  <StepRow
+                    done={installScheduled}
+                    label="Schedule Installation Date"
+                    action={
+                      !installScheduled ? (
+                        <Button asChild size="sm" variant="outline">
+                          <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
+                            <Calendar className="mr-1.5" size={14} /> Schedule
+                          </a>
+                        </Button>
+                      ) : null
+                    }
+                  />
                 </CardContent>
               </Card>
 
-              {!paid ? (
-                <Card>
-                  <CardContent className="pt-6 space-y-3">
-                    <Button asChild size="lg" className="w-full">
-                      <a
-                        href={buildStripeCheckoutUrl(reservation.id)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Complete Payment <ExternalLink className="ml-2" size={16} />
-                      </a>
-                    </Button>
-                    <Button variant="outline" className="w-full" onClick={copyLink}>
-                      <Copy className="mr-2" size={16} /> Copy Reservation Link
-                    </Button>
-                    <p className="text-xs text-muted-foreground text-center">
-                      Save this private reservation link.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                    <Button asChild size="lg" className="w-full">
-                      <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
-                        <Calendar className="mr-2" size={16} />
-                        Schedule Video Consultation
-                      </a>
-                    </Button>
-                    <Button variant="outline" className="w-full" onClick={copyLink}>
-                      <Copy className="mr-2" size={16} /> Copy Reservation Link
-                    </Button>
-                </div>
-              )}
+              <Button variant="outline" className="w-full" onClick={copyLink}>
+                <Copy className="mr-2" size={16} /> Copy Reservation Link
+              </Button>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                Save this private reservation link.
+              </p>
             </>
           ) : null}
         </div>
@@ -202,14 +281,23 @@ const Detail = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const ChecklistItem = ({ done, label }: { done: boolean; label: string }) => (
-  <div className="flex items-center gap-2.5 text-sm">
+const StepRow = ({
+  done,
+  label,
+  action,
+}: {
+  done: boolean;
+  label: string;
+  action?: React.ReactNode;
+}) => (
+  <div className="flex items-center gap-2.5 text-sm py-1">
     {done ? (
       <CheckCircle2 className="text-primary shrink-0" size={18} />
     ) : (
       <Circle className="text-muted-foreground shrink-0" size={18} />
     )}
-    <span className={done ? "text-foreground" : "text-muted-foreground"}>{label}</span>
+    <span className={`flex-grow ${done ? "text-foreground" : "text-muted-foreground"}`}>{label}</span>
+    {action}
   </div>
 );
 
