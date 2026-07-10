@@ -89,7 +89,7 @@ export const products: Product[] = [
     placement: "Indoor",
     shortDescription: "2-person traditional sauna, built for living rooms, garages, and studio apartments.",
     longDescription:
-      "Our 2-person indoor traditional sauna, engineered for 200°F on standard 120V power. Authentic löyly with real stones, installed in your home.",
+      "2-person sauna, 200°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(500),
@@ -103,7 +103,7 @@ export const products: Product[] = [
     placement: "Outdoor",
     shortDescription: "2-person traditional sauna for backyards, patios, and decks.",
     longDescription:
-      "Our 2-person outdoor traditional sauna. 200°F on standard 120V power with real stones for authentic löyly.",
+      "2-person sauna, 200°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: 500,
     tiers: TRAD_TIERS(500),
@@ -120,7 +120,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
     longDescription:
-      "An earlier-generation traditional sauna converted from one of our infrared models. Full stones and the same authentic traditional experience at a lower monthly price.",
+      "1st-gen traditional sauna. 200°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_INDOOR,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
@@ -135,7 +135,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
     longDescription:
-      "An earlier-generation outdoor traditional sauna converted from one of our infrared models. Real stones and the same authentic experience at a lower price point.",
+      "1st-gen traditional sauna. 200°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_OUTDOOR,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
@@ -149,7 +149,7 @@ export const products: Product[] = [
     placement: "Indoor",
     shortDescription: "Gentle, low-EMF infrared heat. Compact enough for any room.",
     longDescription:
-      "Our 2-person indoor infrared sauna delivers deep, low-EMF radiant heat at 150°F. Compact footprint, standard 120V power, and delivered fully assembled.",
+      "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_INDOOR,
     reservationFee: 200,
     tiers: INFRARED_INDOOR_TIERS,
@@ -163,7 +163,7 @@ export const products: Product[] = [
     placement: "Outdoor",
     shortDescription: "Weather-ready infrared sauna for backyards and patios.",
     longDescription:
-      "Our 2-person outdoor infrared sauna delivers gentle, low-EMF radiant heat, sealed for year-round Bay Area weather. Runs on standard 120V.",
+      "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_OUTDOOR,
     reservationFee: 200,
     tiers: INFRARED_OUTDOOR_TIERS,
