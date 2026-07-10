@@ -85,7 +85,7 @@ const Pricing = () => {
             </p>
           </div>
 
-          <div className="space-y-20 md:space-y-28">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {CATEGORIES.map(({ key, title, blurb, imageFrom }, idx) => {
               const items = productsIn(key);
               const indoor = items.find((p) => p.placement === "Indoor");
@@ -100,9 +100,9 @@ const Pricing = () => {
               return (
                 <section
                   key={key}
-                  className="rounded-3xl bg-card border border-border overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch"
+                  className="rounded-3xl bg-card border border-border overflow-hidden flex flex-col"
                 >
-                  <div className="bg-muted aspect-[4/5] md:aspect-auto md:min-h-full">
+                  <div className="bg-muted aspect-[4/5]">
                     <img
                       src={imageProduct.image}
                       alt={`${title} rental in San Francisco`}
@@ -110,8 +110,8 @@ const Pricing = () => {
                       loading="lazy"
                     />
                   </div>
-                  <div className="p-6 md:p-10 flex flex-col">
-                    <h2 className="text-3xl md:text-4xl font-semibold text-card-foreground mb-4">
+                  <div className="p-6 md:p-8 flex flex-col flex-grow">
+                    <h2 className="text-2xl md:text-3xl font-semibold text-card-foreground mb-4">
                       {title}
                     </h2>
                     <p className="text-muted-foreground leading-relaxed mb-3">
