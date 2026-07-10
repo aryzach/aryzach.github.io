@@ -411,7 +411,7 @@ const AdminReservations = () => {
     if (!draft) return;
     setDraftError(null);
     setDraftErrorField(null);
-    const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility);
+    const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility, draft.model);
     if (!sauna_type_id) {
       setDraftError(`No sauna type for ${draft.style} + ${ELIG_LABEL[draft.indoor_outdoor_eligibility]}.`);
       setDraftErrorField("style");
@@ -564,12 +564,25 @@ const AdminReservations = () => {
   ) => {
     const nextElig = which === "location" ? (value as "indoor" | "outdoor" | "either") : row.indoor_outdoor_eligibility;
     const nextStyle = which === "style" ? (value as StyleValue) : styleFor(row.sauna_type_id);
-    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig);
+    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig, row.model);
     if (!nextTypeId) {
       toast.error(`No sauna type for ${nextStyle} + ${ELIG_LABEL[nextElig]}.`);
       return;
     }
     const patch = { indoor_outdoor_eligibility: nextElig, sauna_type_id: nextTypeId };
+    setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
+    try {
+      await callAdmin({ action: "update_inventory", id: row.id, patch });
+    } catch (e) {
+      toast.error((e as Error).message || "Save failed");
+      await loadAll();
+    }
+  };
+
+  const updateModel = async (row: InventoryRow, nextModel: string | null) => {
+    const style = styleFor(row.sauna_type_id);
+    const nextTypeId = saunaTypeIdFor(style, row.indoor_outdoor_eligibility, nextModel) || row.sauna_type_id;
+    const patch = { model: nextModel, sauna_type_id: nextTypeId };
     setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
     try {
       await callAdmin({ action: "update_inventory", id: row.id, patch });
@@ -886,7 +899,7 @@ const AdminReservations = () => {
                             <SelectCell
                               value={r.model || ""}
                               options={[{ value: "", label: "—" }, ...MODELS.map((m) => ({ value: m, label: m }))]}
-                              onSave={(v) => updateCell(r.id, "model", v || null)}
+                              onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
