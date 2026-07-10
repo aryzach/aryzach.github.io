@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, CheckCircle2, Circle, Copy, ExternalLink, FileText, Loader2, Upload, Video } from "lucide-react";
+import { Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
@@ -48,6 +48,7 @@ const ReservationDashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [uploadingId, setUploadingId] = useState(false);
   const idInputRef = useRef<HTMLInputElement>(null);
+  const [idPhoto, setIdPhoto] = useState<{ url: string; name: string } | null>(null);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -62,6 +63,7 @@ const ReservationDashboard = () => {
       setError("This reservation could not be found. Please check your link.");
     } else {
       setReservation(data.reservation as Reservation);
+      setIdPhoto((data.id_photo as { url: string; name: string } | null) ?? null);
       setError(null);
     }
     setLoading(false);
@@ -189,46 +191,54 @@ const ReservationDashboard = () => {
                     done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
                     label="Schedule Video Consultation"
                     action={
-                      reservation.consult_status !== "Complete" ? (
-                        <Button asChild size="sm" variant="outline">
-                          <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
-                            <Video className="mr-1.5" size={14} /> Schedule
-                          </a>
-                        </Button>
-                      ) : null
+                      <Button asChild size="sm" variant="outline">
+                        <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
+                          <Video className="mr-1.5" size={14} />
+                          {reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"
+                            ? "View / Reschedule"
+                            : "Schedule"}
+                        </a>
+                      </Button>
                     }
                   />
                   <StepRow
                     done={reservation.id_status === "Complete"}
                     label="Upload Photo ID"
                     action={
-                      reservation.id_status !== "Complete" ? (
-                        <>
-                          <input
-                            ref={idInputRef}
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp,image/heic,application/pdf"
-                            className="hidden"
-                            onChange={(e) => {
-                              const f = e.target.files?.[0];
-                              if (f) handleIdFile(f);
-                            }}
-                          />
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => idInputRef.current?.click()}
-                            disabled={uploadingId}
-                          >
-                            {uploadingId ? (
-                              <Loader2 className="mr-1.5 animate-spin" size={14} />
-                            ) : (
-                              <Upload className="mr-1.5" size={14} />
-                            )}
-                            {uploadingId ? "Uploading…" : "Upload"}
+                      <div className="flex items-center gap-2">
+                        <input
+                          ref={idInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/heic,application/pdf"
+                          className="hidden"
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) handleIdFile(f);
+                          }}
+                        />
+                        {idPhoto && (
+                          <Button asChild size="sm" variant="ghost">
+                            <a href={idPhoto.url} target="_blank" rel="noopener noreferrer">
+                              <Eye className="mr-1.5" size={14} /> View
+                            </a>
                           </Button>
-                        </>
-                      ) : null
+                        )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => idInputRef.current?.click()}
+                          disabled={uploadingId}
+                        >
+                          {uploadingId ? (
+                            <Loader2 className="mr-1.5 animate-spin" size={14} />
+                          ) : idPhoto ? (
+                            <RefreshCw className="mr-1.5" size={14} />
+                          ) : (
+                            <Upload className="mr-1.5" size={14} />
+                          )}
+                          {uploadingId ? "Uploading…" : idPhoto ? "Replace" : "Upload"}
+                        </Button>
+                      </div>
                     }
                   />
                   <StepRow
@@ -247,13 +257,12 @@ const ReservationDashboard = () => {
                     done={installScheduled}
                     label="Schedule Installation Date"
                     action={
-                      !installScheduled ? (
-                        <Button asChild size="sm" variant="outline">
-                          <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
-                            <Calendar className="mr-1.5" size={14} /> Schedule
-                          </a>
-                        </Button>
-                      ) : null
+                      <Button asChild size="sm" variant="outline">
+                        <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
+                          <Calendar className="mr-1.5" size={14} />
+                          {installScheduled ? "View / Reschedule" : "Schedule"}
+                        </a>
+                      </Button>
                     }
                   />
                 </CardContent>
@@ -290,13 +299,20 @@ const StepRow = ({
   label: string;
   action?: React.ReactNode;
 }) => (
-  <div className="flex items-center gap-2.5 text-sm py-1">
+  <div className="flex items-center gap-3 text-sm py-1">
     {done ? (
-      <CheckCircle2 className="text-primary shrink-0" size={18} />
+      <span
+        aria-label="Complete"
+        className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-green-500 text-white shrink-0"
+      >
+        <Check size={16} strokeWidth={3} />
+      </span>
     ) : (
-      <Circle className="text-muted-foreground shrink-0" size={18} />
+      <Circle className="text-muted-foreground shrink-0" size={22} strokeWidth={1.5} />
     )}
-    <span className={`flex-grow ${done ? "text-foreground" : "text-muted-foreground"}`}>{label}</span>
+    <span className={`flex-grow ${done ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+      {label}
+    </span>
     {action}
   </div>
 );

@@ -44,5 +44,24 @@ Deno.serve(async (req) => {
   }
   if (!reservation) return json({ error: "Not found" }, 404);
 
-  return json({ reservation });
+  // Return the most recent uploaded photo ID (if any) as a short-lived signed URL.
+  let id_photo: { url: string; name: string } | null = null;
+  try {
+    const { data: files } = await supabase.storage
+      .from("reservation-ids")
+      .list(id, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
+    const latest = files?.[0];
+    if (latest) {
+      const { data: signed } = await supabase.storage
+        .from("reservation-ids")
+        .createSignedUrl(`${id}/${latest.name}`, 60 * 10);
+      if (signed?.signedUrl) {
+        id_photo = { url: signed.signedUrl, name: latest.name };
+      }
+    }
+  } catch (e) {
+    console.error("id_photo lookup failed:", e);
+  }
+
+  return json({ reservation, id_photo });
 });
