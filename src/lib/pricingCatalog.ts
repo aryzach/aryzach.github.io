@@ -3,6 +3,7 @@
 
 import originalCollectionAsset from "@/assets/original-collection.png.asset.json";
 import originalCollectionOutdoorAsset from "@/assets/original-collection-outdoor.png.asset.json";
+import originalCollectionIndoorAsset from "@/assets/original-collection-indoor.jpg.asset.json";
 import infraredOutdoorAsset from "@/assets/infrared-outdoor.png.asset.json";
 import infraredHeroAsset from "@/assets/infrared-hero.jpg.asset.json";
 import traditionalHeroAsset from "@/assets/traditional-hero.png.asset.json";
@@ -71,6 +72,7 @@ const ORIGINAL_TIERS: PricingTier[] = [
 // Portrait placeholder imagery — swap for real photography later.
 const PLACEHOLDER_TRAD_INDOOR = assetUrl(traditionalIndoorAsset);
 const PLACEHOLDER_TRAD_OUTDOOR = assetUrl(traditionalHeroAsset);
+const IMG_ORIGINAL_COLLECTION_INDOOR = assetUrl(originalCollectionIndoorAsset);
 const IMG_ORIGINAL_COLLECTION = assetUrl(originalCollectionAsset);
 const IMG_ORIGINAL_COLLECTION_OUTDOOR = assetUrl(originalCollectionOutdoorAsset);
 const PLACEHOLDER_INFRARED_INDOOR = assetUrl(infraredHeroAsset);
@@ -118,7 +120,7 @@ export const products: Product[] = [
       "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
     longDescription:
       "An earlier-generation traditional sauna converted from one of our infrared models. Full stones and the same authentic traditional experience at a lower monthly price.",
-    image: IMG_ORIGINAL_COLLECTION,
+    image: IMG_ORIGINAL_COLLECTION_INDOOR,
     reservationFee: 500,
     tiers: ORIGINAL_TIERS,
   },
@@ -192,7 +194,7 @@ export const categoryHero: Record<Category, { image: string; blurb: string }> = 
       "Gentle, low-EMF radiant heat. Choose indoor or outdoor.",
   },
   original: {
-    image: IMG_ORIGINAL_COLLECTION,
+    image: IMG_ORIGINAL_COLLECTION_INDOOR,
     blurb:
       "Earlier-generation traditional saunas converted from infrared models. Same authentic experience at a lower monthly price.",
   },
