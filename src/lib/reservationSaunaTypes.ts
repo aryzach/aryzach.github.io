@@ -10,14 +10,9 @@ export interface SaunaTypeOption {
 
 export const SAUNA_TYPE_OPTIONS: SaunaTypeOption[] = [
   {
-    id: "indoor_infrared",
-    label: "Indoor Infrared",
-    productHref: "/pricing/infrared/indoor",
-  },
-  {
-    id: "outdoor_infrared",
-    label: "Outdoor Infrared",
-    productHref: "/pricing/infrared/outdoor",
+    id: "outdoor_traditional_latest",
+    label: "Outdoor Traditional",
+    productHref: "/pricing/traditional/outdoor",
   },
   {
     id: "indoor_outdoor_traditional_latest",
@@ -25,19 +20,24 @@ export const SAUNA_TYPE_OPTIONS: SaunaTypeOption[] = [
     productHref: "/pricing/traditional/indoor",
   },
   {
-    id: "outdoor_traditional_latest",
-    label: "Outdoor Traditional",
-    productHref: "/pricing/traditional/outdoor",
+    id: "outdoor_infrared",
+    label: "Outdoor Infrared",
+    productHref: "/pricing/infrared/outdoor",
   },
   {
-    id: "indoor_traditional",
-    label: "Original Collection Indoor",
-    productHref: "/pricing/original/original-indoor",
+    id: "indoor_infrared",
+    label: "Indoor Infrared",
+    productHref: "/pricing/infrared/indoor",
   },
   {
     id: "outdoor_traditional_original",
     label: "Original Collection Outdoor",
     productHref: "/pricing/original/original-outdoor",
+  },
+  {
+    id: "indoor_traditional",
+    label: "Original Collection Indoor",
+    productHref: "/pricing/original/original-indoor",
   },
 ];
 

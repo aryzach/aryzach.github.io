@@ -184,6 +184,13 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                 <div className="grid grid-cols-1 gap-2">
                   {SAUNA_TYPE_OPTIONS.map((o) => {
                     const active = selectedSaunaTypeId === o.id;
+                    const optAvail = getStatus(o.id);
+                    const availText =
+                      optAvail.status === "available"
+                        ? "Available now"
+                        : optAvail.status === "future" && optAvail.nextAvailableDate
+                        ? `Next available ${formatDatePretty(optAvail.nextAvailableDate)}`
+                        : "Currently unavailable";
                     return (
                       <div
                         key={o.id}
@@ -209,7 +216,18 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                           >
                             {active && <span className="h-2 w-2 rounded-full bg-primary" />}
                           </span>
-                          <span className="text-sm text-foreground truncate">{o.label}</span>
+                          <div className="min-w-0">
+                            <div className="text-sm text-foreground truncate">{o.label}</div>
+                            <div
+                              className={`text-xs truncate ${
+                                optAvail.status === "available"
+                                  ? "text-primary"
+                                  : "text-muted-foreground"
+                              }`}
+                            >
+                              {availText}
+                            </div>
+                          </div>
                         </div>
                         <a
                           href={o.productHref}
