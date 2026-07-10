@@ -87,16 +87,18 @@ const PricingProduct = () => {
                 <AvailabilityLine status={status} size="md" />
               </div>
 
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
                 {product.tiers.map((tier) => (
                   <TierCard
                     key={tier.months}
                     tier={tier}
-                    reservationFee={product.reservationFee}
-                    onReserve={handleReserve}
-                    disabled={!canReserve}
                   />
                 ))}
+              </div>
+              <div className="mt-5">
+                <Button size="lg" onClick={handleReserve} disabled={!canReserve} className="w-full md:w-auto">
+                  {canReserve ? "Reserve Now" : "Currently unavailable"}
+                </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
                 Longer commitments unlock lower monthly rates and free installation. After your initial term, continue month-to-month.
@@ -120,12 +122,9 @@ const PricingProduct = () => {
 
 interface TierProps {
   tier: PricingTier;
-  reservationFee: number;
-  onReserve: () => void;
-  disabled: boolean;
 }
 
-const TierCard = ({ tier, reservationFee, onReserve, disabled }: TierProps) => {
+const TierCard = ({ tier }: TierProps) => {
   const highlighted = !!tier.badge;
   return (
     <div
@@ -148,19 +147,9 @@ const TierCard = ({ tier, reservationFee, onReserve, disabled }: TierProps) => {
         <span className="text-xs text-muted-foreground">/ mo</span>
       </div>
 
-      <div className="text-xs mb-3 flex-grow text-card-foreground">
+      <div className="text-xs text-card-foreground">
         {tier.installFee === 0 ? "Free installation" : `$${tier.installFee} installation`}
       </div>
-
-      <Button
-        onClick={onReserve}
-        disabled={disabled}
-        variant={highlighted ? "default" : "outline"}
-        size="sm"
-        className="w-full"
-      >
-        Reserve
-      </Button>
     </div>
   );
 };
