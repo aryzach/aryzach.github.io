@@ -280,12 +280,6 @@ const ConfigureStep = ({
             </SelectContent>
           </Select>
         </Field>
-        {saunaInfo && (
-          <p className="text-xs text-muted-foreground">
-            Placement: <span className="text-foreground font-medium">{saunaInfo.placement === "indoor" ? "Indoor" : "Outdoor"}</span>
-            <span className="opacity-60"> — fixed for this sauna type</span>
-          </p>
-        )}
       </Section>
 
       <Section title="Term & pricing">
