@@ -134,15 +134,33 @@ Deno.serve(async (req) => {
       }
 
       case "manual_mark_paid": {
-        // Simulate the webhook for testing when Stripe isn't wired up.
-        const { id } = payload;
+        // Simulate the webhook for manual admin overrides.
+        const { id, notes } = payload;
+        if (!notes || typeof notes !== "string" || !notes.trim()) {
+          return json({ error: "An admin note is required to mark payment paid manually." }, 400);
+        }
         const { data: reservation } = await supabase
           .from("reservations").select("*").eq("id", id).maybeSingle();
         if (!reservation) return json({ error: "Not found" }, 404);
         if (reservation.payment_status === "Paid") return json({ ok: true, already: true });
 
         const nowIso = new Date().toISOString();
+        const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
         const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
+
+        // If a sauna is already assigned, do not assign a second one.
+        if (reservation.sauna_inventory_id) {
+          await supabase.from("reservations").update({
+            payment_status: "Paid",
+            payment_completed_at: nowIso,
+            hold_created_at: reservation.hold_created_at ?? nowIso,
+            hold_deadline: reservation.hold_deadline ?? holdDeadlineIso,
+          }).eq("id", id);
+          await supabase.from("reservation_events").insert([
+            { reservation_id: id, event_type: "Payment Received", message: `Payment marked paid manually. Note: ${notes.trim()}` },
+          ]);
+          return json({ ok: true, already_assigned: true });
+        }
 
         const { data: candidates } = await supabase
           .from("sauna_inventory").select("*")
@@ -158,10 +176,11 @@ Deno.serve(async (req) => {
         if (!chosen) {
           await supabase.from("reservations").update({
             payment_status: "Paid", reservation_status: "Needs Manual Review",
+            payment_completed_at: nowIso,
             hold_created_at: nowIso,
           }).eq("id", id);
           await supabase.from("reservation_events").insert([
-            { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
+            { reservation_id: id, event_type: "Payment Received", message: `Payment marked complete (manual). Note: ${notes.trim()}` },
             { reservation_id: id, event_type: "Needs Manual Review", message: "No eligible sauna auto-assigned." },
           ]);
           return json({ ok: true, needs_review: true });
@@ -172,11 +191,14 @@ Deno.serve(async (req) => {
         }).eq("id", chosen.id);
         await supabase.from("reservations").update({
           payment_status: "Paid", reservation_status: "Reservation Hold",
-          sauna_inventory_id: chosen.id, hold_created_at: nowIso,
+          sauna_inventory_id: chosen.id,
+          payment_completed_at: nowIso,
+          hold_created_at: nowIso,
+          hold_deadline: holdDeadlineIso,
         }).eq("id", id);
         await supabase.from("reservation_events").insert([
-          { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
-          { reservation_id: id, event_type: "Reservation Hold Created", message: "Sauna held (no automatic expiration).", metadata: { sauna_inventory_id: chosen.id } },
+          { reservation_id: id, event_type: "Payment Received", message: `Payment marked complete (manual). Note: ${notes.trim()}` },
+          { reservation_id: id, event_type: "Reservation Hold Created", message: "Sauna held (5-day informational deadline).", metadata: { sauna_inventory_id: chosen.id, hold_deadline: holdDeadlineIso } },
         ]);
         return json({ ok: true });
       }
