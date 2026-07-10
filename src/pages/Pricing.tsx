@@ -18,14 +18,14 @@ const CATEGORIES: {
     key: "traditional",
     title: "Traditional Sauna",
     blurb:
-      "Authentic löyly with real stones powered from a standard home outlet.",
+      "200°F heat, authentic löyly, and real stones powered from a standard home outlet.",
     imageFrom: "Outdoor",
   },
   {
     key: "infrared",
     title: "Infrared Sauna",
     blurb: "Gentle, low-EMF radiant heat, installed in your home.",
-    imageFrom: "Outdoor",
+    imageFrom: "Indoor",
   },
   {
     key: "original",
