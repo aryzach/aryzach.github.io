@@ -101,16 +101,6 @@ Deno.serve(async (req) => {
             push("Hold Released", "Admin released the reservation hold.");
             break;
           }
-          case "extend": {
-            const days = Number(extend_days) || 5;
-            const base = reservation.hold_deadline
-              ? new Date(reservation.hold_deadline)
-              : new Date();
-            const next = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
-            update = { hold_deadline: next.toISOString() };
-            push("Hold Deadline Extended", `Deadline extended by ${days} day(s).`);
-            break;
-          }
           case "mark_consult":
             update = { consult_status: "Complete" };
             push("Video Consultation Complete", "Admin marked consultation complete.");
@@ -148,7 +138,6 @@ Deno.serve(async (req) => {
         if (reservation.payment_status === "Paid") return json({ ok: true, already: true });
 
         const nowIso = new Date().toISOString();
-        const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
         const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
 
         const { data: candidates } = await supabase
@@ -165,7 +154,7 @@ Deno.serve(async (req) => {
         if (!chosen) {
           await supabase.from("reservations").update({
             payment_status: "Paid", reservation_status: "Needs Manual Review",
-            hold_created_at: nowIso, hold_deadline: holdDeadlineIso,
+            hold_created_at: nowIso,
           }).eq("id", id);
           await supabase.from("reservation_events").insert([
             { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
@@ -179,11 +168,11 @@ Deno.serve(async (req) => {
         }).eq("id", chosen.id);
         await supabase.from("reservations").update({
           payment_status: "Paid", reservation_status: "Reservation Hold",
-          sauna_inventory_id: chosen.id, hold_created_at: nowIso, hold_deadline: holdDeadlineIso,
+          sauna_inventory_id: chosen.id, hold_created_at: nowIso,
         }).eq("id", id);
         await supabase.from("reservation_events").insert([
           { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
-          { reservation_id: id, event_type: "Reservation Hold Created", message: `Sauna held until ${holdDeadlineIso}.`, metadata: { sauna_inventory_id: chosen.id } },
+          { reservation_id: id, event_type: "Reservation Hold Created", message: "Sauna held (no automatic expiration).", metadata: { sauna_inventory_id: chosen.id } },
         ]);
         return json({ ok: true });
       }
