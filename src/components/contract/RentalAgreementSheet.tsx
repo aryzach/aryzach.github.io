@@ -202,7 +202,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         </div>
 
         {!loading && (
-          <div className="fixed bottom-0 left-0 right-0 sm:absolute bg-background/95 backdrop-blur border-t border-border px-5 md:px-8 py-4 flex items-center justify-between gap-3">
+          <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border px-5 md:px-8 py-4 flex items-center justify-between gap-3">
             {step === "configure" ? (
               <>
                 <Button variant="ghost" onClick={() => onOpenChange(false)}>Close</Button>
