@@ -47,6 +47,27 @@ export type Database = {
         }
         Relationships: []
       }
+      app_config: {
+        Row: {
+          description: string | null
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       contract_acknowledgments: {
         Row: {
           accepted: boolean
@@ -415,6 +436,7 @@ export type Database = {
           install_address: string | null
           last_name: string
           min_commitment_months: number | null
+          payment_completed_at: string | null
           payment_status: string
           phone: string | null
           placement_choice: string | null
@@ -424,7 +446,9 @@ export type Database = {
           sauna_inventory_id: string | null
           sauna_type_id: string
           secure_token: string
+          stripe_checkout_session_id: string | null
           stripe_payment_id: string | null
+          stripe_payment_intent_id: string | null
           updated_at: string
         }
         Insert: {
@@ -443,6 +467,7 @@ export type Database = {
           install_address?: string | null
           last_name: string
           min_commitment_months?: number | null
+          payment_completed_at?: string | null
           payment_status?: string
           phone?: string | null
           placement_choice?: string | null
@@ -452,7 +477,9 @@ export type Database = {
           sauna_inventory_id?: string | null
           sauna_type_id: string
           secure_token?: string
+          stripe_checkout_session_id?: string | null
           stripe_payment_id?: string | null
+          stripe_payment_intent_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -471,6 +498,7 @@ export type Database = {
           install_address?: string | null
           last_name?: string
           min_commitment_months?: number | null
+          payment_completed_at?: string | null
           payment_status?: string
           phone?: string | null
           placement_choice?: string | null
@@ -480,7 +508,9 @@ export type Database = {
           sauna_inventory_id?: string | null
           sauna_type_id?: string
           secure_token?: string
+          stripe_checkout_session_id?: string | null
           stripe_payment_id?: string | null
+          stripe_payment_intent_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -609,6 +639,45 @@ export type Database = {
           reservation_fee_cents?: number
           sort_order?: number
           stripe_payment_link?: string
+        }
+        Relationships: []
+      }
+      stripe_webhook_events: {
+        Row: {
+          checkout_session_id: string | null
+          client_reference_id: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          livemode: boolean
+          processed_at: string | null
+          processing_status: string
+          received_at: string
+          stripe_event_id: string
+        }
+        Insert: {
+          checkout_session_id?: string | null
+          client_reference_id?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          livemode?: boolean
+          processed_at?: string | null
+          processing_status?: string
+          received_at?: string
+          stripe_event_id: string
+        }
+        Update: {
+          checkout_session_id?: string | null
+          client_reference_id?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          livemode?: boolean
+          processed_at?: string | null
+          processing_status?: string
+          received_at?: string
+          stripe_event_id?: string
         }
         Relationships: []
       }
