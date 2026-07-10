@@ -182,8 +182,6 @@ export const ReservationsListPanel = ({
     );
   const bulkConfirm = () =>
     runBulk("Confirm", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "confirm" }));
-  const bulkExtend = () =>
-    runBulk("Extend", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "extend", extend_days: 5 }));
   const bulkRelease = () =>
     runBulk("Release", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "release" }),
       "Release {n} holds?");
@@ -288,7 +286,6 @@ export const ReservationsListPanel = ({
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkCopyLinks}>Copy Links</Button>
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkMarkPaid}>Mark Paid</Button>
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkConfirm}>Confirm Hold</Button>
-          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkExtend}>+5d Hold</Button>
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkRelease}>Release Hold</Button>
           <Button size="sm" variant="destructive" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
           <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={() => setSelected(new Set())}>Clear</Button>
