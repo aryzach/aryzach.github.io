@@ -177,17 +177,11 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         toast.error("Something went wrong. Please try again.");
         return;
       }
-      void notifyWeb3Forms(
-        intent === "consult"
-          ? "New Consultation Lead — SF Sauna"
-          : "New Reservation Request — SF Sauna",
-        valid,
-        {
-          type: intent === "consult" ? "Consultation Lead" : "Reservation Request",
-          reservation_source: source,
-          reservation_id: data.id,
-        },
-      );
+      void notifyWeb3Forms("New Reservation Request — SF Sauna", valid, {
+        type: "Reservation Request",
+        reservation_source: source,
+        reservation_id: data.id,
+      });
       // Navigate to the private reservation dashboard (magic link page)
       // where the user completes payment and the remaining steps.
       navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
