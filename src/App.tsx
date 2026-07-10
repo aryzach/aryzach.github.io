@@ -42,6 +42,8 @@ import PrefabSaunaInstallationForm from "./pages/PrefabSaunaInstallationForm";
 import ReservationSystem from "./pages/ReservationSystem";
 import ReservationConfirmation from "./pages/ReservationConfirmation";
 import AdminReservations from "./pages/AdminReservations";
+import ReservationDashboard from "./pages/ReservationDashboard";
+import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -109,6 +111,7 @@ const App = () => (
         <ScrollToTop />
         <ScrollToHash />
         <GAPageView />
+        <ReservationModalProvider>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
@@ -148,9 +151,11 @@ const App = () => (
           <Route path="/reservation-system" element={<ReservationSystem />} />
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
           <Route path="/admin-reservations" element={<AdminReservations />} />
+          <Route path="/reservation/:id" element={<ReservationDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </ReservationModalProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
