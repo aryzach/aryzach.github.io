@@ -11,6 +11,7 @@ import GoogleReviews from "@/components/GoogleReviews";
 
 const IndoorInfraredLanding = () => {
   useSEO(seoData.indoorInfraredLanding);
+  const { open: openReservation } = useReservationModal();
 
   // Google Ads conversion tracking
   useEffect(() => {
@@ -51,8 +52,8 @@ const IndoorInfraredLanding = () => {
                 Experience deep, therapeutic heat in the comfort of your home. Our infrared saunas plug into any standard 120V outlet — no special wiring required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
-                  <Link to="/reserve-your-sauna">Reserve Your Sauna</Link>
+                <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
+                  Reserve Your Sauna
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a href="#pricing">View Pricing</a>
@@ -202,8 +203,8 @@ const IndoorInfraredLanding = () => {
           <p className="text-muted-foreground text-lg">
             Reserve your indoor infrared sauna today. We'll handle delivery, setup, and ongoing support.
           </p>
-          <Button size="lg" asChild>
-            <Link to="/reserve-your-sauna">Reserve Your Sauna Now</Link>
+          <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
+            Reserve Your Sauna Now
           </Button>
         </div>
       </section>
