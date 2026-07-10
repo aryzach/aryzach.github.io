@@ -295,6 +295,33 @@ Deno.serve(async (req) => {
         return json({ ok: true });
       }
 
+      case "list_waitlist": {
+        const { data, error } = await supabase
+          .from("waitlist_entries")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return json({ waitlist: data });
+      }
+
+      case "delete_waitlist": {
+        const { id } = payload;
+        const { error } = await supabase.from("waitlist_entries").delete().eq("id", id);
+        if (error) throw error;
+        return json({ ok: true });
+      }
+
+      case "update_waitlist": {
+        const { id, patch } = payload;
+        const allowed = ["status", "admin_notes"];
+        const clean: Record<string, unknown> = {};
+        for (const k of allowed) if (k in patch) clean[k] = patch[k];
+        const { data, error } = await supabase
+          .from("waitlist_entries").update(clean).eq("id", id).select().single();
+        if (error) throw error;
+        return json({ entry: data });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }

@@ -11,6 +11,7 @@ import { CheckCircle2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
+import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { useAvailability } from "@/hooks/useAvailability";
 import { formatDatePretty } from "@/lib/availability";
 import { buildStripeCheckoutUrl, CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
@@ -67,6 +68,7 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
 
   const selectedSaunaTypeId = watch("sauna_type_id");
   const availability = getStatus(selectedSaunaTypeId || null);
+  const isWaitlistMode = availability.status === "unavailable" && !!selectedSaunaTypeId;
 
   const minDate = useMemo(() => {
     const today = todayISO();
@@ -96,6 +98,33 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
     });
     if (!valid) return;
 
+    // Waitlist path: sauna type has no current or future availability.
+    if (isWaitlistMode) {
+      setSubmitting("reserve");
+      try {
+        const { error } = await supabase.from("waitlist_entries").insert({
+          first_name: valid.first_name,
+          last_name: valid.last_name,
+          email: valid.email,
+          phone: valid.phone,
+          city: valid.city,
+          sauna_type_id: valid.sauna_type_id,
+          preferred_install_date: valid.preferred_install_date || null,
+          reservation_source: source,
+        });
+        if (error) {
+          console.error("waitlist insert failed:", error);
+          toast.error("Something went wrong. Please try again.");
+          return;
+        }
+        toast.success("You're on the waitlist. We'll be in touch.");
+        onClose();
+      } finally {
+        setSubmitting(null);
+      }
+      return;
+    }
+
     if (valid.preferred_install_date < todayISO()) {
       toast.error("Installation date can't be before today.");
       return;
@@ -107,10 +136,6 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         );
         return;
       }
-    }
-    if (availability.status === "unavailable") {
-      toast.error("That sauna type is currently unavailable.");
-      return;
     }
 
     setSubmitting(intent);
@@ -274,10 +299,16 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                   className="w-full"
                   disabled={submitting !== null}
                 >
-                  {submitting === "reserve" ? "Working…" : "Pay $100 Reservation Deposit"}
+                  {submitting === "reserve"
+                    ? "Working…"
+                    : isWaitlistMode
+                    ? `Join Waitlist for ${saunaTypeLabel(selectedSaunaTypeId)}`
+                    : "Pay $100 Reservation Deposit"}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments.
+                  {isWaitlistMode
+                    ? "This sauna is currently unavailable. Join the waitlist and we'll reach out as soon as one opens up."
+                    : "Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments."}
                 </p>
               </div>
 
