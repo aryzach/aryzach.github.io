@@ -66,10 +66,6 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
   });
 
   const selectedSaunaTypeId = watch("sauna_type_id");
-  const selectedOption = useMemo(
-    () => SAUNA_TYPE_OPTIONS.find((o) => o.id === selectedSaunaTypeId),
-    [selectedSaunaTypeId],
-  );
   const availability = getStatus(selectedSaunaTypeId || null);
 
   const minDate = useMemo(() => {
