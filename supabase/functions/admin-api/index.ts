@@ -280,6 +280,21 @@ Deno.serve(async (req) => {
         return json({ ok: true });
       }
 
+      case "delete_reservation": {
+        const { id } = payload;
+        const { data: r } = await supabase
+          .from("reservations").select("sauna_inventory_id").eq("id", id).maybeSingle();
+        if (r?.sauna_inventory_id) {
+          await supabase.from("sauna_inventory").update({
+            status: "Available", current_customer: null, reservation_id: null,
+          }).eq("id", r.sauna_inventory_id);
+        }
+        await supabase.from("reservation_events").delete().eq("reservation_id", id);
+        const { error } = await supabase.from("reservations").delete().eq("id", id);
+        if (error) throw error;
+        return json({ ok: true });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
