@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
+import { ReservationsListPanel } from "./AdminReservationsList";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -193,7 +194,7 @@ const AdminReservations = () => {
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"inventory" | "calendar">("inventory");
+  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -650,9 +651,18 @@ const AdminReservations = () => {
               className={`px-3 py-1.5 text-sm rounded ${tab === "calendar" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("calendar")}
             >Calendar</button>
+            <button
+              type="button"
+              className={`px-3 py-1.5 text-sm rounded ${tab === "reservations" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              onClick={() => setTab("reservations")}
+            >Reservations</button>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
+
+          {tab === "reservations" && (
+            <ReservationsListPanel callAdmin={callAdmin} />
+          )}
 
           {tab === "calendar" && (
             <CalendarView

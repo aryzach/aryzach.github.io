@@ -62,31 +62,18 @@ const STATUS_COLOR: Record<string, string> = {
   "Refunded": "bg-gray-200 text-gray-900",
 };
 
-const AdminReservationsList = () => {
-  useSEO({ title: "Admin — Reservations", description: "Internal reservations admin." });
-
-  const [password, setPassword] = useState<string>(() => sessionStorage.getItem(PASSWORD_STORAGE_KEY) || "");
-  const [authed, setAuthed] = useState(false);
-  const [pwInput, setPwInput] = useState("");
+// Embeddable panel that renders the reservation list. Reuses the parent's
+// admin password via callAdmin. Used both by the standalone page and as a
+// tab inside the AdminReservations inventory page.
+export const ReservationsListPanel = ({
+  callAdmin,
+}: {
+  callAdmin: (body: Record<string, unknown>) => Promise<any>;
+}) => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [events, setEvents] = useState<ReservationEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  const callAdmin = useCallback(async (body: Record<string, unknown>) => {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const res = await fetch(`${supabaseUrl}/functions/v1/admin-api`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-admin-password": password,
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
-    return res.json();
-  }, [password]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -101,20 +88,7 @@ const AdminReservationsList = () => {
     }
   }, [callAdmin]);
 
-  useEffect(() => {
-    if (!password) return;
-    (async () => {
-      try {
-        await callAdmin({ action: "login" });
-        setAuthed(true);
-        sessionStorage.setItem(PASSWORD_STORAGE_KEY, password);
-        await load();
-      } catch {
-        sessionStorage.removeItem(PASSWORD_STORAGE_KEY);
-        setPassword("");
-      }
-    })();
-  }, [password, callAdmin, load]);
+  useEffect(() => { load(); }, [load]);
 
   const doAction = async (id: string, kind: string, extra: Record<string, unknown> = {}) => {
     try {
@@ -153,6 +127,158 @@ const AdminReservationsList = () => {
     return m;
   }, [events]);
 
+  const statusIcon = (done: boolean) => (done ? "✓" : "○");
+  const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-lg font-medium text-foreground">Magic Links</h2>
+        <Button onClick={load} size="sm" variant="outline" disabled={loading}>
+          {loading ? "Refreshing…" : "Refresh"}
+        </Button>
+      </div>
+      <div className="space-y-3">
+        {reservations.length === 0 && !loading && (
+          <p className="text-muted-foreground">No reservations yet.</p>
+        )}
+        {reservations.map((r) => {
+          const isOpen = expandedId === r.id;
+          const rEvents = eventsFor.get(r.id) ?? [];
+          const paid = r.payment_status === "Paid";
+          const consultDone = r.consult_status === "Scheduled" || r.consult_status === "Complete";
+          const idDone = r.id_status === "Complete";
+          const contractDone = r.contract_status === "Complete";
+          const installDone = r.reservation_status === "Reservation Confirmed";
+          return (
+            <Card key={r.id}>
+              <CardContent className="p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex-grow min-w-[240px]">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium text-foreground">
+                        {r.first_name} {r.last_name}
+                      </span>
+                      <Badge className={STATUS_COLOR[r.reservation_status] ?? "bg-gray-200"}>
+                        {r.reservation_status}
+                      </Badge>
+                      <Badge variant="outline">{styleFor(r.sauna_type_id)}</Badge>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {r.email} · {r.phone ?? "no phone"} · {r.city ?? "no city"}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {saunaTypeLabel(r.sauna_type_id)} · install {fmt(r.preferred_install_at)}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-0.5">
+                      <span>{statusIcon(paid)} Deposit</span>
+                      <span>{statusIcon(consultDone)} Consult</span>
+                      <span>{statusIcon(idDone)} Photo ID</span>
+                      <span>{statusIcon(contractDone)} Contract</span>
+                      <span>{statusIcon(installDone)} Install scheduled</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-end">
+                    <Button size="sm" variant="outline" onClick={() => copyLink(r)}>Copy Link</Button>
+                    {r.payment_status !== "Paid" && r.reservation_status !== "Lead" && (
+                      <Button size="sm" variant="outline" onClick={() => markPaid(r.id)}>Mark Paid</Button>
+                    )}
+                    {r.reservation_status === "Reservation Hold" && (
+                      <>
+                        <Button size="sm" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
+                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "extend", { extend_days: 5 })}>+5 days</Button>
+                        <Button size="sm" variant="destructive" onClick={() => doAction(r.id, "release")}>Release</Button>
+                      </>
+                    )}
+                    <Button size="sm" variant="ghost" onClick={() => setExpandedId(isOpen ? null : r.id)}>
+                      {isOpen ? "Hide" : "Details"}
+                    </Button>
+                  </div>
+                </div>
+
+                {isOpen && (
+                  <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Details</h4>
+                      <dl className="text-sm space-y-1">
+                        <Row k="Source" v={r.reservation_source} />
+                        <Row k="Payment" v={r.payment_status} />
+                        <Row k="Consult" v={r.consult_status} />
+                        <Row k="Contract" v={r.contract_status} />
+                        <Row k="ID" v={r.id_status} />
+                        <Row k="Created" v={fmt(r.created_at)} />
+                        {r.hold_deadline && <Row k="Hold ends" v={fmt(r.hold_deadline)} />}
+                      </dl>
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_consult")}>Mark consult</Button>
+                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_contract")}>Mark contract</Button>
+                        <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_id")}>Mark ID</Button>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Timeline</h4>
+                      <ol className="text-sm space-y-1.5">
+                        {rEvents.length === 0 && <li className="text-muted-foreground">No events yet.</li>}
+                        {rEvents.map((e) => (
+                          <li key={e.id} className="flex items-baseline gap-3">
+                            <span className="text-xs text-muted-foreground w-32 shrink-0">
+                              {fmt(e.created_at)}
+                            </span>
+                            <div>
+                              <div className="text-foreground font-medium">{e.event_type}</div>
+                              {e.message && <div className="text-muted-foreground text-xs">{e.message}</div>}
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const AdminReservationsList = () => {
+  useSEO({ title: "Admin — Reservations", description: "Internal reservations admin." });
+
+  const [password, setPassword] = useState<string>(() => sessionStorage.getItem(PASSWORD_STORAGE_KEY) || "");
+  const [authed, setAuthed] = useState(false);
+  const [pwInput, setPwInput] = useState("");
+
+  const callAdmin = useCallback(async (body: Record<string, unknown>) => {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const res = await fetch(`${supabaseUrl}/functions/v1/admin-api`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-password": password,
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
+    return res.json();
+  }, [password]);
+
+  useEffect(() => {
+    if (!password) return;
+    (async () => {
+      try {
+        await callAdmin({ action: "login" });
+        setAuthed(true);
+        sessionStorage.setItem(PASSWORD_STORAGE_KEY, password);
+      } catch {
+        sessionStorage.removeItem(PASSWORD_STORAGE_KEY);
+        setPassword("");
+      }
+    })();
+  }, [password, callAdmin]);
+
   if (!authed) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -186,105 +312,10 @@ const AdminReservationsList = () => {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-semibold">Reservations</h1>
             <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm"><Link to="/admin-reservations">Inventory →</Link></Button>
-              <Button onClick={load} size="sm" variant="outline" disabled={loading}>
-                {loading ? "Refreshing…" : "Refresh"}
-              </Button>
+              <Button asChild variant="outline" size="sm"><Link to="/admin">Inventory →</Link></Button>
             </div>
           </div>
-
-          <div className="space-y-3">
-            {reservations.length === 0 && !loading && (
-              <p className="text-muted-foreground">No reservations yet.</p>
-            )}
-            {reservations.map((r) => {
-              const isOpen = expandedId === r.id;
-              const rEvents = eventsFor.get(r.id) ?? [];
-              return (
-                <Card key={r.id}>
-                  <CardContent className="p-4">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="flex-grow min-w-[240px]">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-medium text-foreground">
-                            {r.first_name} {r.last_name}
-                          </span>
-                          <Badge className={STATUS_COLOR[r.reservation_status] ?? "bg-gray-200"}>
-                            {r.reservation_status}
-                          </Badge>
-                          <Badge variant="outline">Payment: {r.payment_status}</Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {r.email} · {r.phone ?? "no phone"} · {r.city ?? "no city"}
-                        </div>
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {saunaTypeLabel(r.sauna_type_id)} · install {fmt(r.preferred_install_at)}
-                        </div>
-                        {r.hold_deadline && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Hold: {fmt(r.hold_created_at)} → {fmt(r.hold_deadline)}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-2 justify-end">
-                        <Button size="sm" variant="outline" onClick={() => copyLink(r)}>Copy Link</Button>
-                        {r.payment_status !== "Paid" && r.reservation_status !== "Lead" && (
-                          <Button size="sm" variant="outline" onClick={() => markPaid(r.id)}>Mark Paid</Button>
-                        )}
-                        {r.reservation_status === "Reservation Hold" && (
-                          <>
-                            <Button size="sm" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
-                            <Button size="sm" variant="outline" onClick={() => doAction(r.id, "extend", { extend_days: 5 })}>+5 days</Button>
-                            <Button size="sm" variant="destructive" onClick={() => doAction(r.id, "release")}>Release</Button>
-                          </>
-                        )}
-                        <Button size="sm" variant="ghost" onClick={() => setExpandedId(isOpen ? null : r.id)}>
-                          {isOpen ? "Hide" : "Details"}
-                        </Button>
-                      </div>
-                    </div>
-
-                    {isOpen && (
-                      <div className="mt-4 pt-4 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Details</h4>
-                          <dl className="text-sm space-y-1">
-                            <Row k="Source" v={r.reservation_source} />
-                            <Row k="Consult" v={r.consult_status} />
-                            <Row k="Contract" v={r.contract_status} />
-                            <Row k="ID" v={r.id_status} />
-                            <Row k="Created" v={fmt(r.created_at)} />
-                          </dl>
-                          <div className="flex flex-wrap gap-2 mt-3">
-                            <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_consult")}>Mark consult</Button>
-                            <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_contract")}>Mark contract</Button>
-                            <Button size="sm" variant="outline" onClick={() => doAction(r.id, "mark_id")}>Mark ID</Button>
-                          </div>
-                        </div>
-                        <div>
-                          <h4 className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Timeline</h4>
-                          <ol className="text-sm space-y-1.5">
-                            {rEvents.length === 0 && <li className="text-muted-foreground">No events yet.</li>}
-                            {rEvents.map((e) => (
-                              <li key={e.id} className="flex items-baseline gap-3">
-                                <span className="text-xs text-muted-foreground w-32 shrink-0">
-                                  {fmt(e.created_at)}
-                                </span>
-                                <div>
-                                  <div className="text-foreground font-medium">{e.event_type}</div>
-                                  {e.message && <div className="text-muted-foreground text-xs">{e.message}</div>}
-                                </div>
-                              </li>
-                            ))}
-                          </ol>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+          <ReservationsListPanel callAdmin={callAdmin} />
         </div>
       </main>
       <Footer />

@@ -153,6 +153,7 @@ const App = () => (
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
           <Route path="/admin-reservations" element={<AdminReservations />} />
           <Route path="/admin-reservations-list" element={<AdminReservationsList />} />
+          <Route path="/admin" element={<AdminReservations />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
