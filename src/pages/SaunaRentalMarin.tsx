@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleReviews from "@/components/GoogleReviews";
@@ -15,6 +16,7 @@ import { seoData } from "@/lib/seoData";
 
 const SaunaRentalMarin = () => {
   useSEO(seoData.saunaRentalMarin);
+  const { open: openReservation } = useReservationModal();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -33,12 +35,13 @@ const SaunaRentalMarin = () => {
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl">
               We deliver plug-in saunas to homes and apartments across Mill Valley, Sausalito, Tiburon, Belvedere, Larkspur, Corte Madera, San Anselmo, and Fairfax.
             </p>
-            <Link 
-              to="/reserve-your-sauna"
+            <button
+              type="button"
+              onClick={() => openReservation({ source: "Direct Link" })}
               className="inline-block bg-accent hover:bg-accent/90 text-white font-medium px-8 py-3 rounded-lg transition-colors mb-12"
             >
               Check Availability in Marin
-            </Link>
+            </button>
             
             <div className="relative mb-12">
               <img 
@@ -449,12 +452,13 @@ const SaunaRentalMarin = () => {
               Ready for your sauna?
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link 
-                to="/reserve-your-sauna"
+              <button
+                type="button"
+                onClick={() => openReservation({ source: "Direct Link" })}
                 className="inline-block bg-accent hover:bg-accent/90 text-white font-medium px-8 py-3 rounded-lg transition-colors"
               >
                 Check Availability in Marin
-              </Link>
+              </button>
               <Link 
                 to="/pricing"
                 className="text-accent hover:text-accent-dark font-medium"
