@@ -29,9 +29,9 @@ const CATEGORIES: {
   },
   {
     key: "original",
-    title: "Traditional Sauna — Original Collection",
+    title: "Original Collection",
     blurb:
-      "Earlier-generation traditional saunas converted from infrared models. Same authentic experience at a lower monthly price.",
+      "1st-gen traditional saunas converted from infrared models. Same heat at a lower monthly price.",
     imageFrom: "Indoor",
   },
 ];
