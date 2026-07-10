@@ -299,10 +299,16 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                   className="w-full"
                   disabled={submitting !== null}
                 >
-                  {submitting === "reserve" ? "Working…" : "Pay $100 Reservation Deposit"}
+                  {submitting === "reserve"
+                    ? "Working…"
+                    : isWaitlistMode
+                    ? `Join Waitlist for ${saunaTypeLabel(selectedSaunaTypeId)}`
+                    : "Pay $100 Reservation Deposit"}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments.
+                  {isWaitlistMode
+                    ? "This sauna is currently unavailable. Join the waitlist and we'll reach out as soon as one opens up."
+                    : "Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments."}
                 </p>
               </div>
 
