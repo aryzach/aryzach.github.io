@@ -1,6 +1,12 @@
 // Catalog for the new /pricing experience.
 // Maps product URL slugs -> sauna_types.id in the database + display data.
 
+import {
+  PRICING_TIERS,
+  RESERVATION_DEPOSIT_INFRARED,
+  RESERVATION_DEPOSIT_TRADITIONAL,
+  type SaunaTypeId,
+} from "./generatedPricing";
 import originalCollectionAsset from "@/assets/original-collection.png.asset.json";
 import originalCollectionOutdoorAsset from "@/assets/original-collection-outdoor.png.asset.json";
 import originalCollectionIndoorAsset from "@/assets/original-collection-indoor.jpg.asset.json";
@@ -40,35 +46,19 @@ export interface Product {
   tiers: PricingTier[];
 }
 
-const TRAD_TIERS = (installShort: number): PricingTier[] => [
-  { months: 1, monthly: 1300, installFee: installShort },
-  { months: 3, monthly: 700, installFee: installShort },
-  { months: 6, monthly: 600, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 400, installFee: 0, badge: "Best Value" },
-];
-
-const INFRARED_INDOOR_TIERS: PricingTier[] = [
-  { months: 1, monthly: 500, installFee: 200 },
-  { months: 3, monthly: 400, installFee: 200 },
-  { months: 6, monthly: 300, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 200, installFee: 0, badge: "Best Value" },
-];
-
-const INFRARED_OUTDOOR_TIERS: PricingTier[] = [
-  { months: 1, monthly: 600, installFee: 200 },
-  { months: 3, monthly: 500, installFee: 200 },
-  { months: 6, monthly: 400, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 300, installFee: 0, badge: "Best Value" },
-];
-
-// Original Collection (older-generation, converted from infrared) uses
-// the lower Original Collection pricing.
-const ORIGINAL_TIERS: PricingTier[] = [
-  { months: 1, monthly: 900, installFee: 500 },
-  { months: 3, monthly: 500, installFee: 500 },
-  { months: 6, monthly: 400, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 300, installFee: 0, badge: "Best Value" },
-];
+function tiersFor(id: SaunaTypeId): PricingTier[] {
+  const table = PRICING_TIERS[id];
+  return ([1, 3, 6, 12] as const).map((months) => {
+    const row = table[months];
+    const tier: PricingTier = {
+      months,
+      monthly: row.monthly,
+      installFee: row.installFee,
+    };
+    if (row.badge) tier.badge = row.badge;
+    return tier;
+  });
+}
 
 // Portrait placeholder imagery — swap for real photography later.
 const PLACEHOLDER_TRAD_INDOOR = assetUrl(traditionalIndoorAsset);
@@ -91,8 +81,8 @@ export const products: Product[] = [
     longDescription:
       "2-person sauna, 200°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_INDOOR,
-    reservationFee: 500,
-    tiers: TRAD_TIERS(500),
+    reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
+    tiers: tiersFor("indoor_outdoor_traditional_latest"),
   },
   {
     slug: "outdoor",
@@ -105,8 +95,8 @@ export const products: Product[] = [
     longDescription:
       "2-person sauna, 200°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
-    reservationFee: 500,
-    tiers: TRAD_TIERS(500),
+    reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
+    tiers: tiersFor("outdoor_traditional_latest"),
   },
   {
     slug: "original-indoor",
@@ -122,8 +112,8 @@ export const products: Product[] = [
     longDescription:
       "1st-gen traditional sauna. 200°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_INDOOR,
-    reservationFee: 500,
-    tiers: ORIGINAL_TIERS,
+    reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
+    tiers: tiersFor("indoor_traditional"),
   },
   {
     slug: "original-outdoor",
@@ -137,8 +127,8 @@ export const products: Product[] = [
     longDescription:
       "1st-gen traditional sauna. 200°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_OUTDOOR,
-    reservationFee: 500,
-    tiers: ORIGINAL_TIERS,
+    reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
+    tiers: tiersFor("outdoor_traditional_original"),
   },
   {
     slug: "indoor",
@@ -151,8 +141,8 @@ export const products: Product[] = [
     longDescription:
       "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_INDOOR,
-    reservationFee: 200,
-    tiers: INFRARED_INDOOR_TIERS,
+    reservationFee: RESERVATION_DEPOSIT_INFRARED,
+    tiers: tiersFor("indoor_infrared"),
   },
   {
     slug: "outdoor",
@@ -165,8 +155,8 @@ export const products: Product[] = [
     longDescription:
       "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_OUTDOOR,
-    reservationFee: 200,
-    tiers: INFRARED_OUTDOOR_TIERS,
+    reservationFee: RESERVATION_DEPOSIT_INFRARED,
+    tiers: tiersFor("outdoor_infrared"),
   },
 ];
 
