@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,10 +66,6 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
   });
 
   const selectedSaunaTypeId = watch("sauna_type_id");
-  const selectedOption = useMemo(
-    () => SAUNA_TYPE_OPTIONS.find((o) => o.id === selectedSaunaTypeId),
-    [selectedSaunaTypeId],
-  );
   const availability = getStatus(selectedSaunaTypeId || null);
 
   const minDate = useMemo(() => {
@@ -187,27 +182,49 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
               </div>
 
               <Field label="Sauna type" error={errors.sauna_type_id?.message}>
-                <Select
-                  value={selectedSaunaTypeId || undefined}
-                  onValueChange={(v) => setValue("sauna_type_id", v, { shouldValidate: true })}
-                >
-                  <SelectTrigger><SelectValue placeholder="Choose a sauna type" /></SelectTrigger>
-                  <SelectContent>
-                    {SAUNA_TYPE_OPTIONS.map((o) => (
-                      <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {selectedOption && (
-                  <a
-                    href={selectedOption.productHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mt-1.5"
-                  >
-                    View Details <ExternalLink size={11} />
-                  </a>
-                )}
+                <div className="grid grid-cols-1 gap-2">
+                  {SAUNA_TYPE_OPTIONS.map((o) => {
+                    const active = selectedSaunaTypeId === o.id;
+                    return (
+                      <div
+                        key={o.id}
+                        role="radio"
+                        aria-checked={active}
+                        tabIndex={0}
+                        onClick={() => setValue("sauna_type_id", o.id, { shouldValidate: true })}
+                        onKeyDown={(e) => {
+                          if (e.key === " " || e.key === "Enter") {
+                            e.preventDefault();
+                            setValue("sauna_type_id", o.id, { shouldValidate: true });
+                          }
+                        }}
+                        className={`flex items-center justify-between gap-3 rounded-md border px-3 py-2.5 cursor-pointer transition-colors ${
+                          active ? "border-primary bg-primary/5" : "border-border hover:bg-muted/40"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span
+                            className={`inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                              active ? "border-primary" : "border-muted-foreground/40"
+                            }`}
+                          >
+                            {active && <span className="h-2 w-2 rounded-full bg-primary" />}
+                          </span>
+                          <span className="text-sm text-foreground truncate">{o.label}</span>
+                        </div>
+                        <a
+                          href={o.productHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+                        >
+                          Details <ExternalLink size={11} />
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
               </Field>
 
               <Field label="Preferred installation date" error={errors.preferred_install_date?.message}>
