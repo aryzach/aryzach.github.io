@@ -17,7 +17,7 @@ import { formatDatePretty } from "@/lib/availability";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { saunaTypeLabel as _saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 
-const WEB3FORMS_ACCESS_KEY = "3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3";
+const WEB3FORMS_ACCESS_KEY = "c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef";
 
 async function notifyWeb3Forms(subject: string, values: FormValues, extra: Record<string, string>) {
   try {
