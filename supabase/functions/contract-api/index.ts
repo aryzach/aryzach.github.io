@@ -8,6 +8,15 @@ import {
   getSaunaTypeInfo,
   getSecurityDeposit,
 } from "../_shared/pricing.ts";
+import { buildSignedContractPdf, sha256Hex } from "../_shared/pdfBuilder.ts";
+
+const ACKNOWLEDGMENTS: { key: string; text: string }[] = [
+  { key: "reviewed_agreement", text: "I have reviewed and agree to the Rental Summary and the Master Agreement." },
+  { key: "commitment_binding", text: "I understand that the Initial Commitment Period is binding and that I am responsible for the rental fees due for the selected term." },
+  { key: "cancellation_terms", text: "I understand the cancellation and pre-delivery cancellation terms." },
+  { key: "safety_terms", text: "I have reviewed and agree to the Safe Operation and Fire Prevention Requirements." },
+  { key: "electronic_signature_consent", text: "I consent to receive, sign, and retain this Agreement electronically, and I intend my typed legal name to serve as my electronic signature." },
+];
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -289,6 +298,169 @@ Deno.serve(async (req) => {
           .eq("id", reservation.id);
 
         return json({ contract, flags });
+      }
+
+      case "sign": {
+        const { contract_id, typed_legal_name, acknowledgments, time_zone } = body ?? {};
+        if (typeof contract_id !== "string" || !contract_id) return json({ error: "Missing contract" }, 400);
+        if (typeof typed_legal_name !== "string" || typed_legal_name.trim().length < 2) {
+          return json({ error: "Please type your full legal name." }, 400);
+        }
+
+        // Load contract and confirm it belongs to this reservation.
+        const { data: contract, error: cErr } = await supabase
+          .from("contracts")
+          .select("*")
+          .eq("id", contract_id)
+          .eq("reservation_id", reservation.id)
+          .maybeSingle();
+        if (cErr) throw cErr;
+        if (!contract) return json({ error: "Contract not found" }, 404);
+        if (contract.status === "Signed") return json({ error: "This agreement has already been signed." }, 400);
+        if (contract.status === "Voided") return json({ error: "This agreement has been voided." }, 400);
+
+        // Require exact match of typed legal name (case-insensitive, trimmed) to prevent silent mismatch.
+        const typed = typed_legal_name.trim();
+        if (typed.toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {
+          return json({
+            error: `Please type your full legal name exactly as shown on the agreement: "${contract.customer_legal_name}".`,
+          }, 400);
+        }
+
+        // Require every acknowledgment to be accepted.
+        const acks = (acknowledgments && typeof acknowledgments === "object") ? acknowledgments : {};
+        for (const a of ACKNOWLEDGMENTS) {
+          if (!acks[a.key]) return json({ error: "Please accept all acknowledgments to continue." }, 400);
+        }
+
+        // Load active master agreement PDF bytes.
+        const { data: version, error: vErr } = await supabase
+          .from("agreement_versions")
+          .select("id, version_name, master_pdf_storage_path")
+          .eq("id", contract.agreement_version_id)
+          .maybeSingle();
+        if (vErr) throw vErr;
+        if (!version) return json({ error: "Master Agreement version missing." }, 500);
+
+        const { data: masterFile, error: dlErr } = await supabase.storage
+          .from("agreement-versions")
+          .download(version.master_pdf_storage_path);
+        if (dlErr || !masterFile) throw dlErr ?? new Error("Could not read Master Agreement PDF");
+        const masterBytes = new Uint8Array(await masterFile.arrayBuffer());
+
+        const signedAt = new Date().toISOString();
+        const ipAddress =
+          req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+          req.headers.get("cf-connecting-ip") ||
+          null;
+        const userAgent = req.headers.get("user-agent") || null;
+        const tz = typeof time_zone === "string" && time_zone ? time_zone : null;
+
+        const ackRecords = ACKNOWLEDGMENTS.map((a) => ({
+          key: a.key,
+          text: a.text,
+          accepted_at: signedAt,
+        }));
+
+        // Build the signed PDF (Rental Summary + Audit + Master Agreement).
+        const pdfBytes = await buildSignedContractPdf({
+          summary: contract.rental_summary_snapshot,
+          audit: {
+            typed_legal_name: typed,
+            signed_at: signedAt,
+            time_zone: tz,
+            ip_address: ipAddress,
+            user_agent: userAgent,
+            agreement_version: version.version_name,
+            reservation_id: reservation.id,
+            contract_id: contract.id,
+            acknowledgments: ackRecords,
+            electronic_consent_confirmed: true,
+          },
+          masterAgreementPdfBytes: masterBytes,
+        });
+
+        const hash = await sha256Hex(pdfBytes);
+        const storagePath = `${reservation.id}/${contract.id}.pdf`;
+
+        const { error: upErr } = await supabase.storage
+          .from("signed-contracts")
+          .upload(storagePath, pdfBytes, { contentType: "application/pdf", upsert: true });
+        if (upErr) throw upErr;
+
+        // Persist signature audit + acknowledgments + contract status.
+        const { error: auditErr } = await supabase.from("contract_signature_audit").insert({
+          contract_id: contract.id,
+          typed_legal_name: typed,
+          signed_at: signedAt,
+          time_zone: tz,
+          ip_address: ipAddress,
+          user_agent: userAgent,
+          agreement_version: version.version_name,
+          reservation_id: reservation.id,
+          signed_pdf_hash: hash,
+          electronic_consent_confirmed: true,
+        });
+        if (auditErr) throw auditErr;
+
+        await supabase.from("contract_acknowledgments").insert(
+          ACKNOWLEDGMENTS.map((a) => ({
+            contract_id: contract.id,
+            acknowledgment_key: a.key,
+            acknowledgment_text: a.text,
+            accepted: true,
+            accepted_at: signedAt,
+          })),
+        );
+
+        const { data: updated, error: updErr } = await supabase
+          .from("contracts")
+          .update({
+            status: "Signed",
+            signed_at: signedAt,
+            signed_pdf_storage_path: storagePath,
+            signed_pdf_hash: hash,
+          })
+          .eq("id", contract.id)
+          .select()
+          .single();
+        if (updErr) throw updErr;
+
+        await supabase.from("contract_events").insert({
+          contract_id: contract.id,
+          event_type: "Contract Signed",
+          actor_type: "customer",
+          event_details: { ip: ipAddress, user_agent: userAgent, time_zone: tz, hash },
+        });
+
+        await supabase
+          .from("reservations")
+          .update({ contract_status: "Complete" })
+          .eq("id", reservation.id);
+
+        // Return a signed URL for immediate download/view.
+        const { data: signed } = await supabase.storage
+          .from("signed-contracts")
+          .createSignedUrl(storagePath, 60 * 10);
+
+        return json({ contract: updated, signed_pdf_url: signed?.signedUrl ?? null, hash });
+      }
+
+      case "signed_pdf_url": {
+        const { contract_id } = body ?? {};
+        if (typeof contract_id !== "string" || !contract_id) return json({ error: "Missing contract" }, 400);
+        const { data: contract } = await supabase
+          .from("contracts")
+          .select("id, signed_pdf_storage_path, reservation_id")
+          .eq("id", contract_id)
+          .eq("reservation_id", reservation.id)
+          .maybeSingle();
+        if (!contract?.signed_pdf_storage_path) return json({ error: "Not available" }, 404);
+        const { data: signed, error: sErr } = await supabase.storage
+          .from("signed-contracts")
+          .createSignedUrl(contract.signed_pdf_storage_path, 60 * 10);
+        if (sErr) throw sErr;
+        return json({ url: signed?.signedUrl ?? null });
       }
 
       default:
