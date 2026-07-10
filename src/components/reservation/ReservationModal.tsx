@@ -15,6 +15,31 @@ import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { useAvailability } from "@/hooks/useAvailability";
 import { formatDatePretty } from "@/lib/availability";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
+import { saunaTypeLabel as _saunaTypeLabel } from "@/lib/reservationSaunaTypes";
+
+const WEB3FORMS_ACCESS_KEY = "3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3";
+
+async function notifyWeb3Forms(subject: string, values: FormValues, extra: Record<string, string>) {
+  try {
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_ACCESS_KEY,
+        subject,
+        name: `${values.first_name} ${values.last_name}`,
+        email: values.email,
+        phone: values.phone,
+        city: values.city,
+        sauna_type: _saunaTypeLabel(values.sauna_type_id),
+        preferred_install_date: values.preferred_install_date,
+        ...extra,
+      }),
+    });
+  } catch (e) {
+    console.error("web3forms notify failed:", e);
+  }
+}
 
 export type ReservationSource =
   | "Pricing Page"
@@ -117,6 +142,10 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
           toast.error("Something went wrong. Please try again.");
           return;
         }
+        void notifyWeb3Forms("New Waitlist Signup — SF Sauna", valid, {
+          type: "Waitlist",
+          reservation_source: source,
+        });
         toast.success("You're on the waitlist. We'll be in touch.");
         onClose();
       } finally {
@@ -148,6 +177,11 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         toast.error("Something went wrong. Please try again.");
         return;
       }
+      void notifyWeb3Forms("New Reservation Request — SF Sauna", valid, {
+        type: "Reservation Request",
+        reservation_source: source,
+        reservation_id: data.id,
+      });
       // Navigate to the private reservation dashboard (magic link page)
       // where the user completes payment and the remaining steps.
       navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
