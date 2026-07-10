@@ -117,7 +117,7 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 500,
+              "minPrice": 400,
               "maxPrice": 1300,
               "unitCode": "MON"
             }
@@ -139,7 +139,7 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 500,
+              "minPrice": 400,
               "maxPrice": 1300,
               "unitCode": "MON"
             }

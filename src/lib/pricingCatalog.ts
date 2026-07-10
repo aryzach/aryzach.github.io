@@ -44,7 +44,7 @@ const TRAD_TIERS = (installShort: number): PricingTier[] => [
   { months: 1, monthly: 1300, installFee: installShort },
   { months: 3, monthly: 700, installFee: installShort },
   { months: 6, monthly: 600, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 500, installFee: 0, badge: "Best Value" },
+  { months: 12, monthly: 400, installFee: 0, badge: "Best Value" },
 ];
 
 const INFRARED_INDOOR_TIERS: PricingTier[] = [
@@ -56,8 +56,8 @@ const INFRARED_INDOOR_TIERS: PricingTier[] = [
 
 const INFRARED_OUTDOOR_TIERS: PricingTier[] = [
   { months: 1, monthly: 600, installFee: 200 },
-  { months: 3, monthly: 400, installFee: 200 },
-  { months: 6, monthly: 300, installFee: 0, badge: "Most Popular" },
+  { months: 3, monthly: 500, installFee: 200 },
+  { months: 6, monthly: 400, installFee: 0, badge: "Most Popular" },
   { months: 12, monthly: 300, installFee: 0, badge: "Best Value" },
 ];
 
