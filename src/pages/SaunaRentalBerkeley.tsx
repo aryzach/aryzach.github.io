@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleReviews from "@/components/GoogleReviews";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import heroImage from "@/assets/sauna-rental-berkeley-backyard.jpeg";
@@ -88,6 +89,7 @@ const faqs = [
 
 const SaunaRentalBerkeley = () => {
   useSEO(seoData.saunaRentalBerkeley);
+  const { open: openReservation } = useReservationModal();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -102,11 +104,9 @@ const SaunaRentalBerkeley = () => {
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
               We deliver plug-in saunas to homes and apartments across Berkeley neighborhoods including North Berkeley, Elmwood, Claremont, Central Berkeley, Westbrae, and more.
             </p>
-            <Link to="/reserve-your-sauna">
-              <Button size="lg" className="mb-12">
-                Check Availability in Berkeley
-              </Button>
-            </Link>
+            <Button size="lg" className="mb-12" onClick={() => openReservation({ source: "Direct Link" })}>
+              Check Availability in Berkeley
+            </Button>
             <div className="relative rounded-lg overflow-hidden">
               <img 
                 src={heroImage} 
@@ -357,11 +357,9 @@ const SaunaRentalBerkeley = () => {
               Ready for your sauna?
             </h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/reserve-your-sauna">
-                <Button size="lg">
-                  Check Availability in Berkeley
-                </Button>
-              </Link>
+              <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
+                Check Availability in Berkeley
+              </Button>
               <Link to="/pricing" className="text-accent hover:text-accent-dark font-medium inline-flex items-center gap-2">
                 View pricing →
               </Link>

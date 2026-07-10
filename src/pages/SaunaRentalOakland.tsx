@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleReviews from "@/components/GoogleReviews";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -69,6 +70,7 @@ const faqs = [
 
 const SaunaRentalOakland = () => {
   useSEO(seoData.saunaRentalOakland);
+  const { open: openReservation } = useReservationModal();
   return (
     <div className="min-h-screen bg-background">
         <Header />
@@ -84,11 +86,9 @@ const SaunaRentalOakland = () => {
                 We deliver plug-in saunas to homes and apartments across Oakland neighborhoods including Rockridge, Temescal, Piedmont Ave, Grand Lake, Montclair, and more.
               </p>
               <div className="mb-12">
-                <Link to="/reserve-your-sauna">
-                  <Button size="lg" className="w-full md:w-auto">
-                    Check Availability in Oakland
-                  </Button>
-                </Link>
+                <Button size="lg" className="w-full md:w-auto" onClick={() => openReservation({ source: "Direct Link" })}>
+                  Check Availability in Oakland
+                </Button>
               </div>
               <div className="rounded-lg overflow-hidden mb-8">
                 <img 
@@ -318,11 +318,9 @@ const SaunaRentalOakland = () => {
                 Ready for your sauna?
               </h2>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link to="/reserve-your-sauna">
-                  <Button size="lg">
-                    Check Availability in Oakland
-                  </Button>
-                </Link>
+                <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
+                  Check Availability in Oakland
+                </Button>
                 <Link to="/pricing" className="text-accent hover:text-accent-dark font-medium">
                   View pricing →
                 </Link>
