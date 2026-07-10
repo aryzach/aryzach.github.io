@@ -185,20 +185,49 @@ export const ReservationsListPanel = ({
   const bulkRelease = () =>
     runBulk("Release", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "release" }),
       "Release {n} holds?");
-  const bulkCopyLinks = () => {
+  const copyToClipboard = async (text: string): Promise<boolean> => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {
+      // fall through to legacy path
+    }
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.left = "0";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const bulkCopyLinks = async () => {
     const targets = filtered.filter((r) => selected.has(r.id));
     if (!targets.length) { toast.error("Nothing selected"); return; }
     const text = targets
       .map((r) => `${r.first_name} ${r.last_name}\t${window.location.origin}/reservation/${r.id}?token=${encodeURIComponent(r.secure_token)}`)
       .join("\n");
-    navigator.clipboard.writeText(text);
-    toast.success(`Copied ${targets.length} links`);
+    const ok = await copyToClipboard(text);
+    if (ok) toast.success(`Copied ${targets.length} links`);
+    else toast.error("Copy blocked. Open in a new tab to copy.");
   };
 
-  const copyLink = (r: Reservation) => {
+  const copyLink = async (r: Reservation) => {
     const url = `${window.location.origin}/reservation/${r.id}?token=${encodeURIComponent(r.secure_token)}`;
-    navigator.clipboard.writeText(url);
-    toast.success("Reservation link copied");
+    const ok = await copyToClipboard(url);
+    if (ok) toast.success("Reservation link copied");
+    else toast.error("Copy blocked. Open in a new tab to copy.");
   };
 
   const rowValues = (r: Reservation): Record<ColKey, string> => ({
