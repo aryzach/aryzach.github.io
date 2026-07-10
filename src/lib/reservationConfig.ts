@@ -1,39 +1,71 @@
-// Placeholder external URLs for reservation flow.
-// Replace with real Stripe Payment Link and Cal.com scheduling URLs when live.
-export const RESERVATION_STRIPE_PAYMENT_LINK = "RESERVATION_STRIPE_PAYMENT_LINK";
-export const CALCOM_VIDEO_CONSULT_LINK = "https://cal.com/sfsaunarental/sf-sauna-video-consultation?overlayCalendar=true";
-export const CALCOM_INSTALLATION_LINK = "https://cal.com/sfsaunarental/sf-sauna-delivery-installation?overlayCalendar=true";
+// External URLs for the reservation flow.
+import { supabase } from "@/integrations/supabase/client";
 
-// Stripe payment links, split by sauna family.
-export const RESERVATION_STRIPE_LINK_INFRARED =
-  "https://buy.stripe.com/4gMeVd5XNfZQ3Oc2Tp6Vq1G";
-export const RESERVATION_STRIPE_LINK_TRADITIONAL =
-  "https://buy.stripe.com/dRm14ngCr4h85WkeC76Vq1I";
+export const CALCOM_VIDEO_CONSULT_LINK =
+  "https://cal.com/sfsaunarental/sf-sauna-video-consultation?overlayCalendar=true";
+export const CALCOM_INSTALLATION_LINK =
+  "https://cal.com/sfsaunarental/sf-sauna-delivery-installation?overlayCalendar=true";
 
-export function isInfraredSaunaTypeId(id: string | null | undefined): boolean {
-  return !!id && id.includes("infrared");
+// The reservation deposit is standardized at $200 for every sauna type.
+export const RESERVATION_DEPOSIT_USD = 200;
+
+// Fallback link used only if the app_config lookup fails.
+const FALLBACK_TEST_LINK = "https://buy.stripe.com/4gMeVd5XNfZQ3Oc2Tp6Vq1G";
+
+let cachedLink: string | null = null;
+let cachedMode: "test" | "live" | null = null;
+
+export interface StripeReservationConfig {
+  mode: "test" | "live";
+  baseLink: string;
 }
 
-export function reservationDepositForSaunaType(id: string | null | undefined): {
+/** Load the active Stripe reservation payment link + mode from app_config. */
+export async function getStripeReservationConfig(): Promise<StripeReservationConfig> {
+  if (cachedLink && cachedMode) return { mode: cachedMode, baseLink: cachedLink };
+  const { data } = await supabase
+    .from("app_config" as any)
+    .select("key,value")
+    .in("key", [
+      "stripe_mode",
+      "stripe_test_reservation_payment_link",
+      "stripe_live_reservation_payment_link",
+    ]);
+  const map = new Map<string, string>(
+    ((data as any[]) ?? []).map((r) => [r.key as string, r.value as string]),
+  );
+  const mode = (map.get("stripe_mode") === "live" ? "live" : "test") as "test" | "live";
+  const link =
+    (mode === "live"
+      ? map.get("stripe_live_reservation_payment_link")
+      : map.get("stripe_test_reservation_payment_link")) || FALLBACK_TEST_LINK;
+  cachedLink = link;
+  cachedMode = mode;
+  return { mode, baseLink: link };
+}
+
+/** Append client_reference_id + optional prefilled_email to a Stripe Payment Link. */
+export function buildStripeCheckoutUrl(
+  baseLink: string,
+  reservationId: string,
+  email?: string | null,
+): string {
+  const params = new URLSearchParams();
+  params.set("client_reference_id", reservationId);
+  if (email) params.set("prefilled_email", email);
+  const sep = baseLink.includes("?") ? "&" : "?";
+  return `${baseLink}${sep}${params.toString()}`;
+}
+
+/** Legacy call-site convenience — always returns the standardized $200 deposit. */
+export function reservationDepositForSaunaType(_id: string | null | undefined): {
   amount: number;
-  stripeLink: string;
 } {
-  if (isInfraredSaunaTypeId(id)) {
-    return { amount: 200, stripeLink: RESERVATION_STRIPE_LINK_INFRARED };
-  }
-  return { amount: 500, stripeLink: RESERVATION_STRIPE_LINK_TRADITIONAL };
+  return { amount: RESERVATION_DEPOSIT_USD };
 }
 
-// Kept for backward-compat imports; both resolve to the single reservation link.
-export const INFRARED_STRIPE_PAYMENT_LINK = RESERVATION_STRIPE_PAYMENT_LINK;
-export const TRADITIONAL_STRIPE_PAYMENT_LINK = RESERVATION_STRIPE_PAYMENT_LINK;
-
+// Legacy exports kept so any stray imports resolve.
+export const RESERVATION_STRIPE_PAYMENT_LINK = FALLBACK_TEST_LINK;
 export function resolveStripeLink(_url: string): string {
-  return RESERVATION_STRIPE_PAYMENT_LINK;
-}
-
-export function buildStripeCheckoutUrl(reservationId: string): string {
-  const base = RESERVATION_STRIPE_PAYMENT_LINK;
-  const sep = base.includes("?") ? "&" : "?";
-  return `${base}${sep}client_reference_id=${encodeURIComponent(reservationId)}`;
+  return FALLBACK_TEST_LINK;
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -12,7 +12,9 @@ import { useSEO } from "@/hooks/useSEO";
 import {
   CALCOM_VIDEO_CONSULT_LINK,
   CALCOM_INSTALLATION_LINK,
-  reservationDepositForSaunaType,
+  RESERVATION_DEPOSIT_USD,
+  buildStripeCheckoutUrl,
+  getStripeReservationConfig,
 } from "@/lib/reservationConfig";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
@@ -52,6 +54,8 @@ const ReservationDashboard = () => {
   const [idPhoto, setIdPhoto] = useState<{ url: string; name: string } | null>(null);
   const [agreementOpen, setAgreementOpen] = useState(false);
   const [contractStatus, setContractStatus] = useState<string | null>(null);
+  const [stripeBaseLink, setStripeBaseLink] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -74,6 +78,11 @@ const ReservationDashboard = () => {
 
   useEffect(() => { load(); }, [load]);
 
+  // Load the active Stripe payment link once.
+  useEffect(() => {
+    getStripeReservationConfig().then((c) => setStripeBaseLink(c.baseLink)).catch(() => {});
+  }, []);
+
   // Load contract status from contract-api so the dashboard row reflects
   // the current contract regardless of the reservation.contract_status field.
   const loadContract = useCallback(async () => {
@@ -88,11 +97,30 @@ const ReservationDashboard = () => {
 
   useEffect(() => { loadContract(); }, [loadContract]);
 
-  // Auto-refresh once when returning (in case payment just completed).
+  // Poll for payment completion every 8s (up to ~10 minutes) while unpaid.
   useEffect(() => {
-    const t = setTimeout(() => { load(); }, 4000);
-    return () => clearTimeout(t);
-  }, [load]);
+    if (!reservation) return;
+    if (reservation.payment_status === "Paid") return;
+    const started = Date.now();
+    const interval = window.setInterval(() => {
+      if (Date.now() - started > 10 * 60 * 1000) {
+        window.clearInterval(interval);
+        return;
+      }
+      load();
+    }, 8000);
+    return () => window.clearInterval(interval);
+  }, [reservation, load]);
+
+  const manualRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await load();
+      await loadContract();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [load, loadContract]);
 
   const copyLink = async () => {
     try {
@@ -139,12 +167,16 @@ const ReservationDashboard = () => {
 
   const paid = reservation?.payment_status === "Paid";
   const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
-  const deposit = reservation
-    ? reservationDepositForSaunaType(reservation.sauna_type_id)
+  const stripeHref = useMemo(() => {
+    if (!reservation || !stripeBaseLink) return "#";
+    return buildStripeCheckoutUrl(stripeBaseLink, reservation.id, reservation.email);
+  }, [reservation, stripeBaseLink]);
+  const holdDeadlinePretty = reservation?.hold_deadline
+    ? new Date(reservation.hold_deadline).toLocaleString(undefined, {
+        dateStyle: "long",
+        timeStyle: "short",
+      })
     : null;
-  const stripeHref = reservation && deposit
-    ? `${deposit.stripeLink}${deposit.stripeLink.includes("?") ? "&" : "?"}client_reference_id=${encodeURIComponent(reservation.id)}`
-    : "#";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -175,6 +207,24 @@ const ReservationDashboard = () => {
                   : "Complete all steps on this page to complete your reservation."}
               </p>
 
+              {!paid && (
+                <p className="text-sm text-muted-foreground mb-4">
+                  Complete your $200 reservation payment to activate your temporary sauna hold.
+                </p>
+              )}
+              {paid && holdDeadlinePretty && (
+                <p className="text-sm text-foreground mb-4">
+                  Your sauna is temporarily held. Hold deadline:{" "}
+                  <span className="font-medium">{holdDeadlinePretty}</span>.
+                </p>
+              )}
+              {paid && reservation?.reservation_status === "Needs Manual Review" && (
+                <p className="text-sm text-foreground mb-4">
+                  We received your $200 reservation payment and are confirming availability for
+                  your requested installation date.
+                </p>
+              )}
+
               <Card className="mb-4">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-medium text-muted-foreground">
@@ -199,7 +249,7 @@ const ReservationDashboard = () => {
                 <CardContent className="space-y-2">
                   <StepRow
                     done={paid}
-                    label={`Pay $${deposit?.amount ?? 0} reservation deposit`}
+                    label={`Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`}
                     sublabel={
                       !paid
                         ? "Deposit applied to lease payments. We will confirm receipt within 24 hours."
@@ -207,7 +257,7 @@ const ReservationDashboard = () => {
                     }
                     action={
                       !paid ? (
-                        <Button asChild size="sm">
+                        <Button asChild size="sm" disabled={!stripeBaseLink}>
                           <a href={stripeHref} target="_blank" rel="noopener noreferrer">
                             Pay <ExternalLink className="ml-1.5" size={14} />
                           </a>
@@ -325,6 +375,20 @@ const ReservationDashboard = () => {
 
               <Button variant="outline" className="w-full" onClick={copyLink}>
                 <Copy className="mr-2" size={16} /> Copy Reservation Link
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full mt-2"
+                onClick={manualRefresh}
+                disabled={refreshing}
+              >
+                {refreshing ? (
+                  <Loader2 className="mr-2 animate-spin" size={14} />
+                ) : (
+                  <RefreshCw className="mr-2" size={14} />
+                )}
+                Refresh Status
               </Button>
               <p className="text-xs text-muted-foreground text-center mt-2">
                 Save this private reservation link.
