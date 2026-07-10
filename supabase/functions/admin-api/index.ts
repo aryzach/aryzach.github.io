@@ -105,6 +105,10 @@ Deno.serve(async (req) => {
             update = { consult_status: "Complete" };
             push("Video Consultation Complete", "Admin marked consultation complete.");
             break;
+          case "mark_consult_scheduled":
+            update = { consult_status: "Scheduled" };
+            push("Video Consultation Scheduled", "Admin marked consultation scheduled.");
+            break;
           case "mark_contract":
             update = { contract_status: "Complete" };
             push("Contract Completed", "Admin marked rental agreement complete.");
