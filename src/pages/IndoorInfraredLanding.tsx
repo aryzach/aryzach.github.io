@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { Check, Thermometer, Users, Zap, Clock, Shield } from "lucide-react";
 import lindseyLivingRoom from "@/assets/lindsey-sauna-living-room.png";
 import indoorInfraredImg from "@/assets/indoorinfrared.png";
