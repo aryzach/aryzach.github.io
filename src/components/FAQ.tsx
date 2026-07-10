@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const faqs = [
   {
     question: "What's the difference between infrared and steam saunas?",
-    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 160–194°F for a more classic feel.",
+    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 160–200°F for a more classic feel.",
   },
   {
     question: "What power do they need? Will this overload my apartment?",
@@ -25,15 +25,15 @@ const faqs = [
   },
   {
     question: "How long does setup take?",
-    answer: "About 1–2 hours. We position it, plug it in, test it, and walk you through everything.",
+    answer: "Plan for 3 hours. We position it, plug it in, test it, and walk you through everything.",
   },
   {
     question: "How long does it take to heat up?",
-    answer: "Infrared reaches ~150°F in ~30-40 minutes. Steam saunas hit 160–194°F in 20–60 minutes depending on the heaters you choose.",
+    answer: "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 170–200°F in 40–60 minutes.",
   },
   {
     question: "Do I need to leave it running?",
-    answer: "No. Just turn it on 20–60 minutes before using. Most people heat it once a day for about an hour.",
+    answer: "No. Just turn it on 30–60 minutes before using. Most people heat it once a day for about an hour.",
   },
   {
     question: "Is this landlord-friendly?",
@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     question: "Can I buy out the sauna later?",
-    answer: "Yes.\n\nAfter your lease term, you can purchase the unit with 30% of your rental payments credited.\n\nHere is our pricing structure (tax exclusive):\n• Indoor infrared sauna: $2,399\n• Outdoor infrared sauna: $2,978\n• Indoor steam sauna: $7,499\n• Outdoor steam sauna: $8,299",
+    answer: "Yes, at the end of your lease, 50% of rental payment can be applied toward the purchase of your sauna.",
   },
   {
     question: "Who handles maintenance?",
