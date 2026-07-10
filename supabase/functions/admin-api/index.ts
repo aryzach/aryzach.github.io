@@ -311,6 +311,103 @@ Deno.serve(async (req) => {
         return json({ entry: data });
       }
 
+      // ============================================================
+      // Agreement Versions
+      // ============================================================
+      case "list_agreement_versions": {
+        const { data, error } = await supabase
+          .from("agreement_versions")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return json({ versions: data });
+      }
+
+      case "upload_agreement_version": {
+        const { version_name, description, file_name, content_type, file_base64 } = payload;
+        if (!version_name || !file_name || !file_base64) {
+          return json({ error: "version_name, file_name, and file_base64 are required" }, 400);
+        }
+        if ((content_type || "application/pdf") !== "application/pdf") {
+          return json({ error: "Master Agreement must be a PDF" }, 400);
+        }
+        // Decode base64 (accept data-URL prefix too)
+        const b64 = String(file_base64).includes(",")
+          ? String(file_base64).split(",")[1]
+          : String(file_base64);
+        const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+
+        const safeName = String(file_name).replace(/[^A-Za-z0-9._-]/g, "_");
+        const path = `${crypto.randomUUID()}/${safeName}`;
+
+        const { error: upErr } = await supabase.storage
+          .from("agreement-versions")
+          .upload(path, bytes, { contentType: "application/pdf", upsert: false });
+        if (upErr) throw upErr;
+
+        const { data, error } = await supabase
+          .from("agreement_versions")
+          .insert({
+            version_name: String(version_name).trim(),
+            description: description ? String(description).trim() : null,
+            master_pdf_storage_path: path,
+            is_active: false,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return json({ version: data });
+      }
+
+      case "set_active_agreement_version": {
+        const { id } = payload;
+        if (!id) return json({ error: "id is required" }, 400);
+        // Deactivate current active first (unique partial index enforces only one).
+        await supabase
+          .from("agreement_versions")
+          .update({ is_active: false, archived_at: new Date().toISOString() })
+          .eq("is_active", true)
+          .neq("id", id);
+        const { data, error } = await supabase
+          .from("agreement_versions")
+          .update({ is_active: true, archived_at: null })
+          .eq("id", id)
+          .select()
+          .single();
+        if (error) throw error;
+        return json({ version: data });
+      }
+
+      case "archive_agreement_version": {
+        const { id } = payload;
+        if (!id) return json({ error: "id is required" }, 400);
+        const { data, error } = await supabase
+          .from("agreement_versions")
+          .update({ is_active: false, archived_at: new Date().toISOString() })
+          .eq("id", id)
+          .select()
+          .single();
+        if (error) throw error;
+        return json({ version: data });
+      }
+
+      case "agreement_version_download_url": {
+        const { id } = payload;
+        if (!id) return json({ error: "id is required" }, 400);
+        const { data: v, error: vErr } = await supabase
+          .from("agreement_versions")
+          .select("master_pdf_storage_path, version_name")
+          .eq("id", id)
+          .maybeSingle();
+        if (vErr) throw vErr;
+        if (!v) return json({ error: "Not found" }, 404);
+        const { data: signed, error: sErr } = await supabase.storage
+          .from("agreement-versions")
+          .createSignedUrl(v.master_pdf_storage_path, 60 * 10);
+        if (sErr) throw sErr;
+        return json({ url: signed.signedUrl });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
