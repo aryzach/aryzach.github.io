@@ -83,6 +83,11 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
   }, [minDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = async (intent: "reserve" | "consult") => {
+    if (intent === "consult") {
+      window.open(CALCOM_VIDEO_CONSULT_LINK, "_blank", "noopener,noreferrer");
+      setConsultSuccess(true);
+      return;
+    }
     const valid = await new Promise<FormValues | null>((resolve) => {
       handleSubmit(
         (v) => resolve(v),
@@ -118,17 +123,11 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         toast.error("Something went wrong. Please try again.");
         return;
       }
-
-      if (intent === "reserve") {
-        // Open Stripe checkout in a new tab, then redirect the current tab
-        // to the private reservation dashboard.
-        window.open(buildStripeCheckoutUrl(data.id), "_blank", "noopener,noreferrer");
-        navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
-        onClose();
-      } else {
-        window.open(CALCOM_VIDEO_CONSULT_LINK, "_blank", "noopener,noreferrer");
-        setConsultSuccess(true);
-      }
+      // Open Stripe checkout in a new tab, then redirect the current tab
+      // to the private reservation dashboard.
+      window.open(buildStripeCheckoutUrl(data.id), "_blank", "noopener,noreferrer");
+      navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
+      onClose();
     } finally {
       setSubmitting(null);
     }
