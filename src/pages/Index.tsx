@@ -151,10 +151,10 @@ const Index = () => {
           "mainEntity": [
             {
               "@type": "Question",
-               "name": "What's the difference between infrared and steam saunas?",
+               "name": "What's the difference between infrared and traditional saunas?",
                "acceptedAnswer": {
                  "@type": "Answer",
-                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Steam saunas heat the air with a traditional heater and rocks, running 160–194°F for a more classic feel."
+                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 160–200°F for a more classic feel."
               }
             },
             {
@@ -194,7 +194,7 @@ const Index = () => {
               "name": "How long does setup take?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "About 1–2 hours. We position it, plug it in, test it, and walk you through everything."
+                "text": "Plan for 3 hours. We position it, plug it in, test it, and walk you through everything."
               }
             },
             {
@@ -202,7 +202,7 @@ const Index = () => {
               "name": "How long does it take to heat up?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Infrared reaches ~150°F in ~30-40 minutes. Steam saunas hit 160–194°F in 20–60 minutes depending on the heaters you choose."
+                "text": "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 170–200°F in 40–60 minutes."
               }
             },
             {
@@ -210,7 +210,7 @@ const Index = () => {
               "name": "Do I need to leave it running?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "No. Just turn it on 20–60 minutes before using. Most people heat it once a day for about an hour."
+                "text": "No. Just turn it on 30–60 minutes before using. Most people heat it once a day for about an hour."
               }
             },
             {
@@ -258,7 +258,7 @@ const Index = () => {
               "name": "Can I buy out the sauna later?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                 "text": "Yes. After your lease term, you can purchase the unit with 30% of your rental payments credited. Infrared pricing follows retail listings; steam saunas are Indoor $6,499 and Outdoor $8,499 (+$459 if you have the extra heater)."
+                 "text": "Yes, at the end of your lease, 50% of rental payment can be applied toward the purchase of your sauna."
               }
             },
             {
