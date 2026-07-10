@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 
 const ReserveCTA = () => {
+  const { open } = useReservationModal();
   return (
     <section className="py-16 md:py-24 bg-primary">
       <div className="container mx-auto px-4 text-center">
@@ -12,11 +13,14 @@ const ReserveCTA = () => {
         <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
           Join the many San Franciscans enjoying daily heat therapy at home
         </p>
-        <Button asChild size="lg" variant="outline" className="text-lg px-8 border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-          <Link to="/reserve-your-sauna">
-            Reserve Your Sauna Now
-            <ArrowRight className="ml-2" size={20} />
-          </Link>
+        <Button
+          size="lg"
+          variant="outline"
+          onClick={() => open({ source: "Pricing Page" })}
+          className="text-lg px-8 border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+        >
+          Reserve Your Sauna Now
+          <ArrowRight className="ml-2" size={20} />
         </Button>
       </div>
     </section>
