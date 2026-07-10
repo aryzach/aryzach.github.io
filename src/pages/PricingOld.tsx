@@ -5,6 +5,7 @@ import InstallationRequirements from "@/components/InstallationRequirements";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import thermometerIcon from "@/assets/thermometer.svg";
 import peopleIcon from "@/assets/2-people.svg";
 import saunaIcon from "@/assets/sauna.svg";
@@ -76,6 +77,7 @@ const commonFeatures = [
 
 const Pricing = () => {
   useSEO(seoData.pricing);
+  const { open: openReservation } = useReservationModal();
   
   return (
     <div className="min-h-screen">
@@ -182,11 +184,12 @@ const Pricing = () => {
                           </div>
                         </div>
 
-                        <Link to="/reserve-your-sauna">
-                          <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                            Check Availability
-                          </Button>
-                        </Link>
+                        <Button
+                          className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                          onClick={() => openReservation({ source: "Pricing Page" })}
+                        >
+                          Check Availability
+                        </Button>
                       </div>
                     ))}
                   </div>
