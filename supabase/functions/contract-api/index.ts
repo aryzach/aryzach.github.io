@@ -84,9 +84,17 @@ Deno.serve(async (req) => {
         // Active master agreement version (for prefill / display)
         const { data: activeVersion } = await supabase
           .from("agreement_versions")
-          .select("id, version_name")
+          .select("id, version_name, master_pdf_storage_path")
           .eq("is_active", true)
           .maybeSingle();
+
+        let masterAgreementUrl: string | null = null;
+        if (activeVersion?.master_pdf_storage_path) {
+          const { data: signed } = await supabase.storage
+            .from("agreement-versions")
+            .createSignedUrl(activeVersion.master_pdf_storage_path, 60 * 10);
+          masterAgreementUrl = signed?.signedUrl ?? null;
+        }
 
         return json({
           reservation: {
@@ -102,7 +110,10 @@ Deno.serve(async (req) => {
           },
           contract: current,
           voided_contracts: list.filter((c: any) => c.status === "Voided"),
-          active_agreement_version: activeVersion,
+          active_agreement_version: activeVersion
+            ? { id: activeVersion.id, version_name: activeVersion.version_name }
+            : null,
+          master_agreement_url: masterAgreementUrl,
         });
       }
 
@@ -112,6 +123,7 @@ Deno.serve(async (req) => {
           phone,
           email,
           installation_address,
+          installation_city,
           sauna_type,
           commitment_months,
           insurance_selected,
@@ -129,6 +141,9 @@ Deno.serve(async (req) => {
         if (typeof installation_address !== "string" || installation_address.trim().length < 5) {
           return json({ error: "Please enter your installation address." }, 400);
         }
+        if (typeof installation_city !== "string" || installation_city.trim().length < 2) {
+          return json({ error: "Please enter your installation city." }, 400);
+        }
         const saunaInfo = getSaunaTypeInfo(String(sauna_type ?? ""));
         if (!saunaInfo) return json({ error: "Please choose a sauna type." }, 400);
         const months = Number(commitment_months);
@@ -141,7 +156,10 @@ Deno.serve(async (req) => {
 
         const monthlyPrice = getMonthlyPrice(saunaInfo.id, months);
         if (monthlyPrice == null) return json({ error: "No pricing available for that selection." }, 400);
-        const deliveryFee = getDeliveryFee(installation_address);
+        const streetAddress = installation_address.trim();
+        const city = installation_city.trim();
+        const combinedAddress = `${streetAddress}, ${city}`;
+        const deliveryFee = getDeliveryFee(city) === 0 ? 0 : getDeliveryFee(combinedAddress);
         const securityDeposit = getSecurityDeposit(saunaInfo.id);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
@@ -179,7 +197,9 @@ Deno.serve(async (req) => {
           customer_legal_name: customer_legal_name.trim(),
           phone: (phone ?? "").toString().trim() || null,
           email: email.trim(),
-          installation_address: installation_address.trim(),
+          installation_address: combinedAddress,
+          installation_street: streetAddress,
+          installation_city: city,
           sauna_type: saunaInfo.label,
           sauna_type_id: saunaInfo.id,
           placement: saunaInfo.placement,
@@ -201,7 +221,7 @@ Deno.serve(async (req) => {
           customer_legal_name: customer_legal_name.trim(),
           phone: (phone ?? "").toString().trim() || null,
           email: email.trim(),
-          installation_address: installation_address.trim(),
+          installation_address: combinedAddress,
           sauna_type: saunaInfo.label,
           placement: saunaInfo.placement,
           commitment_months: months,

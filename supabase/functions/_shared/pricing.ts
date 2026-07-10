@@ -65,6 +65,16 @@ export function isSanFranciscoAddress(address: string | null | undefined): boole
   return false;
 }
 
-export function getDeliveryFee(address: string | null | undefined): number {
-  return isSanFranciscoAddress(address) ? 0 : 150;
+export function isSanFranciscoCity(city: string | null | undefined): boolean {
+  if (!city) return false;
+  const s = city.trim().toLowerCase();
+  if (!s) return false;
+  if (s === "sf" || s === "s.f." || s === "s.f") return true;
+  if (/san\s*francisco/.test(s)) return true;
+  return false;
+}
+
+export function getDeliveryFee(cityOrAddress: string | null | undefined): number {
+  if (isSanFranciscoCity(cityOrAddress)) return 0;
+  return isSanFranciscoAddress(cityOrAddress) ? 0 : 150;
 }
