@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ const neighborhoods = [
 
 const SaunaRentalSanFrancisco = () => {
   useSEO(seoData.saunaRentalSanFrancisco);
+  const { open: openReservation } = useReservationModal();
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";
@@ -57,8 +59,8 @@ const SaunaRentalSanFrancisco = () => {
             <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
               We deliver plug-in saunas to homes and apartments across San Francisco neighborhoods including Noe Valley, Inner Sunset, Richmond, Hayes Valley, Bernal Heights, Russian Hill, and more.
             </p>
-            <Button asChild size="lg" className="text-lg px-8">
-              <Link to="/reserve-your-sauna">Check Availability in San Francisco</Link>
+            <Button size="lg" className="text-lg px-8" onClick={() => openReservation({ source: "Direct Link" })}>
+              Check Availability in San Francisco
             </Button>
           </div>
           
@@ -380,8 +382,8 @@ const SaunaRentalSanFrancisco = () => {
               Ready for your sauna?
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="text-lg px-8">
-                <Link to="/reserve-your-sauna">Check Availability in San Francisco</Link>
+              <Button size="lg" className="text-lg px-8" onClick={() => openReservation({ source: "Direct Link" })}>
+                Check Availability in San Francisco
               </Button>
               <Link to="/pricing" className="text-accent hover:text-accent-dark font-medium text-lg">
                 View pricing →
