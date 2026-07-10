@@ -8,7 +8,7 @@ const Packages = () => {
       <div className="container mx-auto px-4">
         <div className="text-center">
           <h2 className="text-3xl md:text-5xl font-semibold mb-8 text-foreground">
-            At-home sauna from $199/mo
+            At-home sauna from $200/mo
           </h2>
           <Link to="/pricing">
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">

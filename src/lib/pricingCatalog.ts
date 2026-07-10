@@ -41,33 +41,33 @@ export interface Product {
 }
 
 const TRAD_TIERS = (installShort: number): PricingTier[] => [
-  { months: 1, monthly: 1199, installFee: installShort },
-  { months: 3, monthly: 599, installFee: installShort },
-  { months: 6, monthly: 499, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 399, installFee: 0, badge: "Best Value" },
+  { months: 1, monthly: 1300, installFee: installShort },
+  { months: 3, monthly: 700, installFee: installShort },
+  { months: 6, monthly: 600, installFee: 0, badge: "Most Popular" },
+  { months: 12, monthly: 500, installFee: 0, badge: "Best Value" },
 ];
 
 const INFRARED_INDOOR_TIERS: PricingTier[] = [
-  { months: 1, monthly: 549, installFee: 200 },
-  { months: 3, monthly: 399, installFee: 200 },
-  { months: 6, monthly: 299, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 199, installFee: 0, badge: "Best Value" },
+  { months: 1, monthly: 500, installFee: 200 },
+  { months: 3, monthly: 400, installFee: 200 },
+  { months: 6, monthly: 300, installFee: 0, badge: "Most Popular" },
+  { months: 12, monthly: 200, installFee: 0, badge: "Best Value" },
 ];
 
 const INFRARED_OUTDOOR_TIERS: PricingTier[] = [
-  { months: 1, monthly: 599, installFee: 200 },
-  { months: 3, monthly: 399, installFee: 200 },
-  { months: 6, monthly: 349, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 299, installFee: 0, badge: "Best Value" },
+  { months: 1, monthly: 600, installFee: 200 },
+  { months: 3, monthly: 400, installFee: 200 },
+  { months: 6, monthly: 300, installFee: 0, badge: "Most Popular" },
+  { months: 12, monthly: 300, installFee: 0, badge: "Best Value" },
 ];
 
 // Original Collection (older-generation, converted from infrared) uses
 // the lower Original Collection pricing.
 const ORIGINAL_TIERS: PricingTier[] = [
-  { months: 1, monthly: 899, installFee: 500 },
-  { months: 3, monthly: 499, installFee: 500 },
-  { months: 6, monthly: 399, installFee: 0, badge: "Most Popular" },
-  { months: 12, monthly: 299, installFee: 0, badge: "Best Value" },
+  { months: 1, monthly: 900, installFee: 500 },
+  { months: 3, monthly: 500, installFee: 500 },
+  { months: 6, monthly: 400, installFee: 0, badge: "Most Popular" },
+  { months: 12, monthly: 300, installFee: 0, badge: "Best Value" },
 ];
 
 // Portrait placeholder imagery — swap for real photography later.

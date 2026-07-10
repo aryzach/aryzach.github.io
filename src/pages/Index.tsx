@@ -73,8 +73,8 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 199,
-              "maxPrice": 679,
+              "minPrice": 200,
+              "maxPrice": 1300,
               "unitCode": "MON"
             }
           }
@@ -95,8 +95,8 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 259,
-              "maxPrice": 679,
+              "minPrice": 300,
+              "maxPrice": 1300,
               "unitCode": "MON"
             }
           }
@@ -117,8 +117,8 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 299,
-              "maxPrice": 679,
+              "minPrice": 500,
+              "maxPrice": 1300,
               "unitCode": "MON"
             }
           }
@@ -139,8 +139,8 @@ const Index = () => {
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 299,
-              "maxPrice": 679,
+              "minPrice": 500,
+              "maxPrice": 1300,
               "unitCode": "MON"
             }
           }
