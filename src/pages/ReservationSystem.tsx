@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { rowToStatus, formatDatePretty, type PublicAvailabilityRow } from "@/lib/availability";
-import ReservationDialog from "@/components/reservation/ReservationDialog";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
 
 interface SaunaType {
@@ -31,7 +31,7 @@ const ReservationSystem = () => {
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [availability, setAvailability] = useState<PublicAvailabilityRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<SaunaType | null>(null);
+  const { open: openReservation } = useReservationModal();
 
   useEffect(() => {
     (async () => {
@@ -108,7 +108,7 @@ const ReservationSystem = () => {
 
                       <Button
                         className="mt-auto"
-                        onClick={() => setSelected(t)}
+                        onClick={() => openReservation({ saunaTypeId: t.id, source: "Pricing Page" })}
                         disabled={avail.status === "unavailable"}
                       >
                         Reserve
@@ -122,14 +122,6 @@ const ReservationSystem = () => {
         </div>
       </main>
       <Footer />
-
-      {selected && (
-        <ReservationDialog
-          saunaType={selected}
-          availability={availabilityFor(selected.id)}
-          onClose={() => setSelected(null)}
-        />
-      )}
     </div>
   );
 };
