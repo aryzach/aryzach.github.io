@@ -14,6 +14,292 @@ export type Database = {
   }
   public: {
     Tables: {
+      agreement_versions: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          master_pdf_storage_path: string
+          updated_at: string
+          version_name: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          master_pdf_storage_path: string
+          updated_at?: string
+          version_name: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          master_pdf_storage_path?: string
+          updated_at?: string
+          version_name?: string
+        }
+        Relationships: []
+      }
+      contract_acknowledgments: {
+        Row: {
+          accepted: boolean
+          accepted_at: string | null
+          acknowledgment_key: string
+          acknowledgment_text: string
+          contract_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          accepted?: boolean
+          accepted_at?: string | null
+          acknowledgment_key: string
+          acknowledgment_text: string
+          contract_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          accepted?: boolean
+          accepted_at?: string | null
+          acknowledgment_key?: string
+          acknowledgment_text?: string
+          contract_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_acknowledgments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_events: {
+        Row: {
+          actor_type: string
+          contract_id: string
+          created_at: string
+          event_details: Json
+          event_type: string
+          id: string
+        }
+        Insert: {
+          actor_type?: string
+          contract_id: string
+          created_at?: string
+          event_details?: Json
+          event_type: string
+          id?: string
+        }
+        Update: {
+          actor_type?: string
+          contract_id?: string
+          created_at?: string
+          event_details?: Json
+          event_type?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_events_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_signature_audit: {
+        Row: {
+          agreement_version: string
+          contract_id: string
+          created_at: string
+          electronic_consent_confirmed: boolean
+          id: string
+          ip_address: string | null
+          reservation_id: string
+          signed_at: string
+          signed_pdf_hash: string
+          time_zone: string | null
+          typed_legal_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          agreement_version: string
+          contract_id: string
+          created_at?: string
+          electronic_consent_confirmed?: boolean
+          id?: string
+          ip_address?: string | null
+          reservation_id: string
+          signed_at?: string
+          signed_pdf_hash: string
+          time_zone?: string | null
+          typed_legal_name: string
+          user_agent?: string | null
+        }
+        Update: {
+          agreement_version?: string
+          contract_id?: string
+          created_at?: string
+          electronic_consent_confirmed?: boolean
+          id?: string
+          ip_address?: string | null
+          reservation_id?: string
+          signed_at?: string
+          signed_pdf_hash?: string
+          time_zone?: string | null
+          typed_legal_name?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_signature_audit_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          admin_overrides: Json
+          agreement_version_id: string
+          commitment_months: number
+          created_at: string
+          customer_legal_name: string
+          delivery_fee: number
+          email: string
+          generated_at: string | null
+          id: string
+          installation_address: string | null
+          insurance_monthly_price: number
+          insurance_selected: boolean
+          monthly_price: number
+          phone: string | null
+          placement: string
+          preferred_installation_date: string | null
+          pricing_snapshot: Json
+          rental_summary_snapshot: Json
+          replaces_contract_id: string | null
+          reservation_id: string
+          sauna_type: string
+          second_heater_monthly_price: number
+          second_heater_selected: boolean
+          security_deposit: number
+          signed_at: string | null
+          signed_pdf_hash: string | null
+          signed_pdf_storage_path: string | null
+          stair_elevator_charge: number | null
+          status: string
+          updated_at: string
+          void_reason: string | null
+          voided_at: string | null
+        }
+        Insert: {
+          admin_overrides?: Json
+          agreement_version_id: string
+          commitment_months: number
+          created_at?: string
+          customer_legal_name: string
+          delivery_fee: number
+          email: string
+          generated_at?: string | null
+          id?: string
+          installation_address?: string | null
+          insurance_monthly_price?: number
+          insurance_selected?: boolean
+          monthly_price: number
+          phone?: string | null
+          placement: string
+          preferred_installation_date?: string | null
+          pricing_snapshot?: Json
+          rental_summary_snapshot?: Json
+          replaces_contract_id?: string | null
+          reservation_id: string
+          sauna_type: string
+          second_heater_monthly_price?: number
+          second_heater_selected?: boolean
+          security_deposit: number
+          signed_at?: string | null
+          signed_pdf_hash?: string | null
+          signed_pdf_storage_path?: string | null
+          stair_elevator_charge?: number | null
+          status?: string
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Update: {
+          admin_overrides?: Json
+          agreement_version_id?: string
+          commitment_months?: number
+          created_at?: string
+          customer_legal_name?: string
+          delivery_fee?: number
+          email?: string
+          generated_at?: string | null
+          id?: string
+          installation_address?: string | null
+          insurance_monthly_price?: number
+          insurance_selected?: boolean
+          monthly_price?: number
+          phone?: string | null
+          placement?: string
+          preferred_installation_date?: string | null
+          pricing_snapshot?: Json
+          rental_summary_snapshot?: Json
+          replaces_contract_id?: string | null
+          reservation_id?: string
+          sauna_type?: string
+          second_heater_monthly_price?: number
+          second_heater_selected?: boolean
+          security_deposit?: number
+          signed_at?: string | null
+          signed_pdf_hash?: string | null
+          signed_pdf_storage_path?: string | null
+          stair_elevator_charge?: number | null
+          status?: string
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_agreement_version_id_fkey"
+            columns: ["agreement_version_id"]
+            isOneToOne: false
+            referencedRelation: "agreement_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_replaces_contract_id_fkey"
+            columns: ["replaces_contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservation_events: {
         Row: {
           created_at: string
