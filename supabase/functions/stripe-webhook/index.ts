@@ -86,7 +86,6 @@ Deno.serve(async (req) => {
   }
 
   const nowIso = new Date().toISOString();
-  const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
   const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
 
   // Find eligible sauna: Available first, else earliest Incoming/Returning/Maintenance
@@ -116,7 +115,6 @@ Deno.serve(async (req) => {
         reservation_status: "Needs Manual Review",
         stripe_payment_id: paymentId ?? null,
         hold_created_at: nowIso,
-        hold_deadline: holdDeadlineIso,
       })
       .eq("id", reservationId);
 
@@ -145,7 +143,6 @@ Deno.serve(async (req) => {
       sauna_inventory_id: chosen.id,
       stripe_payment_id: paymentId ?? null,
       hold_created_at: nowIso,
-      hold_deadline: holdDeadlineIso,
     })
     .eq("id", reservationId);
 
@@ -154,7 +151,7 @@ Deno.serve(async (req) => {
     {
       reservation_id: reservationId,
       event_type: "Reservation Hold Created",
-      message: `Sauna held until ${holdDeadlineIso}.`,
+      message: "Sauna held (no automatic expiration).",
       metadata: { sauna_inventory_id: chosen.id },
     },
   ]);
