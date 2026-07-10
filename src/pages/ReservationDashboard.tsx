@@ -79,6 +79,7 @@ const ReservationDashboard = () => {
   };
 
   const paid = reservation?.payment_status === "Paid";
+  const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -121,7 +122,7 @@ const ReservationDashboard = () => {
                     label="Preferred installation date"
                     value={formatDatePretty(reservation.preferred_install_at.slice(0, 10))}
                   />
-                  <Detail label="Payment" value={paid ? "Complete" : "Pending"} />
+                  <Detail label="$100 reservation deposit" value={paid ? "Complete" : "Pending"} />
                   {paid && reservation.hold_deadline && (
                     <Detail
                       label="Reservation hold deadline"
@@ -131,6 +132,24 @@ const ReservationDashboard = () => {
                       })}
                     />
                   )}
+                </CardContent>
+              </Card>
+
+              <Card className="mb-4">
+                <CardHeader>
+                  <CardTitle className="text-base font-medium text-muted-foreground">
+                    Your next steps
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-1.5">
+                  <ChecklistItem done={paid} label="$100 reservation deposit" />
+                  <ChecklistItem
+                    done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
+                    label="Video Consultation Scheduled"
+                  />
+                  <ChecklistItem done={reservation.id_status === "Complete"} label="Photo ID uploaded" />
+                  <ChecklistItem done={reservation.contract_status === "Complete"} label="Contract Complete" />
+                  <ChecklistItem done={installScheduled} label="Installation Date Scheduled" />
                 </CardContent>
               </Card>
 
@@ -155,34 +174,7 @@ const ReservationDashboard = () => {
                   </CardContent>
                 </Card>
               ) : (
-                <>
-                  <Card className="mb-4">
-                    <CardHeader>
-                      <CardTitle className="text-base font-medium text-muted-foreground">
-                        Your next steps
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-1.5">
-                      <ChecklistItem
-                        done={paid}
-                        label="Reservation payment"
-                      />
-                      <ChecklistItem
-                        done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
-                        label="Schedule video consultation"
-                      />
-                      <ChecklistItem
-                        done={reservation.id_status === "Complete"}
-                        label="Upload photo ID"
-                      />
-                      <ChecklistItem
-                        done={reservation.contract_status === "Complete"}
-                        label="Complete rental agreement"
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <div className="space-y-3">
+                <div className="space-y-3">
                     <Button asChild size="lg" className="w-full">
                       <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
                         <Calendar className="mr-2" size={16} />
@@ -192,8 +184,7 @@ const ReservationDashboard = () => {
                     <Button variant="outline" className="w-full" onClick={copyLink}>
                       <Copy className="mr-2" size={16} /> Copy Reservation Link
                     </Button>
-                  </div>
-                </>
+                </div>
               )}
             </>
           ) : null}
