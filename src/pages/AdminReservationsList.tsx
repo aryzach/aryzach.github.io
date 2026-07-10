@@ -402,7 +402,6 @@ export const ReservationsListPanel = ({
                     {r.reservation_status === "Reservation Hold" && (
                       <>
                         <Button size="sm" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
-                        <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "extend", { extend_days: 5 })}>+5d</Button>
                         <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "release")}>Release</Button>
                       </>
                     )}
