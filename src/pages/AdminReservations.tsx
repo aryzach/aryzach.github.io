@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
+import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -195,7 +196,7 @@ const AdminReservations = () => {
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist">("inventory");
+  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -662,6 +663,11 @@ const AdminReservations = () => {
               className={`px-3 py-1.5 text-sm rounded ${tab === "waitlist" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("waitlist")}
             >Waitlist</button>
+            <button
+              type="button"
+              className={`px-3 py-1.5 text-sm rounded ${tab === "agreements" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              onClick={() => setTab("agreements")}
+            >Agreements</button>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
@@ -672,6 +678,10 @@ const AdminReservations = () => {
 
           {tab === "waitlist" && (
             <WaitlistPanel callAdmin={callAdmin} />
+          )}
+
+          {tab === "agreements" && (
+            <AgreementVersionsPanel callAdmin={callAdmin} />
           )}
 
           {tab === "calendar" && (
