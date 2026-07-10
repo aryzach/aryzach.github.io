@@ -94,8 +94,7 @@ const Pricing = () => {
               if (cards.length === 0) return null;
               const imageProduct =
                 items.find((p) => p.placement === imageFrom) || cards[0];
-              const imagePositionClass =
-                key === "original" ? "object-[center_70%]" : "object-center";
+              const imagePositionClass = "object-center";
               const startingAt = Math.min(
                 ...cards.flatMap((p) => p.tiers.map((t) => t.monthly)),
               );
