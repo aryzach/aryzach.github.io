@@ -160,7 +160,7 @@ export const seoData = {
   // Google Ads Landing Pages
   indoorInfraredLanding: {
     title: "Indoor Infrared Sauna Rental | SF Sauna Rental",
-    description: "Rent an indoor infrared sauna for your San Francisco home. 150°F deep heat, 120V plug-in, 45-minute setup. Monthly plans from $199/mo with free installation.",
+    description: "Rent an indoor infrared sauna for your San Francisco home. 150°F deep heat, 120V plug-in, 45-minute setup. Monthly plans from $200/mo with free installation.",
     canonical: "https://sfsaunarental.com/indoor-infrared-sauna-rental"
   },
 
