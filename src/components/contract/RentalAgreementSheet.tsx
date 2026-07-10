@@ -285,9 +285,24 @@ const ConfigureStep = ({
             <Input value={form.phone} onChange={(e) => set("phone", e.target.value)} />
           </Field>
         </div>
-        <Field label="Installation address">
-          <Input value={form.installation_address} onChange={(e) => set("installation_address", e.target.value)} />
-        </Field>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="md:col-span-2">
+            <Field label="Installation address">
+              <Input
+                value={form.installation_address}
+                onChange={(e) => set("installation_address", e.target.value)}
+                placeholder="Street address"
+              />
+            </Field>
+          </div>
+          <Field label="City">
+            <Input
+              value={form.installation_city}
+              onChange={(e) => set("installation_city", e.target.value)}
+              placeholder="e.g. San Francisco"
+            />
+          </Field>
+        </div>
         <Field label="Preferred installation date">
           <Input type="date" value={form.preferred_installation_date} onChange={(e) => set("preferred_installation_date", e.target.value)} />
         </Field>
@@ -311,22 +326,29 @@ const ConfigureStep = ({
       </Section>
 
       <Section title="Term & pricing">
-        <Field label="Initial commitment">
-          <div className="grid grid-cols-4 gap-2">
-            {COMMITMENT_MONTHS.map((m) => (
-              <button
-                type="button"
-                key={m}
-                onClick={() => set("commitment_months", m)}
-                className={`h-10 rounded-md border text-sm font-medium transition ${
-                  form.commitment_months === m
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background hover:border-primary/60"
-                }`}
-              >
-                {commitmentLabel(m)}
-              </button>
-            ))}
+        <Field label="Initial commitment — After your initial term, continue month-to-month.">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {COMMITMENT_MONTHS.map((m) => {
+              const price = form.sauna_type ? getMonthlyPrice(form.sauna_type, m) : null;
+              const active = form.commitment_months === m;
+              return (
+                <button
+                  type="button"
+                  key={m}
+                  onClick={() => set("commitment_months", m)}
+                  className={`flex flex-col items-center justify-center gap-0.5 h-16 rounded-md border text-sm font-medium transition ${
+                    active
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-background hover:border-primary/60"
+                  }`}
+                >
+                  <span>{commitmentLabel(m)}</span>
+                  <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+                    {price != null ? `${formatUSD(price)}/mo` : "—"}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </Field>
         <div className="rounded-md border border-border divide-y divide-border bg-card">
@@ -334,11 +356,13 @@ const ConfigureStep = ({
             label="Monthly rental"
             value={monthlyPrice != null ? `${formatUSD(monthlyPrice)} / month` : "—"}
           />
-          <PriceRow
-            label="Delivery fee"
-            value={formatUSD(deliveryFee)}
-            hint={isSf ? "Free within San Francisco" : "Outside San Francisco"}
-          />
+          {!isSf && (
+            <PriceRow
+              label="Delivery fee"
+              value={formatUSD(deliveryFee)}
+              hint="If outside of San Francisco"
+            />
+          )}
           <PriceRow label="Security deposit" value={formatUSD(securityDeposit)} hint="Refundable" />
           <PriceRow label="Stair / elevator charge" value="To be confirmed before delivery" muted />
         </div>
