@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertTriangle, ChevronLeft, ExternalLink, Loader2, Sparkles } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronLeft, Download, ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -20,6 +20,7 @@ import {
   isSanFranciscoCity,
   formatUSD,
   commitmentLabel,
+  ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
 
@@ -31,7 +32,7 @@ interface Props {
   onSaved?: () => void;
 }
 
-type Step = "configure" | "preview";
+type Step = "configure" | "preview" | "sign" | "signed";
 
 interface FormState {
   customer_legal_name: string;
@@ -67,6 +68,10 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [activeVersion, setActiveVersion] = useState<string>("");
   const [contract, setContract] = useState<any>(null);
   const [masterAgreementUrl, setMasterAgreementUrl] = useState<string | null>(null);
+  const [signedPdfUrl, setSignedPdfUrl] = useState<string | null>(null);
+  const [typedName, setTypedName] = useState("");
+  const [acks, setAcks] = useState<Record<string, boolean>>({});
+  const [signing, setSigning] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,7 +108,17 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           c?.preferred_installation_date ??
           (r.preferred_install_at ? String(r.preferred_install_at).slice(0, 10) : ""),
       });
-      setStep(c ? "preview" : "configure");
+      if (c?.status === "Signed") {
+        setStep("signed");
+        try {
+          const { data: urlRes } = await supabase.functions.invoke("contract-api", {
+            body: { action: "signed_pdf_url", id: reservationId, token, contract_id: c.id },
+          });
+          setSignedPdfUrl(urlRes?.url ?? null);
+        } catch { /* non-fatal */ }
+      } else {
+        setStep(c ? "preview" : "configure");
+      }
     } catch (e) {
       toast.error((e as Error).message || "Failed to load contract");
     } finally {
