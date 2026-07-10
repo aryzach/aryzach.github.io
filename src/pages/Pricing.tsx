@@ -24,7 +24,7 @@ const CATEGORIES: {
   {
     key: "infrared",
     title: "Infrared Sauna",
-    blurb: "Gentle, low-EMF radiant heat, delivered fully assembled.",
+    blurb: "Gentle, low-EMF radiant heat, installed in your home.",
     imageFrom: "Outdoor",
   },
   {
@@ -94,6 +94,8 @@ const Pricing = () => {
               if (cards.length === 0) return null;
               const imageProduct =
                 items.find((p) => p.placement === imageFrom) || cards[0];
+              const imagePositionClass =
+                key === "original" ? "object-[center_70%]" : "object-center";
               const startingAt = Math.min(
                 ...cards.flatMap((p) => p.tiers.map((t) => t.monthly)),
               );
@@ -106,7 +108,7 @@ const Pricing = () => {
                     <img
                       src={imageProduct.image}
                       alt={`${title} rental in San Francisco`}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover ${imagePositionClass}`}
                       loading="lazy"
                     />
                   </div>
@@ -124,7 +126,7 @@ const Pricing = () => {
                       </span>
                       <span className="text-sm text-muted-foreground">/ month</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-auto">
+                    <div className="grid grid-cols-1 gap-4 mt-auto">
                       {cards.map((p) => (
                         <PlacementCard
                           key={`${p.category}-${p.slug}`}
