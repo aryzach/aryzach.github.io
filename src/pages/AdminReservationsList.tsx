@@ -434,6 +434,12 @@ export const ReservationsListPanel = ({
                         <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "release")}>Release</Button>
                       </>
                     )}
+                    {r.consult_status !== "Scheduled" && r.consult_status !== "Complete" && (
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_consult_scheduled")}>Consult Scheduled</Button>
+                    )}
+                    {r.reservation_status !== "Reservation Confirmed" && r.reservation_status !== "Cancelled" && (
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "confirm")}>Install Scheduled</Button>
+                    )}
                     <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button>
                   </div>
                 </td>
