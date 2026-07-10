@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertTriangle, ChevronLeft, ExternalLink, Loader2, Sparkles } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronLeft, Download, ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -20,6 +20,7 @@ import {
   isSanFranciscoCity,
   formatUSD,
   commitmentLabel,
+  ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
 
@@ -31,7 +32,7 @@ interface Props {
   onSaved?: () => void;
 }
 
-type Step = "configure" | "preview";
+type Step = "configure" | "preview" | "sign" | "signed";
 
 interface FormState {
   customer_legal_name: string;
@@ -67,6 +68,10 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [activeVersion, setActiveVersion] = useState<string>("");
   const [contract, setContract] = useState<any>(null);
   const [masterAgreementUrl, setMasterAgreementUrl] = useState<string | null>(null);
+  const [signedPdfUrl, setSignedPdfUrl] = useState<string | null>(null);
+  const [typedName, setTypedName] = useState("");
+  const [acks, setAcks] = useState<Record<string, boolean>>({});
+  const [signing, setSigning] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,7 +108,17 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           c?.preferred_installation_date ??
           (r.preferred_install_at ? String(r.preferred_install_at).slice(0, 10) : ""),
       });
-      setStep(c ? "preview" : "configure");
+      if (c?.status === "Signed") {
+        setStep("signed");
+        try {
+          const { data: urlRes } = await supabase.functions.invoke("contract-api", {
+            body: { action: "signed_pdf_url", id: reservationId, token, contract_id: c.id },
+          });
+          setSignedPdfUrl(urlRes?.url ?? null);
+        } catch { /* non-fatal */ }
+      } else {
+        setStep(c ? "preview" : "configure");
+      }
     } catch (e) {
       toast.error((e as Error).message || "Failed to load contract");
     } finally {
@@ -184,6 +199,41 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
   const saunaTypeMismatch = form.sauna_type && contract?.rental_summary_snapshot?.flags?.includes?.("sauna_type_changed_from_reservation");
 
+  const sign = async () => {
+    if (!contract) return;
+    const missing = ACKNOWLEDGMENTS.find((a) => !acks[a.key]);
+    if (missing) { toast.error("Please accept all acknowledgments to continue."); return; }
+    if (typedName.trim().toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {
+      toast.error(`Please type your full legal name exactly as shown: "${contract.customer_legal_name}".`);
+      return;
+    }
+    setSigning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("contract-api", {
+        body: {
+          action: "sign",
+          id: reservationId,
+          token,
+          contract_id: contract.id,
+          typed_legal_name: typedName.trim(),
+          acknowledgments: acks,
+          time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
+      });
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      setContract(data.contract);
+      setSignedPdfUrl(data.signed_pdf_url ?? null);
+      setStep("signed");
+      toast.success("Rental Agreement signed");
+      onSaved?.();
+    } catch (e) {
+      toast.error((e as Error).message || "Could not sign the agreement");
+    } finally {
+      setSigning(false);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-3xl overflow-y-auto p-0">
@@ -220,12 +270,23 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               isSf={isSf}
               activeVersion={activeVersion}
             />
-          ) : contract ? (
+          ) : step === "preview" && contract ? (
             <PreviewStep
               contract={contract}
               onEdit={() => setStep("configure")}
               mismatchFlag={!!saunaTypeMismatch}
             />
+          ) : step === "sign" && contract ? (
+            <SignStep
+              contract={contract}
+              typedName={typedName}
+              setTypedName={setTypedName}
+              acks={acks}
+              setAcks={setAcks}
+              masterAgreementUrl={masterAgreementUrl}
+            />
+          ) : step === "signed" && contract ? (
+            <SignedStep contract={contract} signedPdfUrl={signedPdfUrl} />
           ) : null}
         </div>
 
@@ -240,15 +301,24 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
                   )}
                 </Button>
               </>
-            ) : (
+            ) : step === "preview" ? (
               <>
                 <Button variant="ghost" onClick={() => setStep("configure")}>
                   <ChevronLeft className="mr-1" size={16} /> Edit Agreement
                 </Button>
-                <Button disabled title="Signing available soon">
-                  Continue to Sign
+                <Button onClick={() => setStep("sign")}>Continue to Sign</Button>
+              </>
+            ) : step === "sign" ? (
+              <>
+                <Button variant="ghost" onClick={() => setStep("preview")}>
+                  <ChevronLeft className="mr-1" size={16} /> Back to preview
+                </Button>
+                <Button onClick={sign} disabled={signing}>
+                  {signing ? <><Loader2 className="mr-2 animate-spin" size={16} /> Signing…</> : "Sign & Complete"}
                 </Button>
               </>
+            ) : (
+              <Button variant="ghost" className="ml-auto" onClick={() => onOpenChange(false)}>Close</Button>
             )}
           </div>
         )}
@@ -433,6 +503,131 @@ const PreviewStep = ({
           Need to change something? Edit the agreement
         </button>
       </div>
+    </div>
+  );
+};
+
+// ---------- Sign step ----------
+const SignStep = ({
+  contract, typedName, setTypedName, acks, setAcks, masterAgreementUrl,
+}: {
+  contract: any;
+  typedName: string;
+  setTypedName: (v: string) => void;
+  acks: Record<string, boolean>;
+  setAcks: (v: Record<string, boolean>) => void;
+  masterAgreementUrl: string | null;
+}) => {
+  const nameMatches =
+    typedName.trim().length > 0 &&
+    typedName.trim().toLowerCase() === String(contract.customer_legal_name).trim().toLowerCase();
+  return (
+    <div className="space-y-6">
+      <div className="rounded-md border border-border bg-card p-4 text-sm">
+        <p className="text-foreground font-medium mb-1">Almost done — please review and sign.</p>
+        <p className="text-muted-foreground">
+          Confirm each acknowledgment below and type your full legal name to sign the agreement electronically.
+          {masterAgreementUrl && (
+            <>
+              {" "}You can{" "}
+              <a
+                href={masterAgreementUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                open the Master Agreement in a new tab
+              </a>{" "}
+              at any time.
+            </>
+          )}
+        </p>
+      </div>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Acknowledgments</h3>
+        <div className="space-y-2">
+          {ACKNOWLEDGMENTS.map((a) => (
+            <label
+              key={a.key}
+              className={`flex items-start gap-3 rounded-md border p-3 cursor-pointer transition ${
+                acks[a.key] ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/50"
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={!!acks[a.key]}
+                onChange={(e) => setAcks({ ...acks, [a.key]: e.target.checked })}
+                className="mt-1 h-4 w-4"
+              />
+              <span className="text-sm text-foreground leading-relaxed">{a.text}</span>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Electronic signature</h3>
+        <p className="text-sm text-muted-foreground">
+          Type your full legal name exactly as it appears on the agreement:{" "}
+          <span className="text-foreground font-medium">{contract.customer_legal_name}</span>
+        </p>
+        <Input
+          value={typedName}
+          onChange={(e) => setTypedName(e.target.value)}
+          placeholder={contract.customer_legal_name}
+          className={`font-serif text-lg tracking-wide ${nameMatches ? "border-primary" : ""}`}
+        />
+        <p className="text-xs text-muted-foreground">
+          By clicking "Sign &amp; Complete", you agree that your typed name is your electronic signature and has
+          the same legal effect as a handwritten signature.
+        </p>
+      </section>
+    </div>
+  );
+};
+
+// ---------- Signed confirmation ----------
+const SignedStep = ({
+  contract, signedPdfUrl,
+}: { contract: any; signedPdfUrl: string | null }) => {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-start gap-3 rounded-md border border-green-300 bg-green-50 text-green-900 p-4">
+        <CheckCircle2 size={20} className="mt-0.5 shrink-0" />
+        <div>
+          <p className="font-semibold">Rental Agreement signed</p>
+          <p className="text-sm mt-1">
+            Signed on{" "}
+            {contract.signed_at
+              ? new Date(contract.signed_at).toLocaleString("en-US", {
+                  dateStyle: "long", timeStyle: "short",
+                })
+              : "just now"}
+            . A copy is stored securely on your reservation.
+          </p>
+        </div>
+      </div>
+
+      <RentalSummaryPreview summary={contract.rental_summary_snapshot} />
+
+      {signedPdfUrl && (
+        <Card>
+          <CardContent className="pt-5 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold">Signed PDF</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Includes your Rental Summary, signature audit page, and the full Master Agreement.
+              </p>
+            </div>
+            <Button asChild variant="outline">
+              <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
+                <Download className="mr-1.5" size={14} /> Download
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
