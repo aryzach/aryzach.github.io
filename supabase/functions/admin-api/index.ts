@@ -47,6 +47,147 @@ Deno.serve(async (req) => {
         return json({ reservations: data });
       }
 
+      case "list_reservations_with_events": {
+        const { data: reservations, error } = await supabase
+          .from("reservations")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        const ids = (reservations ?? []).map((r: any) => r.id);
+        let events: any[] = [];
+        if (ids.length) {
+          const { data: evs, error: eErr } = await supabase
+            .from("reservation_events")
+            .select("*")
+            .in("reservation_id", ids)
+            .order("created_at", { ascending: true });
+          if (eErr) throw eErr;
+          events = evs ?? [];
+        }
+        return json({ reservations, events });
+      }
+
+      case "reservation_action": {
+        const { id, kind, extend_days, notes } = payload;
+        const { data: reservation, error: rErr } = await supabase
+          .from("reservations").select("*").eq("id", id).maybeSingle();
+        if (rErr) throw rErr;
+        if (!reservation) return json({ error: "Not found" }, 404);
+
+        const evtInserts: any[] = [];
+        const push = (event_type: string, message: string, metadata: any = {}) =>
+          evtInserts.push({ reservation_id: id, event_type, message, metadata });
+
+        let update: Record<string, unknown> = {};
+
+        switch (kind) {
+          case "confirm": {
+            update = { reservation_status: "Reservation Confirmed" };
+            if (reservation.sauna_inventory_id) {
+              await supabase.from("sauna_inventory")
+                .update({ status: "Reservation Confirmed" })
+                .eq("id", reservation.sauna_inventory_id);
+            }
+            push("Reservation Confirmed", "Admin confirmed reservation.");
+            break;
+          }
+          case "release": {
+            update = { reservation_status: "Cancelled", sauna_inventory_id: null, hold_deadline: null };
+            if (reservation.sauna_inventory_id) {
+              await supabase.from("sauna_inventory")
+                .update({ status: "Available", current_customer: null, reservation_id: null })
+                .eq("id", reservation.sauna_inventory_id);
+            }
+            push("Hold Released", "Admin released the reservation hold.");
+            break;
+          }
+          case "extend": {
+            const days = Number(extend_days) || 5;
+            const base = reservation.hold_deadline
+              ? new Date(reservation.hold_deadline)
+              : new Date();
+            const next = new Date(base.getTime() + days * 24 * 60 * 60 * 1000);
+            update = { hold_deadline: next.toISOString() };
+            push("Hold Deadline Extended", `Deadline extended by ${days} day(s).`);
+            break;
+          }
+          case "mark_consult":
+            update = { consult_status: "Complete" };
+            push("Video Consultation Complete", "Admin marked consultation complete.");
+            break;
+          case "mark_contract":
+            update = { contract_status: "Complete" };
+            push("Contract Completed", "Admin marked rental agreement complete.");
+            break;
+          case "mark_id":
+            update = { id_status: "Complete" };
+            push("ID Uploaded", "Admin marked ID verification complete.");
+            break;
+          case "set_notes":
+            update = { admin_notes: notes ?? null };
+            break;
+          default:
+            return json({ error: "Unknown action kind" }, 400);
+        }
+
+        const { data: updated, error: uErr } = await supabase
+          .from("reservations").update(update).eq("id", id).select().single();
+        if (uErr) throw uErr;
+        if (evtInserts.length) {
+          await supabase.from("reservation_events").insert(evtInserts);
+        }
+        return json({ reservation: updated });
+      }
+
+      case "manual_mark_paid": {
+        // Simulate the webhook for testing when Stripe isn't wired up.
+        const { id } = payload;
+        const { data: reservation } = await supabase
+          .from("reservations").select("*").eq("id", id).maybeSingle();
+        if (!reservation) return json({ error: "Not found" }, 404);
+        if (reservation.payment_status === "Paid") return json({ ok: true, already: true });
+
+        const nowIso = new Date().toISOString();
+        const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
+        const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
+
+        const { data: candidates } = await supabase
+          .from("sauna_inventory").select("*")
+          .eq("sauna_type_id", reservation.sauna_type_id)
+          .in("status", ["Available", "Incoming", "Returning", "Maintenance"]);
+        const available = (candidates ?? []).filter((c: any) => c.status === "Available");
+        const upcoming = (candidates ?? [])
+          .filter((c: any) => c.status !== "Available" && c.available_date && c.available_date <= preferredDate)
+          .sort((a: any, b: any) => (a.available_date < b.available_date ? -1 : 1));
+        const chosen = available[0] ?? upcoming[0] ?? null;
+        const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
+
+        if (!chosen) {
+          await supabase.from("reservations").update({
+            payment_status: "Paid", reservation_status: "Needs Manual Review",
+            hold_created_at: nowIso, hold_deadline: holdDeadlineIso,
+          }).eq("id", id);
+          await supabase.from("reservation_events").insert([
+            { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
+            { reservation_id: id, event_type: "Needs Manual Review", message: "No eligible sauna auto-assigned." },
+          ]);
+          return json({ ok: true, needs_review: true });
+        }
+
+        await supabase.from("sauna_inventory").update({
+          status: "Reservation Hold", current_customer: customerName, reservation_id: id,
+        }).eq("id", chosen.id);
+        await supabase.from("reservations").update({
+          payment_status: "Paid", reservation_status: "Reservation Hold",
+          sauna_inventory_id: chosen.id, hold_created_at: nowIso, hold_deadline: holdDeadlineIso,
+        }).eq("id", id);
+        await supabase.from("reservation_events").insert([
+          { reservation_id: id, event_type: "Payment Received", message: "Payment marked complete (manual)." },
+          { reservation_id: id, event_type: "Reservation Hold Created", message: `Sauna held until ${holdDeadlineIso}.`, metadata: { sauna_inventory_id: chosen.id } },
+        ]);
+        return json({ ok: true });
+      }
+
       case "update_reservation": {
         const { id, patch } = payload;
         const allowed = [
