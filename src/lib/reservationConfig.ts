@@ -4,6 +4,26 @@ export const RESERVATION_STRIPE_PAYMENT_LINK = "RESERVATION_STRIPE_PAYMENT_LINK"
 export const CALCOM_VIDEO_CONSULT_LINK = "https://cal.com/sfsaunarental/sf-sauna-video-consultation?overlayCalendar=true";
 export const CALCOM_INSTALLATION_LINK = "https://cal.com/sfsaunarental/sf-sauna-delivery-installation?overlayCalendar=true";
 
+// Stripe payment links, split by sauna family.
+export const RESERVATION_STRIPE_LINK_INFRARED =
+  "https://buy.stripe.com/4gMeVd5XNfZQ3Oc2Tp6Vq1G";
+export const RESERVATION_STRIPE_LINK_TRADITIONAL =
+  "https://buy.stripe.com/7sY4gz99ZeVMgAYctZ6Vq1H";
+
+export function isInfraredSaunaTypeId(id: string | null | undefined): boolean {
+  return !!id && id.includes("infrared");
+}
+
+export function reservationDepositForSaunaType(id: string | null | undefined): {
+  amount: number;
+  stripeLink: string;
+} {
+  if (isInfraredSaunaTypeId(id)) {
+    return { amount: 200, stripeLink: RESERVATION_STRIPE_LINK_INFRARED };
+  }
+  return { amount: 400, stripeLink: RESERVATION_STRIPE_LINK_TRADITIONAL };
+}
+
 // Kept for backward-compat imports; both resolve to the single reservation link.
 export const INFRARED_STRIPE_PAYMENT_LINK = RESERVATION_STRIPE_PAYMENT_LINK;
 export const TRADITIONAL_STRIPE_PAYMENT_LINK = RESERVATION_STRIPE_PAYMENT_LINK;
