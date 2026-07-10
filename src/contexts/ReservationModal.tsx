@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useState, type Context, type ReactNode } from "react";
 import ReservationModal, { type ReservationSource } from "@/components/reservation/ReservationModal";
 
 interface OpenOptions {
@@ -11,7 +11,14 @@ interface Ctx {
   close: () => void;
 }
 
-const ReservationModalCtx = createContext<Ctx | null>(null);
+declare global {
+  var __sfSaunaReservationModalCtx: Context<Ctx | null> | undefined;
+}
+
+const ReservationModalCtx =
+  globalThis.__sfSaunaReservationModalCtx ?? createContext<Ctx | null>(null);
+
+globalThis.__sfSaunaReservationModalCtx = ReservationModalCtx;
 
 export function ReservationModalProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{ open: boolean; saunaTypeId?: string; source: ReservationSource }>({
