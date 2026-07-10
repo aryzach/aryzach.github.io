@@ -1,0 +1,1 @@
+UPDATE public.app_config SET value = 'https://buy.stripe.com/test_14A14n0DtbJAfwUctZ6Vq0m' WHERE key = 'stripe_test_reservation_payment_link';
