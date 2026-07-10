@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
+import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
 import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -299,6 +299,23 @@ const ReservationDashboard = () => {
                         <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
                           <Calendar className="mr-1.5" size={14} />
                           {installScheduled ? "View / Reschedule" : "Schedule"}
+                        </a>
+                      </Button>
+                    }
+                  />
+                  <StepRow
+                    done={false}
+                    label="Connect to ACH"
+                    sublabel="Save 3% and avoid credit card fees"
+                    action={
+                      <Button asChild size="sm" variant="outline">
+                        <a
+                          href="https://connect.plaid.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Banknote className="mr-1.5" size={14} />
+                          Connect
                         </a>
                       </Button>
                     }
