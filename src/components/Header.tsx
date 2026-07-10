@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useReservationModal } from "@/contexts/ReservationModal";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { open: openReservation } = useReservationModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,8 +63,11 @@ const Header = () => {
           </nav>
 
           {/* CTA Button */}
-          <Button asChild className="hidden md:flex font-sans font-medium bg-accent hover:bg-accent/90 text-white">
-            <Link to="/reserve-your-sauna">Reserve Your Sauna</Link>
+          <Button
+            onClick={() => openReservation({ source: "Direct Link" })}
+            className="hidden md:flex font-sans font-medium bg-accent hover:bg-accent/90 text-white"
+          >
+            Reserve Your Sauna
           </Button>
 
           {/* Mobile Menu Button */}
@@ -96,8 +101,11 @@ const Header = () => {
               <button onClick={() => scrollToSection("faq")} className="text-left text-white/70 hover:text-white transition-colors">
                 FAQ
               </button>
-              <Button asChild className="w-full font-sans font-medium bg-accent hover:bg-accent/90 text-white">
-                <Link to="/reserve-your-sauna" onClick={() => setIsMobileMenuOpen(false)}>Reserve Your Sauna</Link>
+              <Button
+                onClick={() => { setIsMobileMenuOpen(false); openReservation({ source: "Direct Link" }); }}
+                className="w-full font-sans font-medium bg-accent hover:bg-accent/90 text-white"
+              >
+                Reserve Your Sauna
               </Button>
             </div>
           </nav>

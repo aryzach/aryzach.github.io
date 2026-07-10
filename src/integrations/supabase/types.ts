@@ -14,69 +14,125 @@ export type Database = {
   }
   public: {
     Tables: {
+      reservation_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          message: string | null
+          metadata: Json
+          reservation_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          message?: string | null
+          metadata?: Json
+          reservation_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          message?: string | null
+          metadata?: Json
+          reservation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservation_events_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservations: {
         Row: {
           access_notes: string | null
           admin_notes: string | null
+          city: string | null
           consult_status: string
           contract_status: string
           created_at: string
           email: string
           first_name: string
+          hold_created_at: string | null
+          hold_deadline: string | null
           id: string
           id_status: string
-          install_address: string
+          install_address: string | null
           last_name: string
-          min_commitment_months: number
+          min_commitment_months: number | null
           payment_status: string
-          phone: string
-          placement_choice: string
+          phone: string | null
+          placement_choice: string | null
           preferred_install_at: string
+          reservation_source: string
           reservation_status: string
           sauna_inventory_id: string | null
           sauna_type_id: string
+          secure_token: string
+          stripe_payment_id: string | null
+          updated_at: string
         }
         Insert: {
           access_notes?: string | null
           admin_notes?: string | null
+          city?: string | null
           consult_status?: string
           contract_status?: string
           created_at?: string
           email: string
           first_name: string
+          hold_created_at?: string | null
+          hold_deadline?: string | null
           id?: string
           id_status?: string
-          install_address: string
+          install_address?: string | null
           last_name: string
-          min_commitment_months: number
+          min_commitment_months?: number | null
           payment_status?: string
-          phone: string
-          placement_choice: string
+          phone?: string | null
+          placement_choice?: string | null
           preferred_install_at: string
+          reservation_source?: string
           reservation_status?: string
           sauna_inventory_id?: string | null
           sauna_type_id: string
+          secure_token?: string
+          stripe_payment_id?: string | null
+          updated_at?: string
         }
         Update: {
           access_notes?: string | null
           admin_notes?: string | null
+          city?: string | null
           consult_status?: string
           contract_status?: string
           created_at?: string
           email?: string
           first_name?: string
+          hold_created_at?: string | null
+          hold_deadline?: string | null
           id?: string
           id_status?: string
-          install_address?: string
+          install_address?: string | null
           last_name?: string
-          min_commitment_months?: number
+          min_commitment_months?: number | null
           payment_status?: string
-          phone?: string
-          placement_choice?: string
+          phone?: string | null
+          placement_choice?: string | null
           preferred_install_at?: string
+          reservation_source?: string
           reservation_status?: string
           sauna_inventory_id?: string | null
           sauna_type_id?: string
+          secure_token?: string
+          stripe_payment_id?: string | null
+          updated_at?: string
         }
         Relationships: [
           {

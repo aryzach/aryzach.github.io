@@ -127,7 +127,7 @@ export const products: Product[] = [
   },
   {
     slug: "original-outdoor",
-    saunaTypeId: null,
+    saunaTypeId: "outdoor_traditional_original",
     name: "Original Collection — Outdoor",
     category: "original",
     categoryLabel: "Original Collection",

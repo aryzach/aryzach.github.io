@@ -1,1 +1,10 @@
 project_id = "vwpeuejdgyjcwcymzjxt"
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.reservation-create]
+verify_jwt = false
+
+[functions.reservation-get]
+verify_jwt = false
