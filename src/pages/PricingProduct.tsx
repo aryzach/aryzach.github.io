@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -7,15 +6,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { useAvailability } from "@/hooks/useAvailability";
 import { getProduct, type Category, type PricingTier } from "@/lib/pricingCatalog";
 import AvailabilityLine from "@/components/pricing/AvailabilityLine";
-import ReservationDialog from "@/components/reservation/ReservationDialog";
-import { supabase } from "@/integrations/supabase/client";
-
-interface SaunaTypeLite {
-  id: string;
-  name: string;
-  placement: "indoor" | "outdoor" | "either";
-  reservation_fee_cents: number;
-}
+import { useReservationModal } from "@/contexts/ReservationModal";
 
 const PricingProduct = () => {
   const { category, product: productSlug } = useParams<{ category: string; product: string }>();
@@ -31,26 +22,14 @@ const PricingProduct = () => {
 
   const { getStatus } = useAvailability();
   const status = getStatus(product.saunaTypeId);
+  const { open: openReservation } = useReservationModal();
 
-  const [saunaType, setSaunaType] = useState<SaunaTypeLite | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (!product.saunaTypeId) return;
-    (async () => {
-      const { data } = await supabase
-        .from("sauna_types")
-        .select("id,name,placement,reservation_fee_cents")
-        .eq("id", product.saunaTypeId!)
-        .maybeSingle();
-      if (data) setSaunaType(data as SaunaTypeLite);
-    })();
-  }, [product.saunaTypeId]);
-
-  const canReserve = !!saunaType && status.status !== "unavailable";
+  const canReserve = !!product.saunaTypeId && status.status !== "unavailable";
 
   const handleReserve = () => {
-    if (canReserve) setDialogOpen(true);
+    if (canReserve && product.saunaTypeId) {
+      openReservation({ saunaTypeId: product.saunaTypeId, source: "Product Page" });
+    }
   };
 
   return (
@@ -108,14 +87,6 @@ const PricingProduct = () => {
         </div>
       </main>
       <Footer />
-
-      {dialogOpen && saunaType && (
-        <ReservationDialog
-          saunaType={saunaType}
-          availability={status}
-          onClose={() => setDialogOpen(false)}
-        />
-      )}
     </div>
   );
 };
