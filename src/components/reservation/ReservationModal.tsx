@@ -274,10 +274,10 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                   className="w-full"
                   disabled={submitting !== null}
                 >
-                  {submitting === "reserve" ? "Working…" : "Reserve for $100"}
+                  {submitting === "reserve" ? "Working…" : "Pay $100 Reservation Deposit"}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  $100 activates a temporary reservation hold once payment is completed.
+                  Reservation Deposit place a reservation on a sauna. This deposit is applied to lease payments.
                 </p>
               </div>
 
