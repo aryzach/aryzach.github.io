@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.reservation-get]
 verify_jwt = false
+
+[functions.reservation-upload-id]
+verify_jwt = false
