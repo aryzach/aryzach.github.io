@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -473,6 +474,29 @@ Deno.serve(async (req) => {
           last_success: lastOkRes.data?.[0] ?? null,
           last_failure: lastFailRes.data?.[0] ?? null,
         });
+      }
+
+      case "list_reservation_emails": {
+        const { reservation_id } = payload;
+        const q = supabase
+          .from("reservation_email_events")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (reservation_id) q.eq("reservation_id", reservation_id);
+        const { data, error } = await q;
+        if (error) throw error;
+        return json({ emails: data });
+      }
+
+      case "resend_reservation_email": {
+        const { reservation_id, email_type } = payload;
+        if (!reservation_id || !email_type) return json({ error: "reservation_id and email_type required" }, 400);
+        if (email_type !== "reservation_created" && email_type !== "payment_received") {
+          return json({ error: "invalid email_type" }, 400);
+        }
+        const result = await sendReservationEmail(supabase, reservation_id, email_type, { force: true });
+        if (!result.ok) return json({ error: result.error || "send failed" }, 500);
+        return json({ ok: true, resend_id: result.resend_id });
       }
 
       default:

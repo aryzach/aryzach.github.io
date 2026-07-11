@@ -292,11 +292,12 @@ const ReservationDashboard = () => {
               <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
                 {paid ? "Your sauna is temporarily reserved" : "Continue your reservation"}
               </h1>
-              <p className="text-muted-foreground mb-8">
-                {paid
-                  ? "We'll be in touch after your video consultation to confirm final installation timing."
-                  : "Complete all steps on this page to complete your reservation."}
-              </p>
+              {paid && (
+                <p className="text-muted-foreground mb-8">
+                  We'll be in touch after your video consultation to confirm final installation timing.
+                </p>
+              )}
+              {!paid && <div className="mb-8" />}
 
               {paid && holdDeadlinePretty && (
                 <p className="text-sm text-foreground mb-4">
@@ -325,6 +326,7 @@ const ReservationDashboard = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="text-sm space-y-1.5">
+                  <Detail label="Name" value={`${reservation.first_name} ${reservation.last_name}`} />
                   <Detail label="Sauna type" value={saunaTypeLabel(reservation.sauna_type_id)} />
                   <Detail
                     label="Preferred installation date"
@@ -352,28 +354,6 @@ const ReservationDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="mb-4">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-medium text-muted-foreground">
-                      Your information
-                    </CardTitle>
-                    {editableInfo && (
-                      <Button size="sm" variant="ghost" onClick={openInfoEdit}>
-                        <Pencil className="mr-1.5" size={14} /> Edit
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="text-sm space-y-1.5">
-                  <Detail label="Name" value={`${reservation.first_name} ${reservation.last_name}`} />
-                  <Detail label="Email" value={reservation.email} />
-                  <Detail label="Phone" value={reservation.phone || "—"} />
-                  <Detail label="Install address" value={reservation.install_address || "—"} />
-                  <Detail label="City" value={reservation.city || "—"} />
-                </CardContent>
-              </Card>
-
               {/* Reservation deposit callout */}
               <Card className="mb-4">
                 <CardContent className="pt-6">
@@ -395,8 +375,8 @@ const ReservationDashboard = () => {
                           : `Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1 leading-snug">
-                        Lock in your reservation with a reservation deposit, or choose to wait
-                        until after the your Video Consultation.
+                        Lock in your sauna now with the deposit, or choose to wait until after
+                        your Video Consultation.
                       </p>
                     </div>
                     {!paid && (
@@ -419,7 +399,7 @@ const ReservationDashboard = () => {
                 <CardContent className="space-y-2">
                   <StepRow
                     done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
-                    label="Step 1: Schedule Video Consultation"
+                    label="Schedule Video Consultation"
                     action={
                       <Button asChild size="sm" variant="outline">
                         <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">

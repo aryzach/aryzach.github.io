@@ -3,6 +3,7 @@
 // via the stripe_webhook_events table.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -185,6 +186,9 @@ Deno.serve(async (req) => {
       { reservation_id: reservationId, event_type: "Payment Received", message: "Reservation payment received." },
       { reservation_id: reservationId, event_type: "Needs Manual Review", message: "No eligible sauna available for auto-assignment." },
     ]);
+    try {
+      await sendReservationEmail(supabase, reservationId, "payment_received");
+    } catch (e) { console.error("payment_received email threw:", e); }
     await markProcessed("success");
     return text("ok", 200);
   }
@@ -223,6 +227,10 @@ Deno.serve(async (req) => {
       metadata: { sauna_inventory_id: chosen.id, hold_deadline: holdDeadlineIso },
     },
   ]);
+
+  try {
+    await sendReservationEmail(supabase, reservationId, "payment_received");
+  } catch (e) { console.error("payment_received email threw:", e); }
 
   await markProcessed("success");
   return text("ok", 200);
