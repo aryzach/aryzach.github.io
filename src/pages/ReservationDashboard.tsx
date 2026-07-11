@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
+import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, Pencil, RefreshCw, Upload, Video } from "lucide-react";
 import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -16,8 +16,12 @@ import {
   buildStripeCheckoutUrl,
   getStripeReservationConfig,
 } from "@/lib/reservationConfig";
-import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
+import { saunaTypeLabel, SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface Reservation {
   id: string;
@@ -56,6 +60,10 @@ const ReservationDashboard = () => {
   const [contractStatus, setContractStatus] = useState<string | null>(null);
   const [stripeBaseLink, setStripeBaseLink] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editSaunaType, setEditSaunaType] = useState<string>("");
+  const [editDate, setEditDate] = useState<string>("");
+  const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -128,6 +136,37 @@ const ReservationDashboard = () => {
       toast.success("Reservation link copied");
     } catch {
       toast.error("Could not copy link");
+    }
+  };
+
+  const openEdit = () => {
+    if (!reservation) return;
+    setEditSaunaType(reservation.sauna_type_id);
+    setEditDate(reservation.preferred_install_at.slice(0, 10));
+    setEditOpen(true);
+  };
+
+  const saveEdit = async () => {
+    if (!id || !token || !reservation) return;
+    setSaving(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("reservation-update", {
+        body: {
+          id,
+          token,
+          sauna_type_id: editSaunaType,
+          preferred_install_date: editDate,
+        },
+      });
+      const err = (error as any)?.message || (data as any)?.error;
+      if (err) throw new Error(err);
+      toast.success("Reservation updated");
+      setEditOpen(false);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message || "Update failed");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -227,9 +266,16 @@ const ReservationDashboard = () => {
 
               <Card className="mb-4">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-medium text-muted-foreground">
-                    Reservation details
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base font-medium text-muted-foreground">
+                      Reservation details
+                    </CardTitle>
+                    {contractStatus !== "Signed" && (
+                      <Button size="sm" variant="ghost" onClick={openEdit}>
+                        <Pencil className="mr-1.5" size={14} /> Edit
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent className="text-sm space-y-1.5">
                   <Detail label="Sauna type" value={saunaTypeLabel(reservation.sauna_type_id)} />
@@ -407,6 +453,57 @@ const ReservationDashboard = () => {
           onSaved={loadContract}
         />
       )}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit reservation</DialogTitle>
+            <DialogDescription>
+              Update your sauna type or preferred installation date.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <Label>Sauna type</Label>
+              <Select
+                value={editSaunaType}
+                onValueChange={setEditSaunaType}
+                disabled={reservation?.payment_status === "Paid"}
+              >
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {SAUNA_TYPE_OPTIONS.map((o) => (
+                    <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {reservation?.payment_status === "Paid" && (
+                <p className="text-xs text-muted-foreground">
+                  Sauna type can't be changed after your deposit is paid. Contact us for help.
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-install-date">Preferred installation date</Label>
+              <Input
+                id="edit-install-date"
+                type="date"
+                value={editDate}
+                min={new Date().toISOString().slice(0, 10)}
+                onChange={(e) => setEditDate(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditOpen(false)} disabled={saving}>
+              Cancel
+            </Button>
+            <Button onClick={saveEdit} disabled={saving}>
+              {saving && <Loader2 className="mr-2 animate-spin" size={14} />}
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
