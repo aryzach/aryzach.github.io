@@ -114,6 +114,129 @@ Deno.serve(async (req) => {
   };
 
   if (event.type !== "checkout.session.completed") {
+    // Handle SetupIntent lifecycle (ACH bank connection) below.
+    if (
+      event.type === "setup_intent.succeeded" ||
+      event.type === "setup_intent.setup_failed" ||
+      event.type === "setup_intent.canceled"
+    ) {
+      const si = event.data?.object ?? {};
+      const siReservationId: string | undefined = si.metadata?.reservation_id;
+      if (!siReservationId) {
+        await markProcessed("ignored", "setup_intent missing reservation_id metadata");
+        return text("ok", 200);
+      }
+
+      const { data: res } = await supabase
+        .from("reservations")
+        .select("id, stripe_customer_id, ach_status")
+        .eq("id", siReservationId)
+        .maybeSingle();
+      if (!res) {
+        await markProcessed("error", "reservation not found for setup_intent");
+        return text("ok", 200);
+      }
+
+      // Ensure the SetupIntent Customer matches this reservation's Customer.
+      const siCustomer: string | null =
+        typeof si.customer === "string" ? si.customer : si.customer?.id ?? null;
+      if (res.stripe_customer_id && siCustomer && siCustomer !== res.stripe_customer_id) {
+        console.error(
+          `SetupIntent customer mismatch: reservation ${res.id} has ${res.stripe_customer_id}, SetupIntent ${si.id} has ${siCustomer}`,
+        );
+        await supabase.from("reservation_events").insert({
+          reservation_id: res.id,
+          event_type: "ACH Customer Mismatch",
+          message: "SetupIntent customer did not match reservation Stripe customer. Not applied.",
+          metadata: { setup_intent_id: si.id, expected: res.stripe_customer_id, got: siCustomer },
+        });
+        await markProcessed("error", "customer mismatch");
+        return text("ok", 200);
+      }
+
+      if (event.type === "setup_intent.succeeded") {
+        const pmId: string | null =
+          typeof si.payment_method === "string" ? si.payment_method : si.payment_method?.id ?? null;
+
+        // Fetch PaymentMethod for safe display fields (bank name, last4).
+        let bankName: string | null = null;
+        let bankLast4: string | null = null;
+        if (pmId) {
+          try {
+            const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+            if (stripeKey) {
+              const pmRes = await fetch(`https://api.stripe.com/v1/payment_methods/${pmId}`, {
+                headers: { Authorization: `Bearer ${stripeKey}` },
+              });
+              const pm = await pmRes.json();
+              bankName = pm?.us_bank_account?.bank_name ?? null;
+              bankLast4 = pm?.us_bank_account?.last4 ?? null;
+            }
+          } catch (e) {
+            console.error("PaymentMethod lookup failed:", e);
+          }
+        }
+
+        // Idempotent: if already Connected with the same setup intent, short-circuit.
+        if (res.ach_status === "Connected") {
+          await markProcessed("success");
+          return text("already connected", 200);
+        }
+
+        await supabase
+          .from("reservations")
+          .update({
+            ach_status: "Connected",
+            ach_connected_at: new Date().toISOString(),
+            stripe_ach_setup_intent_id: si.id,
+            stripe_ach_payment_method_id: pmId,
+            ach_bank_name: bankName,
+            ach_bank_last4: bankLast4,
+            ach_last_error: null,
+          })
+          .eq("id", res.id);
+        await supabase.from("reservation_events").insert({
+          reservation_id: res.id,
+          event_type: "Bank Account Connected",
+          message: bankName && bankLast4
+            ? `Bank account connected (${bankName} ••${bankLast4}).`
+            : "Bank account connected for future rent payments.",
+          metadata: { setup_intent_id: si.id, payment_method_id: pmId },
+        });
+      } else if (event.type === "setup_intent.setup_failed") {
+        const errMsg: string = si.last_setup_error?.message ?? "Bank connection failed.";
+        await supabase
+          .from("reservations")
+          .update({
+            ach_status: "Failed",
+            ach_last_error: errMsg.slice(0, 500),
+          })
+          .eq("id", res.id);
+        await supabase.from("reservation_events").insert({
+          reservation_id: res.id,
+          event_type: "Bank Connection Failed",
+          message: errMsg.slice(0, 500),
+          metadata: { setup_intent_id: si.id },
+        });
+      } else if (event.type === "setup_intent.canceled") {
+        await supabase
+          .from("reservations")
+          .update({
+            ach_status: "Not Connected",
+          })
+          .eq("id", res.id);
+        await supabase.from("reservation_events").insert({
+          reservation_id: res.id,
+          event_type: "Bank Connection Canceled",
+          message: "Customer canceled the bank-account connection.",
+          metadata: { setup_intent_id: si.id },
+        });
+      }
+
+      await markProcessed("success");
+      return text("ok", 200);
+    }
+
     await markProcessed("ignored");
     return text("ok", 200);
   }
@@ -126,6 +249,12 @@ Deno.serve(async (req) => {
     await markProcessed("ignored", `payment_status=${session.payment_status}`);
     return text("ok", 200);
   }
+
+  // Extract Stripe Customer ID (may be null if Payment Link doesn't create one).
+  const sessionCustomerId: string | null =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id ?? null;
 
   // Load reservation
   const { data: reservation, error: rErr } = await supabase
@@ -143,6 +272,41 @@ Deno.serve(async (req) => {
   if (reservation.payment_status === "Paid") {
     await markProcessed("success");
     return text("already paid", 200);
+  }
+
+  // Determine stripe_customer_id handling:
+  //  - if reservation already has one and it differs, don't overwrite; flag mismatch.
+  //  - if session.customer is missing, mark linkage_missing for admin review.
+  const customerFlag: {
+    stripe_customer_id?: string | null;
+    stripe_customer_linkage_missing?: boolean;
+  } = {};
+  if (sessionCustomerId) {
+    if (reservation.stripe_customer_id && reservation.stripe_customer_id !== sessionCustomerId) {
+      // Do not overwrite; flag for admin review.
+      await supabase.from("reservation_events").insert({
+        reservation_id: reservation.id,
+        event_type: "Stripe Customer Mismatch",
+        message: "Checkout Session Customer differs from existing reservation Customer. Not overwritten.",
+        metadata: {
+          existing: reservation.stripe_customer_id,
+          incoming: sessionCustomerId,
+          checkout_session_id: checkoutSessionId,
+        },
+      });
+    } else {
+      customerFlag.stripe_customer_id = sessionCustomerId;
+      customerFlag.stripe_customer_linkage_missing = false;
+    }
+  } else {
+    // No customer on the session — flag it. Admin can backfill or link manually.
+    customerFlag.stripe_customer_linkage_missing = true;
+    await supabase.from("reservation_events").insert({
+      reservation_id: reservation.id,
+      event_type: "Stripe Customer Missing",
+      message: "Checkout Session had no Customer. ACH connection is blocked until admin links a Customer.",
+      metadata: { checkout_session_id: checkoutSessionId },
+    });
   }
 
   const nowIso = new Date().toISOString();
@@ -179,6 +343,7 @@ Deno.serve(async (req) => {
         stripe_payment_intent_id: paymentIntentId ?? null,
         payment_completed_at: nowIso,
         hold_created_at: nowIso,
+        ...customerFlag,
       })
       .eq("id", reservationId);
 
@@ -215,6 +380,7 @@ Deno.serve(async (req) => {
       payment_completed_at: nowIso,
       hold_created_at: nowIso,
       hold_deadline: holdDeadlineIso,
+      ...customerFlag,
     })
     .eq("id", reservationId);
 
