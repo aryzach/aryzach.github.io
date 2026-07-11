@@ -195,7 +195,7 @@ export async function sendReservationEmail(
   opts: { force?: boolean } = {},
 ): Promise<{ ok: boolean; skipped?: boolean; error?: string; resend_id?: string }> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
-  const from = Deno.env.get("RESERVATION_EMAIL_FROM") || "SF Sauna <reservations@sfsaunarental.com>";
+  const from = Deno.env.get("RESERVATION_EMAIL_FROM") || "SF Sauna <reservations@updates.sfsaunarental.com>";
   const replyTo = Deno.env.get("RESERVATION_EMAIL_REPLY_TO") || undefined;
   if (!apiKey) return { ok: false, error: "RESEND_API_KEY not configured" };
 
