@@ -434,6 +434,47 @@ Deno.serve(async (req) => {
         return json({ url: signed.signedUrl });
       }
 
+      case "stripe_status": {
+        const [lastOkRes, lastFailRes, cfgRes] = await Promise.all([
+          supabase
+            .from("stripe_webhook_events")
+            .select("received_at, processed_at, event_type, livemode")
+            .eq("processing_status", "processed")
+            .order("received_at", { ascending: false })
+            .limit(1),
+          supabase
+            .from("stripe_webhook_events")
+            .select("received_at, error_message, event_type, livemode")
+            .in("processing_status", ["failed", "error"])
+            .order("received_at", { ascending: false })
+            .limit(1),
+          supabase
+            .from("app_config")
+            .select("key, value")
+            .in("key", [
+              "stripe_mode",
+              "stripe_live_reservation_payment_link",
+              "stripe_test_reservation_payment_link",
+            ]),
+        ]);
+        const cfg: Record<string, string | null> = {};
+        for (const row of (cfgRes.data ?? []) as { key: string; value: string | null }[]) {
+          cfg[row.key] = row.value;
+        }
+        const mode = (cfg.stripe_mode || "test").toLowerCase();
+        const activeLink =
+          mode === "live"
+            ? cfg.stripe_live_reservation_payment_link
+            : cfg.stripe_test_reservation_payment_link;
+        return json({
+          mode,
+          payment_link_mode: activeLink ? mode : null,
+          payment_link_configured: !!activeLink,
+          last_success: lastOkRes.data?.[0] ?? null,
+          last_failure: lastFailRes.data?.[0] ?? null,
+        });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
