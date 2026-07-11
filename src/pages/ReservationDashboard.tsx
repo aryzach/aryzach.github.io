@@ -91,6 +91,7 @@ const ReservationDashboard = () => {
     first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
   });
   const [savingInfo, setSavingInfo] = useState(false);
+  const [connectingBank, setConnectingBank] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
