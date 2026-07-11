@@ -196,6 +196,12 @@ Deno.serve(async (req) => {
     };
     eventType = "Appointment Cancelled";
     message = `${isVideo ? "Video consultation" : "Installation"} booking cancelled.`;
+  } else if (trigger === "MEETING_ENDED") {
+    update = {
+      [statusCol]: "Complete",
+    };
+    eventType = isVideo ? "Video Consultation Complete" : "Installation Complete";
+    message = `${isVideo ? "Video consultation" : "Installation"} marked complete (meeting ended on Cal.com).`;
   } else {
     return json({ ok: true, ignored: `trigger:${trigger}` });
   }
