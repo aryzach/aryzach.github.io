@@ -28,6 +28,8 @@ interface Reservation {
   first_name: string;
   last_name: string;
   email: string;
+  phone: string | null;
+  install_address: string | null;
   sauna_type_id: string;
   preferred_install_at: string;
   city: string | null;
@@ -38,6 +40,11 @@ interface Reservation {
   id_status: string;
   hold_created_at: string | null;
   hold_deadline: string | null;
+}
+
+interface SaunaHold {
+  status: string;
+  is_reserved: boolean;
 }
 
 const ReservationDashboard = () => {
@@ -64,6 +71,12 @@ const ReservationDashboard = () => {
   const [editSaunaType, setEditSaunaType] = useState<string>("");
   const [editDate, setEditDate] = useState<string>("");
   const [saving, setSaving] = useState(false);
+  const [saunaHold, setSaunaHold] = useState<SaunaHold | null>(null);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoForm, setInfoForm] = useState({
+    first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
+  });
+  const [savingInfo, setSavingInfo] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -79,6 +92,7 @@ const ReservationDashboard = () => {
     } else {
       setReservation(data.reservation as Reservation);
       setIdPhoto((data.id_photo as { url: string; name: string } | null) ?? null);
+      setSaunaHold((data.sauna_hold as SaunaHold | null) ?? null);
       setError(null);
     }
     setLoading(false);
