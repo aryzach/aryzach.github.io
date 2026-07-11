@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.reservation-update]
 verify_jwt = false
+
+[functions.cal-webhook]
+verify_jwt = false
