@@ -431,25 +431,39 @@ const ReservationDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <StepRow
-                    done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
-                    label="Schedule Video Consultation"
+                    done={consultScheduled}
+                    label="Video Consultation Scheduled"
+                    sublabel={
+                      reservation.video_consult_scheduled_at
+                        ? new Date(reservation.video_consult_scheduled_at).toLocaleString(undefined, {
+                            dateStyle: "long",
+                            timeStyle: "short",
+                          })
+                        : undefined
+                    }
                     action={
                       <Button asChild size="sm" variant="outline">
-                        <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
+                        <a href={calVideoHref} target="_blank" rel="noopener noreferrer">
                           <Video className="mr-1.5" size={14} />
-                          {reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"
+                          {consultScheduled
                             ? "View / Reschedule"
                             : "Schedule"}
                         </a>
                       </Button>
                     }
                   />
-                  <div className="pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    After the call
-                  </div>
+                  <StepRow
+                    done={consultComplete}
+                    label="Video Consultation Complete"
+                    sublabel="We'll mark this complete after your call."
+                  />
+                  <StepRow
+                    done={paid}
+                    label="Reservation Payment"
+                  />
                   <StepRow
                     done={contractStatus === "Signed"}
-                    label="Complete Rental Agreement"
+                    label="Rental Agreement Signed"
                     action={
                       <div className="flex items-center gap-2">
                         {contractStatus && contractStatus !== "Not Started" && contractStatus !== "Signed" && (
@@ -471,7 +485,7 @@ const ReservationDashboard = () => {
                   />
                   <StepRow
                     done={reservation.id_status === "Complete"}
-                    label="Upload Photo ID"
+                    label="Photo ID Uploaded"
                     action={
                       <div className="flex items-center gap-2">
                         <input
@@ -509,48 +523,30 @@ const ReservationDashboard = () => {
                       </div>
                     }
                   />
-                  <StepRow
-                    done={false}
-                    label="Connect to ACH (optional)"
-                    sublabel="Save 3% and avoid credit card fees"
-                    action={
-                      <Button asChild size="sm" variant="outline">
-                        <a
-                          href="https://connect.plaid.com/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Banknote className="mr-1.5" size={14} />
-                          Connect
-                        </a>
-                      </Button>
-                    }
-                  />
-                  <StepRow
-                    done={installScheduled}
-                    label="Schedule Installation Date"
-                    sublabel="Available after rental agreement and photo ID are complete"
-                    action={
-                      <Button
-                        asChild={canScheduleInstall}
-                        size="sm"
-                        variant="outline"
-                        disabled={!canScheduleInstall}
-                      >
-                        {canScheduleInstall ? (
-                          <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
+                  {allPrereqsComplete && (
+                    <div className="mt-4 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+                      <p className="text-sm text-foreground font-medium">Everything looks good.</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        You can now schedule your installation.
+                      </p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <Button asChild size="sm">
+                          <a href={calInstallHref} target="_blank" rel="noopener noreferrer">
                             <Calendar className="mr-1.5" size={14} />
-                            {installScheduled ? "View / Reschedule" : "Schedule"}
+                            {installScheduled ? "View / Reschedule Installation" : "Schedule Installation"}
                           </a>
-                        ) : (
-                          <span>
-                            <Calendar className="mr-1.5 inline" size={14} />
-                            Schedule
+                        </Button>
+                        {reservation.installation_scheduled_at && (
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(reservation.installation_scheduled_at).toLocaleString(undefined, {
+                              dateStyle: "long",
+                              timeStyle: "short",
+                            })}
                           </span>
                         )}
-                      </Button>
-                    }
-                  />
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
