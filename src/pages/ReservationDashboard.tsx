@@ -220,10 +220,48 @@ const ReservationDashboard = () => {
 
   const paid = reservation?.payment_status === "Paid";
   const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
+  const contractSigned = contractStatus === "Signed";
+  const idComplete = reservation?.id_status === "Complete";
+  const canScheduleInstall = contractSigned && idComplete;
+  const isReserved = paid || saunaHold?.is_reserved === true;
+  const editableInfo = !contractSigned;
   const stripeHref = useMemo(() => {
     if (!reservation || !stripeBaseLink) return "#";
     return buildStripeCheckoutUrl(stripeBaseLink, reservation.id, reservation.email);
   }, [reservation, stripeBaseLink]);
+
+  const openInfoEdit = () => {
+    if (!reservation) return;
+    setInfoForm({
+      first_name: reservation.first_name ?? "",
+      last_name: reservation.last_name ?? "",
+      email: reservation.email ?? "",
+      phone: reservation.phone ?? "",
+      install_address: reservation.install_address ?? "",
+      city: reservation.city ?? "",
+    });
+    setInfoOpen(true);
+  };
+
+  const saveInfo = async () => {
+    if (!id || !token) return;
+    setSavingInfo(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("reservation-update", {
+        body: { id, token, ...infoForm },
+      });
+      const err = (error as any)?.message || (data as any)?.error;
+      if (err) throw new Error(err);
+      toast.success("Your info was updated");
+      setInfoOpen(false);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message || "Update failed");
+    } finally {
+      setSavingInfo(false);
+    }
+  };
+
   const holdDeadlinePretty = reservation?.hold_deadline
     ? new Date(reservation.hold_deadline).toLocaleString(undefined, {
         dateStyle: "long",
