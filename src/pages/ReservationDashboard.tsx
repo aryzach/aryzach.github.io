@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, RefreshCw, Upload, Video } from "lucide-react";
+import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, Pencil, RefreshCw, Upload, Video } from "lucide-react";
 import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -16,8 +16,12 @@ import {
   buildStripeCheckoutUrl,
   getStripeReservationConfig,
 } from "@/lib/reservationConfig";
-import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
+import { saunaTypeLabel, SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface Reservation {
   id: string;
