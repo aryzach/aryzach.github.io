@@ -597,20 +597,39 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
-                    done={false}
+                    done={reservation.ach_status === "Connected"}
                     label="Connect Your Bank Account (Optional)"
-                    sublabel="Connect your bank account to avoid credit card processing fees."
+                    sublabel={
+                      reservation.ach_status === "Connected"
+                        ? reservation.ach_bank_name && reservation.ach_bank_last4
+                          ? `Connected: ${reservation.ach_bank_name} ••${reservation.ach_bank_last4}`
+                          : "Bank account connected"
+                        : reservation.stripe_customer_linkage_missing
+                          ? "Contact support — Stripe customer needs to be linked before you can connect your bank."
+                          : "Connect your bank account to avoid credit card processing fees."
+                    }
                     action={
-                      <Button asChild size="sm" variant="outline">
-                        <a
-                          href="https://connect.plaid.com/"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      reservation.ach_status === "Connected" ? (
+                        <span className="text-xs text-muted-foreground">Connected</span>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleConnectBank}
+                          disabled={
+                            connectingBank ||
+                            !paid ||
+                            !!reservation.stripe_customer_linkage_missing
+                          }
                         >
-                          <Banknote className="mr-1.5" size={14} />
-                          Connect
-                        </a>
-                      </Button>
+                          {connectingBank ? (
+                            <Loader2 className="mr-1.5 animate-spin" size={14} />
+                          ) : (
+                            <Banknote className="mr-1.5" size={14} />
+                          )}
+                          {connectingBank ? "Opening…" : "Connect Bank"}
+                        </Button>
+                      )
                     }
                   />
                   <StepRow
