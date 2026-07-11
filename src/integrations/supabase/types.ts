@@ -384,6 +384,50 @@ export type Database = {
           },
         ]
       }
+      reservation_email_events: {
+        Row: {
+          created_at: string
+          delivery_status: string
+          email_type: string
+          error_message: string | null
+          id: string
+          recipient_email: string
+          resend_email_id: string | null
+          reservation_id: string
+          sent_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          delivery_status?: string
+          email_type: string
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          resend_email_id?: string | null
+          reservation_id: string
+          sent_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          delivery_status?: string
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          resend_email_id?: string | null
+          reservation_id?: string
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservation_email_events_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reservation_events: {
         Row: {
           created_at: string
