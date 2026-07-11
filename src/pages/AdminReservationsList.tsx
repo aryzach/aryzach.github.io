@@ -42,6 +42,8 @@ interface Reservation {
   ach_bank_name?: string | null;
   ach_bank_last4?: string | null;
   ach_last_error?: string | null;
+  default_payment_method_status?: string | null;
+  default_payment_method_updated_at?: string | null;
 }
 
 interface ReservationEvent {
@@ -154,6 +156,44 @@ export const ReservationsListPanel = ({
       await callAdmin({ action: "delete_reservation", id: r.id });
       toast.success("Deleted");
       await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+  const [achDialogId, setAchDialogId] = useState<string | null>(null);
+  const [subs, setSubs] = useState<any[] | null>(null);
+  const [subsBusy, setSubsBusy] = useState(false);
+
+  const setAchAsDefault = async (id: string) => {
+    try {
+      const res = await callAdmin({ action: "set_ach_as_default", id });
+      if (res.ok) toast.success("ACH set as Stripe Customer default.");
+      else toast.error(res.error || "Failed to set default.");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+  const loadSubs = async (id: string) => {
+    setSubsBusy(true);
+    try {
+      const res = await callAdmin({ action: "list_customer_subscriptions", id });
+      setSubs(res.subscriptions ?? []);
+    } catch (e) {
+      toast.error((e as Error).message);
+      setSubs([]);
+    } finally {
+      setSubsBusy(false);
+    }
+  };
+
+  const setSubDefault = async (id: string, subscription_id: string) => {
+    try {
+      await callAdmin({ action: "set_subscription_default_pm", id, subscription_id });
+      toast.success("Subscription default_payment_method updated.");
+      await loadSubs(id);
     } catch (e) {
       toast.error((e as Error).message);
     }
