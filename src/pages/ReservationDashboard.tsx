@@ -46,6 +46,13 @@ interface Reservation {
   installation_booking_id?: string | null;
   installation_scheduled_at?: string | null;
   installation_status?: string | null;
+  stripe_customer_id?: string | null;
+  stripe_customer_linkage_missing?: boolean | null;
+  ach_status?: string | null;
+  ach_connected_at?: string | null;
+  ach_bank_name?: string | null;
+  ach_bank_last4?: string | null;
+  ach_last_error?: string | null;
 }
 
 interface SaunaHold {
