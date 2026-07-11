@@ -12,6 +12,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
+import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
