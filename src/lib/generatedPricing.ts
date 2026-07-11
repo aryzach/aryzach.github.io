@@ -58,8 +58,8 @@ export const PRICING_TIERS: Record<SaunaTypeId, Record<CommitmentMonths, Pricing
   },
 };
 
-export const INSURANCE_MONTHLY = 19;
-export const SECOND_HEATER_MONTHLY = 209;
+export const INSURANCE_MONTHLY = 20;
+export const SECOND_HEATER_MONTHLY = 200;
 export const DELIVERY_FEE_OUTSIDE_SF = 150;
 export const RESERVATION_DEPOSIT_INFRARED = 200;
 export const RESERVATION_DEPOSIT_TRADITIONAL = 500;
