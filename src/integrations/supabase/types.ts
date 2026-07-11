@@ -478,6 +478,9 @@ export type Database = {
           id: string
           id_status: string
           install_address: string | null
+          installation_booking_id: string | null
+          installation_scheduled_at: string | null
+          installation_status: string
           last_name: string
           min_commitment_months: number | null
           payment_completed_at: string | null
@@ -494,6 +497,8 @@ export type Database = {
           stripe_payment_id: string | null
           stripe_payment_intent_id: string | null
           updated_at: string
+          video_consult_booking_id: string | null
+          video_consult_scheduled_at: string | null
         }
         Insert: {
           access_notes?: string | null
@@ -509,6 +514,9 @@ export type Database = {
           id?: string
           id_status?: string
           install_address?: string | null
+          installation_booking_id?: string | null
+          installation_scheduled_at?: string | null
+          installation_status?: string
           last_name: string
           min_commitment_months?: number | null
           payment_completed_at?: string | null
@@ -525,6 +533,8 @@ export type Database = {
           stripe_payment_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string
+          video_consult_booking_id?: string | null
+          video_consult_scheduled_at?: string | null
         }
         Update: {
           access_notes?: string | null
@@ -540,6 +550,9 @@ export type Database = {
           id?: string
           id_status?: string
           install_address?: string | null
+          installation_booking_id?: string | null
+          installation_scheduled_at?: string | null
+          installation_status?: string
           last_name?: string
           min_commitment_months?: number | null
           payment_completed_at?: string | null
@@ -556,6 +569,8 @@ export type Database = {
           stripe_payment_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string
+          video_consult_booking_id?: string | null
+          video_consult_scheduled_at?: string | null
         }
         Relationships: [
           {
