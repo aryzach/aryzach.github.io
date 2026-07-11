@@ -517,6 +517,16 @@ export const ReservationsListPanel = ({
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_scheduled")}>Install Scheduled</Button>
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_complete")}>Install Complete</Button>
                     <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button>
+                    {r.stripe_ach_payment_method_id && (
+                      <Button
+                        size="sm"
+                        variant={r.ach_status === "Connected, Default Update Failed" ? "default" : "outline"}
+                        className="h-6 px-2 text-[10px]"
+                        onClick={() => { setAchDialogId(r.id); setSubs(null); }}
+                      >
+                        ACH
+                      </Button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -524,6 +534,59 @@ export const ReservationsListPanel = ({
           </tbody>
         </table>
       </div>
+
+      {achDialogId && (() => {
+        const r = reservations.find((x) => x.id === achDialogId);
+        if (!r) return null;
+        return (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setAchDialogId(null)}>
+            <div className="bg-card border border-border rounded-md p-4 max-w-lg w-full text-sm" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-foreground">ACH Tools — {r.first_name} {r.last_name}</h3>
+                <button className="text-muted-foreground hover:text-foreground" onClick={() => setAchDialogId(null)}>✕</button>
+              </div>
+              <dl className="space-y-1 text-xs mb-3">
+                <div className="flex justify-between gap-4"><dt className="text-muted-foreground">ACH status</dt><dd>{r.ach_status ?? "—"}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Bank</dt><dd>{r.ach_bank_name && r.ach_bank_last4 ? `${r.ach_bank_name} ••${r.ach_bank_last4}` : "—"}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Customer default PM</dt><dd>{r.default_payment_method_status ?? "—"}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Default updated</dt><dd>{r.default_payment_method_updated_at ? fmt(r.default_payment_method_updated_at) : "—"}</dd></div>
+                {r.ach_last_error && (
+                  <div className="text-orange-700 dark:text-orange-400 mt-2 text-[11px]">{r.ach_last_error}</div>
+                )}
+              </dl>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <Button size="sm" onClick={() => setAchAsDefault(r.id)}>Set ACH as Stripe Default</Button>
+                <Button size="sm" variant="outline" onClick={() => loadSubs(r.id)} disabled={subsBusy}>
+                  {subsBusy ? "Loading…" : "List Subscriptions"}
+                </Button>
+              </div>
+              {subs && (
+                <div className="border-t border-border pt-3">
+                  <div className="text-xs font-medium mb-2">Active Stripe Subscriptions</div>
+                  {subs.length === 0 && <div className="text-xs text-muted-foreground">None found.</div>}
+                  {subs.map((s) => {
+                    const overrides = s.default_payment_method && s.default_payment_method !== r.stripe_ach_payment_method_id;
+                    return (
+                      <div key={s.id} className="flex items-center justify-between gap-2 py-1.5 border-b border-border last:border-0 text-xs">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-mono text-[11px] truncate">{s.id}</div>
+                          <div className="text-muted-foreground text-[11px]">
+                            {s.status} · default PM: {s.default_payment_method ?? "(uses customer default)"}
+                            {overrides && <span className="ml-2 text-orange-600">overrides customer default</span>}
+                          </div>
+                        </div>
+                        <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => setSubDefault(r.id, s.id)}>
+                          Set ACH as default
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
