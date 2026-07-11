@@ -626,6 +626,79 @@ const ReservationDashboard = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit your information</DialogTitle>
+            <DialogDescription>
+              Update your name, contact info, or installation address.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="info-first">First name</Label>
+                <Input
+                  id="info-first"
+                  value={infoForm.first_name}
+                  onChange={(e) => setInfoForm({ ...infoForm, first_name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="info-last">Last name</Label>
+                <Input
+                  id="info-last"
+                  value={infoForm.last_name}
+                  onChange={(e) => setInfoForm({ ...infoForm, last_name: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-email">Email</Label>
+              <Input
+                id="info-email"
+                type="email"
+                value={infoForm.email}
+                onChange={(e) => setInfoForm({ ...infoForm, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-phone">Phone</Label>
+              <Input
+                id="info-phone"
+                type="tel"
+                value={infoForm.phone}
+                onChange={(e) => setInfoForm({ ...infoForm, phone: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-address">Install address</Label>
+              <Input
+                id="info-address"
+                value={infoForm.install_address}
+                onChange={(e) => setInfoForm({ ...infoForm, install_address: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-city">City</Label>
+              <Input
+                id="info-city"
+                value={infoForm.city}
+                onChange={(e) => setInfoForm({ ...infoForm, city: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setInfoOpen(false)} disabled={savingInfo}>
+              Cancel
+            </Button>
+            <Button onClick={saveInfo} disabled={savingInfo}>
+              {savingInfo && <Loader2 className="mr-2 animate-spin" size={14} />}
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
