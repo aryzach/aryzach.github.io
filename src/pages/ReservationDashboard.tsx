@@ -14,6 +14,7 @@ import {
   CALCOM_INSTALLATION_LINK,
   RESERVATION_DEPOSIT_USD,
   buildStripeCheckoutUrl,
+  buildCalcomUrl,
   getStripeReservationConfig,
 } from "@/lib/reservationConfig";
 import { saunaTypeLabel, SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
@@ -40,6 +41,11 @@ interface Reservation {
   id_status: string;
   hold_created_at: string | null;
   hold_deadline: string | null;
+  video_consult_booking_id?: string | null;
+  video_consult_scheduled_at?: string | null;
+  installation_booking_id?: string | null;
+  installation_scheduled_at?: string | null;
+  installation_status?: string | null;
 }
 
 interface SaunaHold {
