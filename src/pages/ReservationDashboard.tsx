@@ -233,6 +233,71 @@ const ReservationDashboard = () => {
     }
   };
 
+  const handleConnectBank = async () => {
+    if (!id || !token || !reservation) return;
+    setConnectingBank(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-setup-intent", {
+        body: { id, token },
+      });
+      const err = (error as any)?.message || (data as any)?.error;
+      if (err) throw new Error(err);
+      if (data?.already_connected) {
+        toast.success("Bank already connected");
+        await load();
+        return;
+      }
+      const { client_secret, publishable_key, customer_email, customer_name } = data as {
+        client_secret: string;
+        publishable_key: string;
+        customer_email?: string;
+        customer_name?: string;
+      };
+      if (!client_secret || !publishable_key) throw new Error("Could not start bank connection.");
+      const stripe = await loadStripe(publishable_key);
+      if (!stripe) throw new Error("Stripe.js failed to load.");
+      // Launch Stripe's built-in bank collection UI (Financial Connections).
+      // This handles ACH mandate + authorization language automatically.
+      const result = await stripe.collectBankAccountForSetup({
+        clientSecret: client_secret,
+        params: {
+          payment_method_type: "us_bank_account",
+          payment_method_data: {
+            billing_details: {
+              name: customer_name || `${reservation.first_name} ${reservation.last_name}`.trim(),
+              email: customer_email || reservation.email,
+            },
+          },
+        },
+        expand: ["payment_method"],
+      });
+      if (result.error) {
+        throw new Error(result.error.message || "Bank connection failed.");
+      }
+      const status = result.setupIntent?.status;
+      if (status === "requires_confirmation") {
+        const confirm = await stripe.confirmUsBankAccountSetup(client_secret);
+        if (confirm.error) throw new Error(confirm.error.message || "Bank confirmation failed.");
+        toast.success("Bank account connected");
+      } else if (status === "succeeded") {
+        toast.success("Bank account connected");
+      } else if (status === "requires_payment_method") {
+        toast.info("Bank connection canceled");
+      } else {
+        toast.success("Bank account submitted");
+      }
+      // Server confirmation lands via setup_intent.succeeded webhook.
+      // Refresh a few times to pick up the ach_status update.
+      await load();
+      setTimeout(() => load(), 3000);
+      setTimeout(() => load(), 8000);
+    } catch (e) {
+      toast.error((e as Error).message || "Could not connect bank account");
+    } finally {
+      setConnectingBank(false);
+    }
+  };
+
   const paid = reservation?.payment_status === "Paid";
   const installStatus = reservation?.installation_status ?? "Not Scheduled";
   const installScheduled = installStatus === "Scheduled" || installStatus === "Complete";
