@@ -13,6 +13,42 @@ Deno.serve(async (req) => {
   const key = Deno.env.get("STRIPE_SECRET_KEY");
   if (!key) return json({ error: "STRIPE_SECRET_KEY not set" }, 500);
 
+  const url = new URL(req.url);
+  const linkId = url.searchParams.get("payment_link");
+  if (linkId) {
+    const r = await fetch(`https://api.stripe.com/v1/payment_links/${linkId}`, {
+      headers: { Authorization: `Bearer ${key}` },
+    });
+    const body = await r.json();
+    // Also fetch recent checkout sessions for this link
+    const s = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions?payment_link=${linkId}&limit=5`,
+      { headers: { Authorization: `Bearer ${key}` } },
+    );
+    const sessions = await s.json();
+    return json({
+      payment_link: {
+        id: body.id,
+        active: body.active,
+        livemode: body.livemode,
+        customer_creation: body.customer_creation,
+        payment_method_types: body.payment_method_types,
+        payment_intent_data: body.payment_intent_data,
+        after_completion: body.after_completion,
+        error: body.error?.message ?? null,
+      },
+      recent_sessions: (sessions.data ?? []).map((x: any) => ({
+        id: x.id,
+        livemode: x.livemode,
+        customer: x.customer,
+        customer_email: x.customer_details?.email ?? x.customer_email,
+        payment_status: x.payment_status,
+        created: x.created,
+      })),
+      sessions_error: sessions.error?.message ?? null,
+    });
+  }
+
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
