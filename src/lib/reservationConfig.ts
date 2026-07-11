@@ -9,6 +9,41 @@ export const CALCOM_INSTALLATION_LINK =
 // The reservation deposit is standardized at $200 for every sauna type.
 export const RESERVATION_DEPOSIT_USD = 200;
 
+/**
+ * Build a Cal.com booking URL prefilled with the customer name/email and
+ * tagged with the reservation_id via Cal.com metadata (surfaced in the
+ * webhook payload as `payload.metadata.reservation_id`).
+ *
+ * The customer's display name is appended with a short reservation code so
+ * the reservation ID also shows up in the Cal.com meeting title
+ * (e.g. "Video Consultation between Host and John Smith — Reservation: 7fa33a67").
+ */
+export function buildCalcomUrl(
+  baseLink: string,
+  opts: {
+    reservationId: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    redirectUrl?: string | null;
+  },
+): string {
+  const url = new URL(baseLink);
+  const shortId = opts.reservationId.slice(0, 8);
+  const fullName = `${(opts.firstName ?? "").trim()} ${(opts.lastName ?? "").trim()}`.trim();
+  const displayName = fullName
+    ? `${fullName} — Reservation: ${shortId}`
+    : `Reservation: ${shortId}`;
+  url.searchParams.set("name", displayName);
+  if (opts.email) url.searchParams.set("email", opts.email);
+  // Cal.com passes metadata into the webhook body untouched.
+  url.searchParams.set("metadata[reservation_id]", opts.reservationId);
+  if (opts.redirectUrl) {
+    url.searchParams.set("redirect", opts.redirectUrl);
+  }
+  return url.toString();
+}
+
 // Fallback link used only if the app_config lookup fails.
 const FALLBACK_TEST_LINK = "https://buy.stripe.com/4gMeVd5XNfZQ3Oc2Tp6Vq1G";
 
