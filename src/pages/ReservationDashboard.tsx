@@ -54,6 +54,8 @@ interface Reservation {
   ach_bank_name?: string | null;
   ach_bank_last4?: string | null;
   ach_last_error?: string | null;
+  default_payment_method_status?: string | null;
+  default_payment_method_updated_at?: string | null;
 }
 
 interface SaunaHold {
@@ -597,19 +599,27 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
-                    done={reservation.ach_status === "Connected"}
+                    done={
+                      reservation.ach_status === "Connected" ||
+                      reservation.ach_status === "Connected, Default Update Failed"
+                    }
                     label="Connect Your Bank Account (Optional)"
                     sublabel={
                       reservation.ach_status === "Connected"
                         ? reservation.ach_bank_name && reservation.ach_bank_last4
-                          ? `Connected: ${reservation.ach_bank_name} ••${reservation.ach_bank_last4}`
-                          : "Bank account connected"
-                        : reservation.stripe_customer_linkage_missing
-                          ? "Contact support — Stripe customer needs to be linked before you can connect your bank."
-                          : "Connect your bank account to avoid credit card processing fees."
+                          ? `Connected: ${reservation.ach_bank_name} ••${reservation.ach_bank_last4} — set as default`
+                          : "Bank account connected and set as default"
+                        : reservation.ach_status === "Connected, Default Update Failed"
+                          ? reservation.ach_bank_name && reservation.ach_bank_last4
+                            ? `Bank saved (${reservation.ach_bank_name} ••${reservation.ach_bank_last4}) — support will finalize setup.`
+                            : "Bank saved — support will finalize setup."
+                          : reservation.stripe_customer_linkage_missing
+                            ? "Contact support — Stripe customer needs to be linked before you can connect your bank."
+                            : "Connect your bank account to avoid credit card processing fees."
                     }
                     action={
-                      reservation.ach_status === "Connected" ? (
+                      reservation.ach_status === "Connected" ||
+                      reservation.ach_status === "Connected, Default Update Failed" ? (
                         <span className="text-xs text-muted-foreground">Connected</span>
                       ) : (
                         <Button

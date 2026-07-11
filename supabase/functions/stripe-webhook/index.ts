@@ -4,6 +4,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
+import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -158,51 +159,90 @@ Deno.serve(async (req) => {
         const pmId: string | null =
           typeof si.payment_method === "string" ? si.payment_method : si.payment_method?.id ?? null;
 
-        // Fetch PaymentMethod for safe display fields (bank name, last4).
-        let bankName: string | null = null;
-        let bankLast4: string | null = null;
-        if (pmId) {
-          try {
-            const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-            if (stripeKey) {
-              const pmRes = await fetch(`https://api.stripe.com/v1/payment_methods/${pmId}`, {
-                headers: { Authorization: `Bearer ${stripeKey}` },
-              });
-              const pm = await pmRes.json();
-              bankName = pm?.us_bank_account?.bank_name ?? null;
-              bankLast4 = pm?.us_bank_account?.last4 ?? null;
-            }
-          } catch (e) {
-            console.error("PaymentMethod lookup failed:", e);
-          }
-        }
-
-        // Idempotent: if already Connected with the same setup intent, short-circuit.
+        // Idempotent: if already fully Connected with default set, short-circuit.
         if (res.ach_status === "Connected") {
           await markProcessed("success");
           return text("already connected", 200);
         }
 
-        await supabase
-          .from("reservations")
-          .update({
-            ach_status: "Connected",
-            ach_connected_at: new Date().toISOString(),
-            stripe_ach_setup_intent_id: si.id,
-            stripe_ach_payment_method_id: pmId,
-            ach_bank_name: bankName,
-            ach_bank_last4: bankLast4,
-            ach_last_error: null,
-          })
-          .eq("id", res.id);
-        await supabase.from("reservation_events").insert({
-          reservation_id: res.id,
-          event_type: "Bank Account Connected",
-          message: bankName && bankLast4
-            ? `Bank account connected (${bankName} ••${bankLast4}).`
-            : "Bank account connected for future rent payments.",
-          metadata: { setup_intent_id: si.id, payment_method_id: pmId },
-        });
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (!pmId || !res.stripe_customer_id || !stripeKey) {
+          await supabase
+            .from("reservations")
+            .update({
+              ach_status: "Connected, Default Update Failed",
+              ach_connected_at: new Date().toISOString(),
+              stripe_ach_setup_intent_id: si.id,
+              stripe_ach_payment_method_id: pmId,
+              ach_last_error: "Missing PaymentMethod, Stripe Customer, or STRIPE_SECRET_KEY.",
+            })
+            .eq("id", res.id);
+          await supabase.from("reservation_events").insert({
+            reservation_id: res.id,
+            event_type: "Bank Account Connected (Default Not Set)",
+            message: "Bank saved, but default_payment_method could not be updated. Admin retry available.",
+            metadata: { setup_intent_id: si.id, payment_method_id: pmId },
+          });
+          await markProcessed("success");
+          return text("ok", 200);
+        }
+
+        const result = await setAchAsCustomerDefault(stripeKey, res.stripe_customer_id, pmId);
+
+        if (result.ok) {
+          const nowIso = new Date().toISOString();
+          await supabase
+            .from("reservations")
+            .update({
+              ach_status: "Connected",
+              ach_connected_at: nowIso,
+              stripe_ach_setup_intent_id: si.id,
+              stripe_ach_payment_method_id: pmId,
+              ach_bank_name: result.bank_name ?? null,
+              ach_bank_last4: result.bank_last4 ?? null,
+              ach_last_error: null,
+              default_payment_method_status: "ACH",
+              default_payment_method_updated_at: nowIso,
+            })
+            .eq("id", res.id);
+          await supabase.from("reservation_events").insert({
+            reservation_id: res.id,
+            event_type: "Bank Account Connected",
+            message:
+              result.bank_name && result.bank_last4
+                ? `Bank account connected and set as default payment method (${result.bank_name} ••${result.bank_last4}).`
+                : "Bank account connected and set as default payment method.",
+            metadata: {
+              setup_intent_id: si.id,
+              payment_method_id: pmId,
+              customer_default_after: result.customer_default_after,
+            },
+          });
+        } else {
+          // Keep the PM saved, mark degraded so admin can retry.
+          await supabase
+            .from("reservations")
+            .update({
+              ach_status: "Connected, Default Update Failed",
+              ach_connected_at: new Date().toISOString(),
+              stripe_ach_setup_intent_id: si.id,
+              stripe_ach_payment_method_id: pmId,
+              ach_bank_name: result.bank_name ?? null,
+              ach_bank_last4: result.bank_last4 ?? null,
+              ach_last_error: (result.error ?? "Failed to set default payment method").slice(0, 500),
+            })
+            .eq("id", res.id);
+          await supabase.from("reservation_events").insert({
+            reservation_id: res.id,
+            event_type: "Bank Account Connected (Default Not Set)",
+            message: `Bank saved, but default_payment_method update failed: ${result.error ?? "unknown"}`,
+            metadata: {
+              setup_intent_id: si.id,
+              payment_method_id: pmId,
+              customer_default_after: result.customer_default_after ?? null,
+            },
+          });
+        }
       } else if (event.type === "setup_intent.setup_failed") {
         const errMsg: string = si.last_setup_error?.message ?? "Bank connection failed.";
         await supabase

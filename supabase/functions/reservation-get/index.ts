@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
   const { data: reservation, error } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, city, sauna_type_id, preferred_install_at, reservation_status, payment_status, consult_status, contract_status, id_status, hold_created_at, hold_deadline, created_at, sauna_inventory_id, video_consult_booking_id, video_consult_scheduled_at, installation_booking_id, installation_scheduled_at, installation_status, stripe_customer_id, stripe_customer_linkage_missing, ach_status, ach_connected_at, ach_bank_name, ach_bank_last4, ach_last_error",
+      "id, first_name, last_name, email, phone, install_address, city, sauna_type_id, preferred_install_at, reservation_status, payment_status, consult_status, contract_status, id_status, hold_created_at, hold_deadline, created_at, sauna_inventory_id, video_consult_booking_id, video_consult_scheduled_at, installation_booking_id, installation_scheduled_at, installation_status, stripe_customer_id, stripe_customer_linkage_missing, ach_status, ach_connected_at, ach_bank_name, ach_bank_last4, ach_last_error, default_payment_method_status, default_payment_method_updated_at",
     )
     .eq("id", id)
     .eq("secure_token", token)

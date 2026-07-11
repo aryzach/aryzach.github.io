@@ -1,5 +1,10 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
+import {
+  setAchAsCustomerDefault,
+  listCustomerSubscriptions,
+  setSubscriptionDefaultPaymentMethod,
+} from "../_shared/stripeAch.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -590,6 +595,113 @@ Deno.serve(async (req) => {
           metadata: { mode },
         });
         return json({ reservation: data });
+      }
+
+      case "set_ach_as_default": {
+        const { id } = payload;
+        if (!id) return json({ error: "id required" }, 400);
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (!stripeKey) return json({ error: "STRIPE_SECRET_KEY not configured" }, 500);
+
+        const { data: r } = await supabase
+          .from("reservations")
+          .select("id, stripe_customer_id, stripe_ach_payment_method_id, ach_status")
+          .eq("id", id)
+          .maybeSingle();
+        if (!r) return json({ error: "Not found" }, 404);
+        if (!r.stripe_customer_id) return json({ error: "Reservation has no Stripe Customer." }, 400);
+        if (!r.stripe_ach_payment_method_id) return json({ error: "Reservation has no saved ACH PaymentMethod." }, 400);
+
+        const result = await setAchAsCustomerDefault(
+          stripeKey,
+          r.stripe_customer_id,
+          r.stripe_ach_payment_method_id,
+        );
+
+        if (result.ok) {
+          const nowIso = new Date().toISOString();
+          const { data: updated } = await supabase
+            .from("reservations")
+            .update({
+              ach_status: "Connected",
+              ach_last_error: null,
+              default_payment_method_status: "ACH",
+              default_payment_method_updated_at: nowIso,
+            })
+            .eq("id", id)
+            .select()
+            .single();
+          await supabase.from("reservation_events").insert({
+            reservation_id: id,
+            event_type: "ACH Set As Default (Admin)",
+            message: "Admin set ACH as the Stripe Customer default payment method.",
+            metadata: {
+              payment_method_id: r.stripe_ach_payment_method_id,
+              customer_default_after: result.customer_default_after,
+            },
+          });
+          return json({ ok: true, reservation: updated, verified: result.verified });
+        }
+
+        await supabase
+          .from("reservations")
+          .update({
+            ach_status: "Connected, Default Update Failed",
+            ach_last_error: (result.error ?? "Failed to set default").slice(0, 500),
+          })
+          .eq("id", id);
+        await supabase.from("reservation_events").insert({
+          reservation_id: id,
+          event_type: "ACH Set As Default Failed (Admin)",
+          message: `Admin retry failed: ${result.error ?? "unknown"}`,
+          metadata: { payment_method_id: r.stripe_ach_payment_method_id },
+        });
+        return json({ ok: false, error: result.error ?? "Failed to set default" }, 500);
+      }
+
+      case "list_customer_subscriptions": {
+        const { id } = payload;
+        if (!id) return json({ error: "id required" }, 400);
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (!stripeKey) return json({ error: "STRIPE_SECRET_KEY not configured" }, 500);
+        const { data: r } = await supabase
+          .from("reservations")
+          .select("stripe_customer_id, stripe_ach_payment_method_id")
+          .eq("id", id)
+          .maybeSingle();
+        if (!r?.stripe_customer_id) return json({ error: "Reservation has no Stripe Customer." }, 400);
+        const result = await listCustomerSubscriptions(stripeKey, r.stripe_customer_id);
+        if (!result.ok) return json({ error: result.error }, 500);
+        return json({
+          subscriptions: result.subscriptions,
+          ach_payment_method_id: r.stripe_ach_payment_method_id,
+        });
+      }
+
+      case "set_subscription_default_pm": {
+        const { id, subscription_id } = payload;
+        if (!id || !subscription_id) return json({ error: "id and subscription_id required" }, 400);
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (!stripeKey) return json({ error: "STRIPE_SECRET_KEY not configured" }, 500);
+        const { data: r } = await supabase
+          .from("reservations")
+          .select("stripe_customer_id, stripe_ach_payment_method_id")
+          .eq("id", id)
+          .maybeSingle();
+        if (!r?.stripe_ach_payment_method_id) return json({ error: "No ACH PaymentMethod on reservation." }, 400);
+        const result = await setSubscriptionDefaultPaymentMethod(
+          stripeKey,
+          subscription_id,
+          r.stripe_ach_payment_method_id,
+        );
+        if (!result.ok) return json({ error: result.error }, 500);
+        await supabase.from("reservation_events").insert({
+          reservation_id: id,
+          event_type: "Subscription Default PM Updated (Admin)",
+          message: `Admin set ACH as default_payment_method on subscription ${subscription_id}.`,
+          metadata: { subscription_id, payment_method_id: r.stripe_ach_payment_method_id },
+        });
+        return json({ ok: true, default_payment_method: result.default_payment_method });
       }
 
       default:

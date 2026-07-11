@@ -476,6 +476,8 @@ export type Database = {
           consult_status: string
           contract_status: string
           created_at: string
+          default_payment_method_status: string | null
+          default_payment_method_updated_at: string | null
           email: string
           first_name: string
           hold_created_at: string | null
@@ -521,6 +523,8 @@ export type Database = {
           consult_status?: string
           contract_status?: string
           created_at?: string
+          default_payment_method_status?: string | null
+          default_payment_method_updated_at?: string | null
           email: string
           first_name: string
           hold_created_at?: string | null
@@ -566,6 +570,8 @@ export type Database = {
           consult_status?: string
           contract_status?: string
           created_at?: string
+          default_payment_method_status?: string | null
+          default_payment_method_updated_at?: string | null
           email?: string
           first_name?: string
           hold_created_at?: string | null
