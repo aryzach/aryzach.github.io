@@ -15,6 +15,23 @@ Deno.serve(async (req) => {
 
   const url = new URL(req.url);
   const linkId = url.searchParams.get("payment_link");
+  if (url.searchParams.get("list_links")) {
+    const r = await fetch(`https://api.stripe.com/v1/payment_links?limit=20`, {
+      headers: { Authorization: `Bearer ${key}` },
+    });
+    const body = await r.json();
+    return json({
+      links: (body.data ?? []).map((l: any) => ({
+        id: l.id,
+        url: l.url,
+        active: l.active,
+        livemode: l.livemode,
+        customer_creation: l.customer_creation,
+        payment_intent_data: l.payment_intent_data,
+      })),
+      error: body.error?.message ?? null,
+    });
+  }
   if (linkId) {
     const r = await fetch(`https://api.stripe.com/v1/payment_links/${linkId}`, {
       headers: { Authorization: `Bearer ${key}` },
