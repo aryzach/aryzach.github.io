@@ -128,8 +128,10 @@ export const ReservationsListPanel = ({
 
   const markPaid = async (id: string) => {
     if (!confirm("Manually mark this reservation as paid? (Skips Stripe.)")) return;
+    const notes = prompt("Add an admin note explaining why this is being marked paid manually:");
+    if (!notes || !notes.trim()) { toast.error("An admin note is required."); return; }
     try {
-      await callAdmin({ action: "manual_mark_paid", id });
+      await callAdmin({ action: "manual_mark_paid", id, notes: notes.trim() });
       toast.success("Marked paid");
       await load();
     } catch (e) {
@@ -175,11 +177,15 @@ export const ReservationsListPanel = ({
       "Delete {n} reservations? This cannot be undone.",
     );
   const bulkMarkPaid = () =>
-    runBulk(
+    {
+      const notes = prompt("Add an admin note (applied to all selected reservations):");
+      if (!notes || !notes.trim()) { toast.error("An admin note is required."); return; }
+      return runBulk(
       "Mark Paid",
-      (r) => callAdmin({ action: "manual_mark_paid", id: r.id }),
+      (r) => callAdmin({ action: "manual_mark_paid", id: r.id, notes: notes.trim() }),
       "Manually mark {n} reservations as paid?",
-    );
+      );
+    };
   const bulkConfirm = () =>
     runBulk("Confirm", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "confirm" }));
   const bulkRelease = () =>
