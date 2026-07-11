@@ -12,6 +12,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
+import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -671,6 +672,8 @@ const AdminReservations = () => {
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
+
+          <StripeStatusCard callAdmin={callAdmin} />
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />
