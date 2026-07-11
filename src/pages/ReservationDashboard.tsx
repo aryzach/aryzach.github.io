@@ -225,16 +225,43 @@ const ReservationDashboard = () => {
   };
 
   const paid = reservation?.payment_status === "Paid";
-  const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
+  const installStatus = reservation?.installation_status ?? "Not Scheduled";
+  const installScheduled = installStatus === "Scheduled" || installStatus === "Complete";
   const contractSigned = contractStatus === "Signed";
   const idComplete = reservation?.id_status === "Complete";
-  const canScheduleInstall = contractSigned && idComplete;
+  const consultScheduled =
+    reservation?.consult_status === "Scheduled" || reservation?.consult_status === "Complete";
+  const consultComplete = reservation?.consult_status === "Complete";
+  const allPrereqsComplete =
+    consultScheduled && consultComplete && paid && contractSigned && idComplete;
+  const canScheduleInstall = allPrereqsComplete;
   const isReserved = paid || saunaHold?.is_reserved === true;
   const editableInfo = !contractSigned;
   const stripeHref = useMemo(() => {
     if (!reservation || !stripeBaseLink) return "#";
     return buildStripeCheckoutUrl(stripeBaseLink, reservation.id, reservation.email);
   }, [reservation, stripeBaseLink]);
+
+  const calVideoHref = useMemo(() => {
+    if (!reservation) return CALCOM_VIDEO_CONSULT_LINK;
+    return buildCalcomUrl(CALCOM_VIDEO_CONSULT_LINK, {
+      reservationId: reservation.id,
+      firstName: reservation.first_name,
+      lastName: reservation.last_name,
+      email: reservation.email,
+      redirectUrl: typeof window !== "undefined" ? window.location.href : null,
+    });
+  }, [reservation]);
+  const calInstallHref = useMemo(() => {
+    if (!reservation) return CALCOM_INSTALLATION_LINK;
+    return buildCalcomUrl(CALCOM_INSTALLATION_LINK, {
+      reservationId: reservation.id,
+      firstName: reservation.first_name,
+      lastName: reservation.last_name,
+      email: reservation.email,
+      redirectUrl: typeof window !== "undefined" ? window.location.href : null,
+    });
+  }, [reservation]);
 
   const openInfoEdit = () => {
     if (!reservation) return;
