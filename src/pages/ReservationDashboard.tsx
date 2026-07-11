@@ -524,8 +524,8 @@ const ReservationDashboard = () => {
                   />
                   <StepRow
                     done={false}
-                    label="Connect to ACH (optional)"
-                    sublabel="Save 3% and avoid credit card fees"
+                    label="Connect Your Bank Account (Optional)"
+                    sublabel="Connect your bank account to avoid credit card processing fees."
                     action={
                       <Button asChild size="sm" variant="outline">
                         <a
