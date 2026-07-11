@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, Pencil, RefreshCw, Upload, Video } from "lucide-react";
+import { Banknote, Calendar, Check, Circle, Copy, ExternalLink, Eye, FileText, Loader2, Pencil, RefreshCw, Upload, Video } from "lucide-react";
 import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
