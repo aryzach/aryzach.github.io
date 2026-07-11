@@ -19,15 +19,18 @@ Deno.serve(async (req) => {
   let body: any = {};
   try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
 
-  const { id, token, sauna_type_id, preferred_install_date } = body ?? {};
+  const {
+    id, token, sauna_type_id, preferred_install_date,
+    first_name, last_name, email, phone, install_address, city,
+  } = body ?? {};
   if (!id || !token || typeof id !== "string" || typeof token !== "string") {
     return json({ error: "Missing id or token" }, 400);
   }
-  if (!sauna_type_id && !preferred_install_date) {
-    return json({ error: "Nothing to update" }, 400);
-  }
   if (preferred_install_date && !/^\d{4}-\d{2}-\d{2}$/.test(preferred_install_date)) {
     return json({ error: "Invalid date" }, 400);
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ error: "Invalid email" }, 400);
   }
 
   const supabase = createClient(
@@ -38,7 +41,7 @@ Deno.serve(async (req) => {
   // Verify token and load reservation
   const { data: reservation, error: rErr } = await supabase
     .from("reservations")
-    .select("id, sauna_type_id, preferred_install_at, payment_status, sauna_inventory_id")
+    .select("id, sauna_type_id, preferred_install_at, payment_status, sauna_inventory_id, first_name, last_name, email, phone, install_address, city")
     .eq("id", id)
     .eq("secure_token", token)
     .maybeSingle();
@@ -75,6 +78,30 @@ Deno.serve(async (req) => {
     const d = new Date(preferred_install_date + "T00:00:00");
     if (d < today) return json({ error: "Installation date can't be before today." }, 400);
     update.preferred_install_at = d.toISOString();
+  }
+
+  // Personal info updates — allowed pre-signed
+  const trim = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+  if (typeof first_name === "string" && trim(first_name) && trim(first_name) !== reservation.first_name) {
+    if (trim(first_name).length > 100) return json({ error: "First name too long" }, 400);
+    update.first_name = trim(first_name);
+  }
+  if (typeof last_name === "string" && trim(last_name) && trim(last_name) !== reservation.last_name) {
+    if (trim(last_name).length > 100) return json({ error: "Last name too long" }, 400);
+    update.last_name = trim(last_name);
+  }
+  if (typeof email === "string" && trim(email) && trim(email) !== reservation.email) {
+    update.email = trim(email).toLowerCase();
+  }
+  if (typeof phone === "string" && trim(phone) !== (reservation.phone ?? "")) {
+    if (trim(phone).length < 7) return json({ error: "Invalid phone" }, 400);
+    update.phone = trim(phone);
+  }
+  if (typeof install_address === "string" && trim(install_address) !== (reservation.install_address ?? "")) {
+    update.install_address = trim(install_address);
+  }
+  if (typeof city === "string" && trim(city) !== (reservation.city ?? "")) {
+    update.city = trim(city);
   }
 
   if (Object.keys(update).length === 0) return json({ ok: true, changed: false });

@@ -28,6 +28,8 @@ interface Reservation {
   first_name: string;
   last_name: string;
   email: string;
+  phone: string | null;
+  install_address: string | null;
   sauna_type_id: string;
   preferred_install_at: string;
   city: string | null;
@@ -38,6 +40,11 @@ interface Reservation {
   id_status: string;
   hold_created_at: string | null;
   hold_deadline: string | null;
+}
+
+interface SaunaHold {
+  status: string;
+  is_reserved: boolean;
 }
 
 const ReservationDashboard = () => {
@@ -64,6 +71,12 @@ const ReservationDashboard = () => {
   const [editSaunaType, setEditSaunaType] = useState<string>("");
   const [editDate, setEditDate] = useState<string>("");
   const [saving, setSaving] = useState(false);
+  const [saunaHold, setSaunaHold] = useState<SaunaHold | null>(null);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [infoForm, setInfoForm] = useState({
+    first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
+  });
+  const [savingInfo, setSavingInfo] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -79,6 +92,7 @@ const ReservationDashboard = () => {
     } else {
       setReservation(data.reservation as Reservation);
       setIdPhoto((data.id_photo as { url: string; name: string } | null) ?? null);
+      setSaunaHold((data.sauna_hold as SaunaHold | null) ?? null);
       setError(null);
     }
     setLoading(false);
@@ -206,10 +220,48 @@ const ReservationDashboard = () => {
 
   const paid = reservation?.payment_status === "Paid";
   const installScheduled = reservation?.reservation_status === "Reservation Confirmed";
+  const contractSigned = contractStatus === "Signed";
+  const idComplete = reservation?.id_status === "Complete";
+  const canScheduleInstall = contractSigned && idComplete;
+  const isReserved = paid || saunaHold?.is_reserved === true;
+  const editableInfo = !contractSigned;
   const stripeHref = useMemo(() => {
     if (!reservation || !stripeBaseLink) return "#";
     return buildStripeCheckoutUrl(stripeBaseLink, reservation.id, reservation.email);
   }, [reservation, stripeBaseLink]);
+
+  const openInfoEdit = () => {
+    if (!reservation) return;
+    setInfoForm({
+      first_name: reservation.first_name ?? "",
+      last_name: reservation.last_name ?? "",
+      email: reservation.email ?? "",
+      phone: reservation.phone ?? "",
+      install_address: reservation.install_address ?? "",
+      city: reservation.city ?? "",
+    });
+    setInfoOpen(true);
+  };
+
+  const saveInfo = async () => {
+    if (!id || !token) return;
+    setSavingInfo(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("reservation-update", {
+        body: { id, token, ...infoForm },
+      });
+      const err = (error as any)?.message || (data as any)?.error;
+      if (err) throw new Error(err);
+      toast.success("Your info was updated");
+      setInfoOpen(false);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message || "Update failed");
+    } finally {
+      setSavingInfo(false);
+    }
+  };
+
   const holdDeadlinePretty = reservation?.hold_deadline
     ? new Date(reservation.hold_deadline).toLocaleString(undefined, {
         dateStyle: "long",
@@ -246,11 +298,6 @@ const ReservationDashboard = () => {
                   : "Complete all steps on this page to complete your reservation."}
               </p>
 
-              {!paid && (
-                <p className="text-sm text-muted-foreground mb-4">
-                  Complete your $200 reservation payment to activate your temporary sauna hold.
-                </p>
-              )}
               {paid && holdDeadlinePretty && (
                 <p className="text-sm text-foreground mb-4">
                   Your sauna is temporarily held. Hold deadline:{" "}
@@ -283,6 +330,83 @@ const ReservationDashboard = () => {
                     label="Preferred installation date"
                     value={formatDatePretty(reservation.preferred_install_at.slice(0, 10))}
                   />
+                  <div className="flex items-center justify-between gap-4 pt-2">
+                    <span className="text-muted-foreground">Sauna hold status</span>
+                    <span
+                      className={
+                        "inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium " +
+                        (isReserved
+                          ? "bg-green-500/15 text-green-700 dark:text-green-400"
+                          : "bg-red-500/15 text-red-700 dark:text-red-400")
+                      }
+                    >
+                      <span
+                        className={
+                          "h-2 w-2 rounded-full " +
+                          (isReserved ? "bg-green-500" : "bg-red-500")
+                        }
+                      />
+                      {isReserved ? "Reserved for you" : "Not yet reserved"}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="mb-4">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-base font-medium text-muted-foreground">
+                      Your information
+                    </CardTitle>
+                    {editableInfo && (
+                      <Button size="sm" variant="ghost" onClick={openInfoEdit}>
+                        <Pencil className="mr-1.5" size={14} /> Edit
+                      </Button>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent className="text-sm space-y-1.5">
+                  <Detail label="Name" value={`${reservation.first_name} ${reservation.last_name}`} />
+                  <Detail label="Email" value={reservation.email} />
+                  <Detail label="Phone" value={reservation.phone || "—"} />
+                  <Detail label="Install address" value={reservation.install_address || "—"} />
+                  <Detail label="City" value={reservation.city || "—"} />
+                </CardContent>
+              </Card>
+
+              {/* Reservation deposit callout */}
+              <Card className="mb-4">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    {paid ? (
+                      <span
+                        aria-label="Complete"
+                        className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-green-500 text-white shrink-0 mt-0.5"
+                      >
+                        <Check size={16} strokeWidth={3} />
+                      </span>
+                    ) : (
+                      <Circle className="text-muted-foreground shrink-0 mt-0.5" size={22} strokeWidth={1.5} />
+                    )}
+                    <div className="flex-grow min-w-0">
+                      <div className="text-foreground font-medium">
+                        {paid
+                          ? `$${RESERVATION_DEPOSIT_USD} reservation deposit paid`
+                          : `Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1 leading-snug">
+                        Lock in your reservation with a reservation deposit, or choose to wait
+                        until after the your Video Consultation.
+                      </p>
+                    </div>
+                    {!paid && (
+                      <Button asChild size="sm" disabled={!stripeBaseLink}>
+                        <a href={stripeHref} target="_blank" rel="noopener noreferrer">
+                          Pay <ExternalLink className="ml-1.5" size={14} />
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -294,26 +418,8 @@ const ReservationDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <StepRow
-                    done={paid}
-                    label={`Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`}
-                    sublabel={
-                      !paid
-                        ? "Deposit applied to lease payments. We will confirm receipt within 24 hours."
-                        : undefined
-                    }
-                    action={
-                      !paid ? (
-                        <Button asChild size="sm" disabled={!stripeBaseLink}>
-                          <a href={stripeHref} target="_blank" rel="noopener noreferrer">
-                            Pay <ExternalLink className="ml-1.5" size={14} />
-                          </a>
-                        </Button>
-                      ) : null
-                    }
-                  />
-                  <StepRow
                     done={reservation.consult_status === "Scheduled" || reservation.consult_status === "Complete"}
-                    label="Schedule Video Consultation"
+                    label="Step 1: Schedule Video Consultation"
                     action={
                       <Button asChild size="sm" variant="outline">
                         <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
@@ -323,6 +429,31 @@ const ReservationDashboard = () => {
                             : "Schedule"}
                         </a>
                       </Button>
+                    }
+                  />
+                  <div className="pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    After the call
+                  </div>
+                  <StepRow
+                    done={contractStatus === "Signed"}
+                    label="Complete Rental Agreement"
+                    action={
+                      <div className="flex items-center gap-2">
+                        {contractStatus && contractStatus !== "Not Started" && contractStatus !== "Signed" && (
+                          <span className="text-xs text-muted-foreground">{contractStatus}</span>
+                        )}
+                        <Button
+                          size="sm"
+                          variant={contractStatus === "Signed" ? "ghost" : "outline"}
+                          onClick={() => setAgreementOpen(true)}
+                        >
+                          <FileText className="mr-1.5" size={14} />
+                          {contractStatus === "Signed" ? "View"
+                            : contractStatus === "Draft Created" || contractStatus === "Ready to Sign"
+                              ? "Review & Sign"
+                              : "Start"}
+                        </Button>
+                      </div>
                     }
                   />
                   <StepRow
@@ -366,42 +497,8 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
-                    done={contractStatus === "Signed"}
-                    label="Complete Rental Agreement"
-                    action={
-                      <div className="flex items-center gap-2">
-                        {contractStatus && contractStatus !== "Not Started" && contractStatus !== "Signed" && (
-                          <span className="text-xs text-muted-foreground">{contractStatus}</span>
-                        )}
-                        <Button
-                          size="sm"
-                          variant={contractStatus === "Signed" ? "ghost" : "outline"}
-                          onClick={() => setAgreementOpen(true)}
-                        >
-                          <FileText className="mr-1.5" size={14} />
-                          {contractStatus === "Signed" ? "View"
-                            : contractStatus === "Draft Created" || contractStatus === "Ready to Sign"
-                              ? "Review & Sign"
-                              : "Start"}
-                        </Button>
-                      </div>
-                    }
-                  />
-                  <StepRow
-                    done={installScheduled}
-                    label="Schedule Installation Date"
-                    action={
-                      <Button asChild size="sm" variant="outline">
-                        <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
-                          <Calendar className="mr-1.5" size={14} />
-                          {installScheduled ? "View / Reschedule" : "Schedule"}
-                        </a>
-                      </Button>
-                    }
-                  />
-                  <StepRow
                     done={false}
-                    label="Connect to ACH"
+                    label="Connect to ACH (optional)"
                     sublabel="Save 3% and avoid credit card fees"
                     action={
                       <Button asChild size="sm" variant="outline">
@@ -413,6 +510,31 @@ const ReservationDashboard = () => {
                           <Banknote className="mr-1.5" size={14} />
                           Connect
                         </a>
+                      </Button>
+                    }
+                  />
+                  <StepRow
+                    done={installScheduled}
+                    label="Schedule Installation Date"
+                    sublabel="Available after rental agreement and photo ID are complete"
+                    action={
+                      <Button
+                        asChild={canScheduleInstall}
+                        size="sm"
+                        variant="outline"
+                        disabled={!canScheduleInstall}
+                      >
+                        {canScheduleInstall ? (
+                          <a href={CALCOM_INSTALLATION_LINK} target="_blank" rel="noopener noreferrer">
+                            <Calendar className="mr-1.5" size={14} />
+                            {installScheduled ? "View / Reschedule" : "Schedule"}
+                          </a>
+                        ) : (
+                          <span>
+                            <Calendar className="mr-1.5 inline" size={14} />
+                            Schedule
+                          </span>
+                        )}
                       </Button>
                     }
                   />
@@ -499,6 +621,79 @@ const ReservationDashboard = () => {
             </Button>
             <Button onClick={saveEdit} disabled={saving}>
               {saving && <Loader2 className="mr-2 animate-spin" size={14} />}
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={infoOpen} onOpenChange={setInfoOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit your information</DialogTitle>
+            <DialogDescription>
+              Update your name, contact info, or installation address.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="info-first">First name</Label>
+                <Input
+                  id="info-first"
+                  value={infoForm.first_name}
+                  onChange={(e) => setInfoForm({ ...infoForm, first_name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="info-last">Last name</Label>
+                <Input
+                  id="info-last"
+                  value={infoForm.last_name}
+                  onChange={(e) => setInfoForm({ ...infoForm, last_name: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-email">Email</Label>
+              <Input
+                id="info-email"
+                type="email"
+                value={infoForm.email}
+                onChange={(e) => setInfoForm({ ...infoForm, email: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-phone">Phone</Label>
+              <Input
+                id="info-phone"
+                type="tel"
+                value={infoForm.phone}
+                onChange={(e) => setInfoForm({ ...infoForm, phone: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-address">Install address</Label>
+              <Input
+                id="info-address"
+                value={infoForm.install_address}
+                onChange={(e) => setInfoForm({ ...infoForm, install_address: e.target.value })}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="info-city">City</Label>
+              <Input
+                id="info-city"
+                value={infoForm.city}
+                onChange={(e) => setInfoForm({ ...infoForm, city: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setInfoOpen(false)} disabled={savingInfo}>
+              Cancel
+            </Button>
+            <Button onClick={saveInfo} disabled={savingInfo}>
+              {savingInfo && <Loader2 className="mr-2 animate-spin" size={14} />}
               Save changes
             </Button>
           </DialogFooter>

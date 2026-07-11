@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
   const { data: reservation, error } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, city, sauna_type_id, preferred_install_at, reservation_status, payment_status, consult_status, contract_status, id_status, hold_created_at, hold_deadline, created_at",
+      "id, first_name, last_name, email, phone, install_address, city, sauna_type_id, preferred_install_at, reservation_status, payment_status, consult_status, contract_status, id_status, hold_created_at, hold_deadline, created_at, sauna_inventory_id",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -43,6 +43,22 @@ Deno.serve(async (req) => {
     return json({ error: "Server error" }, 500);
   }
   if (!reservation) return json({ error: "Not found" }, 404);
+
+  // Look up sauna inventory hold state
+  let sauna_hold: { status: string; is_reserved: boolean } | null = null;
+  if (reservation.sauna_inventory_id) {
+    const { data: inv } = await supabase
+      .from("sauna_inventory")
+      .select("status, reservation_id")
+      .eq("id", reservation.sauna_inventory_id)
+      .maybeSingle();
+    if (inv) {
+      const isReserved =
+        inv.reservation_id === reservation.id &&
+        ["Reservation Hold", "Reserved", "Reservation Confirmed", "Installed"].includes(inv.status);
+      sauna_hold = { status: inv.status, is_reserved: isReserved };
+    }
+  }
 
   // Return the most recent uploaded photo ID (if any) as a short-lived signed URL.
   let id_photo: { url: string; name: string } | null = null;
@@ -63,5 +79,5 @@ Deno.serve(async (req) => {
     console.error("id_photo lookup failed:", e);
   }
 
-  return json({ reservation, id_photo });
+  return json({ reservation, id_photo, sauna_hold });
 });
