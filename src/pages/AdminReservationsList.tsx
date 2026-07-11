@@ -33,6 +33,15 @@ interface Reservation {
   admin_notes: string | null;
   secure_token: string;
   created_at: string;
+  stripe_customer_id?: string | null;
+  stripe_customer_linkage_missing?: boolean | null;
+  ach_status?: string | null;
+  ach_connected_at?: string | null;
+  stripe_ach_setup_intent_id?: string | null;
+  stripe_ach_payment_method_id?: string | null;
+  ach_bank_name?: string | null;
+  ach_bank_last4?: string | null;
+  ach_last_error?: string | null;
 }
 
 interface ReservationEvent {
