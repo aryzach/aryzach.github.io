@@ -453,6 +453,57 @@ const ReservationDashboard = () => {
           onSaved={loadContract}
         />
       )}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit reservation</DialogTitle>
+            <DialogDescription>
+              Update your sauna type or preferred installation date.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <Label>Sauna type</Label>
+              <Select
+                value={editSaunaType}
+                onValueChange={setEditSaunaType}
+                disabled={reservation?.payment_status === "Paid"}
+              >
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {SAUNA_TYPE_OPTIONS.map((o) => (
+                    <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {reservation?.payment_status === "Paid" && (
+                <p className="text-xs text-muted-foreground">
+                  Sauna type can't be changed after your deposit is paid. Contact us for help.
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-install-date">Preferred installation date</Label>
+              <Input
+                id="edit-install-date"
+                type="date"
+                value={editDate}
+                min={new Date().toISOString().slice(0, 10)}
+                onChange={(e) => setEditDate(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditOpen(false)} disabled={saving}>
+              Cancel
+            </Button>
+            <Button onClick={saveEdit} disabled={saving}>
+              {saving && <Loader2 className="mr-2 animate-spin" size={14} />}
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
