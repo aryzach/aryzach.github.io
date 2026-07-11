@@ -33,7 +33,7 @@ function fmtWhen(iso: string | null | undefined): string {
 }
 
 interface Props {
-  callAdmin: (body: Record<string, unknown>) => Promise<StripeStatus>;
+  callAdmin: (body: Record<string, unknown>) => Promise<any>;
 }
 
 export function StripeStatusCard({ callAdmin }: Props) {

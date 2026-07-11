@@ -673,7 +673,7 @@ const AdminReservations = () => {
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
-          <StripeStatusCard callAdmin={callAdmin as unknown as (b: Record<string, unknown>) => Promise<never>} />
+          <StripeStatusCard callAdmin={callAdmin} />
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />
