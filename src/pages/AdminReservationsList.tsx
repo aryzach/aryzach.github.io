@@ -33,6 +33,15 @@ interface Reservation {
   admin_notes: string | null;
   secure_token: string;
   created_at: string;
+  stripe_customer_id?: string | null;
+  stripe_customer_linkage_missing?: boolean | null;
+  ach_status?: string | null;
+  ach_connected_at?: string | null;
+  stripe_ach_setup_intent_id?: string | null;
+  stripe_ach_payment_method_id?: string | null;
+  ach_bank_name?: string | null;
+  ach_bank_last4?: string | null;
+  ach_last_error?: string | null;
 }
 
 interface ReservationEvent {
@@ -310,9 +319,28 @@ export const ReservationsListPanel = ({
             ({filtered.length}{filtered.length !== reservations.length ? ` of ${reservations.length}` : ""})
           </span>
         </h2>
-        <Button onClick={load} size="sm" variant="outline" disabled={loading}>
-          {loading ? "Refreshing…" : "Refresh"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={async () => {
+              try {
+                const res = await callAdmin({ action: "backfill_stripe_customers" });
+                const linked = (res.results ?? []).filter((r: any) => r.status === "linked").length;
+                const missing = (res.results ?? []).filter((r: any) => r.status === "no_customer_on_session").length;
+                toast.success(`Backfill: ${linked} linked, ${missing} missing customer, ${res.processed - linked - missing} errors`);
+                await load();
+              } catch (e) {
+                toast.error((e as Error).message || "Backfill failed");
+              }
+            }}
+            size="sm"
+            variant="outline"
+          >
+            Backfill Stripe Customers
+          </Button>
+          <Button onClick={load} size="sm" variant="outline" disabled={loading}>
+            {loading ? "Refreshing…" : "Refresh"}
+          </Button>
+        </div>
       </div>
 
       {selected.size > 0 && (

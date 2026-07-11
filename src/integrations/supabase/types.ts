@@ -466,6 +466,11 @@ export type Database = {
       reservations: {
         Row: {
           access_notes: string | null
+          ach_bank_last4: string | null
+          ach_bank_name: string | null
+          ach_connected_at: string | null
+          ach_last_error: string | null
+          ach_status: string
           admin_notes: string | null
           city: string | null
           consult_status: string
@@ -493,7 +498,11 @@ export type Database = {
           sauna_inventory_id: string | null
           sauna_type_id: string
           secure_token: string
+          stripe_ach_payment_method_id: string | null
+          stripe_ach_setup_intent_id: string | null
           stripe_checkout_session_id: string | null
+          stripe_customer_id: string | null
+          stripe_customer_linkage_missing: boolean
           stripe_payment_id: string | null
           stripe_payment_intent_id: string | null
           updated_at: string
@@ -502,6 +511,11 @@ export type Database = {
         }
         Insert: {
           access_notes?: string | null
+          ach_bank_last4?: string | null
+          ach_bank_name?: string | null
+          ach_connected_at?: string | null
+          ach_last_error?: string | null
+          ach_status?: string
           admin_notes?: string | null
           city?: string | null
           consult_status?: string
@@ -529,7 +543,11 @@ export type Database = {
           sauna_inventory_id?: string | null
           sauna_type_id: string
           secure_token?: string
+          stripe_ach_payment_method_id?: string | null
+          stripe_ach_setup_intent_id?: string | null
           stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_customer_linkage_missing?: boolean
           stripe_payment_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string
@@ -538,6 +556,11 @@ export type Database = {
         }
         Update: {
           access_notes?: string | null
+          ach_bank_last4?: string | null
+          ach_bank_name?: string | null
+          ach_connected_at?: string | null
+          ach_last_error?: string | null
+          ach_status?: string
           admin_notes?: string | null
           city?: string | null
           consult_status?: string
@@ -565,7 +588,11 @@ export type Database = {
           sauna_inventory_id?: string | null
           sauna_type_id?: string
           secure_token?: string
+          stripe_ach_payment_method_id?: string | null
+          stripe_ach_setup_intent_id?: string | null
           stripe_checkout_session_id?: string | null
+          stripe_customer_id?: string | null
+          stripe_customer_linkage_missing?: boolean
           stripe_payment_id?: string | null
           stripe_payment_intent_id?: string | null
           updated_at?: string

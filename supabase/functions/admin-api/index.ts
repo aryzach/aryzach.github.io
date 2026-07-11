@@ -507,6 +507,91 @@ Deno.serve(async (req) => {
         return json({ ok: true, resend_id: result.resend_id });
       }
 
+      case "backfill_stripe_customers": {
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (!stripeKey) return json({ error: "STRIPE_SECRET_KEY not configured" }, 500);
+        const { data: candidates, error: cErr } = await supabase
+          .from("reservations")
+          .select("id, stripe_checkout_session_id")
+          .eq("payment_status", "Paid")
+          .is("stripe_customer_id", null)
+          .not("stripe_checkout_session_id", "is", null);
+        if (cErr) throw cErr;
+
+        const results: any[] = [];
+        for (const r of (candidates ?? []) as { id: string; stripe_checkout_session_id: string }[]) {
+          try {
+            const resp = await fetch(
+              `https://api.stripe.com/v1/checkout/sessions/${r.stripe_checkout_session_id}`,
+              { headers: { Authorization: `Bearer ${stripeKey}` } },
+            );
+            const s = await resp.json();
+            if (!resp.ok) {
+              results.push({ id: r.id, status: "error", error: s.error?.message });
+              continue;
+            }
+            const customerId: string | null =
+              typeof s.customer === "string" ? s.customer : s.customer?.id ?? null;
+            if (customerId) {
+              await supabase
+                .from("reservations")
+                .update({
+                  stripe_customer_id: customerId,
+                  stripe_customer_linkage_missing: false,
+                })
+                .eq("id", r.id);
+              await supabase.from("reservation_events").insert({
+                reservation_id: r.id,
+                event_type: "Stripe Customer Backfilled",
+                message: "Stripe Customer linked from prior Checkout Session.",
+                metadata: { customer_id: customerId, checkout_session_id: r.stripe_checkout_session_id },
+              });
+              results.push({ id: r.id, status: "linked", customer_id: customerId });
+            } else {
+              await supabase
+                .from("reservations")
+                .update({ stripe_customer_linkage_missing: true })
+                .eq("id", r.id);
+              results.push({ id: r.id, status: "no_customer_on_session" });
+            }
+          } catch (e) {
+            results.push({ id: r.id, status: "error", error: (e as Error).message });
+          }
+        }
+        return json({ processed: results.length, results });
+      }
+
+      case "admin_reset_ach": {
+        const { id, mode } = payload;
+        if (!id) return json({ error: "id required" }, 400);
+        const patch: any = { ach_last_error: null };
+        if (mode === "clear_failed") {
+          patch.ach_status = "Not Connected";
+        } else if (mode === "skip") {
+          patch.ach_status = "Not Connected";
+          patch.ach_last_error = "Marked skipped by admin";
+        } else if (mode === "retry") {
+          patch.ach_status = "Not Connected";
+          patch.stripe_ach_setup_intent_id = null;
+        } else {
+          return json({ error: "invalid mode" }, 400);
+        }
+        const { data, error } = await supabase
+          .from("reservations")
+          .update(patch)
+          .eq("id", id)
+          .select()
+          .single();
+        if (error) throw error;
+        await supabase.from("reservation_events").insert({
+          reservation_id: id,
+          event_type: "ACH Admin Action",
+          message: `ACH admin action: ${mode}`,
+          metadata: { mode },
+        });
+        return json({ reservation: data });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }

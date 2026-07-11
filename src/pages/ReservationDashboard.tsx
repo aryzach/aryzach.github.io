@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogD
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { loadStripe } from "@stripe/stripe-js";
 
 interface Reservation {
   id: string;
@@ -46,6 +47,13 @@ interface Reservation {
   installation_booking_id?: string | null;
   installation_scheduled_at?: string | null;
   installation_status?: string | null;
+  stripe_customer_id?: string | null;
+  stripe_customer_linkage_missing?: boolean | null;
+  ach_status?: string | null;
+  ach_connected_at?: string | null;
+  ach_bank_name?: string | null;
+  ach_bank_last4?: string | null;
+  ach_last_error?: string | null;
 }
 
 interface SaunaHold {
@@ -83,6 +91,7 @@ const ReservationDashboard = () => {
     first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
   });
   const [savingInfo, setSavingInfo] = useState(false);
+  const [connectingBank, setConnectingBank] = useState(false);
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -221,6 +230,71 @@ const ReservationDashboard = () => {
     } finally {
       setUploadingId(false);
       if (idInputRef.current) idInputRef.current.value = "";
+    }
+  };
+
+  const handleConnectBank = async () => {
+    if (!id || !token || !reservation) return;
+    setConnectingBank(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("stripe-setup-intent", {
+        body: { id, token },
+      });
+      const err = (error as any)?.message || (data as any)?.error;
+      if (err) throw new Error(err);
+      if (data?.already_connected) {
+        toast.success("Bank already connected");
+        await load();
+        return;
+      }
+      const { client_secret, publishable_key, customer_email, customer_name } = data as {
+        client_secret: string;
+        publishable_key: string;
+        customer_email?: string;
+        customer_name?: string;
+      };
+      if (!client_secret || !publishable_key) throw new Error("Could not start bank connection.");
+      const stripe = await loadStripe(publishable_key);
+      if (!stripe) throw new Error("Stripe.js failed to load.");
+      // Launch Stripe's built-in bank collection UI (Financial Connections).
+      // This handles ACH mandate + authorization language automatically.
+      const result = await stripe.collectBankAccountForSetup({
+        clientSecret: client_secret,
+        params: {
+          payment_method_type: "us_bank_account",
+          payment_method_data: {
+            billing_details: {
+              name: customer_name || `${reservation.first_name} ${reservation.last_name}`.trim(),
+              email: customer_email || reservation.email,
+            },
+          },
+        },
+        expand: ["payment_method"],
+      });
+      if (result.error) {
+        throw new Error(result.error.message || "Bank connection failed.");
+      }
+      const status = result.setupIntent?.status;
+      if (status === "requires_confirmation") {
+        const confirm = await stripe.confirmUsBankAccountSetup(client_secret);
+        if (confirm.error) throw new Error(confirm.error.message || "Bank confirmation failed.");
+        toast.success("Bank account connected");
+      } else if (status === "succeeded") {
+        toast.success("Bank account connected");
+      } else if (status === "requires_payment_method") {
+        toast.info("Bank connection canceled");
+      } else {
+        toast.success("Bank account submitted");
+      }
+      // Server confirmation lands via setup_intent.succeeded webhook.
+      // Refresh a few times to pick up the ach_status update.
+      await load();
+      setTimeout(() => load(), 3000);
+      setTimeout(() => load(), 8000);
+    } catch (e) {
+      toast.error((e as Error).message || "Could not connect bank account");
+    } finally {
+      setConnectingBank(false);
     }
   };
 
@@ -523,20 +597,39 @@ const ReservationDashboard = () => {
                     }
                   />
                   <StepRow
-                    done={false}
+                    done={reservation.ach_status === "Connected"}
                     label="Connect Your Bank Account (Optional)"
-                    sublabel="Connect your bank account to avoid credit card processing fees."
+                    sublabel={
+                      reservation.ach_status === "Connected"
+                        ? reservation.ach_bank_name && reservation.ach_bank_last4
+                          ? `Connected: ${reservation.ach_bank_name} ••${reservation.ach_bank_last4}`
+                          : "Bank account connected"
+                        : reservation.stripe_customer_linkage_missing
+                          ? "Contact support — Stripe customer needs to be linked before you can connect your bank."
+                          : "Connect your bank account to avoid credit card processing fees."
+                    }
                     action={
-                      <Button asChild size="sm" variant="outline">
-                        <a
-                          href="https://connect.plaid.com/"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      reservation.ach_status === "Connected" ? (
+                        <span className="text-xs text-muted-foreground">Connected</span>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleConnectBank}
+                          disabled={
+                            connectingBank ||
+                            !paid ||
+                            !!reservation.stripe_customer_linkage_missing
+                          }
                         >
-                          <Banknote className="mr-1.5" size={14} />
-                          Connect
-                        </a>
-                      </Button>
+                          {connectingBank ? (
+                            <Loader2 className="mr-1.5 animate-spin" size={14} />
+                          ) : (
+                            <Banknote className="mr-1.5" size={14} />
+                          )}
+                          {connectingBank ? "Opening…" : "Connect Bank"}
+                        </Button>
+                      )
                     }
                   />
                   <StepRow

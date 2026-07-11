@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.cal-webhook]
 verify_jwt = false
+
+[functions.stripe-setup-intent]
+verify_jwt = false
