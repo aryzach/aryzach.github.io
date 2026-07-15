@@ -44,6 +44,12 @@ Deno.serve(async (req) => {
   }
   if (!reservation) return json({ error: "Not found" }, 404);
 
+  // Record that the magic link was opened.
+  await supabase
+    .from("reservations")
+    .update({ magic_link_opened_at: new Date().toISOString() })
+    .eq("id", id);
+
   // Look up sauna inventory hold state
   let sauna_hold: { status: string; is_reserved: boolean } | null = null;
   if (reservation.sauna_inventory_id) {
