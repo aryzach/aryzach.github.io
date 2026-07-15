@@ -18,7 +18,7 @@ const CATEGORIES: {
     key: "traditional",
     title: "Traditional Sauna",
     blurb:
-      "200°F heat, authentic löyly, and real stones powered from a standard home outlet.",
+      "230°F heat, authentic löyly, and real stones powered from a standard home outlet.",
     imageFrom: "Outdoor",
   },
   {

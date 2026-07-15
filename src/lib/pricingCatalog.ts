@@ -79,7 +79,7 @@ export const products: Product[] = [
     placement: "Indoor",
     shortDescription: "2-person traditional sauna, built for living rooms, garages, and studio apartments.",
     longDescription:
-      "2-person sauna, 200°F on a standard home outlet.",
+      "2-person sauna, 230°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
     tiers: tiersFor("indoor_outdoor_traditional_latest"),
@@ -93,7 +93,7 @@ export const products: Product[] = [
     placement: "Outdoor",
     shortDescription: "2-person traditional sauna for backyards, patios, and decks.",
     longDescription:
-      "2-person sauna, 200°F on a standard home outlet.",
+      "2-person sauna, 230°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
     tiers: tiersFor("outdoor_traditional_latest"),
@@ -110,7 +110,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation indoor traditional sauna, converted from an infrared model. Same authentic experience, lower monthly price.",
     longDescription:
-      "1st-gen traditional sauna. 200°F on a standard home outlet.",
+      "1st-gen traditional sauna. 230°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_INDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
     tiers: tiersFor("indoor_traditional"),
@@ -125,7 +125,7 @@ export const products: Product[] = [
     shortDescription:
       "Earlier-generation outdoor traditional sauna, converted from an infrared model. Authentic experience at a lower monthly price.",
     longDescription:
-      "1st-gen traditional sauna. 200°F on a standard home outlet.",
+      "1st-gen traditional sauna. 230°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_OUTDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
     tiers: tiersFor("outdoor_traditional_original"),

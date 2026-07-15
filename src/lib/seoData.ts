@@ -67,7 +67,7 @@ export const seoData = {
   },
    finnishSaunaSF: {
      title: "Steam Sauna Rental San Francisco | Traditional Heat",
-     description: "Rent a steam sauna in San Francisco. Traditional high-heat experience at 170-194°F. Professional delivery and installation for homes and backyards.",
+     description: "Rent a steam sauna in San Francisco. Traditional high-heat experience at 170-230°F. Professional delivery and installation for homes and backyards.",
      canonical: "https://sfsaunarental.com/finnish-sauna-san-francisco"
   },
   saunaRentalSF: {

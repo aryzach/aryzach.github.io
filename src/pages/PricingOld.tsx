@@ -131,7 +131,7 @@ const Pricing = () => {
                         <img src={thermometerIcon} alt="Sauna temperature range indicator" className="w-5 h-5 brightness-0 invert" />
                         <span>
                           {sauna.type === "Steam Sauna" 
-                            ? "170 - 194°F (77 - 90°C)" 
+                            ? "170 - 230°F (77 - 110°C)" 
                             : "150°F (65°C)"}
                         </span>
                       </div>
