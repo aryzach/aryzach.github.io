@@ -489,6 +489,7 @@ export type Database = {
           installation_scheduled_at: string | null
           installation_status: string
           last_name: string
+          magic_link_opened_at: string | null
           min_commitment_months: number | null
           payment_completed_at: string | null
           payment_status: string
@@ -536,6 +537,7 @@ export type Database = {
           installation_scheduled_at?: string | null
           installation_status?: string
           last_name: string
+          magic_link_opened_at?: string | null
           min_commitment_months?: number | null
           payment_completed_at?: string | null
           payment_status?: string
@@ -583,6 +585,7 @@ export type Database = {
           installation_scheduled_at?: string | null
           installation_status?: string
           last_name?: string
+          magic_link_opened_at?: string | null
           min_commitment_months?: number | null
           payment_completed_at?: string | null
           payment_status?: string
