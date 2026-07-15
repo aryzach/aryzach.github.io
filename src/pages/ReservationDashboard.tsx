@@ -56,6 +56,7 @@ interface Reservation {
   ach_last_error?: string | null;
   default_payment_method_status?: string | null;
   default_payment_method_updated_at?: string | null;
+  magic_link_opened_at?: string | null;
 }
 
 interface SaunaHold {

@@ -44,6 +44,7 @@ interface Reservation {
   ach_last_error?: string | null;
   default_payment_method_status?: string | null;
   default_payment_method_updated_at?: string | null;
+  magic_link_opened_at?: string | null;
 }
 
 interface ReservationEvent {
@@ -79,7 +80,7 @@ const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "T
 
 type ColKey =
   | "name" | "email" | "phone" | "city" | "sauna" | "style" | "install"
-  | "status" | "payment" | "consult" | "id" | "contract" | "created";
+  | "status" | "payment" | "consult" | "id" | "contract" | "created" | "magic_link_opened";
 
 // Embeddable table that lists reservations with per-column filters, sort, and
 // row-level actions (copy magic link, mark paid, confirm/extend/release, delete).
@@ -92,7 +93,7 @@ export const ReservationsListPanel = ({
   const [loading, setLoading] = useState(false);
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     name: "", email: "", phone: "", city: "", sauna: "", style: "", install: "",
-    status: "", payment: "", consult: "", id: "", contract: "", created: "",
+    status: "", payment: "", consult: "", id: "", contract: "", created: "", magic_link_opened: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
@@ -299,6 +300,7 @@ export const ReservationsListPanel = ({
     id: r.id_status,
     contract: r.contract_status,
     created: r.created_at,
+    magic_link_opened: r.magic_link_opened_at ?? "",
   });
 
   const filtered = useMemo(() => {
@@ -342,7 +344,7 @@ export const ReservationsListPanel = ({
     ["sauna", "Sauna"], ["style", "Style"], ["install", "Install"],
     ["status", "Status"], ["payment", "Payment"],
     ["consult", "Consult"], ["id", "ID"], ["contract", "Contract"],
-    ["created", "Created"],
+    ["created", "Created"], ["magic_link_opened", "Magic Link Opened"],
   ];
 
   const statusOpts = ["Lead", "Pending Payment", "Reservation Hold", "Reservation Confirmed", "Needs Manual Review", "Cancelled", "Refunded"];
@@ -496,6 +498,7 @@ export const ReservationsListPanel = ({
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.id_status}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.contract_status}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.created_at)}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.magic_link_opened_at)}</td>
                 <td className="px-2 py-1.5 whitespace-nowrap">
                   <div className="flex gap-1">
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => copyLink(r)}>Copy</Button>
