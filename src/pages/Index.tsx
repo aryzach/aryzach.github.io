@@ -154,7 +154,7 @@ const Index = () => {
                "name": "What's the difference between infrared and traditional saunas?",
                "acceptedAnswer": {
                  "@type": "Answer",
-                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 160–200°F for a more classic feel."
+                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 160–230°F for a more classic feel."
               }
             },
             {
@@ -202,7 +202,7 @@ const Index = () => {
               "name": "How long does it take to heat up?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 170–200°F in 40–60 minutes."
+                "text": "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 170–230°F in 40–60 minutes."
               }
             },
             {
