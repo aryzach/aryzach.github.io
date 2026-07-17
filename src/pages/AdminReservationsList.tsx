@@ -501,7 +501,17 @@ export const ReservationsListPanel = ({
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.magic_link_opened_at)}</td>
                 <td className="px-2 py-1.5 whitespace-nowrap">
                   <div className="flex gap-1">
-                    <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => copyLink(r)}>Copy</Button>
+                     <Button
+                       size="sm"
+                       variant="outline"
+                       className="h-6 px-2 text-[10px]"
+                       onClick={() => {
+                         const url = `${window.location.origin}/reservation/${r.id}?token=${encodeURIComponent(r.secure_token)}`;
+                         window.open(url, "_blank", "noopener,noreferrer");
+                       }}
+                     >
+                       Open
+                     </Button>
                     {r.payment_status !== "Paid" && r.reservation_status !== "Lead" && (
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => markPaid(r.id)}>Mark Paid</Button>
                     )}
