@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SF Sauna Rental API",
+    "description": "Machine-readable service description for the SF Sauna Rental reservation and scheduling system.",
+    "version": "2026-07-21",
+    "contact": {
+      "name": "SF Sauna Rental Support",
+      "email": "reservations@sfsaunarental.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1",
+      "description": "Lovable Cloud Supabase Edge Functions"
+    }
+  ],
+  "paths": {
+    "/reservation-create": {
+      "post": {
+        "summary": "Create a reservation",
+        "description": "Submit a new sauna rental reservation and receive a customer magic-link URL.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "phone", "address", "city", "sauna_type_id", "preferred_install_at"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "phone": { "type": "string" },
+                  "address": { "type": "string" },
+                  "city": { "type": "string" },
+                  "sauna_type_id": { "type": "string", "format": "uuid" },
+                  "preferred_install_at": { "type": "string", "format": "date-time" },
+                  "referral_source": { "type": "string" },
+                  "notes": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "dashboard_url": { "type": "string", "format": "uri" },
+                    "reservation_id": { "type": "string", "format": "uuid" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-get": {
+      "post": {
+        "summary": "Get reservation by token",
+        "description": "Retrieve a reservation and its related records using the secure magic-link token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token"],
+                "properties": {
+                  "token": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reservation": { "type": "object" },
+                    "sauna_hold": { "type": "object" },
+                    "agreement": { "type": "object" },
+                    "signature": { "type": "object" },
+                    "id_upload": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservation-update": {
+      "post": {
+        "summary": "Update reservation",
+        "description": "Update sauna type, preferred installation date, and personal details for a reservation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token"],
+                "properties": {
+                  "token": { "type": "string" },
+                  "sauna_type_id": { "type": "string", "format": "uuid" },
+                  "preferred_install_at": { "type": "string", "format": "date-time" },
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "phone": { "type": "string" },
+                  "address": { "type": "string" },
+                  "city": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Reservation updated" }
+        }
+      }
+    },
+    "/stripe-webhook": {
+      "post": {
+        "summary": "Stripe webhook",
+        "description": "Receive Stripe payment and setup_intent events.",
+        "responses": {
+          "200": { "description": "Webhook processed" }
+        }
+      }
+    },
+    "/cal-webhook": {
+      "post": {
+        "summary": "Cal.com webhook",
+        "description": "Receive Cal.com booking and meeting events for consultation and installation scheduling.",
+        "responses": {
+          "200": { "description": "Webhook processed" }
+        }
+      }
+    }
+  }
+}

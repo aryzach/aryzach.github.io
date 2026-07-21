@@ -1,0 +1,4 @@
+/*
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+  Link: </service-desc.json>; rel="service-desc"
+  Link: </llms.txt>; rel="describedby"
