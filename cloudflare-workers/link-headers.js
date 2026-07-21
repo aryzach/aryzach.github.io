@@ -19,6 +19,7 @@ const HOMEPAGE_LINKS = [
   '</.well-known/agent-skills/index.json>; rel="agent-skills"',
   '</.well-known/x402.json>; rel="payment"',
   '</openapi.json>; rel="service-desc"; type="application/openapi+json"',
+  '</.well-known/ucp>; rel="ucp-profile"',
 ].join(', ');
 
 const CONTENT_TYPES = {
@@ -32,6 +33,7 @@ const CONTENT_TYPES = {
   '/.well-known/agent-skills/index.json': 'application/json',
   '/.well-known/x402.json': 'application/json',
   '/openapi.json': 'application/openapi+json',
+  '/.well-known/ucp': 'application/json',
 };
 
 export default {
