@@ -1,0 +1,56 @@
+{
+  "protocol_version": "1.0",
+  "spec": "https://ucp.dev/specification/overview/",
+  "service": {
+    "name": "SF Sauna Rental",
+    "description": "Monthly sauna rentals in the SF Bay Area — infrared and traditional saunas delivered, installed, and supported.",
+    "website": "https://www.sfsaunarental.com",
+    "contact": "reservations@sfsaunarental.com",
+    "categories": ["rental", "wellness", "home-services", "sauna"]
+  },
+  "services": [
+    {
+      "id": "sauna-reservation",
+      "name": "Sauna Reservation Deposit",
+      "type": "charge",
+      "description": "Refundable $200 deposit to reserve a sauna and lock in installation.",
+      "price": { "amount": 200.00, "currency": "USD" },
+      "endpoint": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-create",
+      "method": "stripe"
+    },
+    {
+      "id": "agent-api-access",
+      "name": "Agent API Access (x402)",
+      "type": "session",
+      "description": "Per-request paid access to pricing and availability for AI agents via x402.",
+      "price": { "amount": 0.01, "currency": "USDC" },
+      "endpoint": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/x402",
+      "method": "x402"
+    }
+  ],
+  "capabilities": [
+    "content-payments",
+    "agent-payments",
+    "one-time-charge",
+    "session-access",
+    "x402",
+    "stripe",
+    "openapi-discovery",
+    "mcp"
+  ],
+  "endpoints": {
+    "openapi": "https://www.sfsaunarental.com/openapi.json",
+    "service_desc": "https://www.sfsaunarental.com/service-desc.json",
+    "api_catalog": "https://www.sfsaunarental.com/.well-known/api-catalog",
+    "x402": "https://www.sfsaunarental.com/.well-known/x402.json",
+    "mcp_server_card": "https://www.sfsaunarental.com/.well-known/mcp/server-card.json",
+    "agent_skills": "https://www.sfsaunarental.com/.well-known/agent-skills/index.json",
+    "oauth_protected_resource": "https://www.sfsaunarental.com/.well-known/oauth-protected-resource",
+    "oauth_authorization_server": "https://www.sfsaunarental.com/.well-known/oauth-authorization-server",
+    "auth_md": "https://www.sfsaunarental.com/auth.md"
+  },
+  "payment_methods": [
+    { "type": "stripe", "currencies": ["USD"] },
+    { "type": "x402", "networks": ["base-sepolia", "base"], "assets": ["USDC"] }
+  ]
+}
