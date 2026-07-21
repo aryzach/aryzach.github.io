@@ -10,6 +10,7 @@
   Link: </.well-known/mcp/server-card.json>; rel="mcp-server-card"
   Link: </.well-known/agent-skills/index.json>; rel="agent-skills"
   Link: </.well-known/x402.json>; rel="payment"
+  Link: </openapi.json>; rel="service-desc"; type="application/openapi+json"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
@@ -37,3 +38,6 @@
 
 /.well-known/x402.json
   Content-Type: application/json
+
+/openapi.json
+  Content-Type: application/openapi+json

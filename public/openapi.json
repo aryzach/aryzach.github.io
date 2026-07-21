@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SF Sauna Rental API",
+    "description": "Agent-payable API for SF Sauna Rental. Supports Machine Payment Protocol (MPP) discovery.",
+    "version": "2026-07-21",
+    "contact": {
+      "name": "SF Sauna Rental Support",
+      "email": "reservations@sfsaunarental.com"
+    }
+  },
+  "x-service-info": {
+    "name": "SF Sauna Rental",
+    "categories": ["rental", "wellness", "home-services", "sauna"],
+    "regions": ["us-ca-sf-bay-area"],
+    "website": "https://www.sfsaunarental.com"
+  },
+  "servers": [
+    {
+      "url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1",
+      "description": "Lovable Cloud Edge Functions"
+    }
+  ],
+  "paths": {
+    "/reservation-create": {
+      "post": {
+        "operationId": "createReservation",
+        "summary": "Create a sauna rental reservation",
+        "description": "Create a reservation and receive a magic-link dashboard URL. The $200 refundable reservation deposit is paid via the returned Stripe checkout link.",
+        "x-payment-info": {
+          "intent": "charge",
+          "method": "stripe",
+          "amount": 200.00,
+          "currency": "USD",
+          "description": "Refundable reservation deposit to hold a sauna."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "phone", "address", "city", "sauna_type_id", "preferred_install_at"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "phone": { "type": "string" },
+                  "address": { "type": "string" },
+                  "city": { "type": "string" },
+                  "sauna_type_id": { "type": "string" },
+                  "preferred_install_at": { "type": "string", "format": "date-time" },
+                  "referral_source": { "type": "string" },
+                  "notes": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "dashboard_url": { "type": "string", "format": "uri" },
+                    "reservation_id": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/x402": {
+      "get": {
+        "operationId": "x402AgentAccess",
+        "summary": "Agent-native paid API access via x402",
+        "description": "Returns HTTP 402 with x402 payment requirements. Pay in USDC to receive live pricing and availability.",
+        "x-payment-info": {
+          "intent": "session",
+          "method": "tempo",
+          "amount": 0.01,
+          "currency": "USDC",
+          "description": "Per-request agent API access (USDC on Base)."
+        },
+        "responses": {
+          "200": { "description": "Payment accepted; agent data returned." },
+          "402": { "description": "Payment required (x402 payment requirements in body)." }
+        }
+      }
+    }
+  }
+}
