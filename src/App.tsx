@@ -45,6 +45,7 @@ import AdminReservations from "./pages/AdminReservations";
 import ReservationDashboard from "./pages/ReservationDashboard";
 import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
+import { registerWebMCP } from "@/lib/webmcp";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,13 @@ const GAPageView = () => {
     }
   }, [location.pathname, location.search]);
 
+  return null;
+};
+
+const WebMCPRegistrar = () => {
+  useEffect(() => {
+    registerWebMCP();
+  }, []);
   return null;
 };
 
@@ -111,6 +119,7 @@ const App = () => (
         <ScrollToTop />
         <ScrollToHash />
         <GAPageView />
+        <WebMCPRegistrar />
         <ReservationModalProvider>
         <Routes>
           <Route path="/" element={<Index />} />
