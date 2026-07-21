@@ -28,5 +28,13 @@
   "code_challenge_methods_supported": [
     "S256",
     "plain"
-  ]
+  ],
+  "agent_auth": {
+    "auth_md": "https://www.sfsaunarental.com/auth.md",
+    "register_uri": "mailto:support@sfsaunarental.com?subject=Agent%20Client%20Registration",
+    "identity_types_supported": ["user", "service"],
+    "credential_types_supported": ["client_secret_basic", "client_secret_post", "pkce"],
+    "claims_uri": "https://vwpeuejdgyjcwcymzjxt.supabase.co/auth/v1/oauth/userinfo",
+    "revocation_uri": "mailto:support@sfsaunarental.com?subject=Token%20Revocation"
+  }
 }
