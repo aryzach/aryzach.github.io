@@ -1,75 +1,88 @@
-[
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-create",
-    "contact": {
-      "name": "SF Sauna Rental Support",
-      "email": "reservations@sfsaunarental.com"
+{
+  "linkset": [
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-create",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-create",
-    "name": "SF Sauna Reservation Create API",
-    "description": "Create a new sauna rental reservation and receive a magic-link dashboard URL.",
-    "human-doc-url": "https://www.sfsaunarental.com/reservation-system",
-    "support": "mailto:reservations@sfsaunarental.com"
-  },
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-get",
-    "contact": {
-      "name": "SF Sauna Rental Support",
-      "email": "reservations@sfsaunarental.com"
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-get",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-get",
-    "name": "SF Sauna Reservation Get API",
-    "description": "Retrieve reservation details by secure token for the customer magic-link dashboard.",
-    "support": "mailto:reservations@sfsaunarental.com"
-  },
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-update",
-    "contact": {
-      "name": "SF Sauna Rental Support",
-      "email": "reservations@sfsaunarental.com"
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-update",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-update",
-    "name": "SF Sauna Reservation Update API",
-    "description": "Update reservation sauna type, preferred installation date, and personal details.",
-    "support": "mailto:reservations@sfsaunarental.com"
-  },
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/admin-api",
-    "contact": {
-      "name": "SF Sauna Rental Admin",
-      "email": "admin@sfsaunarental.com"
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/admin-api",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/admin-api",
-    "name": "SF Sauna Admin API",
-    "description": "Authenticated administrative operations for reservations, contracts, payments, and ACH status.",
-    "support": "mailto:admin@sfsaunarental.com"
-  },
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/stripe-webhook",
-    "contact": {
-      "name": "SF Sauna Rental Billing",
-      "email": "billing@sfsaunarental.com"
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/stripe-webhook",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/stripe-webhook",
-    "name": "SF Sauna Stripe Webhook",
-    "description": "Stripe webhook receiver for payment confirmation and ACH bank account setup events.",
-    "support": "mailto:billing@sfsaunarental.com"
-  },
-  {
-    "api-version": "2026-07-21",
-    "api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/cal-webhook",
-    "contact": {
-      "name": "SF Sauna Rental Scheduling",
-      "email": "scheduling@sfsaunarental.com"
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/cal-webhook",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
     },
-    "entry-api-url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/cal-webhook",
-    "name": "SF Sauna Cal.com Webhook",
-    "description": "Cal.com webhook receiver for video consultation and installation scheduling events.",
-    "support": "mailto:scheduling@sfsaunarental.com"
-  }
-]
+    {
+      "anchor": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/stripe-setup-intent",
+      "service-desc": [
+        { "href": "https://www.sfsaunarental.com/service-desc.json", "type": "application/openapi+json" }
+      ],
+      "service-doc": [
+        { "href": "https://www.sfsaunarental.com", "type": "text/html" }
+      ],
+      "status": [
+        { "href": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/health", "type": "application/json" }
+      ]
+    }
+  ]
+}

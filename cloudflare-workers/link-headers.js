@@ -1,34 +1,37 @@
 /**
- * Cloudflare Worker: Add RFC 8288 Link headers for agent discovery.
+ * Cloudflare Worker: Add RFC 8288 / RFC 9727 agent discovery headers.
  *
- * This worker intercepts the homepage (/) and adds Link headers pointing to
- * machine-readable resources. It passes through all other requests unchanged.
+ * Adds Link headers on the homepage and ensures the API catalog is served
+ * with the correct application/linkset+json content type.
  *
  * Deploy with:
- *   npx wrangler deploy cloudflare-workers/link-headers.js --name sf-sauna-link-headers
+ *   npx wrangler deploy --config wrangler.toml
  */
 
-const LINK_HEADERS = [
+const HOMEPAGE_LINKS = [
   '</.well-known/api-catalog>; rel="api-catalog"',
   '</service-desc.json>; rel="service-desc"',
   '</llms.txt>; rel="describedby"',
+  '<https://www.sfsaunarental.com>; rel="service-doc"',
 ].join(', ');
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-
-    // Only add Link headers on the homepage.
-    const isHomepage = url.pathname === '/' || url.pathname === '/index.html';
-
     const response = await fetch(request, { cf: { apps: false } });
+    const newHeaders = new Headers(response.headers);
 
-    if (!isHomepage) {
-      return response;
+    if (url.pathname === '/' || url.pathname === '/index.html') {
+      newHeaders.set('Link', HOMEPAGE_LINKS);
     }
 
-    const newHeaders = new Headers(response.headers);
-    newHeaders.set('Link', LINK_HEADERS);
+    if (url.pathname === '/.well-known/api-catalog') {
+      newHeaders.set('Content-Type', 'application/linkset+json');
+    }
+
+    if (url.pathname === '/service-desc.json') {
+      newHeaders.set('Content-Type', 'application/openapi+json');
+    }
 
     return new Response(response.body, {
       status: response.status,
