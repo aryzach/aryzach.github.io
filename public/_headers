@@ -3,9 +3,17 @@
   Link: </service-desc.json>; rel="service-desc"
   Link: </llms.txt>; rel="describedby"
   Link: <https://www.sfsaunarental.com>; rel="service-doc"
+  Link: </.well-known/openid-configuration>; rel="openid-configuration"
+  Link: </.well-known/oauth-authorization-server>; rel="oauth-authorization-server"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
 
 /service-desc.json
   Content-Type: application/openapi+json
+
+/.well-known/openid-configuration
+  Content-Type: application/json
+
+/.well-known/oauth-authorization-server
+  Content-Type: application/json
