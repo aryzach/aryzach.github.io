@@ -12,6 +12,7 @@
   Link: </.well-known/x402.json>; rel="payment"
   Link: </openapi.json>; rel="service-desc"; type="application/openapi+json"
   Link: </.well-known/ucp>; rel="ucp-profile"
+  Link: </.well-known/acp.json>; rel="acp-discovery"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
@@ -44,4 +45,7 @@
   Content-Type: application/openapi+json
 
 /.well-known/ucp
+  Content-Type: application/json
+
+/.well-known/acp.json
   Content-Type: application/json

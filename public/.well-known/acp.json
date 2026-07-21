@@ -1,0 +1,45 @@
+{
+  "protocol": {
+    "name": "acp",
+    "version": "0.1",
+    "spec": "https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/blob/main/rfcs/rfc.discovery.md"
+  },
+  "api_base_url": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1",
+  "transports": ["https", "json-rpc"],
+  "auth": {
+    "types": ["none", "oauth2"],
+    "oauth_authorization_server": "https://www.sfsaunarental.com/.well-known/oauth-authorization-server",
+    "oauth_protected_resource": "https://www.sfsaunarental.com/.well-known/oauth-protected-resource"
+  },
+  "capabilities": {
+    "services": [
+      {
+        "id": "sauna-reservation",
+        "name": "Sauna Reservation Deposit",
+        "description": "Reserve a monthly sauna rental with a refundable $200 deposit paid via Stripe.",
+        "category": "rental",
+        "price": { "amount": 200.00, "currency": "USD" },
+        "endpoint": "/reservation-create",
+        "method": "POST",
+        "payment": { "provider": "stripe", "intent": "charge" }
+      },
+      {
+        "id": "agent-api-access",
+        "name": "Agent API Access",
+        "description": "Per-request paid access to pricing and availability data for AI agents (x402, USDC on Base).",
+        "category": "data",
+        "price": { "amount": 0.01, "currency": "USDC" },
+        "endpoint": "/x402",
+        "method": "GET",
+        "payment": { "provider": "x402", "intent": "session" }
+      }
+    ],
+    "checkout": true,
+    "quotes": true,
+    "webhooks": false
+  },
+  "contact": {
+    "email": "reservations@sfsaunarental.com",
+    "website": "https://www.sfsaunarental.com"
+  }
+}
