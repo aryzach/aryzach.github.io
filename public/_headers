@@ -6,6 +6,7 @@
   Link: </.well-known/openid-configuration>; rel="openid-configuration"
   Link: </.well-known/oauth-authorization-server>; rel="oauth-authorization-server"
   Link: </.well-known/oauth-protected-resource>; rel="oauth-protected-resource"
+  Link: </auth.md>; rel="auth-md"; type="text/markdown"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
