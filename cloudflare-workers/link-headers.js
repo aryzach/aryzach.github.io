@@ -14,6 +14,7 @@ const HOMEPAGE_LINKS = [
   '</.well-known/openid-configuration>; rel="openid-configuration"',
   '</.well-known/oauth-authorization-server>; rel="oauth-authorization-server"',
   '</.well-known/oauth-protected-resource>; rel="oauth-protected-resource"',
+  '</auth.md>; rel="auth-md"; type="text/markdown"',
 ].join(', ');
 
 const CONTENT_TYPES = {
@@ -22,6 +23,7 @@ const CONTENT_TYPES = {
   '/.well-known/openid-configuration': 'application/json',
   '/.well-known/oauth-authorization-server': 'application/json',
   '/.well-known/oauth-protected-resource': 'application/json',
+  '/auth.md': 'text/markdown; charset=utf-8',
 };
 
 export default {
