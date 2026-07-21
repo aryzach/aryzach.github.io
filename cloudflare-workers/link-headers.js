@@ -1,6 +1,12 @@
 /**
- * Cloudflare Worker: Add RFC 8288 / RFC 9727 / RFC 9728 agent discovery headers
- * and serve well-known metadata files with the correct content type.
+ * Cloudflare Worker: Add RFC 8288 / RFC 9727 / RFC 9728 agent discovery Link
+ * headers and serve well-known metadata files with the correct content type.
+ *
+ * Deployment modes:
+ *  1. Zone route (recommended): add a route for www.sfsaunarental.com/* in the
+ *     sfsaunarental.com zone. The worker fetches the configured origin directly.
+ *  2. Standalone proxy: set ORIGIN_URL env var (e.g. https://example.github.io/)
+ *     and point your DNS to this worker. It will proxy all requests to ORIGIN_URL.
  *
  * Deploy with:
  *   npx wrangler deploy --config wrangler.toml
@@ -38,10 +44,27 @@ const CONTENT_TYPES = {
   '/.well-known/acp.json': 'application/json',
 };
 
+function buildUpstreamRequest(request, env) {
+  const url = new URL(request.url);
+
+  // If ORIGIN_URL is set, rewrite the request to that origin. This is the
+  // standalone-proxy mode. Otherwise, fetch the same URL (zone-route mode),
+  // which Cloudflare resolves to the configured origin behind the worker.
+  if (env.ORIGIN_URL) {
+    const upstream = new URL(url.pathname + url.search, env.ORIGIN_URL);
+    const upstreamRequest = new Request(upstream, request);
+    upstreamRequest.headers.set('Host', upstream.host);
+    return upstreamRequest;
+  }
+
+  return request;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    const response = await fetch(request, { cf: { apps: false } });
+    const upstreamRequest = buildUpstreamRequest(request, env);
+    const response = await fetch(upstreamRequest, { cf: { apps: false } });
     const newHeaders = new Headers(response.headers);
 
     if (url.pathname === '/' || url.pathname === '/index.html') {

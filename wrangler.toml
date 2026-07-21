@@ -2,3 +2,14 @@ name = "sf-sauna-link-headers"
 main = "cloudflare-workers/link-headers.js"
 compatibility_date = "2026-07-21"
 compatibility_flags = ["nodejs_compat"]
+
+# Routes this worker should handle in the sfsaunarental.com zone.
+# Deploy with zone-route mode or set ORIGIN_URL for standalone proxy mode.
+# zone_name = "sfsaunarental.com"
+# routes = [
+#   { pattern = "www.sfsaunarental.com/*", zone_name = "sfsaunarental.com" },
+#   { pattern = "sfsaunarental.com/*", zone_name = "sfsaunarental.com" },
+# ]
+
+# [vars]
+# ORIGIN_URL = "https://your-github-pages-url/"
