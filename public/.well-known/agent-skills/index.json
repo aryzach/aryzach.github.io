@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agentskills.io/schemas/v0.2.0/index.json",
+  "version": "0.2.0",
+  "publisher": {
+    "name": "SF Sauna Rental",
+    "url": "https://www.sfsaunarental.com",
+    "contact": "support@sfsaunarental.com"
+  },
+  "skills": [
+    {
+      "name": "reserve-sauna",
+      "type": "markdown",
+      "description": "Create a sauna rental reservation with SF Sauna Rental in the San Francisco Bay Area.",
+      "url": "https://www.sfsaunarental.com/.well-known/agent-skills/reserve-sauna/SKILL.md",
+      "sha256": "3d2f7009f98e1377f51cb3420539411d3ccf9f947cc994cdedc3b59be30bb1eb"
+    },
+    {
+      "name": "check-pricing",
+      "type": "markdown",
+      "description": "Look up current monthly rental pricing and add-ons for SF Sauna Rental.",
+      "url": "https://www.sfsaunarental.com/.well-known/agent-skills/check-pricing/SKILL.md",
+      "sha256": "46cb6036abe48a244a7ffae5c866aa31ff514a8f3400e68d8a377f2f9300419b"
+    }
+  ]
+}
