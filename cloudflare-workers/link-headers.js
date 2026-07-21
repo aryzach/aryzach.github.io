@@ -1,6 +1,6 @@
 /**
- * Cloudflare Worker: Add RFC 8288 / RFC 9727 agent discovery headers and serve
- * the well-known OIDC/OAuth discovery metadata with the correct content type.
+ * Cloudflare Worker: Add RFC 8288 / RFC 9727 / RFC 9728 agent discovery headers
+ * and serve well-known metadata files with the correct content type.
  *
  * Deploy with:
  *   npx wrangler deploy --config wrangler.toml
@@ -13,7 +13,16 @@ const HOMEPAGE_LINKS = [
   '<https://www.sfsaunarental.com>; rel="service-doc"',
   '</.well-known/openid-configuration>; rel="openid-configuration"',
   '</.well-known/oauth-authorization-server>; rel="oauth-authorization-server"',
+  '</.well-known/oauth-protected-resource>; rel="oauth-protected-resource"',
 ].join(', ');
+
+const CONTENT_TYPES = {
+  '/.well-known/api-catalog': 'application/linkset+json',
+  '/service-desc.json': 'application/openapi+json',
+  '/.well-known/openid-configuration': 'application/json',
+  '/.well-known/oauth-authorization-server': 'application/json',
+  '/.well-known/oauth-protected-resource': 'application/json',
+};
 
 export default {
   async fetch(request, env, ctx) {
@@ -25,14 +34,7 @@ export default {
       newHeaders.set('Link', HOMEPAGE_LINKS);
     }
 
-    const contentTypePaths = {
-      '/.well-known/api-catalog': 'application/linkset+json',
-      '/service-desc.json': 'application/openapi+json',
-      '/.well-known/openid-configuration': 'application/json',
-      '/.well-known/oauth-authorization-server': 'application/json',
-    };
-
-    const ct = contentTypePaths[url.pathname];
+    const ct = CONTENT_TYPES[url.pathname];
     if (ct) {
       newHeaders.set('Content-Type', ct);
     }

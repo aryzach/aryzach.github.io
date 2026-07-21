@@ -1,0 +1,12 @@
+{
+  "resource": "https://www.sfsaunarental.com",
+  "authorization_servers": [
+    "https://vwpeuejdgyjcwcymzjxt.supabase.co/auth/v1"
+  ],
+  "scopes_supported": [
+    "openid",
+    "profile",
+    "email",
+    "phone"
+  ]
+}
