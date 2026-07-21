@@ -7,6 +7,7 @@
   Link: </.well-known/oauth-authorization-server>; rel="oauth-authorization-server"
   Link: </.well-known/oauth-protected-resource>; rel="oauth-protected-resource"
   Link: </auth.md>; rel="auth-md"; type="text/markdown"
+  Link: </.well-known/mcp/server-card.json>; rel="mcp-server-card"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
@@ -21,4 +22,7 @@
   Content-Type: application/json
 
 /.well-known/oauth-protected-resource
+  Content-Type: application/json
+
+/.well-known/mcp/server-card.json
   Content-Type: application/json
