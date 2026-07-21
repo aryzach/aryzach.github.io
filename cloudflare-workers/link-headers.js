@@ -15,6 +15,7 @@ const HOMEPAGE_LINKS = [
   '</.well-known/oauth-authorization-server>; rel="oauth-authorization-server"',
   '</.well-known/oauth-protected-resource>; rel="oauth-protected-resource"',
   '</auth.md>; rel="auth-md"; type="text/markdown"',
+  '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
 ].join(', ');
 
 const CONTENT_TYPES = {
@@ -24,6 +25,7 @@ const CONTENT_TYPES = {
   '/.well-known/oauth-authorization-server': 'application/json',
   '/.well-known/oauth-protected-resource': 'application/json',
   '/auth.md': 'text/markdown; charset=utf-8',
+  '/.well-known/mcp/server-card.json': 'application/json',
 };
 
 export default {

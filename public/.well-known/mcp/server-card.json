@@ -1,0 +1,35 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/server-card.json",
+  "serverInfo": {
+    "name": "sf-sauna-rental-mcp",
+    "title": "SF Sauna Rental MCP",
+    "version": "0.1.0",
+    "vendor": "SF Sauna Rental",
+    "description": "Model Context Protocol server for SF Sauna Rental. Exposes read-only discovery endpoints for reservations, pricing, and availability.",
+    "homepage": "https://www.sfsaunarental.com",
+    "contact": "support@sfsaunarental.com"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/mcp"
+  },
+  "authentication": {
+    "type": "oauth2",
+    "authorization_servers": [
+      "https://vwpeuejdgyjcwcymzjxt.supabase.co/auth/v1"
+    ],
+    "protected_resource_metadata": "https://www.sfsaunarental.com/.well-known/oauth-protected-resource",
+    "scopes_supported": ["openid", "profile", "email"]
+  },
+  "capabilities": {
+    "tools": { "listChanged": false },
+    "resources": { "listChanged": false, "subscribe": false },
+    "prompts": { "listChanged": false },
+    "logging": {}
+  },
+  "documentation": {
+    "service_doc": "https://www.sfsaunarental.com",
+    "service_desc": "https://www.sfsaunarental.com/service-desc.json",
+    "api_catalog": "https://www.sfsaunarental.com/.well-known/api-catalog"
+  }
+}
