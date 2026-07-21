@@ -20,6 +20,7 @@ const HOMEPAGE_LINKS = [
   '</.well-known/x402.json>; rel="payment"',
   '</openapi.json>; rel="service-desc"; type="application/openapi+json"',
   '</.well-known/ucp>; rel="ucp-profile"',
+  '</.well-known/acp.json>; rel="acp-discovery"',
 ].join(', ');
 
 const CONTENT_TYPES = {
@@ -34,6 +35,7 @@ const CONTENT_TYPES = {
   '/.well-known/x402.json': 'application/json',
   '/openapi.json': 'application/openapi+json',
   '/.well-known/ucp': 'application/json',
+  '/.well-known/acp.json': 'application/json',
 };
 
 export default {
