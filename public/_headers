@@ -2,3 +2,10 @@
   Link: </.well-known/api-catalog>; rel="api-catalog"
   Link: </service-desc.json>; rel="service-desc"
   Link: </llms.txt>; rel="describedby"
+  Link: <https://www.sfsaunarental.com>; rel="service-doc"
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+
+/service-desc.json
+  Content-Type: application/openapi+json
