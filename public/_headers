@@ -9,6 +9,7 @@
   Link: </auth.md>; rel="auth-md"; type="text/markdown"
   Link: </.well-known/mcp/server-card.json>; rel="mcp-server-card"
   Link: </.well-known/agent-skills/index.json>; rel="agent-skills"
+  Link: </.well-known/x402.json>; rel="payment"
 
 /.well-known/api-catalog
   Content-Type: application/linkset+json
@@ -33,3 +34,6 @@
 
 /.well-known/agent-skills/*/SKILL.md
   Content-Type: text/markdown; charset=utf-8
+
+/.well-known/x402.json
+  Content-Type: application/json

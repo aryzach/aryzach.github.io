@@ -1,0 +1,24 @@
+{
+  "x402Version": 1,
+  "protocol": "x402",
+  "docs": "https://docs.x402.org",
+  "endpoints": [
+    {
+      "resource": "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/x402",
+      "method": "GET",
+      "description": "Agent-native paid access to SF Sauna Rental API (pricing, availability).",
+      "accepts": [
+        {
+          "scheme": "exact",
+          "network": "base-sepolia",
+          "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+          "maxAmountRequired": "10000",
+          "mimeType": "application/json",
+          "maxTimeoutSeconds": 60,
+          "extra": { "name": "USDC", "version": "2" }
+        }
+      ],
+      "facilitator": "https://x402.org/facilitator"
+    }
+  ]
+}

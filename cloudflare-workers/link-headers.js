@@ -17,6 +17,7 @@ const HOMEPAGE_LINKS = [
   '</auth.md>; rel="auth-md"; type="text/markdown"',
   '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
   '</.well-known/agent-skills/index.json>; rel="agent-skills"',
+  '</.well-known/x402.json>; rel="payment"',
 ].join(', ');
 
 const CONTENT_TYPES = {
@@ -28,6 +29,7 @@ const CONTENT_TYPES = {
   '/auth.md': 'text/markdown; charset=utf-8',
   '/.well-known/mcp/server-card.json': 'application/json',
   '/.well-known/agent-skills/index.json': 'application/json',
+  '/.well-known/x402.json': 'application/json',
 };
 
 export default {
