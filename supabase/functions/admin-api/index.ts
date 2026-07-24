@@ -262,7 +262,7 @@ Deno.serve(async (req) => {
       case "create_inventory": {
         const allowed = [
           "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
-          "current_customer", "install_date",
+          "current_customer", "future_customer", "install_date",
           "available_date",
           "admin_notes",
         ];
@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
         const { id, patch } = payload;
         const allowed = [
           "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
-          "current_customer", "install_date",
+          "current_customer", "future_customer", "install_date",
           "available_date",
           "admin_notes",
         ];
