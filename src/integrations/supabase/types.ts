@@ -638,6 +638,7 @@ export type Database = {
           available_date: string | null
           created_at: string
           current_customer: string | null
+          future_customer: string | null
           id: string
           incoming_eta: string | null
           indoor_outdoor_eligibility: string
@@ -656,6 +657,7 @@ export type Database = {
           available_date?: string | null
           created_at?: string
           current_customer?: string | null
+          future_customer?: string | null
           id?: string
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
@@ -674,6 +676,7 @@ export type Database = {
           available_date?: string | null
           created_at?: string
           current_customer?: string | null
+          future_customer?: string | null
           id?: string
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
