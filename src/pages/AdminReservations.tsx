@@ -766,7 +766,8 @@ const AdminReservations = () => {
                           ["style", "Style"],
                           ["model", "Model"],
                           ["status", "Status"],
-                          ["customer", "Customer"],
+                          ["customer", "Current Customer"],
+                          ["future_customer", "Future Customer"],
                           ["install", "Install"],
                           ["available", "Available"],
                           ["timeline", "Timeline"],
@@ -819,6 +820,9 @@ const AdminReservations = () => {
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.future_customer} onChange={(e) => setColFilter("future_customer", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.install} onChange={(e) => setColFilter("install", e.target.value)} />
