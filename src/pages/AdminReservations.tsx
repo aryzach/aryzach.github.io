@@ -886,6 +886,9 @@ const AdminReservations = () => {
                               <Input className={`h-7 text-xs ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
+                              <Input className={`h-7 text-xs ${draftErrorField === "future_customer" ? "border-destructive" : ""}`} value={draft.future_customer} onChange={(e) => setD("future_customer", e.target.value)} placeholder="Future customer" />
+                            </td>
+                            <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
@@ -905,7 +908,7 @@ const AdminReservations = () => {
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={13} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -913,7 +916,7 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={13} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border hover:bg-muted/20">
@@ -959,6 +962,9 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.current_customer || ""} onSave={(v) => updateCell(r.id, "current_customer", v || null)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.future_customer || ""} onSave={(v) => updateCell(r.id, "future_customer", v || null)} />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
