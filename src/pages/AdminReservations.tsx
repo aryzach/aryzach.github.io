@@ -30,6 +30,7 @@ type SaunaStatus =
   | "Returning"
   | "Maintenance"
   | "Incoming"
+  | "Transfer Planned"
   | "Sold";
 
 const STATUSES: SaunaStatus[] = [
@@ -40,6 +41,7 @@ const STATUSES: SaunaStatus[] = [
   "Returning",
   "Maintenance",
   "Incoming",
+  "Transfer Planned",
   "Sold",
 ];
 
@@ -51,6 +53,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
   "Returning": "bg-yellow-100 text-yellow-900 border-yellow-200",
   "Maintenance": "bg-orange-100 text-orange-900 border-orange-200",
   "Incoming": "bg-sky-100 text-sky-900 border-sky-200",
+  "Transfer Planned": "bg-indigo-100 text-indigo-900 border-indigo-200",
   "Sold": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
@@ -152,6 +155,7 @@ interface InventoryRow {
   indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
   status: SaunaStatus;
   current_customer: string | null;
+  future_customer: string | null;
   install_date: string | null;
   available_date: string | null;
   admin_notes: string | null;
@@ -176,13 +180,15 @@ function timelineFor(row: InventoryRow): string {
     case "Reservation Confirmed":
       return `Confirmed for ${row.current_customer || "(unknown)"}`;
     case "Installed":
-      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}`;
+      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}${row.future_customer ? ` · next: ${row.future_customer}` : ""}`;
     case "Returning":
       return `Returning · available ${fmtDate(row.available_date)}`;
     case "Maintenance":
       return `Maintenance · available ${fmtDate(row.available_date)}`;
     case "Incoming":
       return `Incoming · available ${fmtDate(row.available_date)}`;
+    case "Transfer Planned":
+      return `Transfer planned${row.future_customer ? ` to ${row.future_customer}` : ""}${row.available_date ? ` · ${fmtDate(row.available_date)}` : ""}`;
     case "Sold":
       return "Sold";
   }
@@ -211,6 +217,7 @@ const AdminReservations = () => {
     | "model"
     | "status"
     | "customer"
+    | "future_customer"
     | "install"
     | "available"
     | "timeline"
@@ -218,7 +225,7 @@ const AdminReservations = () => {
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     id: "", location: "", style: "", model: "", status: "",
-    customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
+    customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [sortCol, setSortCol] = useState<ColKey | null>("id");
@@ -236,6 +243,7 @@ const AdminReservations = () => {
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
     status: SaunaStatus;
     current_customer: string;
+    future_customer: string;
     install_date: string;
     available_date: string;
     admin_notes: string;
