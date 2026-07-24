@@ -284,6 +284,8 @@ Deno.serve(async (req) => {
 
       case "update_inventory": {
         const { id, patch } = payload;
+        if (!id) return json({ error: "Inventory id required" }, 400);
+        if (!patch || typeof patch !== "object") return json({ error: "Inventory patch required" }, 400);
         const allowed = [
           "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
           "current_customer", "future_customer", "install_date",
@@ -292,13 +294,17 @@ Deno.serve(async (req) => {
         ];
         const clean: Record<string, unknown> = {};
         for (const k of allowed) if (k in patch) clean[k] = patch[k] === "" ? null : patch[k];
+        if (Object.keys(clean).length === 0) {
+          return json({ error: "No supported inventory fields to update" }, 400);
+        }
         const { data, error } = await supabase
           .from("sauna_inventory")
           .update(clean)
           .eq("id", id)
           .select()
-          .single();
+          .maybeSingle();
         if (error) throw error;
+        if (!data) return json({ error: "Inventory row not found" }, 404);
         return json({ sauna: data });
       }
 
