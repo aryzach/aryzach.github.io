@@ -30,6 +30,7 @@ type SaunaStatus =
   | "Returning"
   | "Maintenance"
   | "Incoming"
+  | "Transfer Planned"
   | "Sold";
 
 const STATUSES: SaunaStatus[] = [
@@ -40,6 +41,7 @@ const STATUSES: SaunaStatus[] = [
   "Returning",
   "Maintenance",
   "Incoming",
+  "Transfer Planned",
   "Sold",
 ];
 
@@ -51,6 +53,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
   "Returning": "bg-yellow-100 text-yellow-900 border-yellow-200",
   "Maintenance": "bg-orange-100 text-orange-900 border-orange-200",
   "Incoming": "bg-sky-100 text-sky-900 border-sky-200",
+  "Transfer Planned": "bg-indigo-100 text-indigo-900 border-indigo-200",
   "Sold": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
@@ -152,6 +155,7 @@ interface InventoryRow {
   indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
   status: SaunaStatus;
   current_customer: string | null;
+  future_customer: string | null;
   install_date: string | null;
   available_date: string | null;
   admin_notes: string | null;
@@ -176,13 +180,15 @@ function timelineFor(row: InventoryRow): string {
     case "Reservation Confirmed":
       return `Confirmed for ${row.current_customer || "(unknown)"}`;
     case "Installed":
-      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}`;
+      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}${row.future_customer ? ` · next: ${row.future_customer}` : ""}`;
     case "Returning":
       return `Returning · available ${fmtDate(row.available_date)}`;
     case "Maintenance":
       return `Maintenance · available ${fmtDate(row.available_date)}`;
     case "Incoming":
       return `Incoming · available ${fmtDate(row.available_date)}`;
+    case "Transfer Planned":
+      return `Transfer planned${row.future_customer ? ` to ${row.future_customer}` : ""}${row.available_date ? ` · ${fmtDate(row.available_date)}` : ""}`;
     case "Sold":
       return "Sold";
   }
@@ -211,6 +217,7 @@ const AdminReservations = () => {
     | "model"
     | "status"
     | "customer"
+    | "future_customer"
     | "install"
     | "available"
     | "timeline"
@@ -218,7 +225,7 @@ const AdminReservations = () => {
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     id: "", location: "", style: "", model: "", status: "",
-    customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
+    customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [sortCol, setSortCol] = useState<ColKey | null>("id");
@@ -236,6 +243,7 @@ const AdminReservations = () => {
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
     status: SaunaStatus;
     current_customer: string;
+    future_customer: string;
     install_date: string;
     available_date: string;
     admin_notes: string;
@@ -402,6 +410,7 @@ const AdminReservations = () => {
       indoor_outdoor_eligibility: "either",
       status: "Available",
       current_customer: "",
+      future_customer: "",
       install_date: "",
       available_date: "",
       admin_notes: "",
@@ -524,6 +533,7 @@ const AdminReservations = () => {
     model: r.model || "",
     status: r.status,
     customer: r.current_customer || "",
+    future_customer: r.future_customer || "",
     install: r.install_date || "",
     available: r.available_date || "",
     timeline: timelineFor(r),
@@ -756,7 +766,8 @@ const AdminReservations = () => {
                           ["style", "Style"],
                           ["model", "Model"],
                           ["status", "Status"],
-                          ["customer", "Customer"],
+                          ["customer", "Current Customer"],
+                          ["future_customer", "Future Customer"],
                           ["install", "Install"],
                           ["available", "Available"],
                           ["timeline", "Timeline"],
@@ -809,6 +820,9 @@ const AdminReservations = () => {
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.future_customer} onChange={(e) => setColFilter("future_customer", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.install} onChange={(e) => setColFilter("install", e.target.value)} />
@@ -872,6 +886,9 @@ const AdminReservations = () => {
                               <Input className={`h-7 text-xs ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
+                              <Input className={`h-7 text-xs ${draftErrorField === "future_customer" ? "border-destructive" : ""}`} value={draft.future_customer} onChange={(e) => setD("future_customer", e.target.value)} placeholder="Future customer" />
+                            </td>
+                            <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
@@ -891,7 +908,7 @@ const AdminReservations = () => {
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={13} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -899,7 +916,7 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={13} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border hover:bg-muted/20">
@@ -945,6 +962,9 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.current_customer || ""} onSave={(v) => updateCell(r.id, "current_customer", v || null)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <TextCell value={r.future_customer || ""} onSave={(v) => updateCell(r.id, "future_customer", v || null)} />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
