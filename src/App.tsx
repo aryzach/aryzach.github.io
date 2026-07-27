@@ -45,6 +45,7 @@ import AdminReservations from "./pages/AdminReservations";
 import ReservationDashboard from "./pages/ReservationDashboard";
 import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
+import Care from "./pages/Care";
 import { registerWebMCP } from "@/lib/webmcp";
 
 const queryClient = new QueryClient();
@@ -161,6 +162,7 @@ const App = () => (
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
           <Route path="/admin" element={<AdminReservations />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
+          <Route path="/care" element={<Care />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
