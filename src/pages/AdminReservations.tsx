@@ -13,6 +13,7 @@ import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
+import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -156,6 +157,8 @@ interface InventoryRow {
   status: SaunaStatus;
   current_customer: string | null;
   future_customer: string | null;
+  current_customer_id: string | null;
+  future_customer_id: string | null;
   install_date: string | null;
   available_date: string | null;
   admin_notes: string | null;
@@ -202,6 +205,7 @@ const AdminReservations = () => {
   const [pwInput, setPwInput] = useState("");
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
+  const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
@@ -242,8 +246,8 @@ const AdminReservations = () => {
     model: string;
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
     status: SaunaStatus;
-    current_customer: string;
-    future_customer: string;
+    current_customer_id: string | null;
+    future_customer_id: string | null;
     install_date: string;
     available_date: string;
     admin_notes: string;
@@ -409,8 +413,8 @@ const AdminReservations = () => {
       model: "",
       indoor_outdoor_eligibility: "either",
       status: "Available",
-      current_customer: "",
-      future_customer: "",
+      current_customer_id: null,
+      future_customer_id: null,
       install_date: "",
       available_date: "",
       admin_notes: "",
@@ -448,7 +452,8 @@ const AdminReservations = () => {
         [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
         [/unit_code/i, "unit_code"],
         [/status/i, "status"],
-        [/current_customer/i, "current_customer"],
+        [/current_customer/i, "current_customer_id"],
+        [/future_customer/i, "future_customer_id"],
         [/model/i, "model"],
       ];
       const hit = fieldMatches.find(([re]) => re.test(msg));
@@ -483,12 +488,14 @@ const AdminReservations = () => {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [typesRes, invRes] = await Promise.all([
+      const [typesRes, invRes, custRes] = await Promise.all([
         supabase.from("sauna_types").select("id, name, sort_order").order("sort_order"),
         callAdmin({ action: "list_inventory" }),
+        callAdmin({ action: "list_customers" }),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
       setInventory(invRes.inventory || []);
+      setCustomers((custRes.customers || []).map((c: any) => ({ id: c.id, name: c.name, email: c.email })));
     } catch (e) {
       console.error(e);
       toast.error("Failed to load admin data.");
@@ -526,6 +533,28 @@ const AdminReservations = () => {
     setPwInput("");
   };
 
+  // Create a new customer via the admin API. Returns the new id or null.
+  const createCustomer = useCallback(async (name: string): Promise<string | null> => {
+    try {
+      const res = await callAdmin({ action: "create_customer", name });
+      const c = res.customer;
+      if (!c?.id) return null;
+      setCustomers((prev) => {
+        const next = [...prev, { id: c.id, name: c.name, email: c.email }];
+        next.sort((a, b) => a.name.localeCompare(b.name));
+        return next;
+      });
+      return c.id;
+    } catch (e) {
+      toast.error((e as Error).message || "Could not add customer");
+      return null;
+    }
+  }, [callAdmin]);
+
+  // Ids already used in other rows for each side, to prevent picking twice.
+  const currentAssignedIds = useMemo(() => new Set(inventory.map((r) => r.current_customer_id).filter(Boolean) as string[]), [inventory]);
+  const futureAssignedIds = useMemo(() => new Set(inventory.map((r) => r.future_customer_id).filter(Boolean) as string[]), [inventory]);
+
   const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
     id: r.unit_code || "",
     location: ELIG_LABEL[r.indoor_outdoor_eligibility],
@@ -561,7 +590,17 @@ const AdminReservations = () => {
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
-    setInventory((prev) => prev.map((r) => (r.id === id ? { ...r, [key]: value } as InventoryRow : r)));
+    setInventory((prev) => prev.map((r) => {
+      if (r.id !== id) return r;
+      const next = { ...r, [key]: value } as InventoryRow;
+      // Mirror customer id -> name locally so the display stays in sync.
+      if (key === "current_customer_id") {
+        next.current_customer = value ? (customers.find((c) => c.id === value)?.name ?? null) : null;
+      } else if (key === "future_customer_id") {
+        next.future_customer = value ? (customers.find((c) => c.id === value)?.name ?? null) : null;
+      }
+      return next;
+    }));
     try {
       await callAdmin({ action: "update_inventory", id, patch: { [key]: value } });
     } catch (e) {
@@ -883,10 +922,24 @@ const AdminReservations = () => {
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
+                              <CustomerPickerCell
+                                value={draft.current_customer_id}
+                                customers={customers}
+                                disabledIds={currentAssignedIds}
+                                placeholder="Customer"
+                                onChange={(id) => setD("current_customer_id", id)}
+                                onCreate={createCustomer}
+                              />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "future_customer" ? "border-destructive" : ""}`} value={draft.future_customer} onChange={(e) => setD("future_customer", e.target.value)} placeholder="Future customer" />
+                              <CustomerPickerCell
+                                value={draft.future_customer_id}
+                                customers={customers}
+                                disabledIds={futureAssignedIds}
+                                placeholder="Future customer"
+                                onChange={(id) => setD("future_customer_id", id)}
+                                onCreate={createCustomer}
+                              />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
@@ -961,10 +1014,22 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.current_customer || ""} onSave={(v) => updateCell(r.id, "current_customer", v || null)} />
+                            <CustomerPickerCell
+                              value={r.current_customer_id}
+                              customers={customers}
+                              disabledIds={new Set([...currentAssignedIds].filter((id) => id !== r.current_customer_id))}
+                              onChange={(id) => updateCell(r.id, "current_customer_id", id)}
+                              onCreate={createCustomer}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.future_customer || ""} onSave={(v) => updateCell(r.id, "future_customer", v || null)} />
+                            <CustomerPickerCell
+                              value={r.future_customer_id}
+                              customers={customers}
+                              disabledIds={new Set([...futureAssignedIds].filter((id) => id !== r.future_customer_id))}
+                              onChange={(id) => updateCell(r.id, "future_customer_id", id)}
+                              onCreate={createCustomer}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />

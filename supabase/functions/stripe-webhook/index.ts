@@ -5,6 +5,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
+import { getOrCreateCustomerForReservation } from "../_shared/customers.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -399,11 +400,18 @@ Deno.serve(async (req) => {
   }
 
   // Assign sauna. Preserve available_date exactly as-is.
+  let customerId: string | null = null;
+  try {
+    const cust = await getOrCreateCustomerForReservation(supabase, reservationId);
+    customerId = cust.id;
+  } catch (e) { console.error("customer link failed:", e); }
+
   await supabase
     .from("sauna_inventory")
     .update({
       status: "Reservation Hold",
       current_customer: customerName,
+      current_customer_id: customerId,
       reservation_id: reservationId,
     })
     .eq("id", chosen.id);
