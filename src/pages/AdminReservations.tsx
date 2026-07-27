@@ -12,7 +12,6 @@ import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
-import { CustomersPanel } from "./AdminCustomers";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 
@@ -534,24 +533,6 @@ const AdminReservations = () => {
     setPwInput("");
   };
 
-  // Create a new customer via the admin API. Returns the new id or null.
-  const createCustomer = useCallback(async (name: string): Promise<string | null> => {
-    try {
-      const res = await callAdmin({ action: "create_customer", name });
-      const c = res.customer;
-      if (!c?.id) return null;
-      setCustomers((prev) => {
-        const next = [...prev, { id: c.id, name: c.name, email: c.email }];
-        next.sort((a, b) => a.name.localeCompare(b.name));
-        return next;
-      });
-      return c.id;
-    } catch (e) {
-      toast.error((e as Error).message || "Could not add customer");
-      return null;
-    }
-  }, [callAdmin]);
-
   // Ids already used in other rows for each side, to prevent picking twice.
   const currentAssignedIds = useMemo(() => new Set(inventory.map((r) => r.current_customer_id).filter(Boolean) as string[]), [inventory]);
   const futureAssignedIds = useMemo(() => new Set(inventory.map((r) => r.future_customer_id).filter(Boolean) as string[]), [inventory]);
@@ -711,11 +692,6 @@ const AdminReservations = () => {
             >Reservations</button>
             <button
               type="button"
-              className={`px-3 py-1.5 text-sm rounded ${tab === "customers" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
-              onClick={() => setTab("customers")}
-            >Customers</button>
-            <button
-              type="button"
               className={`px-3 py-1.5 text-sm rounded ${tab === "waitlist" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("waitlist")}
             >Waitlist</button>
@@ -732,10 +708,6 @@ const AdminReservations = () => {
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />
-          )}
-
-          {tab === "customers" && (
-            <CustomersPanel callAdmin={callAdmin} />
           )}
 
           {tab === "waitlist" && (
