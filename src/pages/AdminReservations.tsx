@@ -811,21 +811,8 @@ const AdminReservations = () => {
                             }}
                           />
                         </th>
-                        {([
-                          ["id", "ID"],
-                          ["location", "Location"],
-                          ["style", "Style"],
-                          ["model", "Model"],
-                          ["status", "Status"],
-                          ["customer", "Current Customer"],
-                          ["future_customer", "Future Customer"],
-                          ["install", "Install"],
-                          ["available", "Available"],
-                          ["timeline", "Timeline"],
-                          ["notes", "Notes"],
-                          ["updated", "Updated"],
-                        ] as [ColKey, string][]).map(([k, label]) => (
-                          <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
+                        {INVENTORY_COLS.map(([k, label]) => (
+                          <th key={k} className="relative text-left px-2 py-1.5 border-r border-border select-none">
                             <button
                               type="button"
                               className="inline-flex items-center gap-1 uppercase hover:text-foreground"
@@ -836,9 +823,12 @@ const AdminReservations = () => {
                                 {sortCol === k ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
                               </span>
                             </button>
+                            <ColResizeHandle onMouseDown={(e) => startInvResize(k, e)} />
                           </th>
                         ))}
-                        <th className="text-left px-2 py-1.5"></th>
+                        <th className="relative text-left px-2 py-1.5">
+                          <ColResizeHandle onMouseDown={(e) => startInvResize("actions", e)} />
+                        </th>
                       </tr>
                       <tr className="border-t border-border bg-muted/30">
                         <th className="px-2 py-1 border-r border-border"></th>
@@ -864,10 +854,11 @@ const AdminReservations = () => {
                           </select>
                         </th>
                         <th className="px-1 py-1 border-r border-border">
-                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.status} onChange={(e) => setColFilter("status", e.target.value)}>
-                            <option value="">All</option>
-                            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
+                          <MultiSelectFilter
+                            options={STATUSES as unknown as string[]}
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                          />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
