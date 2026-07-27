@@ -590,7 +590,17 @@ const AdminReservations = () => {
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
-    setInventory((prev) => prev.map((r) => (r.id === id ? { ...r, [key]: value } as InventoryRow : r)));
+    setInventory((prev) => prev.map((r) => {
+      if (r.id !== id) return r;
+      const next = { ...r, [key]: value } as InventoryRow;
+      // Mirror customer id -> name locally so the display stays in sync.
+      if (key === "current_customer_id") {
+        next.current_customer = value ? (customers.find((c) => c.id === value)?.name ?? null) : null;
+      } else if (key === "future_customer_id") {
+        next.future_customer = value ? (customers.find((c) => c.id === value)?.name ?? null) : null;
+      }
+      return next;
+    }));
     try {
       await callAdmin({ action: "update_inventory", id, patch: { [key]: value } });
     } catch (e) {
