@@ -14,6 +14,8 @@ import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
+import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
+import { MultiSelectFilter } from "@/components/admin/MultiSelectFilter";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -232,6 +234,7 @@ const AdminReservations = () => {
     customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [sortCol, setSortCol] = useState<ColKey | null>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const toggleSort = (k: ColKey) => {
@@ -555,6 +558,7 @@ const AdminReservations = () => {
   const filtered = useMemo(() => {
     const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
     const rows = inventory.filter((r) => {
+      if (statusFilter.length && !statusFilter.includes(r.status)) return false;
       if (!active.length) return true;
       const vals = rowValues(r);
       return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
@@ -568,7 +572,7 @@ const AdminReservations = () => {
       });
     }
     return rows;
-  }, [inventory, colFilters, sortCol, sortDir]);
+  }, [inventory, colFilters, sortCol, sortDir, statusFilter]);
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
