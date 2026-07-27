@@ -101,7 +101,12 @@ export const ReservationsListPanel = ({
     status: "", payment: "", consult: "", id: "", contract: "", created: "", magic_link_opened: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>([
+    "Pending Payment",
+    "Reservation Hold",
+    "Reservation Confirmed",
+    "Needs Manual Review",
+  ]);
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [selected, setSelected] = useState<Set<string>>(new Set());
