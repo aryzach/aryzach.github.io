@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
       sauna_type_id,
       preferred_install_at: preferredIso,
       reservation_source: source,
-      reservation_status: isConsult ? "Lead" : "Pending Payment",
+      reservation_status: "Pending Payment",
       payment_status: isConsult ? "N/A" : "Pending",
       min_commitment_months: null,
     })
