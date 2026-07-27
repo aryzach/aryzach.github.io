@@ -936,7 +936,7 @@ const AdminReservations = () => {
                                 value={draft.current_customer_id}
                                 customers={customers}
                                 disabledIds={currentAssignedIds}
-                                placeholder="Customer"
+                                placeholder=""
                                 onChange={(id) => setD("current_customer_id", id)}
                                 onCreate={createCustomer}
                               />
@@ -946,7 +946,7 @@ const AdminReservations = () => {
                                 value={draft.future_customer_id}
                                 customers={customers}
                                 disabledIds={futureAssignedIds}
-                                placeholder="Future customer"
+                                placeholder=""
                                 onChange={(id) => setD("future_customer_id", id)}
                                 onCreate={createCustomer}
                               />
