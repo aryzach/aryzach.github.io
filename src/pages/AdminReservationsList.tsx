@@ -376,6 +376,7 @@ export const ReservationsListPanel = ({
     "Refunded",
     "Transfer Planned",
     "Sold",
+    "Churned",
   ];
   const paymentOpts = ["Pending", "Paid", "Refunded", "Failed"];
   const stepOpts = ["Not Scheduled", "Scheduled", "Complete", "Not Sent", "Not Uploaded"];
