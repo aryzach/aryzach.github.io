@@ -912,10 +912,24 @@ const AdminReservations = () => {
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "current_customer" ? "border-destructive" : ""}`} value={draft.current_customer} onChange={(e) => setD("current_customer", e.target.value)} placeholder="Customer" />
+                              <CustomerPickerCell
+                                value={draft.current_customer_id}
+                                customers={customers}
+                                disabledIds={currentAssignedIds}
+                                placeholder="Customer"
+                                onChange={(id) => setD("current_customer_id", id)}
+                                onCreate={createCustomer}
+                              />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
-                              <Input className={`h-7 text-xs ${draftErrorField === "future_customer" ? "border-destructive" : ""}`} value={draft.future_customer} onChange={(e) => setD("future_customer", e.target.value)} placeholder="Future customer" />
+                              <CustomerPickerCell
+                                value={draft.future_customer_id}
+                                customers={customers}
+                                disabledIds={futureAssignedIds}
+                                placeholder="Future customer"
+                                onChange={(id) => setD("future_customer_id", id)}
+                                onCreate={createCustomer}
+                              />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
@@ -990,10 +1004,22 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.current_customer || ""} onSave={(v) => updateCell(r.id, "current_customer", v || null)} />
+                            <CustomerPickerCell
+                              value={r.current_customer_id}
+                              customers={customers}
+                              disabledIds={new Set([...currentAssignedIds].filter((id) => id !== r.current_customer_id))}
+                              onChange={(id) => updateCell(r.id, "current_customer_id", id)}
+                              onCreate={createCustomer}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <TextCell value={r.future_customer || ""} onSave={(v) => updateCell(r.id, "future_customer", v || null)} />
+                            <CustomerPickerCell
+                              value={r.future_customer_id}
+                              customers={customers}
+                              disabledIds={new Set([...futureAssignedIds].filter((id) => id !== r.future_customer_id))}
+                              onChange={(id) => updateCell(r.id, "future_customer_id", id)}
+                              onCreate={createCustomer}
+                            />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
