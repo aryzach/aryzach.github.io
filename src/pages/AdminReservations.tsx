@@ -235,6 +235,25 @@ const AdminReservations = () => {
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const INVENTORY_COLS: [ColKey, string][] = [
+    ["id", "ID"],
+    ["location", "Location"],
+    ["style", "Style"],
+    ["model", "Model"],
+    ["status", "Status"],
+    ["customer", "Current Customer"],
+    ["future_customer", "Future Customer"],
+    ["install", "Install"],
+    ["available", "Available"],
+    ["timeline", "Timeline"],
+    ["notes", "Notes"],
+    ["updated", "Updated"],
+  ];
+  const { widths: invWidths, startResize: startInvResize } = useResizableColumns<ColKey | "actions">(
+    "admin.inventory.colWidths.v1",
+    [...INVENTORY_COLS.map(([k]) => k), "actions"] as (ColKey | "actions")[],
+    130,
+  );
   const [sortCol, setSortCol] = useState<ColKey | null>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const toggleSort = (k: ColKey) => {
