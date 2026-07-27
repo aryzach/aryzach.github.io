@@ -34,7 +34,7 @@ const CARE_STYLES = `
       width: 8.5in !important;
       height: 11in !important;
       margin: 0 !important;
-      padding: 0.35in 0.45in !important;
+      padding: 0.3in 0.4in !important;
       box-shadow: none !important;
       border-radius: 0 !important;
       page-break-after: avoid !important;
@@ -208,8 +208,8 @@ export default function Care() {
         >
           {/* HERO */}
           <div
-            className="rounded-xl overflow-hidden mb-4"
-            style={{ height: "1.9in", background: CEDAR_SOFT }}
+            className="rounded-xl overflow-hidden mb-3"
+            style={{ height: "1.2in", background: CEDAR_SOFT }}
           >
             <img
               src={HERO_IMAGE}
@@ -236,14 +236,14 @@ export default function Care() {
             </div>
           </div>
           <p
-            className="text-[9.5pt] max-w-[5in] leading-snug mb-4"
+            className="text-[9.5pt] max-w-[5in] leading-snug mb-3"
             style={{ color: MUTED }}
           >
             A few simple guidelines to keep your sauna safe, clean, and performing its best.
           </p>
 
           {/* GETTING STARTED */}
-          <section className="mb-4">
+          <section className="mb-3">
             <SectionLabel>Getting Started</SectionLabel>
             <div className="grid grid-cols-4 gap-4">
               <StartCard
@@ -270,7 +270,7 @@ export default function Care() {
           </section>
 
           {/* YOUR SESSION + CLEANING side by side to save vertical space */}
-          <div className="grid grid-cols-2 gap-6 mb-4">
+          <div className="grid grid-cols-2 gap-6 mb-3">
             <section>
               <SectionLabel>Your Session</SectionLabel>
               <div className="flex flex-col gap-1.5">
@@ -317,7 +317,7 @@ export default function Care() {
           </div>
 
           {/* SAFETY */}
-          <section className="mb-4">
+          <section className="mb-3">
             <SectionLabel>Safety</SectionLabel>
             <div className="grid grid-cols-4 gap-3">
               <SafetyCard
