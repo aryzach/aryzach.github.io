@@ -205,6 +205,7 @@ const AdminReservations = () => {
   const [pwInput, setPwInput] = useState("");
   const [types, setTypes] = useState<SaunaType[]>([]);
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
+  const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
@@ -245,8 +246,8 @@ const AdminReservations = () => {
     model: string;
     indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
     status: SaunaStatus;
-    current_customer: string;
-    future_customer: string;
+    current_customer_id: string | null;
+    future_customer_id: string | null;
     install_date: string;
     available_date: string;
     admin_notes: string;
@@ -412,8 +413,8 @@ const AdminReservations = () => {
       model: "",
       indoor_outdoor_eligibility: "either",
       status: "Available",
-      current_customer: "",
-      future_customer: "",
+      current_customer_id: null,
+      future_customer_id: null,
       install_date: "",
       available_date: "",
       admin_notes: "",
