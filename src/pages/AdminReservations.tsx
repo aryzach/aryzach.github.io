@@ -771,7 +771,21 @@ const AdminReservations = () => {
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
-                  <table className="w-full text-xs border-collapse">
+                  <InventoryTable
+                    filtered={filtered}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                    clearSelection={clearSelection}
+                    colFilters={colFilters}
+                    setColFilter={setColFilter}
+                    statusFilter={statusFilter}
+                    setStatusFilter={setStatusFilter}
+                    sortCol={sortCol}
+                    sortDir={sortDir}
+                    toggleSort={toggleSort}
+                  >
+                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+                    <InventoryColgroup />
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
                         <th className="px-2 py-1.5 border-r border-border w-8">
