@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
-import { getOrCreateCustomerForReservation, lookupCustomerName } from "../_shared/customers.ts";
 import {
   setAchAsCustomerDefault,
   listCustomerSubscriptions,
@@ -18,6 +17,24 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+
+// Look up a reservation's display name (used to mirror the customer text
+// field on sauna_inventory).
+async function lookupReservationName(
+  // deno-lint-ignore no-explicit-any
+  supabase: any,
+  reservationId: string | null,
+): Promise<string | null> {
+  if (!reservationId) return null;
+  const { data } = await supabase
+    .from("reservations")
+    .select("first_name, last_name, email")
+    .eq("id", reservationId)
+    .maybeSingle();
+  if (!data) return null;
+  const full = `${(data.first_name ?? "").trim()} ${(data.last_name ?? "").trim()}`.trim();
+  return full || data.email || null;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
