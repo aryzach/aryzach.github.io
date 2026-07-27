@@ -34,7 +34,7 @@ interface CustomerRow {
 export function CustomersPanel({
   callAdmin,
 }: {
-  callAdmin: (action: string, payload?: Record<string, unknown>) => Promise<any>;
+  callAdmin: (body: Record<string, unknown>) => Promise<any>;
 }) {
   const [rows, setRows] = useState<CustomerRow[]>([]);
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ export function CustomersPanel({
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await callAdmin("list_customers");
+      const res = await callAdmin({ action: "list_customers" });
       setRows(res.customers ?? []);
     } catch (err: any) {
       toast.error(err?.message || "Failed to load customers");
