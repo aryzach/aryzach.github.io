@@ -33,6 +33,8 @@ const CARE_STYLES = `
       inset: 0 !important;
       width: 8.5in !important;
       height: 11in !important;
+      min-height: 0 !important;
+      max-height: 11in !important;
       margin: 0 !important;
       padding: 0.3in 0.4in !important;
       box-shadow: none !important;
@@ -43,6 +45,7 @@ const CARE_STYLES = `
       overflow: hidden !important;
     }
     .no-print { display: none !important; }
+    html, body { height: auto !important; overflow: hidden !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   }
 `;
