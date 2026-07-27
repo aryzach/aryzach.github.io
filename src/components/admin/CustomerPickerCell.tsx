@@ -24,7 +24,7 @@ interface Props {
   onCreate: (name: string) => Promise<string | null>;
 }
 
-export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "Select customer…", onChange, onCreate }: Props) {
+export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "", onChange, onCreate }: Props) {
   const [open, setOpen] = useState(false);
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
