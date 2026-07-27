@@ -321,59 +321,6 @@ export type Database = {
           },
         ]
       }
-      customers: {
-        Row: {
-          city: string | null
-          created_at: string
-          email: string | null
-          first_name: string | null
-          id: string
-          install_address: string | null
-          last_name: string | null
-          name: string
-          notes: string | null
-          phone: string | null
-          reservation_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          city?: string | null
-          created_at?: string
-          email?: string | null
-          first_name?: string | null
-          id?: string
-          install_address?: string | null
-          last_name?: string | null
-          name: string
-          notes?: string | null
-          phone?: string | null
-          reservation_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          city?: string | null
-          created_at?: string
-          email?: string | null
-          first_name?: string | null
-          id?: string
-          install_address?: string | null
-          last_name?: string | null
-          name?: string
-          notes?: string | null
-          phone?: string | null
-          reservation_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "customers_reservation_id_fkey"
-            columns: ["reservation_id"]
-            isOneToOne: false
-            referencedRelation: "reservations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       pricing_config: {
         Row: {
           description: string | null
@@ -751,17 +698,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "sauna_inventory_current_customer_id_fkey"
+            foreignKeyName: "sauna_inventory_current_customer_reservation_fkey"
             columns: ["current_customer_id"]
             isOneToOne: false
-            referencedRelation: "customers"
+            referencedRelation: "reservations"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "sauna_inventory_future_customer_id_fkey"
+            foreignKeyName: "sauna_inventory_future_customer_reservation_fkey"
             columns: ["future_customer_id"]
             isOneToOne: false
-            referencedRelation: "customers"
+            referencedRelation: "reservations"
             referencedColumns: ["id"]
           },
           {

@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
-import { getOrCreateCustomerForReservation, lookupCustomerName } from "../_shared/customers.ts";
 import {
   setAchAsCustomerDefault,
   listCustomerSubscriptions,
@@ -18,6 +17,24 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+
+// Look up a reservation's display name (used to mirror the customer text
+// field on sauna_inventory).
+async function lookupReservationName(
+  // deno-lint-ignore no-explicit-any
+  supabase: any,
+  reservationId: string | null,
+): Promise<string | null> {
+  if (!reservationId) return null;
+  const { data } = await supabase
+    .from("reservations")
+    .select("first_name, last_name, email")
+    .eq("id", reservationId)
+    .maybeSingle();
+  if (!data) return null;
+  const full = `${(data.first_name ?? "").trim()} ${(data.last_name ?? "").trim()}`.trim();
+  return full || data.email || null;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -201,15 +218,10 @@ Deno.serve(async (req) => {
           return json({ ok: true, needs_review: true });
         }
 
-        let customerId: string | null = null;
-        try {
-          const cust = await getOrCreateCustomerForReservation(supabase, id);
-          customerId = cust.id;
-        } catch (_e) { /* non-fatal */ }
         await supabase.from("sauna_inventory").update({
           status: "Reservation Hold",
           current_customer: customerName,
-          current_customer_id: customerId,
+          current_customer_id: id,
           reservation_id: id,
         }).eq("id", chosen.id);
         await supabase.from("reservations").update({
@@ -284,12 +296,12 @@ Deno.serve(async (req) => {
             clean[k] = v === "" ? null : v;
           }
         }
-        // Mirror customer name from id so display fields stay in sync.
+        // Mirror name from the linked reservation so display fields stay in sync.
         if ("current_customer_id" in clean) {
-          clean["current_customer"] = await lookupCustomerName(supabase, clean["current_customer_id"] as string | null);
+          clean["current_customer"] = await lookupReservationName(supabase, clean["current_customer_id"] as string | null);
         }
         if ("future_customer_id" in clean) {
-          clean["future_customer"] = await lookupCustomerName(supabase, clean["future_customer_id"] as string | null);
+          clean["future_customer"] = await lookupReservationName(supabase, clean["future_customer_id"] as string | null);
         }
         const { data, error } = await supabase
           .from("sauna_inventory")
@@ -317,12 +329,12 @@ Deno.serve(async (req) => {
         if (Object.keys(clean).length === 0) {
           return json({ error: "No supported inventory fields to update" }, 400);
         }
-        // Mirror customer name from id so display fields stay in sync.
+        // Mirror name from the linked reservation so display fields stay in sync.
         if ("current_customer_id" in clean) {
-          clean["current_customer"] = await lookupCustomerName(supabase, clean["current_customer_id"] as string | null);
+          clean["current_customer"] = await lookupReservationName(supabase, clean["current_customer_id"] as string | null);
         }
         if ("future_customer_id" in clean) {
-          clean["future_customer"] = await lookupCustomerName(supabase, clean["future_customer_id"] as string | null);
+          clean["future_customer"] = await lookupReservationName(supabase, clean["future_customer_id"] as string | null);
         }
         const { data, error } = await supabase
           .from("sauna_inventory")
@@ -351,109 +363,32 @@ Deno.serve(async (req) => {
             status: "Available", current_customer: null, current_customer_id: null, reservation_id: null,
           }).eq("id", r.sauna_inventory_id);
         }
+        // Also clear any future-customer references that point to this reservation.
+        await supabase.from("sauna_inventory").update({
+          future_customer: null, future_customer_id: null,
+        }).eq("future_customer_id", id);
         await supabase.from("reservation_events").delete().eq("reservation_id", id);
-        await supabase.from("customers").delete().eq("reservation_id", id);
         const { error } = await supabase.from("reservations").delete().eq("id", id);
         if (error) throw error;
         return json({ ok: true });
       }
 
       // ============================================================
-      // Customers
+      // Customer picker options (backed by reservations)
       // ============================================================
       case "list_customers": {
-        const { data: customers, error } = await supabase
-          .from("customers")
-          .select("*")
-          .order("name", { ascending: true });
+        // Every reservation is a customer. Return them as picker options.
+        const { data, error } = await supabase
+          .from("reservations")
+          .select("id, first_name, last_name, email")
+          .order("first_name", { ascending: true });
         if (error) throw error;
-
-        const reservationIds = (customers ?? [])
-          .map((c: any) => c.reservation_id)
-          .filter((v: string | null): v is string => !!v);
-
-        let reservationsById: Record<string, any> = {};
-        if (reservationIds.length) {
-          const { data: resvs } = await supabase
-            .from("reservations")
-            .select("id, sauna_type_id, reservation_status, payment_status, preferred_install_at, sauna_inventory_id")
-            .in("id", reservationIds);
-          for (const r of resvs ?? []) reservationsById[r.id] = r;
-        }
-
-        const inventoryIds = Object.values(reservationsById)
-          .map((r: any) => r.sauna_inventory_id)
-          .filter((v: string | null): v is string => !!v);
-        let inventoryById: Record<string, any> = {};
-        if (inventoryIds.length) {
-          const { data: inv } = await supabase
-            .from("sauna_inventory")
-            .select("id, unit_code, sauna_type_id, status")
-            .in("id", inventoryIds);
-          for (const i of inv ?? []) inventoryById[i.id] = i;
-        }
-
-        const enriched = (customers ?? []).map((c: any) => {
-          const r = c.reservation_id ? reservationsById[c.reservation_id] : null;
-          const inv = r?.sauna_inventory_id ? inventoryById[r.sauna_inventory_id] : null;
-          return { ...c, reservation: r ?? null, sauna: inv ?? null };
+        const customers = (data ?? []).map((r: any) => {
+          const name = `${(r.first_name ?? "").trim()} ${(r.last_name ?? "").trim()}`.trim() || r.email || "Unknown";
+          return { id: r.id, name, email: r.email ?? null };
         });
-        return json({ customers: enriched });
-      }
-
-      case "create_customer": {
-        const allowed = ["name", "first_name", "last_name", "email", "phone", "install_address", "city", "reservation_id"];
-        const clean: Record<string, unknown> = {};
-        for (const k of allowed) {
-          if (k in payload) {
-            const v = (payload as any)[k];
-            clean[k] = v === "" ? null : v;
-          }
-        }
-        if (!clean.name || String(clean.name).trim() === "") {
-          return json({ error: "Customer name is required" }, 400);
-        }
-        const { data, error } = await supabase
-          .from("customers").insert(clean).select().single();
-        if (error) throw error;
-        return json({ customer: data });
-      }
-
-      case "update_customer": {
-        const { id, patch } = payload;
-        if (!id) return json({ error: "Customer id required" }, 400);
-        const allowed = ["name", "first_name", "last_name", "email", "phone", "install_address", "city", "reservation_id"];
-        const clean: Record<string, unknown> = {};
-        for (const k of allowed) if (k in patch) clean[k] = patch[k] === "" ? null : patch[k];
-        const { data, error } = await supabase
-          .from("customers").update(clean).eq("id", id).select().maybeSingle();
-        if (error) throw error;
-        if (!data) return json({ error: "Customer not found" }, 404);
-        // If name changed, mirror into inventory rows referencing this customer.
-        if ("name" in clean) {
-          await supabase.from("sauna_inventory")
-            .update({ current_customer: clean.name as string })
-            .eq("current_customer_id", id);
-          await supabase.from("sauna_inventory")
-            .update({ future_customer: clean.name as string })
-            .eq("future_customer_id", id);
-        }
-        return json({ customer: data });
-      }
-
-      case "delete_customer": {
-        const { id } = payload;
-        if (!id) return json({ error: "Customer id required" }, 400);
-        // Clear any inventory references first.
-        await supabase.from("sauna_inventory")
-          .update({ current_customer_id: null, current_customer: null })
-          .eq("current_customer_id", id);
-        await supabase.from("sauna_inventory")
-          .update({ future_customer_id: null, future_customer: null })
-          .eq("future_customer_id", id);
-        const { error } = await supabase.from("customers").delete().eq("id", id);
-        if (error) throw error;
-        return json({ ok: true });
+        customers.sort((a: any, b: any) => a.name.localeCompare(b.name));
+        return json({ customers });
       }
 
       case "list_waitlist": {

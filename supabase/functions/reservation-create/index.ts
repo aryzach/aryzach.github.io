@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
-import { getOrCreateCustomerForReservation } from "../_shared/customers.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -96,13 +95,6 @@ Deno.serve(async (req) => {
       : "Reservation created. Awaiting payment.",
     metadata: { source },
   });
-
-  // Create a matching customer record. Non-fatal on failure.
-  try {
-    await getOrCreateCustomerForReservation(supabase, reservation.id);
-  } catch (e) {
-    console.error("customer create failed:", e);
-  }
 
   // Fire the initial reservation email. Do not block on failure — the
   // reservation is already saved and the customer can retry via admin.

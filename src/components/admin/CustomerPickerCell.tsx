@@ -19,15 +19,10 @@ interface Props {
   disabledIds?: Set<string>;
   placeholder?: string;
   onChange: (customerId: string | null) => void | Promise<void>;
-  // Called when the user chooses "add new customer". Should create it, add it
-  // to the customers list, and return the new id.
-  onCreate: (name: string) => Promise<string | null>;
 }
 
-export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "", onChange, onCreate }: Props) {
+export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "", onChange }: Props) {
   const [open, setOpen] = useState(false);
-  const [adding, setAdding] = useState(false);
-  const [newName, setNewName] = useState("");
   const [busy, setBusy] = useState(false);
 
   const current = useMemo(() => customers.find((c) => c.id === value) || null, [customers, value]);
@@ -39,7 +34,7 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
 
   return (
     <div className="flex items-center gap-1">
-      <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setAdding(false); setNewName(""); } }}>
+      <Popover open={open} onOpenChange={(o) => { setOpen(o); }}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -49,8 +44,7 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" className="w-64 p-0">
-          {!adding ? (
-            <Command>
+          <Command>
               <CommandInput placeholder="Search customers…" />
               <CommandList>
                 <CommandEmpty>No customer found.</CommandEmpty>
@@ -74,9 +68,6 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
                 </CommandGroup>
               </CommandList>
               <div className="border-t p-1 flex gap-1">
-                <Button size="sm" variant="ghost" className="h-7 text-xs flex-1 justify-start" onClick={() => setAdding(true)}>
-                  <Plus className="h-3 w-3 mr-1" /> Add new customer
-                </Button>
                 {value && (
                   <Button
                     size="sm"
@@ -92,45 +83,7 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
                   </Button>
                 )}
               </div>
-            </Command>
-          ) : (
-            <div className="p-2 space-y-2">
-              <div className="text-xs font-medium">New customer</div>
-              <Input
-                autoFocus
-                className="h-7 text-xs"
-                placeholder="Full name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter" && newName.trim() && !busy) {
-                    setBusy(true);
-                    try {
-                      const id = await onCreate(newName.trim());
-                      if (id) { await onChange(id); setOpen(false); }
-                    } finally { setBusy(false); }
-                  }
-                }}
-              />
-              <div className="flex gap-1 justify-end">
-                <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => { setAdding(false); setNewName(""); }}>Cancel</Button>
-                <Button
-                  size="sm"
-                  className="h-7 text-xs"
-                  disabled={!newName.trim() || busy}
-                  onClick={async () => {
-                    setBusy(true);
-                    try {
-                      const id = await onCreate(newName.trim());
-                      if (id) { await onChange(id); setOpen(false); }
-                    } finally { setBusy(false); }
-                  }}
-                >
-                  Create
-                </Button>
-              </div>
-            </div>
-          )}
+          </Command>
         </PopoverContent>
       </Popover>
       {value && !open && (
