@@ -12,6 +12,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
+import { CustomersPanel } from "./AdminCustomers";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 
@@ -207,7 +208,7 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
+  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "customers" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
