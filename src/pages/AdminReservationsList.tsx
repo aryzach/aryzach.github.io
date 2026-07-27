@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 import { saunaTypeLabel } from "@/lib/reservationSaunaTypes";
+import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
+import { MultiSelectFilter } from "@/components/admin/MultiSelectFilter";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -96,6 +98,7 @@ export const ReservationsListPanel = ({
     status: "", payment: "", consult: "", id: "", contract: "", created: "", magic_link_opened: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -306,6 +309,7 @@ export const ReservationsListPanel = ({
   const filtered = useMemo(() => {
     const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
     const rows = reservations.filter((r) => {
+      if (statusFilter.length && !statusFilter.includes(r.reservation_status)) return false;
       if (!active.length) return true;
       const vals = rowValues(r);
       return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
@@ -319,7 +323,7 @@ export const ReservationsListPanel = ({
       });
     }
     return rows;
-  }, [reservations, colFilters, sortCol, sortDir]);
+  }, [reservations, colFilters, sortCol, sortDir, statusFilter]);
 
   const allSelected = filtered.length > 0 && filtered.every((r) => selected.has(r.id));
   const someSelected = filtered.some((r) => selected.has(r.id));
@@ -346,6 +350,11 @@ export const ReservationsListPanel = ({
     ["consult", "Consult"], ["id", "ID"], ["contract", "Contract"],
     ["created", "Created"], ["magic_link_opened", "Magic Link Opened"],
   ];
+  const { widths, startResize } = useResizableColumns<ColKey | "actions">(
+    "admin.reservations.colWidths.v1",
+    [...cols.map(([k]) => k), "actions"] as (ColKey | "actions")[],
+    140,
+  );
 
   const statusOpts = ["Lead", "Pending Payment", "Reservation Hold", "Reservation Confirmed", "Needs Manual Review", "Cancelled", "Refunded"];
   const paymentOpts = ["Pending", "Paid", "Refunded", "Failed"];
@@ -398,7 +407,14 @@ export const ReservationsListPanel = ({
       )}
 
       <div className="overflow-x-auto border border-border rounded-md bg-card">
-        <table className="w-full text-xs border-collapse">
+        <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+          <colgroup>
+            <col style={{ width: 32 }} />
+            {cols.map(([k]) => (
+              <col key={k} style={{ width: widths[k] }} />
+            ))}
+            <col style={{ width: widths["actions"] }} />
+          </colgroup>
           <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-2 py-1.5 border-r border-border w-8">
@@ -411,7 +427,7 @@ export const ReservationsListPanel = ({
                 />
               </th>
               {cols.map(([k, label]) => (
-                <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
+                <th key={k} className="relative text-left px-2 py-1.5 border-r border-border select-none">
                   <button
                     type="button"
                     className="inline-flex items-center gap-1 uppercase hover:text-foreground"
@@ -422,19 +438,20 @@ export const ReservationsListPanel = ({
                       {sortCol === k ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
                     </span>
                   </button>
+                  <ColResizeHandle onMouseDown={(e) => startResize(k, e)} />
                 </th>
               ))}
-              <th className="text-left px-2 py-1.5">Actions</th>
+              <th className="relative text-left px-2 py-1.5">
+                Actions
+                <ColResizeHandle onMouseDown={(e) => startResize("actions", e)} />
+              </th>
             </tr>
             <tr className="border-t border-border bg-muted/30">
               <th className="px-1 py-1 border-r border-border"></th>
               {cols.map(([k]) => (
                 <th key={k} className="px-1 py-1 border-r border-border">
                   {k === "status" ? (
-                    <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.status} onChange={(e) => setColFilter("status", e.target.value)}>
-                      <option value="">All</option>
-                      {statusOpts.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
+                    <MultiSelectFilter options={statusOpts} value={statusFilter} onChange={setStatusFilter} />
                   ) : k === "payment" ? (
                     <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.payment} onChange={(e) => setColFilter("payment", e.target.value)}>
                       <option value="">All</option>
