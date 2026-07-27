@@ -14,6 +14,8 @@ import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
+import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
+import { MultiSelectFilter } from "@/components/admin/MultiSelectFilter";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -232,6 +234,26 @@ const AdminReservations = () => {
     customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const INVENTORY_COLS: [ColKey, string][] = [
+    ["id", "ID"],
+    ["location", "Location"],
+    ["style", "Style"],
+    ["model", "Model"],
+    ["status", "Status"],
+    ["customer", "Current Customer"],
+    ["future_customer", "Future Customer"],
+    ["install", "Install"],
+    ["available", "Available"],
+    ["timeline", "Timeline"],
+    ["notes", "Notes"],
+    ["updated", "Updated"],
+  ];
+  const { widths: invWidths, startResize: startInvResize } = useResizableColumns<ColKey | "actions">(
+    "admin.inventory.colWidths.v1",
+    [...INVENTORY_COLS.map(([k]) => k), "actions"] as (ColKey | "actions")[],
+    130,
+  );
   const [sortCol, setSortCol] = useState<ColKey | null>("id");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const toggleSort = (k: ColKey) => {
@@ -555,6 +577,7 @@ const AdminReservations = () => {
   const filtered = useMemo(() => {
     const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
     const rows = inventory.filter((r) => {
+      if (statusFilter.length && !statusFilter.includes(r.status)) return false;
       if (!active.length) return true;
       const vals = rowValues(r);
       return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
@@ -568,7 +591,7 @@ const AdminReservations = () => {
       });
     }
     return rows;
-  }, [inventory, colFilters, sortCol, sortDir]);
+  }, [inventory, colFilters, sortCol, sortDir, statusFilter]);
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
@@ -767,7 +790,14 @@ const AdminReservations = () => {
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
-                  <table className="w-full text-xs border-collapse">
+                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+                    <colgroup>
+                      <col style={{ width: 32 }} />
+                      {INVENTORY_COLS.map(([k]) => (
+                        <col key={k} style={{ width: invWidths[k] }} />
+                      ))}
+                      <col style={{ width: invWidths["actions"] }} />
+                    </colgroup>
                     <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
                       <tr>
                         <th className="px-2 py-1.5 border-r border-border w-8">
@@ -781,21 +811,8 @@ const AdminReservations = () => {
                             }}
                           />
                         </th>
-                        {([
-                          ["id", "ID"],
-                          ["location", "Location"],
-                          ["style", "Style"],
-                          ["model", "Model"],
-                          ["status", "Status"],
-                          ["customer", "Current Customer"],
-                          ["future_customer", "Future Customer"],
-                          ["install", "Install"],
-                          ["available", "Available"],
-                          ["timeline", "Timeline"],
-                          ["notes", "Notes"],
-                          ["updated", "Updated"],
-                        ] as [ColKey, string][]).map(([k, label]) => (
-                          <th key={k} className="text-left px-2 py-1.5 border-r border-border select-none">
+                        {INVENTORY_COLS.map(([k, label]) => (
+                          <th key={k} className="relative text-left px-2 py-1.5 border-r border-border select-none">
                             <button
                               type="button"
                               className="inline-flex items-center gap-1 uppercase hover:text-foreground"
@@ -806,9 +823,12 @@ const AdminReservations = () => {
                                 {sortCol === k ? (sortDir === "asc" ? "▲" : "▼") : "↕"}
                               </span>
                             </button>
+                            <ColResizeHandle onMouseDown={(e) => startInvResize(k, e)} />
                           </th>
                         ))}
-                        <th className="text-left px-2 py-1.5"></th>
+                        <th className="relative text-left px-2 py-1.5">
+                          <ColResizeHandle onMouseDown={(e) => startInvResize("actions", e)} />
+                        </th>
                       </tr>
                       <tr className="border-t border-border bg-muted/30">
                         <th className="px-2 py-1 border-r border-border"></th>
@@ -834,10 +854,11 @@ const AdminReservations = () => {
                           </select>
                         </th>
                         <th className="px-1 py-1 border-r border-border">
-                          <select className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters.status} onChange={(e) => setColFilter("status", e.target.value)}>
-                            <option value="">All</option>
-                            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
+                          <MultiSelectFilter
+                            options={STATUSES as unknown as string[]}
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                          />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
