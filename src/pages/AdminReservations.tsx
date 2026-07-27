@@ -938,7 +938,6 @@ const AdminReservations = () => {
                                 disabledIds={currentAssignedIds}
                                 placeholder=""
                                 onChange={(id) => setD("current_customer_id", id)}
-                                onCreate={createCustomer}
                               />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
@@ -948,7 +947,6 @@ const AdminReservations = () => {
                                 disabledIds={futureAssignedIds}
                                 placeholder=""
                                 onChange={(id) => setD("future_customer_id", id)}
-                                onCreate={createCustomer}
                               />
                             </td>
                             <td className="px-1 py-1 border-r border-border">
@@ -1029,7 +1027,6 @@ const AdminReservations = () => {
                               customers={customers}
                               disabledIds={new Set([...currentAssignedIds].filter((id) => id !== r.current_customer_id))}
                               onChange={(id) => updateCell(r.id, "current_customer_id", id)}
-                              onCreate={createCustomer}
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
@@ -1038,7 +1035,6 @@ const AdminReservations = () => {
                               customers={customers}
                               disabledIds={new Set([...futureAssignedIds].filter((id) => id !== r.future_customer_id))}
                               onChange={(id) => updateCell(r.id, "future_customer_id", id)}
-                              onCreate={createCustomer}
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
