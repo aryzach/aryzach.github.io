@@ -47,8 +47,6 @@ const CARE_STYLES = `
   }
 `;
 
-const cedar = "#B07A४4"; // placeholder replaced below
-
 const CEDAR = "#A9743F";
 const CEDAR_SOFT = "#EFE6DA";
 const BG = "#F9F8F5";
