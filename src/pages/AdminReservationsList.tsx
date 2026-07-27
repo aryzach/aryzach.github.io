@@ -79,6 +79,7 @@ const STATUS_COLOR: Record<string, string> = {
   "Returning": "bg-yellow-100 text-yellow-900 border-yellow-200",
   "Transfer Planned": "bg-indigo-100 text-indigo-900 border-indigo-200",
   "Sold": "bg-gray-200 text-gray-900 border-gray-300",
+  "Churned": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
 const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
