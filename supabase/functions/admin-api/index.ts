@@ -305,31 +305,6 @@ Deno.serve(async (req) => {
           .maybeSingle();
         if (error) throw error;
         if (!data) return json({ error: "Inventory row not found" }, 404);
-
-        // If admin marked this sauna as Reservation Confirmed, mirror that
-        // status onto the linked customer reservation so it shows up on the
-        // reservations page.
-        if (
-          typeof patch.status === "string" &&
-          patch.status === "Reservation Confirmed" &&
-          data.reservation_id
-        ) {
-          const { error: rErr } = await supabase
-            .from("reservations")
-            .update({ reservation_status: "Reservation Confirmed" })
-            .eq("id", data.reservation_id);
-          if (rErr) {
-            console.error("Failed to sync reservation status:", rErr);
-          } else {
-            await supabase.from("reservation_events").insert({
-              reservation_id: data.reservation_id,
-              event_type: "Reservation Confirmed",
-              message: "Reservation confirmed via inventory status change.",
-              metadata: { sauna_inventory_id: data.id },
-            });
-          }
-        }
-
         return json({ sauna: data });
       }
 
