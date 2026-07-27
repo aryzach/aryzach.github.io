@@ -69,13 +69,16 @@ const fmtDate = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
 
 const STATUS_COLOR: Record<string, string> = {
-  "Lead": "bg-gray-200 text-gray-900 border-gray-300",
   "Pending Payment": "bg-yellow-100 text-yellow-900 border-yellow-200",
   "Reservation Hold": "bg-blue-100 text-blue-900 border-blue-200",
   "Reservation Confirmed": "bg-purple-100 text-purple-900 border-purple-200",
   "Needs Manual Review": "bg-orange-100 text-orange-900 border-orange-200",
   "Cancelled": "bg-gray-200 text-gray-900 border-gray-300",
   "Refunded": "bg-gray-200 text-gray-900 border-gray-300",
+  "Installed": "bg-slate-200 text-slate-900 border-slate-300",
+  "Returning": "bg-yellow-100 text-yellow-900 border-yellow-200",
+  "Transfer Planned": "bg-indigo-100 text-indigo-900 border-indigo-200",
+  "Sold": "bg-gray-200 text-gray-900 border-gray-300",
 };
 
 const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
@@ -356,7 +359,18 @@ export const ReservationsListPanel = ({
     140,
   );
 
-  const statusOpts = ["Lead", "Pending Payment", "Reservation Hold", "Reservation Confirmed", "Needs Manual Review", "Cancelled", "Refunded"];
+  const statusOpts = [
+    "Installed",
+    "Returning",
+    "Reservation Hold",
+    "Reservation Confirmed",
+    "Pending Payment",
+    "Needs Manual Review",
+    "Cancelled",
+    "Refunded",
+    "Transfer Planned",
+    "Sold",
+  ];
   const paymentOpts = ["Pending", "Paid", "Refunded", "Failed"];
   const stepOpts = ["Not Scheduled", "Scheduled", "Complete", "Not Sent", "Not Uploaded"];
   const styleOpts = ["Traditional", "Infrared"];
