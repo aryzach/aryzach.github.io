@@ -362,12 +362,43 @@ Deno.serve(async (req) => {
       // Customers
       // ============================================================
       case "list_customers": {
-        const { data, error } = await supabase
+        const { data: customers, error } = await supabase
           .from("customers")
           .select("*")
           .order("name", { ascending: true });
         if (error) throw error;
-        return json({ customers: data });
+
+        const reservationIds = (customers ?? [])
+          .map((c: any) => c.reservation_id)
+          .filter((v: string | null): v is string => !!v);
+
+        let reservationsById: Record<string, any> = {};
+        if (reservationIds.length) {
+          const { data: resvs } = await supabase
+            .from("reservations")
+            .select("id, sauna_type_id, reservation_status, payment_status, preferred_install_at, sauna_inventory_id")
+            .in("id", reservationIds);
+          for (const r of resvs ?? []) reservationsById[r.id] = r;
+        }
+
+        const inventoryIds = Object.values(reservationsById)
+          .map((r: any) => r.sauna_inventory_id)
+          .filter((v: string | null): v is string => !!v);
+        let inventoryById: Record<string, any> = {};
+        if (inventoryIds.length) {
+          const { data: inv } = await supabase
+            .from("sauna_inventory")
+            .select("id, unit_code, sauna_type_id, status")
+            .in("id", inventoryIds);
+          for (const i of inv ?? []) inventoryById[i.id] = i;
+        }
+
+        const enriched = (customers ?? []).map((c: any) => {
+          const r = c.reservation_id ? reservationsById[c.reservation_id] : null;
+          const inv = r?.sauna_inventory_id ? inventoryById[r.sauna_inventory_id] : null;
+          return { ...c, reservation: r ?? null, sauna: inv ?? null };
+        });
+        return json({ customers: enriched });
       }
 
       case "create_customer": {

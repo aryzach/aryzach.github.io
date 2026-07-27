@@ -12,6 +12,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
+import { CustomersPanel } from "./AdminCustomers";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 
@@ -207,7 +208,7 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
+  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "customers" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -710,6 +711,11 @@ const AdminReservations = () => {
             >Reservations</button>
             <button
               type="button"
+              className={`px-3 py-1.5 text-sm rounded ${tab === "customers" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+              onClick={() => setTab("customers")}
+            >Customers</button>
+            <button
+              type="button"
               className={`px-3 py-1.5 text-sm rounded ${tab === "waitlist" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("waitlist")}
             >Waitlist</button>
@@ -726,6 +732,10 @@ const AdminReservations = () => {
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />
+          )}
+
+          {tab === "customers" && (
+            <CustomersPanel callAdmin={callAdmin} />
           )}
 
           {tab === "waitlist" && (
