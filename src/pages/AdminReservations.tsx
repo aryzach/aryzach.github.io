@@ -452,7 +452,8 @@ const AdminReservations = () => {
         [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
         [/unit_code/i, "unit_code"],
         [/status/i, "status"],
-        [/current_customer/i, "current_customer"],
+        [/current_customer/i, "current_customer_id"],
+        [/future_customer/i, "future_customer_id"],
         [/model/i, "model"],
       ];
       const hit = fieldMatches.find(([re]) => re.test(msg));
@@ -487,12 +488,14 @@ const AdminReservations = () => {
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [typesRes, invRes] = await Promise.all([
+      const [typesRes, invRes, custRes] = await Promise.all([
         supabase.from("sauna_types").select("id, name, sort_order").order("sort_order"),
         callAdmin({ action: "list_inventory" }),
+        callAdmin({ action: "list_customers" }),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
       setInventory(invRes.inventory || []);
+      setCustomers((custRes.customers || []).map((c: any) => ({ id: c.id, name: c.name, email: c.email })));
     } catch (e) {
       console.error(e);
       toast.error("Failed to load admin data.");
@@ -529,6 +532,28 @@ const AdminReservations = () => {
     setAuthed(false);
     setPwInput("");
   };
+
+  // Create a new customer via the admin API. Returns the new id or null.
+  const createCustomer = useCallback(async (name: string): Promise<string | null> => {
+    try {
+      const res = await callAdmin({ action: "create_customer", name });
+      const c = res.customer;
+      if (!c?.id) return null;
+      setCustomers((prev) => {
+        const next = [...prev, { id: c.id, name: c.name, email: c.email }];
+        next.sort((a, b) => a.name.localeCompare(b.name));
+        return next;
+      });
+      return c.id;
+    } catch (e) {
+      toast.error((e as Error).message || "Could not add customer");
+      return null;
+    }
+  }, [callAdmin]);
+
+  // Ids already used in other rows for each side, to prevent picking twice.
+  const currentAssignedIds = useMemo(() => new Set(inventory.map((r) => r.current_customer_id).filter(Boolean) as string[]), [inventory]);
+  const futureAssignedIds = useMemo(() => new Set(inventory.map((r) => r.future_customer_id).filter(Boolean) as string[]), [inventory]);
 
   const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
     id: r.unit_code || "",
