@@ -13,6 +13,7 @@ import { ReservationsListPanel } from "./AdminReservationsList";
 import { WaitlistPanel } from "./AdminWaitlist";
 import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
+import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -156,6 +157,8 @@ interface InventoryRow {
   status: SaunaStatus;
   current_customer: string | null;
   future_customer: string | null;
+  current_customer_id: string | null;
+  future_customer_id: string | null;
   install_date: string | null;
   available_date: string | null;
   admin_notes: string | null;
