@@ -34,7 +34,7 @@ const CARE_STYLES = `
       width: 8.5in !important;
       height: 11in !important;
       margin: 0 !important;
-      padding: 0.45in 0.5in !important;
+      padding: 0.35in 0.45in !important;
       box-shadow: none !important;
       border-radius: 0 !important;
       page-break-after: avoid !important;
@@ -274,7 +274,7 @@ export default function Care() {
             <section>
               <SectionLabel>Your Session</SectionLabel>
               <div className="flex flex-col gap-1.5">
-                <TimelineStep icon={<Flame size={16} />} title="Preheat" />
+                <TimelineStep icon={<Flame size={16} />} title="Preheat" subtitle="40–90 minutes" />
                 <TimelineArrow />
                 <TimelineStep
                   icon={<Timer size={16} />}
@@ -282,7 +282,7 @@ export default function Care() {
                   subtitle="15–30 min"
                 />
                 <TimelineArrow />
-                <TimelineStep icon={<Snowflake size={16} />} title="Cool Down" />
+                <TimelineStep icon={<Snowflake size={16} />} title="Cool Down" subtitle="Cold shower, plunge, or cool air for 1–10 minutes" />
                 <TimelineArrow />
                 <TimelineStep icon={<RotateCw size={16} />} title="Repeat if desired" />
               </div>
@@ -334,8 +334,6 @@ export default function Care() {
                 icon={<Plug size={16} />}
                 title="Power"
                 items={[
-                  "Plug directly into a wall outlet",
-                  "Never use extension cords",
                   "Do not move to another outlet without contacting SF Sauna",
                 ]}
               />
@@ -395,7 +393,7 @@ export default function Care() {
                   className="text-[9pt] mt-0.5 flex items-center gap-1.5 justify-end"
                   style={{ color: MUTED }}
                 >
-                  <Mail size={12} /> sfsaunarental@gmail.com
+                  <Mail size={12} /> zach@sfsaunarental.com
                 </div>
               </div>
             </div>
