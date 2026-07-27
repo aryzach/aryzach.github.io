@@ -208,8 +208,8 @@ export default function Care() {
         >
           {/* HERO */}
           <div
-            className="rounded-xl overflow-hidden mb-3"
-            style={{ height: "1.2in", background: CEDAR_SOFT }}
+            className="rounded-xl overflow-hidden mb-4 print:hidden"
+            style={{ height: "1.9in", background: CEDAR_SOFT }}
           >
             <img
               src={HERO_IMAGE}
