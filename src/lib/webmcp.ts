@@ -104,7 +104,7 @@ const tools: WebMCPTool[] = [
     inputSchema: { type: "object", properties: {} },
     execute: () => ({
       business: "SF Sauna Rental",
-      email: "support@sfsaunarental.com",
+      email: "info@sfsaunarental.com",
       site: "https://www.sfsaunarental.com",
       service_area: "San Francisco Bay Area",
     }),

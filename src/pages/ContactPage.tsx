@@ -127,10 +127,10 @@ const ContactPage = () => {
                     <div>
                       <p className="font-medium text-heading">Email</p>
                       <a 
-                        href="mailto:sfsaunarental@gmail.com"
+                        href="mailto:info@sfsaunarental.com"
                         className="text-text hover:text-accent transition-colors"
                       >
-                        sfsaunarental@gmail.com
+                        info@sfsaunarental.com
                       </a>
                     </div>
                   </div>

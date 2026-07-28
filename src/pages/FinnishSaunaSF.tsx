@@ -181,7 +181,7 @@ const FinnishSaunaSF = () => {
     "@type": "LocalBusiness",
     "name": "SF Sauna Rental",
     "url": "https://sfsaunarental.com/finnish-sauna-san-francisco/",
-    "email": "sfsaunarental@gmail.com",
+    "email": "info@sfsaunarental.com",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "San Francisco",
