@@ -89,7 +89,7 @@ const Policies = () => {
               <li>Opt out of certain tracking (via browser or device settings)</li>
             </ul>
             <p className="mb-6">
-              To make a request, email us at <a href="mailto:sfsaunarental@gmail.com" className="text-primary hover:underline">sfsaunarental@gmail.com</a>.
+              To make a request, email us at <a href="mailto:info@sfsaunarental.com" className="text-primary hover:underline">info@sfsaunarental.com</a>.
             </p>
 
             <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">6. Security</h2>
@@ -104,7 +104,7 @@ const Policies = () => {
 
             <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">8. Contact</h2>
             <p className="mb-6">
-              For questions about this Privacy Policy, contact us at: <a href="mailto:sfsaunarental@gmail.com" className="text-primary hover:underline">sfsaunarental@gmail.com</a>
+              For questions about this Privacy Policy, contact us at: <a href="mailto:info@sfsaunarental.com" className="text-primary hover:underline">info@sfsaunarental.com</a>
             </p>
           </div>
         </div>

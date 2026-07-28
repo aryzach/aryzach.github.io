@@ -396,7 +396,7 @@ export default function Care() {
                   className="text-[9pt] mt-0.5 flex items-center gap-1.5 justify-end"
                   style={{ color: MUTED }}
                 >
-                  <Mail size={12} /> zach@sfsaunarental.com
+                  <Mail size={12} /> info@sfsaunarental.com
                 </div>
               </div>
             </div>

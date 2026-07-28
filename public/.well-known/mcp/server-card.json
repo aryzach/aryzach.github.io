@@ -7,7 +7,7 @@
     "vendor": "SF Sauna Rental",
     "description": "Model Context Protocol server for SF Sauna Rental. Exposes read-only discovery endpoints for reservations, pricing, and availability.",
     "homepage": "https://www.sfsaunarental.com",
-    "contact": "support@sfsaunarental.com"
+    "contact": "info@sfsaunarental.com"
   },
   "transport": {
     "type": "http",
