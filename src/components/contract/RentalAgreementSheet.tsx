@@ -342,6 +342,10 @@ const ConfigureStep = ({
   activeVersion: string;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
+  const installFee = useMemo(
+    () => (form.sauna_type ? getInstallFee(form.sauna_type, form.commitment_months) : null),
+    [form.sauna_type, form.commitment_months],
+  );
   return (
     <div className="space-y-8">
       <Section title="Customer information">
