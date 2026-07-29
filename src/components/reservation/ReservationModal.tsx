@@ -36,6 +36,7 @@ async function notifyGHL(
       city: values.city,
       sauna_type: _saunaTypeLabel(values.sauna_type_id),
       preferred_installation_date: values.preferred_install_date,
+      questions: values.questions,
       ...extra,
     },
   });
@@ -89,6 +90,7 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
     defaultValues: {
       sauna_type_id: initialSaunaTypeId ?? "",
       preferred_install_date: "",
+      questions: "",
     } as Partial<FormValues> as FormValues,
   });
 
@@ -316,6 +318,14 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                     Earliest availability: {formatDatePretty(availability.nextAvailableDate)}
                   </p>
                 )}
+              </Field>
+
+              <Field label="Questions?" error={errors.questions?.message}>
+                <Input
+                  type="text"
+                  placeholder="Anything we should know before we reach out?"
+                  {...register("questions")}
+                />
               </Field>
 
               <div className="pt-2 space-y-2">
