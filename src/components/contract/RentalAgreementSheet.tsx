@@ -342,6 +342,10 @@ const ConfigureStep = ({
   activeVersion: string;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
+  const installFee = useMemo(
+    () => (form.sauna_type ? getInstallFee(form.sauna_type, form.commitment_months) : null),
+    [form.sauna_type, form.commitment_months],
+  );
   return (
     <div className="space-y-8">
       <Section title="Customer information">
@@ -434,6 +438,11 @@ const ConfigureStep = ({
           <PriceRow
             label="Monthly rental"
             value={monthlyPrice != null ? `${formatUSD(monthlyPrice)} / month` : "—"}
+          />
+          <PriceRow
+            label="Installation fee"
+            value={installFee != null ? (installFee > 0 ? formatUSD(installFee) : "Free installation") : "—"}
+            hint={installFee != null && installFee > 0 ? "One-time" : "Waived for selected term"}
           />
           {!isSf && (
             <PriceRow
