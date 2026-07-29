@@ -28,7 +28,7 @@ const LearnMore = () => {
     const res = await submitLeadToGHL({
       form_source: "learn_more",
       form_name: "Learn More / Ask a Question",
-      fields: { name, first_name, last_name, email, phone, message },
+      fields: { name, first_name, last_name, email, phone, questions: message },
     });
     setSubmitting(false);
     if (res.ok) navigate("/thank-you");

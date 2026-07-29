@@ -21,7 +21,7 @@ const HowItWorks = () => {
     const res = await submitLeadToGHL({
       form_source: "homepage_how_it_works",
       form_name: "Homepage How It Works",
-      fields: { name, first_name, last_name, email, message },
+      fields: { name, first_name, last_name, email, questions: message },
     });
     setSubmitting(false);
     if (res.ok) {
