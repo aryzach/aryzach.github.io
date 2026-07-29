@@ -439,6 +439,11 @@ const ConfigureStep = ({
             label="Monthly rental"
             value={monthlyPrice != null ? `${formatUSD(monthlyPrice)} / month` : "—"}
           />
+          <PriceRow
+            label="Installation fee"
+            value={installFee != null ? (installFee > 0 ? formatUSD(installFee) : "Free installation") : "—"}
+            hint={installFee != null && installFee > 0 ? "One-time" : "Waived for selected term"}
+          />
           {!isSf && (
             <PriceRow
               label="Delivery fee"
