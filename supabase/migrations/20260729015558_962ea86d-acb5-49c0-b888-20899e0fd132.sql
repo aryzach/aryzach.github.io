@@ -1,0 +1,2 @@
+CREATE POLICY "anon can upload lead photos" ON storage.objects FOR INSERT TO anon, authenticated WITH CHECK (bucket_id = 'lead-uploads');
+CREATE POLICY "anon can read own lead uploads" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'lead-uploads');
