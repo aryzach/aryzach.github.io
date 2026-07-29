@@ -29,7 +29,7 @@ const ContactPage = () => {
     const res = await submitLeadToGHL({
       form_source: "contact_page",
       form_name: "Contact Page",
-      fields: { name, first_name, last_name, email, phone, message },
+      fields: { name, first_name, last_name, email, phone, questions: message },
     });
     setSubmitting(false);
     if (res.ok) navigate("/thank-you");

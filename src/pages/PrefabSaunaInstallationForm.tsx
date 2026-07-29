@@ -52,7 +52,7 @@ const PrefabSaunaInstallationForm = () => {
         sauna_brand: saunaBrand,
         timeline,
         referral_source: referral,
-        message,
+        questions: message,
         photo_urls: upload.urls,
       },
     });

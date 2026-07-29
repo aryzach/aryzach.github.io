@@ -27,7 +27,7 @@ const EmailMoreInfo = () => {
     const res = await submitLeadToGHL({
       form_source: "email_more_info",
       form_name: "Email More Info",
-      fields: { name, first_name, last_name, email, message },
+      fields: { name, first_name, last_name, email, questions: message },
     });
     setSubmitting(false);
     if (res.ok) {
