@@ -36,6 +36,7 @@ async function notifyGHL(
       city: values.city,
       sauna_type: _saunaTypeLabel(values.sauna_type_id),
       preferred_installation_date: values.preferred_install_date,
+      questions: values.questions,
       ...extra,
     },
   });
@@ -56,6 +57,7 @@ const schema = z.object({
   city: z.string().trim().min(1, "Required").max(120),
   sauna_type_id: z.string().min(1, "Required"),
   preferred_install_date: z.string().min(1, "Required"),
+  questions: z.string().trim().max(500).optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -88,6 +90,7 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
     defaultValues: {
       sauna_type_id: initialSaunaTypeId ?? "",
       preferred_install_date: "",
+      questions: "",
     } as Partial<FormValues> as FormValues,
   });
 
@@ -315,6 +318,14 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
                     Earliest availability: {formatDatePretty(availability.nextAvailableDate)}
                   </p>
                 )}
+              </Field>
+
+              <Field label="Questions?" error={errors.questions?.message}>
+                <Input
+                  type="text"
+                  placeholder="Anything we should know before we reach out?"
+                  {...register("questions")}
+                />
               </Field>
 
               <div className="pt-2 space-y-2">
