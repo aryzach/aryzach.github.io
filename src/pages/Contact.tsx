@@ -12,13 +12,42 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
 
 const Contact = () => {
   useSEO(seoData.reserveYourSauna);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
   const [saunaType, setSaunaType] = useState("");
   const [location, setLocation] = useState("");
   const [region, setRegion] = useState("");
   const [date, setDate] = useState<Date>();
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    const { first_name, last_name } = splitFullName(name);
+    const res = await submitLeadToGHL({
+      form_source: "reserve_your_sauna",
+      form_name: "Reserve Your Sauna",
+      fields: {
+        name, first_name, last_name, email, phone, city, region,
+        sauna_type: saunaType,
+        installation_location: location,
+        preferred_installation_date: date ? format(date, "yyyy-MM-dd") : undefined,
+      },
+    });
+    setSubmitting(false);
+    if (res.ok) navigate("/reservation-payment-or-schedule-call");
+    else toast.error("Something went wrong. Please try again.");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -33,18 +62,7 @@ const Contact = () => {
               Fill out the form below and we'll get back to you to confirm your installation date.
             </p>
 
-            <form 
-              action="https://api.web3forms.com/submit" 
-              method="POST" 
-              className="space-y-6"
-            >
-              <input type="hidden" name="access_key" value="c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef" />
-              <input type="hidden" name="redirect" value="https://sfsaunarental.com/reservation-payment-or-schedule-call" />
-              <input type="hidden" name="sauna_type" value={saunaType} />
-              <input type="hidden" name="location" value={location} />
-              <input type="hidden" name="region" value={region} />
-              <input type="hidden" name="preferred_date" value={date ? format(date, "PPP") : ""} />
-              
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="name">
                   Name <span className="text-destructive">*</span>
@@ -55,6 +73,8 @@ const Contact = () => {
                   name="name"
                   required
                   placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
@@ -68,6 +88,8 @@ const Contact = () => {
                   name="email"
                   required
                   placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
@@ -81,6 +103,8 @@ const Contact = () => {
                   name="phone"
                   required
                   placeholder="(555) 555-5555"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
 
@@ -94,6 +118,8 @@ const Contact = () => {
                   name="city"
                   required
                   placeholder="San Francisco"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                 />
               </div>
 
@@ -179,9 +205,9 @@ const Contact = () => {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={!saunaType || !location || !region || !date}
+                disabled={submitting || !saunaType || !location || !region || !date}
               >
-                Reserve Now
+                {submitting ? "Sending…" : "Reserve Now"}
               </Button>
             </form>
           </div>
