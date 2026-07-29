@@ -16,29 +16,29 @@ import { useAvailability } from "@/hooks/useAvailability";
 import { formatDatePretty } from "@/lib/availability";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { saunaTypeLabel as _saunaTypeLabel } from "@/lib/reservationSaunaTypes";
+import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 
-const WEB3FORMS_ACCESS_KEY = "c69ea9bb-1c41-4a04-9948-6cf7aa7f09ef";
-
-async function notifyWeb3Forms(subject: string, values: FormValues, extra: Record<string, string>) {
-  try {
-    await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        subject,
-        name: `${values.first_name} ${values.last_name}`,
-        email: values.email,
-        phone: values.phone,
-        city: values.city,
-        sauna_type: _saunaTypeLabel(values.sauna_type_id),
-        preferred_install_date: values.preferred_install_date,
-        ...extra,
-      }),
-    });
-  } catch (e) {
-    console.error("web3forms notify failed:", e);
-  }
+async function notifyGHL(
+  formName: string,
+  formSource: string,
+  values: FormValues,
+  extra: Record<string, string>,
+) {
+  await submitLeadToGHL({
+    form_source: formSource,
+    form_name: formName,
+    fields: {
+      first_name: values.first_name,
+      last_name: values.last_name,
+      name: `${values.first_name} ${values.last_name}`.trim(),
+      email: values.email,
+      phone: values.phone,
+      city: values.city,
+      sauna_type: _saunaTypeLabel(values.sauna_type_id),
+      preferred_installation_date: values.preferred_install_date,
+      ...extra,
+    },
+  });
 }
 
 export type ReservationSource =
@@ -142,8 +142,8 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
           toast.error("Something went wrong. Please try again.");
           return;
         }
-        void notifyWeb3Forms("New Waitlist Signup — SF Sauna", valid, {
-          type: "Waitlist",
+        void notifyGHL("Reservation Waitlist", "reservation_waitlist", valid, {
+          intent: "waitlist",
           reservation_source: source,
         });
         toast.success("You're on the waitlist. We'll be in touch.");
@@ -177,8 +177,8 @@ const ReservationModal = ({ initialSaunaTypeId, source, onClose }: Props) => {
         toast.error("Something went wrong. Please try again.");
         return;
       }
-      void notifyWeb3Forms("New Reservation Request — SF Sauna", valid, {
-        type: "Reservation Request",
+      void notifyGHL("Reservation Request", "reservation_modal", valid, {
+        intent,
         reservation_source: source,
         reservation_id: data.id,
       });

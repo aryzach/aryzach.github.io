@@ -7,9 +7,34 @@ import Footer from "@/components/Footer";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
 
 const ContactPage = () => {
   useSEO(seoData.contact);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    const { first_name, last_name } = splitFullName(name);
+    const res = await submitLeadToGHL({
+      form_source: "contact_page",
+      form_name: "Contact Page",
+      fields: { name, first_name, last_name, email, phone, message },
+    });
+    setSubmitting(false);
+    if (res.ok) navigate("/thank-you");
+    else toast.error("Something went wrong. Please try again.");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -27,14 +52,7 @@ const ContactPage = () => {
                   Have questions? We're here to help. Fill out the form below and we'll get back to you soon.
                 </p>
 
-                <form
-                  action="https://api.web3forms.com/submit"
-                  method="POST"
-                  className="space-y-6"
-                >
-                  <input type="hidden" name="access_key" value="0fd02492-4a8f-4c11-b60e-a2485315ef72" />
-                  <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
-
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>
                     <Input
@@ -42,6 +60,9 @@ const ContactPage = () => {
                       id="name"
                       name="name"
                       placeholder="Your name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
                     />
                   </div>
 
@@ -52,6 +73,9 @@ const ContactPage = () => {
                       id="email"
                       name="email"
                       placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
                   </div>
 
@@ -62,6 +86,8 @@ const ContactPage = () => {
                       id="phone"
                       name="phone"
                       placeholder="(555) 555-5555"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                     />
                   </div>
 
@@ -72,15 +98,18 @@ const ContactPage = () => {
                       name="message"
                       placeholder="Tell us what you're interested in..."
                       rows={5}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                     />
                   </div>
 
                   <Button
                     type="submit"
                     size="lg"
+                    disabled={submitting}
                     className="w-full"
                   >
-                    Send Message
+                    {submitting ? "Sending…" : "Send Message"}
                   </Button>
                 </form>
               </div>

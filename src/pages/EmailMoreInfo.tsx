@@ -6,9 +6,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { ExternalLink } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
 
 const EmailMoreInfo = () => {
   useSEO(seoData.emailMoreInfo);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    const { first_name, last_name } = splitFullName(name);
+    const res = await submitLeadToGHL({
+      form_source: "email_more_info",
+      form_name: "Email More Info",
+      fields: { name, first_name, last_name, email, message },
+    });
+    setSubmitting(false);
+    if (res.ok) {
+      navigate("/thank-you");
+    } else {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -42,14 +69,7 @@ const EmailMoreInfo = () => {
             </div>
 
             <div className="bg-white rounded-lg p-8 shadow-sm border border-ui">
-              <form
-                action="https://api.web3forms.com/submit"
-                method="POST"
-                className="space-y-6"
-              >
-                <input type="hidden" name="access_key" value="0fd02492-4a8f-4c11-b60e-a2485315ef72" />
-                <input type="hidden" name="redirect" value="https://sfsaunarental.com/thank-you" />
-                
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block font-sans text-[14px] font-medium text-text mb-2">
                     Name
@@ -59,6 +79,8 @@ const EmailMoreInfo = () => {
                     id="name"
                     name="name"
                     required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="w-full"
                   />
                 </div>
@@ -72,6 +94,8 @@ const EmailMoreInfo = () => {
                     id="email"
                     name="email"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full"
                   />
                 </div>
@@ -84,6 +108,8 @@ const EmailMoreInfo = () => {
                     id="message"
                     name="message"
                     required
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                     className="w-full min-h-[120px]"
                     placeholder="Tell us about your space, timeline, or any questions you have..."
                   />
@@ -92,9 +118,10 @@ const EmailMoreInfo = () => {
                 <Button
                   type="submit"
                   size="lg"
+                  disabled={submitting}
                   className="w-full bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-white font-sans font-medium"
                 >
-                  Submit Form
+                  {submitting ? "Sending…" : "Submit Form"}
                 </Button>
               </form>
             </div>
