@@ -130,6 +130,7 @@ const App = () => (
         <ScrollToHash />
         <GAPageView />
         <WebMCPRegistrar />
+        <UtmCapture />
         <ReservationModalProvider>
         <Routes>
           <Route path="/" element={<Index />} />
