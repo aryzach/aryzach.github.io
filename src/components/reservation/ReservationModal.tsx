@@ -56,6 +56,7 @@ const schema = z.object({
   city: z.string().trim().min(1, "Required").max(120),
   sauna_type_id: z.string().min(1, "Required"),
   preferred_install_date: z.string().min(1, "Required"),
+  questions: z.string().trim().max(500).optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
