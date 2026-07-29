@@ -20,6 +20,7 @@ import {
   isSanFranciscoCity,
   formatUSD,
   commitmentLabel,
+  getInstallFee,
   ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
