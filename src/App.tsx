@@ -47,6 +47,7 @@ import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
 import Care from "./pages/Care";
 import { registerWebMCP } from "@/lib/webmcp";
+import { captureUtmParams } from "@/lib/submitLeadToGHL";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,14 @@ const WebMCPRegistrar = () => {
   useEffect(() => {
     registerWebMCP();
   }, []);
+  return null;
+};
+
+const UtmCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    captureUtmParams();
+  }, [location.pathname, location.search]);
   return null;
 };
 
