@@ -20,6 +20,7 @@ import {
   isSanFranciscoCity,
   formatUSD,
   commitmentLabel,
+  getInstallFee,
   ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
@@ -400,13 +401,14 @@ const ConfigureStep = ({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {COMMITMENT_MONTHS.map((m) => {
               const price = form.sauna_type ? getMonthlyPrice(form.sauna_type, m) : null;
+              const installFee = form.sauna_type ? getInstallFee(form.sauna_type, m) : null;
               const active = form.commitment_months === m;
               return (
                 <button
                   type="button"
                   key={m}
                   onClick={() => set("commitment_months", m)}
-                  className={`flex flex-col items-center justify-center gap-0.5 h-16 rounded-md border text-sm font-medium transition ${
+                  className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
                     active
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-background hover:border-primary/60"
@@ -415,6 +417,13 @@ const ConfigureStep = ({
                   <span>{commitmentLabel(m)}</span>
                   <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
                     {price != null ? `${formatUSD(price)}/mo` : "—"}
+                  </span>
+                  <span className={`text-[10px] ${active ? "text-primary-foreground/80" : "text-muted-foreground/80"}`}>
+                    {installFee != null
+                      ? installFee > 0
+                        ? `+${formatUSD(installFee)} install fee`
+                        : "Free installation"
+                      : "—"}
                   </span>
                 </button>
               );

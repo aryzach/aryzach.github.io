@@ -51,6 +51,13 @@ export function getMonthlyPrice(saunaTypeId: string, months: number): number | n
   return row ? row.monthly : null;
 }
 
+export function getInstallFee(saunaTypeId: string, months: number): number | null {
+  const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
+  if (!table) return null;
+  const row = table[months as CommitmentMonths];
+  return row ? row.installFee : null;
+}
+
 export function getSecurityDeposit(saunaTypeId: string): number {
   const info = getSaunaTypeInfo(saunaTypeId);
   if (!info) return 0;
