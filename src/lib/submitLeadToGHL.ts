@@ -1,16 +1,13 @@
 // Centralized GoHighLevel inbound webhook client for all lead-capture forms.
 // See docs and per-form usage below.
 
-const WEBHOOK_URL = import.meta.env.VITE_GHL_INBOUND_WEBHOOK_URL as
-  | string
-  | undefined;
-
-if (!WEBHOOK_URL && import.meta.env.DEV) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "[submitLeadToGHL] VITE_GHL_INBOUND_WEBHOOK_URL is not set. Lead submissions will fail.",
-  );
-}
+// GoHighLevel inbound webhook. Publicly callable from the browser — safe to ship.
+// Override at build time by setting VITE_GHL_INBOUND_WEBHOOK_URL.
+const DEFAULT_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/zyM3BNze9gmgtLAoCCQ0/webhook-trigger/021d1bd1-97d6-41ee-b5e6-8683de1a2a07";
+const WEBHOOK_URL =
+  (import.meta.env.VITE_GHL_INBOUND_WEBHOOK_URL as string | undefined) ??
+  DEFAULT_WEBHOOK_URL;
 
 const UTM_KEYS = [
   "utm_source",
