@@ -2,9 +2,34 @@ import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Instagram, MapPin, Phone, Mail } from "lucide-react";
+import { useState } from "react";
+import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 
 const Footer = () => {
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [joined, setJoined] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    setErrorMsg(null);
+    setSubmitting(true);
+    const res = await submitLeadToGHL({
+      form_source: "footer_newsletter",
+      form_name: "Footer Newsletter",
+      fields: { email },
+    });
+    setSubmitting(false);
+    if (res.ok) {
+      setJoined(true);
+      setEmail("");
+    } else {
+      setErrorMsg("Please try again.");
+    }
+  };
 
   const handlePoliciesClick = (e: React.MouseEvent) => {
     if (location.pathname === "/policies") {
@@ -106,24 +131,26 @@ const Footer = () => {
           <div>
             <h4 className="font-medium mb-4 text-accent">Stay Updated</h4>
             <p className="text-white/70 text-sm mb-3">Join for sauna tips & updates</p>
-            <form 
-              action="https://api.web3forms.com/submit" 
-              method="POST"
-              className="flex gap-2"
-            >
-              <input type="hidden" name="access_key" value="3fb7e2ca-1dd3-49a9-8a81-e90cbcc240b3" />
-              <input type="hidden" name="redirect" value="https://www.sfsaunarental.com/email-more-info/" />
-              <Input
-                type="email"
-                name="email"
-                required
-                placeholder="Your email"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
-              />
-              <Button type="submit" size="sm" className="bg-accent hover:bg-accent/90">
-                Join
-              </Button>
-            </form>
+            {joined ? (
+              <p className="text-sm text-white/90" role="status">Thanks — you're in.</p>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                <Input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="Your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  aria-label="Email address"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                />
+                <Button type="submit" size="sm" disabled={submitting} className="bg-accent hover:bg-accent/90">
+                  {submitting ? "…" : "Join"}
+                </Button>
+              </form>
+            )}
+            {errorMsg && <p className="text-xs text-white/70 mt-2" role="alert">{errorMsg}</p>}
           </div>
         </div>
 
