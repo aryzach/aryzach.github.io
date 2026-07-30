@@ -486,7 +486,7 @@ const ReservationDashboard = () => {
                       </div>
                       <p className="text-xs text-muted-foreground mt-1 leading-snug">
                         Lock in your sauna now with the deposit, or choose to wait until after
-                        your Video Consultation.
+                        your Video Consultation. Payment applies to your balance.
                       </p>
                     </div>
                     {!paid && (
