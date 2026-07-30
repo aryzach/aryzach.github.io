@@ -84,7 +84,7 @@ function saunaTypeIdFor(
   // Traditional + Original Collection routes to the original-collection sauna types
   // so availability is tracked separately from the standard Traditional line.
   if (style === "Traditional" && model === "Original Collection") {
-    if (elig === "indoor") return "indoor_traditional";
+    if (elig === "indoor") return "indoor_traditional_original";
     if (elig === "outdoor") return "outdoor_traditional_original";
     return "outdoor_traditional_original";
   }
@@ -95,11 +95,11 @@ function saunaTypeIdFor(
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
 const STYLE_LOC_TO_TYPE: Record<string, string> = {
-  "infrared|indoor": "indoor_infrared",
-  "infrared|outdoor": "outdoor_infrared",
-  "traditional|indoor": "indoor_traditional",
-  "traditional|outdoor": "outdoor_traditional_latest",
-  "traditional|either": "indoor_outdoor_traditional_latest",
+  "infrared|indoor": "indoor_infrared_standard",
+  "infrared|outdoor": "outdoor_infrared_standard",
+  "traditional|indoor": "indoor_traditional_original",
+  "traditional|outdoor": "outdoor_traditional_standard",
+  "traditional|either": "indoor_traditional_standard",
 };
 
 const LOCATION_TO_ELIG: Record<string, "indoor" | "outdoor" | "either"> = {

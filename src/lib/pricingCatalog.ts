@@ -72,7 +72,7 @@ const PLACEHOLDER_INFRARED_OUTDOOR = assetUrl(infraredOutdoorAsset);
 export const products: Product[] = [
   {
     slug: "indoor",
-    saunaTypeId: "indoor_outdoor_traditional_latest",
+    saunaTypeId: "indoor_traditional_standard",
     name: "Traditional Sauna — Indoor",
     category: "traditional",
     categoryLabel: "Traditional",
@@ -82,11 +82,11 @@ export const products: Product[] = [
       "2-person sauna, 230°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_INDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
-    tiers: tiersFor("indoor_outdoor_traditional_latest"),
+    tiers: tiersFor("indoor_traditional_standard"),
   },
   {
     slug: "outdoor",
-    saunaTypeId: "outdoor_traditional_latest",
+    saunaTypeId: "outdoor_traditional_standard",
     name: "Traditional Sauna — Outdoor",
     category: "traditional",
     categoryLabel: "Traditional",
@@ -96,13 +96,13 @@ export const products: Product[] = [
       "2-person sauna, 230°F on a standard home outlet.",
     image: PLACEHOLDER_TRAD_OUTDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
-    tiers: tiersFor("outdoor_traditional_latest"),
+    tiers: tiersFor("outdoor_traditional_standard"),
   },
   {
     slug: "original-indoor",
     // Slug retained as `original-indoor` (not `indoor`) so lookups within the
     // "original" category remain unique when combined with future variants.
-    saunaTypeId: "indoor_traditional",
+    saunaTypeId: "indoor_traditional_original",
     name: "Original Collection — Indoor",
     category: "original",
     categoryLabel: "Original Collection",
@@ -113,7 +113,7 @@ export const products: Product[] = [
       "1st-gen traditional sauna. 230°F on a standard home outlet.",
     image: IMG_ORIGINAL_COLLECTION_INDOOR,
     reservationFee: RESERVATION_DEPOSIT_TRADITIONAL,
-    tiers: tiersFor("indoor_traditional"),
+    tiers: tiersFor("indoor_traditional_original"),
   },
   {
     slug: "original-outdoor",
@@ -132,7 +132,7 @@ export const products: Product[] = [
   },
   {
     slug: "indoor",
-    saunaTypeId: "indoor_infrared",
+    saunaTypeId: "indoor_infrared_standard",
     name: "Infrared Sauna — Indoor",
     category: "infrared",
     categoryLabel: "Infrared",
@@ -142,11 +142,11 @@ export const products: Product[] = [
       "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_INDOOR,
     reservationFee: RESERVATION_DEPOSIT_INFRARED,
-    tiers: tiersFor("indoor_infrared"),
+    tiers: tiersFor("indoor_infrared_standard"),
   },
   {
     slug: "outdoor",
-    saunaTypeId: "outdoor_infrared",
+    saunaTypeId: "outdoor_infrared_standard",
     name: "Infrared Sauna — Outdoor",
     category: "infrared",
     categoryLabel: "Infrared",
@@ -156,7 +156,7 @@ export const products: Product[] = [
       "2-person infrared sauna delivering 150°F heat.",
     image: PLACEHOLDER_INFRARED_OUTDOOR,
     reservationFee: RESERVATION_DEPOSIT_INFRARED,
-    tiers: tiersFor("outdoor_infrared"),
+    tiers: tiersFor("outdoor_infrared_standard"),
   },
 ];
 
