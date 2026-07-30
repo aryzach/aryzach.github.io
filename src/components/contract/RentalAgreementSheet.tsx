@@ -460,7 +460,7 @@ const ConfigureStep = ({
         <ToggleRow
           selected={form.insurance_selected}
           onChange={(v) => set("insurance_selected", v)}
-          title="Add optional insurance"
+          title="Add Optional Damage Protection"
           price={`${formatUSD(INSURANCE_MONTHLY)} / month`}
           description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions."
         />
