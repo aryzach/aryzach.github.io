@@ -72,32 +72,34 @@ const ELIG_LABEL: Record<"indoor" | "outdoor" | "either", string> = {
   either: "Both",
 };
 
-function styleFor(sauna_type_id: string): StyleValue {
-  return /infrared/i.test(sauna_type_id) ? "Infrared" : "Traditional";
+function styleFor(row: { style?: string | null; sauna_type_id: string }): StyleValue {
+  const raw = row.style || row.sauna_type_id;
+  return /infrared/i.test(raw) ? "Infrared" : "Traditional";
 }
 
+const locationsFor = (elig: "indoor" | "outdoor" | "either"): string[] =>
+  elig === "either" ? ["indoor", "outdoor"] : [elig];
+
+const modelKeyFor = (model?: string | null): "standard" | "original" =>
+  model === "Original Collection" ? "original" : "standard";
+
+// A sauna type is exactly one (location, style, model) combination.
+// Units that fit both locations are keyed to the indoor type but count for both.
 function saunaTypeIdFor(
   style: StyleValue,
   elig: "indoor" | "outdoor" | "either",
   model?: string | null,
-): string | null {
-  // Traditional + Original Collection routes to the original-collection sauna types
-  // so availability is tracked separately from the standard Traditional line.
-  if (style === "Traditional" && model === "Original Collection") {
-    if (elig === "indoor") return "indoor_traditional_original";
-    if (elig === "outdoor") return "outdoor_traditional_original";
-    return "outdoor_traditional_original";
-  }
-  const loc = elig === "either" ? "either" : elig;
-  const key = `${style.toLowerCase()}|${loc}`;
-  return STYLE_LOC_TO_TYPE[key] ?? null;
+): string {
+  const loc = elig === "outdoor" ? "outdoor" : "indoor";
+  return `${loc}_${style.toLowerCase()}_${modelKeyFor(model)}`;
 }
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
 const STYLE_LOC_TO_TYPE: Record<string, string> = {
   "infrared|indoor": "indoor_infrared_standard",
   "infrared|outdoor": "outdoor_infrared_standard",
-  "traditional|indoor": "indoor_traditional_original",
+  "infrared|either": "indoor_infrared_standard",
+  "traditional|indoor": "indoor_traditional_standard",
   "traditional|outdoor": "outdoor_traditional_standard",
   "traditional|either": "indoor_traditional_standard",
 };
@@ -155,6 +157,9 @@ interface InventoryRow {
   unit_code: string | null;
   sauna_type_id: string;
   model: string | null;
+  model_key: "standard" | "original";
+  style: "traditional" | "infrared";
+  locations: string[];
   indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
   status: SaunaStatus;
   current_customer: string | null;
@@ -390,18 +395,18 @@ const AdminReservations = () => {
             : "";
           if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Original Collection)`);
 
-          // Re-route Traditional + Original Collection to the original-collection sauna_type_id.
-          const resolvedTypeId = saunaTypeIdFor(
-            styleRaw === "infrared" ? "Infrared" : "Traditional",
-            elig,
-            model || null,
-          ) || sauna_type_id;
+          void sauna_type_id;
+          const styleValue: StyleValue = styleRaw === "infrared" ? "Infrared" : "Traditional";
+          const resolvedTypeId = saunaTypeIdFor(styleValue, elig, model || null);
 
           await callAdmin({
             action: "create_inventory",
             unit_code: get(col.id) || "",
             sauna_type_id: resolvedTypeId,
-            model: model || "",
+            model: model || "Standard",
+            model_key: modelKeyFor(model),
+            style: styleValue.toLowerCase(),
+            locations: locationsFor(elig),
             indoor_outdoor_eligibility: elig,
             status,
             current_customer: get(col.customer) || "",
@@ -451,16 +456,17 @@ const AdminReservations = () => {
     setDraftError(null);
     setDraftErrorField(null);
     const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility, draft.model);
-    if (!sauna_type_id) {
-      setDraftError(`No sauna type for ${draft.style} + ${ELIG_LABEL[draft.indoor_outdoor_eligibility]}.`);
-      setDraftErrorField("style");
-      return;
-    }
     setSavingDraft(true);
     try {
       const { style, ...rest } = draft;
-      void style;
-      await callAdmin({ action: "create_inventory", ...rest, sauna_type_id });
+      await callAdmin({
+        action: "create_inventory",
+        ...rest,
+        sauna_type_id,
+        style: style.toLowerCase(),
+        model_key: modelKeyFor(draft.model),
+        locations: locationsFor(draft.indoor_outdoor_eligibility),
+      });
       toast.success("Added");
       setDraft(null);
       await loadAll();
@@ -562,7 +568,7 @@ const AdminReservations = () => {
   const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
     id: r.unit_code || "",
     location: ELIG_LABEL[r.indoor_outdoor_eligibility],
-    style: styleFor(r.sauna_type_id),
+    style: styleFor(r),
     model: r.model || "",
     status: r.status,
     customer: r.current_customer || "",
@@ -621,13 +627,14 @@ const AdminReservations = () => {
     value: "indoor" | "outdoor" | "either" | StyleValue,
   ) => {
     const nextElig = which === "location" ? (value as "indoor" | "outdoor" | "either") : row.indoor_outdoor_eligibility;
-    const nextStyle = which === "style" ? (value as StyleValue) : styleFor(row.sauna_type_id);
-    const nextTypeId = saunaTypeIdFor(nextStyle, nextElig, row.model);
-    if (!nextTypeId) {
-      toast.error(`No sauna type for ${nextStyle} + ${ELIG_LABEL[nextElig]}.`);
-      return;
-    }
-    const patch = { indoor_outdoor_eligibility: nextElig, sauna_type_id: nextTypeId };
+    const nextStyle = which === "style" ? (value as StyleValue) : styleFor(row);
+    const patch = {
+      indoor_outdoor_eligibility: nextElig,
+      locations: locationsFor(nextElig),
+      style: nextStyle.toLowerCase() as "traditional" | "infrared",
+      model_key: modelKeyFor(row.model),
+      sauna_type_id: saunaTypeIdFor(nextStyle, nextElig, row.model),
+    };
     setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
     try {
       await callAdmin({ action: "update_inventory", id: row.id, patch });
@@ -638,9 +645,14 @@ const AdminReservations = () => {
   };
 
   const updateModel = async (row: InventoryRow, nextModel: string | null) => {
-    const style = styleFor(row.sauna_type_id);
-    const nextTypeId = saunaTypeIdFor(style, row.indoor_outdoor_eligibility, nextModel) || row.sauna_type_id;
-    const patch = { model: nextModel, sauna_type_id: nextTypeId };
+    const style = styleFor(row);
+    const patch = {
+      model: nextModel,
+      model_key: modelKeyFor(nextModel),
+      style: style.toLowerCase() as "traditional" | "infrared",
+      locations: locationsFor(row.indoor_outdoor_eligibility),
+      sauna_type_id: saunaTypeIdFor(style, row.indoor_outdoor_eligibility, nextModel),
+    };
     setInventory((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)));
     try {
       await callAdmin({ action: "update_inventory", id: row.id, patch });
@@ -994,7 +1006,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <SelectCell
-                              value={styleFor(r.sauna_type_id)}
+                              value={styleFor(r)}
                               options={STYLES.map((s) => ({ value: s, label: s }))}
                               onSave={(v) => updateLocationOrStyle(r, "style", v as StyleValue)}
                             />
