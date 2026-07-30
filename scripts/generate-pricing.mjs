@@ -39,11 +39,11 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 }
 
 const SAUNA_TYPE_IDS = [
-  "indoor_infrared",
-  "outdoor_infrared",
-  "indoor_outdoor_traditional_latest",
-  "outdoor_traditional_latest",
-  "indoor_traditional",
+  "indoor_infrared_standard",
+  "outdoor_infrared_standard",
+  "indoor_traditional_standard",
+  "outdoor_traditional_standard",
+  "indoor_traditional_original",
   "outdoor_traditional_original",
 ];
 
@@ -116,11 +116,11 @@ async function main() {
 // build/prerender even when the database is unreachable.
 
 export type SaunaTypeId =
-  | "indoor_infrared"
-  | "outdoor_infrared"
-  | "indoor_outdoor_traditional_latest"
-  | "outdoor_traditional_latest"
-  | "indoor_traditional"
+  | "indoor_infrared_standard"
+  | "outdoor_infrared_standard"
+  | "indoor_traditional_standard"
+  | "outdoor_traditional_standard"
+  | "indoor_traditional_original"
   | "outdoor_traditional_original";
 
 export type CommitmentMonths = 1 | 3 | 6 | 12;

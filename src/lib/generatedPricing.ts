@@ -4,11 +4,11 @@
 // build/prerender even when the database is unreachable.
 
 export type SaunaTypeId =
-  | "indoor_infrared"
-  | "outdoor_infrared"
-  | "indoor_outdoor_traditional_latest"
-  | "outdoor_traditional_latest"
-  | "indoor_traditional"
+  | "indoor_infrared_standard"
+  | "outdoor_infrared_standard"
+  | "indoor_traditional_standard"
+  | "outdoor_traditional_standard"
+  | "indoor_traditional_original"
   | "outdoor_traditional_original";
 
 export type CommitmentMonths = 1 | 3 | 6 | 12;
@@ -20,31 +20,31 @@ export interface PricingTierRow {
 }
 
 export const PRICING_TIERS: Record<SaunaTypeId, Record<CommitmentMonths, PricingTierRow>> = {
-  indoor_infrared: {
+  indoor_infrared_standard: {
     1: { monthly: 500, installFee: 200 },
     3: { monthly: 400, installFee: 200 },
     6: { monthly: 300, installFee: 0, badge: "Most Popular" },
     12: { monthly: 200, installFee: 0, badge: "Best Value" },
   },
-  outdoor_infrared: {
+  outdoor_infrared_standard: {
     1: { monthly: 600, installFee: 200 },
     3: { monthly: 500, installFee: 200 },
     6: { monthly: 400, installFee: 0, badge: "Most Popular" },
     12: { monthly: 300, installFee: 0, badge: "Best Value" },
   },
-  indoor_outdoor_traditional_latest: {
+  indoor_traditional_standard: {
     1: { monthly: 1400, installFee: 1000 },
     3: { monthly: 900, installFee: 1000 },
     6: { monthly: 800, installFee: 0, badge: "Most Popular" },
     12: { monthly: 600, installFee: 0, badge: "Best Value" },
   },
-  outdoor_traditional_latest: {
+  outdoor_traditional_standard: {
     1: { monthly: 1400, installFee: 1000 },
     3: { monthly: 900, installFee: 1000 },
     6: { monthly: 800, installFee: 0, badge: "Most Popular" },
     12: { monthly: 600, installFee: 0, badge: "Best Value" },
   },
-  indoor_traditional: {
+  indoor_traditional_original: {
     1: { monthly: 900, installFee: 500 },
     3: { monthly: 500, installFee: 500 },
     6: { monthly: 400, installFee: 0, badge: "Most Popular" },
