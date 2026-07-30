@@ -11,7 +11,7 @@ import {
   SECURITY_DEPOSIT_TRADITIONAL,
   DELIVERY_FEE_OUTSIDE_SF,
   type SaunaTypeId as GenSaunaTypeId,
-} from "../../../src/lib/generatedPricing.ts";
+} from "./generatedPricing.ts";
 
 export type SaunaTypeId = GenSaunaTypeId;
 

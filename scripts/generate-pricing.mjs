@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const OUT = join(ROOT, "src", "lib", "generatedPricing.ts");
+const OUT_EDGE = join(ROOT, "supabase", "functions", "_shared", "generatedPricing.ts");
 
 // Prefer env vars; fall back to parsing .env so this works locally too.
 function readEnv(name) {
@@ -145,7 +146,9 @@ export const SECURITY_DEPOSIT_TRADITIONAL = ${cfgMap.security_deposit_traditiona
 `;
 
   writeFileSync(OUT, out);
-  console.log(`[pricing:sync] Wrote ${OUT}`);
+  // Edge functions can't import from ../../src, so keep a copy alongside them.
+  writeFileSync(OUT_EDGE, out);
+  console.log(`[pricing:sync] Wrote ${OUT} and ${OUT_EDGE}`);
 }
 
 main().catch((err) => {
