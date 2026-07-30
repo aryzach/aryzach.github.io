@@ -645,12 +645,15 @@ export type Database = {
           incoming_eta: string | null
           indoor_outdoor_eligibility: string
           install_date: string | null
+          locations: string[]
           minimum_term_ends: string | null
           model: string | null
+          model_key: string
           notice_received_date: string | null
           reservation_id: string | null
           sauna_type_id: string
           status: string
+          style: string
           unit_code: string | null
           updated_at: string
         }
@@ -666,12 +669,15 @@ export type Database = {
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
           install_date?: string | null
+          locations: string[]
           minimum_term_ends?: string | null
           model?: string | null
+          model_key: string
           notice_received_date?: string | null
           reservation_id?: string | null
           sauna_type_id: string
           status?: string
+          style: string
           unit_code?: string | null
           updated_at?: string
         }
@@ -687,12 +693,15 @@ export type Database = {
           incoming_eta?: string | null
           indoor_outdoor_eligibility?: string
           install_date?: string | null
+          locations?: string[]
           minimum_term_ends?: string | null
           model?: string | null
+          model_key?: string
           notice_received_date?: string | null
           reservation_id?: string | null
           sauna_type_id?: string
           status?: string
+          style?: string
           unit_code?: string | null
           updated_at?: string
         }
@@ -732,31 +741,40 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          location: string
+          model_key: string
           name: string
           placement: string
           reservation_fee_cents: number
           sort_order: number
           stripe_payment_link: string
+          style: string
         }
         Insert: {
           created_at?: string
           description: string
           id: string
+          location: string
+          model_key: string
           name: string
           placement: string
           reservation_fee_cents: number
           sort_order?: number
           stripe_payment_link: string
+          style: string
         }
         Update: {
           created_at?: string
           description?: string
           id?: string
+          location?: string
+          model_key?: string
           name?: string
           placement?: string
           reservation_fee_cents?: number
           sort_order?: number
           stripe_payment_link?: string
+          style?: string
         }
         Relationships: []
       }
