@@ -11,7 +11,7 @@ import {
   SECURITY_DEPOSIT_TRADITIONAL,
   DELIVERY_FEE_OUTSIDE_SF,
   type SaunaTypeId as GenSaunaTypeId,
-} from "../../../src/lib/generatedPricing.ts";
+} from "./generatedPricing.ts";
 
 export type SaunaTypeId = GenSaunaTypeId;
 
@@ -26,11 +26,11 @@ export interface SaunaTypeInfo {
 }
 
 export const SAUNA_TYPES: SaunaTypeInfo[] = [
-  { id: "indoor_infrared", label: "Indoor Infrared Sauna", placement: "indoor", family: "infrared", allowsSecondHeater: false },
-  { id: "outdoor_infrared", label: "Outdoor Infrared Sauna", placement: "outdoor", family: "infrared", allowsSecondHeater: false },
-  { id: "indoor_outdoor_traditional_latest", label: "Indoor Traditional Sauna", placement: "indoor", family: "traditional", allowsSecondHeater: true },
-  { id: "outdoor_traditional_latest", label: "Outdoor Traditional Sauna", placement: "outdoor", family: "traditional", allowsSecondHeater: true },
-  { id: "indoor_traditional", label: "Original Collection Indoor Traditional Sauna", placement: "indoor", family: "traditional", allowsSecondHeater: true },
+  { id: "indoor_infrared_standard", label: "Indoor Infrared Sauna", placement: "indoor", family: "infrared", allowsSecondHeater: false },
+  { id: "outdoor_infrared_standard", label: "Outdoor Infrared Sauna", placement: "outdoor", family: "infrared", allowsSecondHeater: false },
+  { id: "indoor_traditional_standard", label: "Indoor Traditional Sauna", placement: "indoor", family: "traditional", allowsSecondHeater: true },
+  { id: "outdoor_traditional_standard", label: "Outdoor Traditional Sauna", placement: "outdoor", family: "traditional", allowsSecondHeater: true },
+  { id: "indoor_traditional_original", label: "Original Collection Indoor Traditional Sauna", placement: "indoor", family: "traditional", allowsSecondHeater: true },
   { id: "outdoor_traditional_original", label: "Original Collection Outdoor Traditional Sauna", placement: "outdoor", family: "traditional", allowsSecondHeater: true },
 ];
 

@@ -282,7 +282,8 @@ Deno.serve(async (req) => {
 
       case "create_inventory": {
         const allowed = [
-          "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
+          "sauna_type_id", "unit_code", "model", "model_key", "style", "locations",
+          "indoor_outdoor_eligibility", "status",
           "current_customer", "future_customer",
           "current_customer_id", "future_customer_id",
           "install_date",
@@ -317,7 +318,8 @@ Deno.serve(async (req) => {
         if (!id) return json({ error: "Inventory id required" }, 400);
         if (!patch || typeof patch !== "object") return json({ error: "Inventory patch required" }, 400);
         const allowed = [
-          "sauna_type_id", "unit_code", "model", "indoor_outdoor_eligibility", "status",
+          "sauna_type_id", "unit_code", "model", "model_key", "style", "locations",
+          "indoor_outdoor_eligibility", "status",
           "current_customer", "future_customer",
           "current_customer_id", "future_customer_id",
           "install_date",
