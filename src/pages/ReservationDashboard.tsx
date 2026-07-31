@@ -19,6 +19,7 @@ import {
 } from "@/lib/reservationConfig";
 import { saunaTypeLabel, SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
+import { useAvailability } from "@/hooks/useAvailability";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
