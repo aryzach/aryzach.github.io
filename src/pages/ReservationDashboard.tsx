@@ -65,6 +65,13 @@ interface SaunaHold {
   is_reserved: boolean;
 }
 
+interface AssignedSauna {
+  id: string;
+  unit_code: string | null;
+  status: string;
+  available_date: string | null;
+}
+
 const ReservationDashboard = () => {
   useSEO({
     title: "Continue Your Reservation — SF Sauna Rental",
@@ -90,6 +97,7 @@ const ReservationDashboard = () => {
   const [editDate, setEditDate] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const [saunaHold, setSaunaHold] = useState<SaunaHold | null>(null);
+  const [assignedSauna, setAssignedSauna] = useState<AssignedSauna | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
   const [infoForm, setInfoForm] = useState({
     first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
@@ -113,6 +121,7 @@ const ReservationDashboard = () => {
       setReservation(data.reservation as Reservation);
       setIdPhoto((data.id_photo as { url: string; name: string } | null) ?? null);
       setSaunaHold((data.sauna_hold as SaunaHold | null) ?? null);
+      setAssignedSauna((data.assigned_sauna as AssignedSauna | null) ?? null);
       setError(null);
     }
     setLoading(false);
@@ -656,9 +665,11 @@ const ReservationDashboard = () => {
                           })
                         : canScheduleInstall
                           ? (() => {
+                              const assignedDate = assignedSauna?.available_date ?? null;
                               const availability = reservation ? getStatus(reservation.sauna_type_id) : null;
-                              return availability?.nextAvailableDate
-                                ? `Please schedule your installation date on or after ${formatDatePretty(availability.nextAvailableDate)}.`
+                              const date = assignedDate ?? availability?.nextAvailableDate ?? null;
+                              return date
+                                ? `Please schedule your installation date on or after ${formatDatePretty(date)}.`
                                 : "Please schedule your installation date.";
                             })()
                           : "Available after rental agreement and photo ID are complete"

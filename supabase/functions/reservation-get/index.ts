@@ -50,19 +50,101 @@ Deno.serve(async (req) => {
     .update({ magic_link_opened_at: new Date().toISOString() })
     .eq("id", id);
 
+  // ---- Auto-assign a sauna once the rental agreement is signed and the photo ID is uploaded ----
+  let assignedInventoryId: string | null = reservation.sauna_inventory_id ?? null;
+  const readyForAssignment =
+    reservation.contract_status === "Complete" && reservation.id_status === "Complete";
+
+  if (readyForAssignment && !assignedInventoryId) {
+    try {
+      const { data: type } = await supabase
+        .from("sauna_types")
+        .select("style, model_key, location")
+        .eq("id", reservation.sauna_type_id)
+        .maybeSingle();
+
+      if (type) {
+        const { data: candidates } = await supabase
+          .from("sauna_inventory")
+          .select("id, status, available_date, created_at, locations, current_customer_id, future_customer_id")
+          .eq("style", type.style)
+          .eq("model_key", type.model_key)
+          .contains("locations", [type.location])
+          .is("current_customer_id", null)
+          .is("future_customer_id", null)
+          .in("status", ["Available", "Incoming", "Returning", "Maintenance"]);
+
+        const eligible = (candidates ?? [])
+          .filter((c: any) => c.status === "Available" || c.available_date)
+          .sort((a: any, b: any) => {
+            const rank = (s: string) => (s === "Available" ? 0 : 1);
+            if (rank(a.status) !== rank(b.status)) return rank(a.status) - rank(b.status);
+            const ad = a.available_date ?? "9999-12-31";
+            const bd = b.available_date ?? "9999-12-31";
+            if (ad !== bd) return ad < bd ? -1 : 1;
+            return String(a.created_at).localeCompare(String(b.created_at));
+          });
+
+        const pick = eligible[0];
+        if (pick) {
+          const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
+          const isNowAvailable = pick.status === "Available" && !pick.available_date;
+          const { error: invErr } = await supabase
+            .from("sauna_inventory")
+            .update({
+              status: "Reservation Confirmed",
+              reservation_id: reservation.id,
+              ...(isNowAvailable
+                ? { current_customer_id: reservation.id, current_customer: customerName }
+                : { future_customer_id: reservation.id, future_customer: customerName }),
+            })
+            .eq("id", pick.id)
+            .is("current_customer_id", null)
+            .is("future_customer_id", null);
+
+          if (!invErr) {
+            assignedInventoryId = pick.id;
+            await supabase
+              .from("reservations")
+              .update({ sauna_inventory_id: pick.id })
+              .eq("id", reservation.id);
+            (reservation as any).sauna_inventory_id = pick.id;
+            await supabase.from("reservation_events").insert({
+              reservation_id: reservation.id,
+              event_type: "Sauna Assigned",
+              message: "Sauna assigned after agreement and photo ID completion",
+              metadata: { sauna_inventory_id: pick.id },
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("sauna auto-assignment failed:", e);
+    }
+  }
+
   // Look up sauna inventory hold state
   let sauna_hold: { status: string; is_reserved: boolean } | null = null;
-  if (reservation.sauna_inventory_id) {
+  let assigned_sauna:
+    | { id: string; unit_code: string | null; status: string; available_date: string | null }
+    | null = null;
+  if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
-      .select("status, reservation_id")
-      .eq("id", reservation.sauna_inventory_id)
+      .select("id, unit_code, status, available_date, reservation_id")
+      .eq("id", assignedInventoryId)
       .maybeSingle();
     if (inv) {
       const isReserved =
         inv.reservation_id === reservation.id &&
         ["Reservation Hold", "Reserved", "Reservation Confirmed", "Installed"].includes(inv.status);
       sauna_hold = { status: inv.status, is_reserved: isReserved };
+      assigned_sauna = {
+        id: inv.id as string,
+        unit_code: (inv.unit_code as string | null) ?? null,
+        status: inv.status as string,
+        available_date: (inv.available_date as string | null) ?? null,
+      };
     }
   }
 
@@ -85,5 +167,5 @@ Deno.serve(async (req) => {
     console.error("id_photo lookup failed:", e);
   }
 
-  return json({ reservation, id_photo, sauna_hold });
+  return json({ reservation, id_photo, sauna_hold, assigned_sauna });
 });
