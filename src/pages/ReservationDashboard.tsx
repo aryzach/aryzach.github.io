@@ -19,6 +19,7 @@ import {
 } from "@/lib/reservationConfig";
 import { saunaTypeLabel, SAUNA_TYPE_OPTIONS } from "@/lib/reservationSaunaTypes";
 import { formatDatePretty } from "@/lib/availability";
+import { useAvailability } from "@/hooks/useAvailability";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -95,6 +96,7 @@ const ReservationDashboard = () => {
   });
   const [savingInfo, setSavingInfo] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
+  const { getStatus } = useAvailability();
 
   const load = useCallback(async () => {
     if (!id || !token) {
@@ -652,7 +654,14 @@ const ReservationDashboard = () => {
                             dateStyle: "long",
                             timeStyle: "short",
                           })
-                        : "Available after rental agreement and photo ID are complete"
+                        : canScheduleInstall
+                          ? (() => {
+                              const availability = reservation ? getStatus(reservation.sauna_type_id) : null;
+                              return availability?.nextAvailableDate
+                                ? `Please schedule your installation date on or after ${formatDatePretty(availability.nextAvailableDate)}.`
+                                : "Please schedule your installation date.";
+                            })()
+                          : "Available after rental agreement and photo ID are complete"
                     }
                     action={
                       <Button
