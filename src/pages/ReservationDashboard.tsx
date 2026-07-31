@@ -96,6 +96,7 @@ const ReservationDashboard = () => {
   });
   const [savingInfo, setSavingInfo] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
+  const { getStatus } = useAvailability();
 
   const load = useCallback(async () => {
     if (!id || !token) {
