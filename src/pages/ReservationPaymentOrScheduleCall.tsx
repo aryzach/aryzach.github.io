@@ -59,7 +59,7 @@ const ReservationPaymentOrScheduleCall = () => {
                   className="w-full"
                 >
                   <a 
-                    href="https://cal.com/sfsaunarental/sf-sauna-video-consultation?overlayCalendar=true"
+                    href="https://cal.com/sf-sauna/sauna-compatibility-consultation?overlayCalendar=true"
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
