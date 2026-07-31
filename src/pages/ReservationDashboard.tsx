@@ -654,7 +654,14 @@ const ReservationDashboard = () => {
                             dateStyle: "long",
                             timeStyle: "short",
                           })
-                        : "Available after rental agreement and photo ID are complete"
+                        : canScheduleInstall
+                          ? (() => {
+                              const availability = reservation ? getStatus(reservation.sauna_type_id) : null;
+                              return availability?.nextAvailableDate
+                                ? `Please schedule your installation date on or after ${formatDatePretty(availability.nextAvailableDate)}.`
+                                : "Please schedule your installation date.";
+                            })()
+                          : "Available after rental agreement and photo ID are complete"
                     }
                     action={
                       <Button
