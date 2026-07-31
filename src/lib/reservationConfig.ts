@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const CALCOM_VIDEO_CONSULT_LINK =
   "https://cal.com/sf-sauna/sauna-compatibility-consultation?overlayCalendar=true";
 export const CALCOM_INSTALLATION_LINK =
-  "https://cal.com/sfsaunarental/sf-sauna-delivery-installation?overlayCalendar=true";
+  "https://cal.com/sf-sauna/sf-sauna-delivery-installation?overlayCalendar=true";
 
 // The reservation deposit is standardized at $200 for every sauna type.
 export const RESERVATION_DEPOSIT_USD = 200;
