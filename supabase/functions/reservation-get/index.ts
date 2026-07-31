@@ -88,19 +88,18 @@ Deno.serve(async (req) => {
         const pick = eligible[0];
         if (pick) {
           const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
-          const isNowAvailable = pick.status === "Available" && !pick.available_date;
           const { error: invErr } = await supabase
             .from("sauna_inventory")
             .update({
               status: "Reservation Confirmed",
               reservation_id: reservation.id,
-              ...(isNowAvailable
-                ? { current_customer_id: reservation.id, current_customer: customerName }
-                : { future_customer_id: reservation.id, future_customer: customerName }),
+              future_customer_id: reservation.id,
+              future_customer: customerName,
             })
             .eq("id", pick.id)
             .is("current_customer_id", null)
             .is("future_customer_id", null);
+
 
           if (!invErr) {
             assignedInventoryId = pick.id;
