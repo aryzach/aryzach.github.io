@@ -45,18 +45,17 @@ const ReserveTraditionalLanding = () => {
       <section className="container mx-auto px-4 pt-10 md:pt-16 pb-8">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-            Traditional Sauna Rental — Indoor or Outdoor
+            Traditional Sauna Rental
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A 2-person traditional sauna delivered, installed, and maintained in San Francisco.
-            Real löyly heat from a stone heater — up to 200°F on a standard household outlet.
+            We handle everything. Delivery, installation, maintenance, and pickup.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             {[
               { icon: Users, text: "2-person sauna" },
               { icon: Thermometer, text: "200°F" },
-              { icon: Home, text: "Works indoors" },
-              { icon: Trees, text: "Works outdoors" },
+              { icon: Home, text: "Works indoors and outdoors" },
+              { icon: Trees, text: "Real stone heater" },
             ].map(({ icon: Icon, text }) => (
               <span
                 key={text}
@@ -66,6 +65,10 @@ const ReserveTraditionalLanding = () => {
                 {text}
               </span>
             ))}
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground">
+              <Thermometer size={15} className="text-primary" />
+              löyly
+            </span>
           </div>
         </div>
       </section>
