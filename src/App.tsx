@@ -46,6 +46,7 @@ import ReservationDashboard from "./pages/ReservationDashboard";
 import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
 import Care from "./pages/Care";
+import ReserveTraditionalLanding from "./pages/ReserveTraditionalLanding";
 import { registerWebMCP } from "@/lib/webmcp";
 import { captureUtmParams } from "@/lib/submitLeadToGHL";
 
@@ -173,6 +174,7 @@ const App = () => (
           <Route path="/admin" element={<AdminReservations />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
           <Route path="/care" element={<Care />} />
+          <Route path="/reserve-traditional-landing" element={<ReserveTraditionalLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
