@@ -194,7 +194,7 @@ const ReserveTraditionalLanding = () => {
         </div>
       </section>
 
-      <FAQ />
+      <FAQ showInstallationGuide={false} />
       <SocialProof />
     </main>
   );
