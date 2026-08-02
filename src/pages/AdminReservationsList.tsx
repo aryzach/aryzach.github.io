@@ -545,10 +545,10 @@ export const ReservationsListPanel = ({
                     {r.reservation_status}
                   </span>
                 </td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.payment_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.consult_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.id_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.contract_status}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.payment_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.consult_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.id_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.contract_status)}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.created_at)}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.magic_link_opened_at)}</td>
                 <td className="px-2 py-1.5 whitespace-nowrap">
