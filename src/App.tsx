@@ -62,19 +62,6 @@ const ScrollToTop = () => {
   return null;
 };
 
-const GAPageView = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    if (typeof (window as any).gtag !== 'undefined') {
-      (window as any).gtag('config', 'G-K2RGWZH97X', {
-        page_path: window.location.pathname + window.location.search
-      });
-    }
-  }, [location.pathname, location.search]);
-
-  return null;
-};
 
 const WebMCPRegistrar = () => {
   useEffect(() => {
