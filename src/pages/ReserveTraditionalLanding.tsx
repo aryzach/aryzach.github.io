@@ -20,6 +20,7 @@ type MediaItem = { type: "video" | "image"; src: string; alt: string };
 
 const media: MediaItem[] = [
   { type: "video", src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
+  { type: "video", src: video0802, alt: "Traditional sauna rental installation in San Francisco" },
   { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor traditional sauna rental in a San Francisco garden" },
   { type: "image", src: "/media/upload-2.jpeg", alt: "Cedar interior of an outdoor traditional sauna in the Bay Area" },
   { type: "image", src: "/media/upload-16.jpeg", alt: "Traditional sauna with red roof on a Bay Area deck with treetop views" },
