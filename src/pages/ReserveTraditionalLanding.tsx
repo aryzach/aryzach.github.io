@@ -136,30 +136,35 @@ const ReserveTraditionalLanding = () => {
 
           {/* Pricing */}
           <div className="mt-10">
-            <div className="mt-5 grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               {TERMS.map((months) => {
                 const t = tiers[months];
+                const highlighted = !!t.badge;
                 return (
                   <div
                     key={months}
-                    className="rounded-lg border border-border bg-card p-3 flex flex-col gap-1"
+                    className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
+                      highlighted
+                        ? "bg-card border-primary shadow-lg"
+                        : "bg-card border-border"
+                    }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-foreground">
-                        {months}mo
+                    {t.badge && (
+                      <div className="absolute -top-2.5 left-4 md:left-1/2 md:-translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                        {t.badge}
+                      </div>
+                    )}
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground md:mb-1 shrink-0">
+                      {months} {months === 1 ? "Month" : "Months"}
+                    </div>
+                    <div className="flex items-baseline gap-1 md:mb-2">
+                      <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">
+                        ${t.monthly}
                       </span>
-                      {t.badge && (
-                        <span className="text-[9px] uppercase tracking-wide rounded-full bg-primary/10 text-primary px-1.5 py-0.5">
-                          {t.badge}
-                        </span>
-                      )}
+                      <span className="text-xs text-muted-foreground leading-none">/ mo</span>
                     </div>
-                    <div className="text-xl font-semibold text-foreground">
-                      ${t.monthly}
-                      <span className="text-xs font-normal text-muted-foreground">/mo</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t.installFee > 0 ? `+$${t.installFee} install` : "Free install"}
+                    <div className="text-xs text-card-foreground text-right md:text-left">
+                      {t.installFee === 0 ? "Free installation" : `$${t.installFee} installation`}
                     </div>
                   </div>
                 );
