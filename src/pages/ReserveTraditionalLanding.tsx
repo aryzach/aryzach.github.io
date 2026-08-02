@@ -74,12 +74,14 @@ const ReserveTraditionalLanding = () => {
       {/* Gallery + form */}
       <section className="container mx-auto px-4 pb-16 grid lg:grid-cols-2 gap-10 items-start">
         <div>
-          <div className="relative overflow-hidden rounded-xl bg-muted aspect-[4/3]">
+          <div className="relative overflow-hidden rounded-xl bg-muted aspect-[3/4] max-w-md mx-auto">
             {current.type === "video" ? (
               <video
                 key={current.src}
                 src={current.src}
-                controls
+                autoPlay
+                muted
+                loop
                 playsInline
                 className="w-full h-full object-cover"
               />
@@ -110,14 +112,14 @@ const ReserveTraditionalLanding = () => {
             </button>
           </div>
 
-          <div className="mt-3 grid grid-cols-4 sm:grid-cols-8 gap-2">
+          <div className="mt-3 grid grid-cols-4 sm:grid-cols-8 gap-2 max-w-md mx-auto">
             {media.map((m, i) => (
               <button
                 key={m.src}
                 type="button"
                 onClick={() => setActive(i)}
                 aria-label={`Show media ${i + 1}`}
-                className={`relative overflow-hidden rounded-md aspect-square border-2 transition-colors ${
+                className={`relative overflow-hidden rounded-md aspect-[3/4] border-2 transition-colors ${
                   i === active ? "border-primary" : "border-transparent hover:border-border"
                 }`}
               >
