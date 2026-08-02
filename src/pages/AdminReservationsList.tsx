@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Check, X } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -83,6 +84,19 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
+
+function stepIndicator(status: string) {
+  const complete = status === "Paid" || status === "Complete";
+  return complete ? (
+    <span className="inline-flex items-center justify-center text-green-600" title={status}>
+      <Check size={16} strokeWidth={2.5} />
+    </span>
+  ) : (
+    <span className="inline-flex items-center justify-center text-red-500" title={status}>
+      <X size={16} strokeWidth={2.5} />
+    </span>
+  );
+}
 
 type ColKey =
   | "name" | "email" | "phone" | "city" | "sauna" | "style" | "install"
@@ -531,10 +545,10 @@ export const ReservationsListPanel = ({
                     {r.reservation_status}
                   </span>
                 </td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.payment_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.consult_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.id_status}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground">{r.contract_status}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.payment_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.consult_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.id_status)}</td>
+                <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.contract_status)}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.created_at)}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.magic_link_opened_at)}</td>
                 <td className="px-2 py-1.5 whitespace-nowrap">
