@@ -45,18 +45,17 @@ const ReserveTraditionalLanding = () => {
       <section className="container mx-auto px-4 pt-10 md:pt-16 pb-8">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-            Traditional Sauna Rental — Indoor or Outdoor
+            Traditional Sauna Rental
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A 2-person traditional sauna delivered, installed, and maintained in San Francisco.
-            Real löyly heat from a stone heater — up to 200°F on a standard household outlet.
+            We handle everything. Delivery, installation, maintenance, and pickup.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             {[
               { icon: Users, text: "2-person sauna" },
               { icon: Thermometer, text: "200°F" },
-              { icon: Home, text: "Works indoors" },
-              { icon: Trees, text: "Works outdoors" },
+              { icon: Home, text: "Works indoors and outdoors" },
+              { icon: Trees, text: "Real stone heater" },
             ].map(({ icon: Icon, text }) => (
               <span
                 key={text}
@@ -66,6 +65,10 @@ const ReserveTraditionalLanding = () => {
                 {text}
               </span>
             ))}
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground">
+              <Thermometer size={15} className="text-primary" />
+              löyly
+            </span>
           </div>
         </div>
       </section>
@@ -133,35 +136,30 @@ const ReserveTraditionalLanding = () => {
 
           {/* Pricing */}
           <div className="mt-10">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground">Traditional sauna pricing</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Same pricing whether you put it indoors or outdoors. Delivery, installation, and all
-              maintenance included.
-            </p>
-            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-4 gap-2">
               {TERMS.map((months) => {
                 const t = tiers[months];
                 return (
                   <div
                     key={months}
-                    className="rounded-lg border border-border bg-card p-5 flex flex-col gap-1"
+                    className="rounded-lg border border-border bg-card p-3 flex flex-col gap-1"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-foreground">
-                        {months} month{months > 1 ? "s" : ""}
+                      <span className="text-xs font-medium text-foreground">
+                        {months}mo
                       </span>
                       {t.badge && (
-                        <span className="text-[11px] uppercase tracking-wide rounded-full bg-primary/10 text-primary px-2 py-0.5">
+                        <span className="text-[9px] uppercase tracking-wide rounded-full bg-primary/10 text-primary px-1.5 py-0.5">
                           {t.badge}
                         </span>
                       )}
                     </div>
-                    <div className="text-3xl font-semibold text-foreground">
+                    <div className="text-xl font-semibold text-foreground">
                       ${t.monthly}
-                      <span className="text-base font-normal text-muted-foreground">/mo</span>
+                      <span className="text-xs font-normal text-muted-foreground">/mo</span>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      {t.installFee > 0 ? `+ $${t.installFee} installation` : "Free installation"}
+                    <div className="text-xs text-muted-foreground">
+                      {t.installFee > 0 ? `+$${t.installFee} install` : "Free install"}
                     </div>
                   </div>
                 );
