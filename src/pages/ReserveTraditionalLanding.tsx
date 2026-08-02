@@ -52,9 +52,9 @@ const ReserveTraditionalLanding = () => {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             {[
-              { icon: Users, text: "2-person sauna" },
+              { icon: Users, text: "2-person" },
               { icon: Thermometer, text: "200°F" },
-              { icon: Home, text: "Works indoors and outdoors" },
+              { icon: Home, text: "Indoors or outdoors" },
               { icon: Trees, text: "Real stone heater" },
             ].map(({ icon: Icon, text }) => (
               <span
