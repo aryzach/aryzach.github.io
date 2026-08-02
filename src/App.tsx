@@ -116,7 +116,6 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <ScrollToHash />
-        <GAPageView />
         <WebMCPRegistrar />
         <UtmCapture />
         <ReservationModalProvider>
