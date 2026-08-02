@@ -85,6 +85,19 @@ const STATUS_COLOR: Record<string, string> = {
 
 const styleFor = (typeId: string) => (/infrared/i.test(typeId) ? "Infrared" : "Traditional");
 
+function stepIndicator(status: string) {
+  const complete = status === "Paid" || status === "Complete";
+  return complete ? (
+    <span className="inline-flex items-center justify-center text-green-600" title={status}>
+      <Check size={16} strokeWidth={2.5} />
+    </span>
+  ) : (
+    <span className="inline-flex items-center justify-center text-red-500" title={status}>
+      <X size={16} strokeWidth={2.5} />
+    </span>
+  );
+}
+
 type ColKey =
   | "name" | "email" | "phone" | "city" | "sauna" | "style" | "install"
   | "status" | "payment" | "consult" | "id" | "contract" | "created" | "magic_link_opened";
