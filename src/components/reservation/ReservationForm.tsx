@@ -319,12 +319,8 @@ const ReservationForm = ({
         )}
       </Field>
 
-      <Field label="Questions?" error={errors.questions?.message}>
-        <Input
-          type="text"
-          placeholder="Anything we should know before we reach out?"
-          {...register("questions")}
-        />
+      <Field label="Questions / Comments" error={errors.questions?.message}>
+        <Input type="text" {...register("questions")} />
       </Field>
 
       <div className="pt-2 space-y-2">
