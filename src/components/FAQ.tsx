@@ -69,7 +69,11 @@ const faqs = [
   },
 ];
 
-const FAQ = () => {
+interface FAQProps {
+  showInstallationGuide?: boolean;
+}
+
+const FAQ = ({ showInstallationGuide = true }: FAQProps) => {
   return (
     <section id="faq" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 max-w-3xl">
