@@ -6,11 +6,15 @@ import SocialProof from "@/components/SocialProof";
 import { useSEO } from "@/hooks/useSEO";
 import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
 import traditionalIndoorAsset from "@/assets/traditional-indoor.jpg.asset.json";
+import video0802Asset from "@/assets/0802.mp4.asset.json";
 
 const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
 const traditionalIndoorImg = traditionalIndoorAsset.url.startsWith("http")
   ? traditionalIndoorAsset.url
   : `${LOVABLE_ASSET_ORIGIN}${traditionalIndoorAsset.url}`;
+const video0802 = video0802Asset.url.startsWith("http")
+  ? video0802Asset.url
+  : `${LOVABLE_ASSET_ORIGIN}${video0802Asset.url}`;
 
 type MediaItem = { type: "video" | "image"; src: string; alt: string };
 
