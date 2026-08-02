@@ -65,6 +65,17 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+function pushReservationSubmittedEvent(saunaTypeId: string, city: string) {
+  const w = window as unknown as { dataLayer?: unknown[] };
+  w.dataLayer = w.dataLayer || [];
+  w.dataLayer.push({
+    event: "reservation_request_submitted",
+    sauna_type: saunaTypeLabel(saunaTypeId),
+    city,
+    page_path: window.location.pathname,
+  });
+}
+
 interface Props {
   initialSaunaTypeId?: string;
   source: ReservationSource;
@@ -162,6 +173,7 @@ const ReservationForm = ({
           intent: "waitlist",
           reservation_source: source,
         });
+        pushReservationSubmittedEvent(valid.sauna_type_id, valid.city);
         toast.success("You're on the waitlist. We'll be in touch.");
         onDone?.();
       } finally {
@@ -198,6 +210,7 @@ const ReservationForm = ({
         reservation_source: source,
         reservation_id: data.id,
       });
+      pushReservationSubmittedEvent(valid.sauna_type_id, valid.city);
       navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
       onDone?.();
     } finally {
