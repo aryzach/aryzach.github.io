@@ -6,16 +6,21 @@ import SocialProof from "@/components/SocialProof";
 import { useSEO } from "@/hooks/useSEO";
 import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
 import traditionalIndoorAsset from "@/assets/traditional-indoor.jpg.asset.json";
+import video0802Asset from "@/assets/0802.mp4.asset.json";
 
 const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
 const traditionalIndoorImg = traditionalIndoorAsset.url.startsWith("http")
   ? traditionalIndoorAsset.url
   : `${LOVABLE_ASSET_ORIGIN}${traditionalIndoorAsset.url}`;
+const video0802 = video0802Asset.url.startsWith("http")
+  ? video0802Asset.url
+  : `${LOVABLE_ASSET_ORIGIN}${video0802Asset.url}`;
 
 type MediaItem = { type: "video" | "image"; src: string; alt: string };
 
 const media: MediaItem[] = [
   { type: "video", src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
+  { type: "video", src: video0802, alt: "Traditional sauna rental installation in San Francisco" },
   { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor traditional sauna rental in a San Francisco garden" },
   { type: "image", src: "/media/upload-2.jpeg", alt: "Cedar interior of an outdoor traditional sauna in the Bay Area" },
   { type: "image", src: "/media/upload-16.jpeg", alt: "Traditional sauna with red roof on a Bay Area deck with treetop views" },
@@ -189,7 +194,7 @@ const ReserveTraditionalLanding = () => {
         </div>
       </section>
 
-      <FAQ />
+      <FAQ showInstallationGuide={false} />
       <SocialProof />
     </main>
   );

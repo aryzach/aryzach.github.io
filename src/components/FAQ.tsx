@@ -69,7 +69,11 @@ const faqs = [
   },
 ];
 
-const FAQ = () => {
+interface FAQProps {
+  showInstallationGuide?: boolean;
+}
+
+const FAQ = ({ showInstallationGuide = true }: FAQProps) => {
   return (
     <section id="faq" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4 max-w-3xl">
@@ -93,13 +97,15 @@ const FAQ = () => {
           ))}
         </Accordion>
 
-        <div className="text-center">
-          <Link to="/install-power">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              View Full Installation Guide
-            </Button>
-          </Link>
-        </div>
+        {showInstallationGuide && (
+          <div className="text-center">
+            <Link to="/install-power">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                View Full Installation Guide
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
