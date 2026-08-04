@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Users, Thermometer, Home, Trees } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, Thermometer, Home, Trees } from "lucide-react";
 import ReservationForm from "@/components/reservation/ReservationForm";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
@@ -40,6 +40,7 @@ const ReserveTraditionalLanding = () => {
   } as any);
 
   const [active, setActive] = useState(0);
+  const [showPricing, setShowPricing] = useState(false);
   const current = media[active];
   const go = (dir: -1 | 1) => setActive((i) => (i + dir + media.length) % media.length);
 
@@ -141,40 +142,55 @@ const ReserveTraditionalLanding = () => {
 
           {/* Pricing */}
           <div className="mt-10">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-              {TERMS.map((months) => {
-                const t = tiers[months];
-                const highlighted = !!t.badge;
-                return (
-                  <div
-                    key={months}
-                    className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
-                      highlighted
-                        ? "bg-card border-primary shadow-lg"
-                        : "bg-card border-border"
-                    }`}
-                  >
-                    {t.badge && (
-                      <div className="absolute -top-2.5 left-4 md:left-1/2 md:-translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
-                        {t.badge}
+            <button
+              type="button"
+              onClick={() => setShowPricing((s) => !s)}
+              className="w-full flex items-center justify-between rounded-xl border border-border bg-card p-4 text-left hover:bg-accent/50 transition-colors"
+              aria-expanded={showPricing}
+            >
+              <span className="font-semibold text-foreground">{showPricing ? "Hide pricing" : "See pricing"}</span>
+              {showPricing ? (
+                <ChevronUp size={18} className="text-muted-foreground" />
+              ) : (
+                <ChevronDown size={18} className="text-muted-foreground" />
+              )}
+            </button>
+            {showPricing && (
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+                {TERMS.map((months) => {
+                  const t = tiers[months];
+                  const highlighted = !!t.badge;
+                  return (
+                    <div
+                      key={months}
+                      className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
+                        highlighted
+                          ? "bg-card border-primary shadow-lg"
+                          : "bg-card border-border"
+                      }`}
+                    >
+                      {t.badge && (
+                        <div className="absolute -top-2.5 left-4 md:left-1/2 md:-translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                          {t.badge}
+                        </div>
+                      )}
+                      <div className="text-xs uppercase tracking-widest text-muted-foreground md:mb-1 shrink-0">
+                        {months} {months === 1 ? "Month" : "Months"}
                       </div>
-                    )}
-                    <div className="text-xs uppercase tracking-widest text-muted-foreground md:mb-1 shrink-0">
-                      {months} {months === 1 ? "Month" : "Months"}
+                      <div className="flex items-baseline gap-1 md:mb-2">
+                        <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">
+                          ${t.monthly}
+                        </span>
+                        <span className="text-xs text-muted-foreground leading-none">/ mo</span>
+                      </div>
+                      <div className="text-xs text-card-foreground text-right md:text-left">
+                        {t.installFee === 0 ? "Free installation" : `$${t.installFee} installation`}
+                      </div>
                     </div>
-                    <div className="flex items-baseline gap-1 md:mb-2">
-                      <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">
-                        ${t.monthly}
-                      </span>
-                      <span className="text-xs text-muted-foreground leading-none">/ mo</span>
-                    </div>
-                    <div className="text-xs text-card-foreground text-right md:text-left">
-                      {t.installFee === 0 ? "Free installation" : `$${t.installFee} installation`}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
