@@ -202,7 +202,7 @@ const Index = () => {
               "name": "How long does it take to heat up?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 170–230°F in 40–60 minutes."
+                "text": "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 200°F in 40–60 minutes."
               }
             },
             {
