@@ -1,35 +1,143 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, Thermometer, Home, Trees } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Star, Check, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ReservationForm from "@/components/reservation/ReservationForm";
+import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
-import SocialProof from "@/components/SocialProof";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
 import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
-import traditionalIndoorAsset from "@/assets/traditional-indoor.jpg.asset.json";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 
 const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
-const traditionalIndoorImg = traditionalIndoorAsset.url.startsWith("http")
-  ? traditionalIndoorAsset.url
-  : `${LOVABLE_ASSET_ORIGIN}${traditionalIndoorAsset.url}`;
 const video0802 = video0802Asset.url.startsWith("http")
   ? video0802Asset.url
   : `${LOVABLE_ASSET_ORIGIN}${video0802Asset.url}`;
 
-type MediaItem = { type: "video" | "image"; src: string; alt: string };
+const TERMS: CommitmentMonths[] = [1, 3, 6, 12];
 
-const media: MediaItem[] = [
-  { type: "video", src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
-  { type: "video", src: video0802, alt: "Traditional sauna rental installation in San Francisco" },
-  { type: "image", src: "/media/upload-3.jpeg", alt: "Outdoor traditional sauna rental in a San Francisco garden" },
-  { type: "image", src: "/media/upload-2.jpeg", alt: "Cedar interior of an outdoor traditional sauna in the Bay Area" },
-  { type: "image", src: "/media/upload-16.jpeg", alt: "Traditional sauna with red roof on a Bay Area deck with treetop views" },
-  { type: "image", src: "/media/upload-15.jpeg", alt: "Traditional sauna rental in a San Francisco backyard garden patio" },
-  { type: "image", src: "/media/upload-5.jpeg", alt: "SF Sauna traditional sauna installed on a San Francisco patio" },
-  { type: "image", src: traditionalIndoorImg, alt: "Indoor traditional 2-person sauna rental in a San Francisco home" },
+const galleryItems = [
+  { type: "video" as const, src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
+  { type: "image" as const, src: "/media/upload-15.jpeg", alt: "Traditional sauna rental in a San Francisco backyard garden patio" },
+  { type: "video" as const, src: video0802, alt: "Traditional sauna rental installation in San Francisco" },
 ];
 
-const TERMS: CommitmentMonths[] = [1, 3, 6, 12];
+const LandingHero = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const { open } = useReservationModal();
+
+  useEffect(() => {
+    videoRef.current?.play().catch(() => {});
+  }, []);
+
+  return (
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="/hero-fallback.avif"
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/hero-video.mp4" type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-charcoal/60" />
+
+      <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px] flex flex-col">
+        <h1 className="font-heading text-[40px] md:text-[56px] font-semibold text-white mb-6 leading-[1.1] tracking-[-0.01em] order-3">
+          A personal sauna — in your home this week.
+        </h1>
+        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[14px] font-normal mb-8 -mt-16 order-1">
+          <a href="https://share.google/bqGJ8MiXfwNgvigwm" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Serving 50+ Sweaty San Franciscans
+          </a>
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="fill-[hsl(var(--color-accent))] text-[hsl(var(--color-accent))]" size={14} />
+            ))}
+          </div>
+        </div>
+        <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-3 font-normal order-2">
+          Make daily heat therapy effortless.
+        </p>
+        <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8 order-4">
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+            <span>Zero-hassle delivery + installation</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
+            <span>Enjoy daily sauna at home, no commute</span>
+          </div>
+          <div className="flex items-start gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6]">
+            <Check className="text-[hsl(var(--color-accent))] flex-shrink-0 mt-0.5" size={18} />
+            <span>Simple monthly plan, maintenance + pickup included</span>
+          </div>
+        </div>
+        <div className="flex justify-center order-5">
+          <Button
+            size="lg"
+            onClick={() => open({ saunaTypeId: "indoor_traditional_standard", source: "Landing Page" })}
+            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
+          >
+            Reserve Your Sauna
+            <ArrowRight className="ml-2" size={20} />
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const LandingGallery = () => (
+  <section className="py-16 md:py-24 bg-cedar-section">
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl md:text-5xl font-semibold text-center mb-8 text-foreground">Indoor &amp; Outdoor Saunas</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {galleryItems.map((item, index) => (
+          <div key={index} className="overflow-hidden aspect-[9/16] relative">
+            {item.type === "image" ? (
+              <img
+                src={item.src}
+                alt={item.alt}
+                loading="lazy"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <video autoPlay muted loop playsInline preload="metadata" className="w-full h-full object-cover">
+                <source src={item.src} type="video/mp4" />
+              </video>
+            )}
+            <div className="absolute inset-0 bg-accent/10 pointer-events-none" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-16 max-w-4xl mx-auto">
+        <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-foreground">Why SF Sauna?</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {[
+            "Fast service throughout the SF Bay Area",
+            "Professional installation + removal included",
+            "Standard 120V power (no electrician needed)",
+            "Month-to-month after initial term",
+            "Apartment-friendly setups",
+          ].map((text) => (
+            <div key={text} className="flex items-start gap-3">
+              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
+              <span className="text-muted-foreground">{text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 const ReserveTraditionalLanding = () => {
   useSEO({
@@ -39,109 +147,27 @@ const ReserveTraditionalLanding = () => {
     canonical: "https://cedar-home-sanctuary.lovable.app/reserve-traditional-landing",
   } as any);
 
-  const [active, setActive] = useState(0);
   const [showPricing, setShowPricing] = useState(false);
-  const current = media[active];
-  const go = (dir: -1 | 1) => setActive((i) => (i + dir + media.length) % media.length);
-
   const tiers = PRICING_TIERS.indoor_traditional_standard;
 
   return (
     <main className="min-h-screen bg-background">
-      <section className="container mx-auto px-4 pt-10 md:pt-16 pb-8">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
-            Traditional Sauna Rental
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            We handle everything. Delivery, installation, maintenance, and pickup.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {[
-              { icon: Users, text: "2-person" },
-              { icon: Thermometer, text: "200°F" },
-              { icon: Home, text: "Indoors or outdoors" },
-              { icon: Trees, text: "Real stone heater" },
-            ].map(({ icon: Icon, text }) => (
-              <span
-                key={text}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground"
-              >
-                <Icon size={15} className="text-primary" />
-                {text}
-              </span>
-            ))}
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground">
-              <Thermometer size={15} className="text-primary" />
-              Pour water for löyly
-            </span>
-          </div>
-        </div>
-      </section>
+      <LandingHero />
+      <LandingGallery />
+      <ReviewWall />
 
-      {/* Gallery + form */}
-      <section className="container mx-auto px-4 pb-16 grid lg:grid-cols-2 gap-10 items-start">
-        <div>
-          <div className="relative overflow-hidden rounded-xl bg-muted aspect-[3/4] max-w-md mx-auto">
-            {current.type === "video" ? (
-              <video
-                key={current.src}
-                src={current.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                key={current.src}
-                src={current.src}
-                alt={current.alt}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-            )}
-            <button
-              type="button"
-              aria-label="Previous media"
-              onClick={() => go(-1)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-foreground hover:bg-background"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              type="button"
-              aria-label="Next media"
-              onClick={() => go(1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 text-foreground hover:bg-background"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+      <section className="container mx-auto px-4 py-16">
+        <div className="max-w-xl mx-auto rounded-xl border border-border bg-card p-6">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Reserve your sauna</h2>
+          <p className="text-sm text-muted-foreground mt-1 mb-5">A few quick details and we'll set aside your spot.</p>
+          <ReservationForm
+            source="Landing Page"
+            initialSaunaTypeId="indoor_traditional_standard"
+            saunaTypeIds={["indoor_traditional_standard", "outdoor_traditional_standard"]}
+            className="space-y-4"
+          />
 
-          <div className="mt-3 grid grid-cols-4 sm:grid-cols-8 gap-2 max-w-md mx-auto">
-            {media.map((m, i) => (
-              <button
-                key={m.src}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-label={`Show media ${i + 1}`}
-                className={`relative overflow-hidden rounded-md aspect-[3/4] border-2 transition-colors ${
-                  i === active ? "border-primary" : "border-transparent hover:border-border"
-                }`}
-              >
-                {m.type === "video" ? (
-                  <video src={m.src} muted playsInline className="w-full h-full object-cover" />
-                ) : (
-                  <img src={m.src} alt={m.alt} loading="lazy" className="w-full h-full object-cover" />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Pricing */}
-          <div className="mt-10">
+          <div className="mt-8">
             <button
               type="button"
               onClick={() => setShowPricing((s) => !s)}
@@ -164,9 +190,7 @@ const ReserveTraditionalLanding = () => {
                     <div
                       key={months}
                       className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
-                        highlighted
-                          ? "bg-card border-primary shadow-lg"
-                          : "bg-card border-border"
+                        highlighted ? "bg-card border-primary shadow-lg" : "bg-card border-border"
                       }`}
                     >
                       {t.badge && (
@@ -178,9 +202,7 @@ const ReserveTraditionalLanding = () => {
                         {months} {months === 1 ? "Month" : "Months"}
                       </div>
                       <div className="flex items-baseline gap-1 md:mb-2">
-                        <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">
-                          ${t.monthly}
-                        </span>
+                        <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">${t.monthly}</span>
                         <span className="text-xs text-muted-foreground leading-none">/ mo</span>
                       </div>
                       <div className="text-xs text-card-foreground text-right md:text-left">
@@ -193,25 +215,9 @@ const ReserveTraditionalLanding = () => {
             )}
           </div>
         </div>
-
-        <div className="lg:sticky lg:top-8">
-          <div className="rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground">Reserve your sauna</h2>
-            <p className="text-sm text-muted-foreground mt-1 mb-5">
-              A few quick details and we'll set aside your spot.
-            </p>
-            <ReservationForm
-              source="Landing Page"
-              initialSaunaTypeId="indoor_traditional_standard"
-              saunaTypeIds={["indoor_traditional_standard", "outdoor_traditional_standard"]}
-              className="space-y-4"
-            />
-          </div>
-        </div>
       </section>
 
       <FAQ showInstallationGuide={false} />
-      <SocialProof />
     </main>
   );
 };
