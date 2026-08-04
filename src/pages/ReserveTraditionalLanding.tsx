@@ -153,8 +153,8 @@ const ReserveTraditionalLanding = () => {
   return (
     <main className="min-h-screen bg-background">
       <LandingHero />
-      <LandingGallery />
       <ReviewWall className="bg-background" />
+      <LandingGallery />
 
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-xl mx-auto rounded-xl border border-border bg-card p-6">
