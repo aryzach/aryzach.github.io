@@ -334,7 +334,7 @@ const ReservationForm = ({
       </Field>
 
       <Field label="Questions / Comments" error={errors.questions?.message}>
-        <Input type="text" {...register("questions")} />
+        <Textarea {...register("questions")} rows={4} />
       </Field>
 
       <div className="pt-2 space-y-2">
