@@ -103,7 +103,7 @@ const makePin = (opts?: { used?: Set<number>; forceLeft?: boolean; forceRight?: 
   };
 };
 
-const ReviewWall = () => {
+const ReviewWall = ({ className }: { className?: string }) => {
   const [pins, setPins] = useState<Pin[]>(() => {
     const used = new Set<number>();
     const initialPins: Pin[] = [];
@@ -172,7 +172,10 @@ const ReviewWall = () => {
   }, []);
 
   return (
-    <section aria-label="Customer reviews" className="relative z-10 w-full bg-secondary overflow-visible py-[14px] md:py-[22px]">
+    <section
+      aria-label="Customer reviews"
+      className={`relative z-10 w-full overflow-visible py-[14px] md:py-[22px] ${className ?? "bg-secondary"}`}
+    >
       <div className="relative mx-auto w-full h-[252px] sm:h-[288px] md:h-[342px] px-4 overflow-visible">
         {pins.map((pin) => (
           <PinCard key={pin.id} pin={pin} />
