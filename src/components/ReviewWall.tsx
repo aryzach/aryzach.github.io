@@ -103,7 +103,7 @@ const makePin = (opts?: { used?: Set<number>; forceLeft?: boolean; forceRight?: 
   };
 };
 
-const ReviewWall = () => {
+const ReviewWall = ({ className }: { className?: string }) => {
   const [pins, setPins] = useState<Pin[]>(() => {
     const used = new Set<number>();
     const initialPins: Pin[] = [];
