@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Users, Thermometer, Home, Trees } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, Thermometer, Home, Trees } from "lucide-react";
 import ReservationForm from "@/components/reservation/ReservationForm";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
