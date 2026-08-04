@@ -34,13 +34,13 @@ export const PRICING_TIERS: Record<SaunaTypeId, Record<CommitmentMonths, Pricing
   },
   indoor_traditional_standard: {
     1: { monthly: 1200, installFee: 500 },
-    3: { monthly: 900, installFee: 500 },
+    3: { monthly: 800, installFee: 500 },
     6: { monthly: 600, installFee: 0, badge: "Most Popular" },
     12: { monthly: 400, installFee: 0, badge: "Best Value" },
   },
   outdoor_traditional_standard: {
     1: { monthly: 1200, installFee: 500 },
-    3: { monthly: 900, installFee: 500 },
+    3: { monthly: 800, installFee: 500 },
     6: { monthly: 600, installFee: 0, badge: "Most Popular" },
     12: { monthly: 400, installFee: 0, badge: "Best Value" },
   },
