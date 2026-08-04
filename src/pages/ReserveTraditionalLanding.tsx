@@ -40,6 +40,7 @@ const ReserveTraditionalLanding = () => {
   } as any);
 
   const [active, setActive] = useState(0);
+  const [showPricing, setShowPricing] = useState(false);
   const current = media[active];
   const go = (dir: -1 | 1) => setActive((i) => (i + dir + media.length) % media.length);
 
