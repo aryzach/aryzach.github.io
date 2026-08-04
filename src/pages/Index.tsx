@@ -154,7 +154,7 @@ const Index = () => {
                "name": "What's the difference between infrared and traditional saunas?",
                "acceptedAnswer": {
                  "@type": "Answer",
-                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 160–230°F for a more classic feel."
+                 "text": "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel."
               }
             },
             {

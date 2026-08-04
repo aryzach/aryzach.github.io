@@ -76,7 +76,7 @@ const FinnishSaunaSF = () => {
                 Real Heat, Real Sweat
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                Steam saunas hit 170–195°F depending on the model. It's the gold standard for para-sympathetic down-regulation and actual heat shock protein activation.
+                Steam saunas hit 200°F. It's the gold standard for para-sympathetic down-regulation and actual heat shock protein activation.
               </p>
             </section>
 
