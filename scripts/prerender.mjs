@@ -37,6 +37,13 @@ const routes = [
   '/email-more-info',
   '/thank-you',
   '/reservation-payment-or-schedule-call',
+  '/terms',
+  '/indoor-infrared-sauna-rental',
+  '/reservation-system',
+  '/pre-fab-sauna-installation',
+  '/pre-fab-sauna-installation-form',
+  '/reserve-traditional-landing',
+  '/reserve-traditional-landing-pay',
 ];
 
 const PORT = 5173;

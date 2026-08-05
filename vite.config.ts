@@ -36,6 +36,11 @@ export const routes = [
   '/reservation-payment-or-schedule-call',
   '/indoor-infrared-sauna-rental',
   '/reservation-system',
+  '/terms',
+  '/pre-fab-sauna-installation',
+  '/pre-fab-sauna-installation-form',
+  '/reserve-traditional-landing',
+  '/reserve-traditional-landing-pay',
 ];
 
 // Vite config for root GitHub Pages site (aryzach.github.io)
