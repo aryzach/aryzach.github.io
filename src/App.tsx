@@ -13,6 +13,7 @@ import HowItWorksPage from "./pages/HowItWorksPage";
 import HowItStarted from "./pages/HowItStarted";
 import InstallPower from "./pages/InstallPower";
 import Policies from "./pages/Policies";
+import Terms from "./pages/Terms";
 import LearnHub from "./pages/LearnHub";
 import Contact from "./pages/Contact";
 import ContactPage from "./pages/ContactPage";
@@ -130,6 +131,7 @@ const App = () => (
           <Route path="/how-it-started" element={<HowItStarted />} />
           <Route path="/install-power" element={<InstallPower />} />
           <Route path="/policies" element={<Policies />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/learn" element={<LearnHub />} />
           <Route path="/reserve-your-sauna" element={<Contact />} />
           <Route path="/learn-more" element={<LearnMore />} />

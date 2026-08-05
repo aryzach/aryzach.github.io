@@ -38,6 +38,13 @@ const Footer = () => {
     }
   };
 
+  const handleTermsClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/terms") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="bg-charcoal text-white py-12">
       <div className="container mx-auto px-4">
@@ -124,6 +131,7 @@ const Footer = () => {
             <h4 className="font-medium mb-4 text-accent">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li><Link to="/policies" onClick={handlePoliciesClick} className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" onClick={handleTermsClick} className="text-white/70 hover:text-white transition-colors">Terms &amp; Conditions</Link></li>
             </ul>
           </div>
 

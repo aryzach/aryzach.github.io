@@ -38,6 +38,11 @@ export const seoData = {
     description: "SF Sauna Rental privacy policy. Learn how we collect, use, and protect your information when you use our sauna rental services in the San Francisco Bay Area.",
     canonical: "https://sfsaunarental.com/policies"
   },
+  terms: {
+    title: "Terms & Conditions | SF Sauna Rental",
+    description: "Terms & Conditions for SF Sauna Rental, including website use, rental services, payments, SMS terms, and limitation of liability.",
+    canonical: "https://sfsaunarental.com/terms"
+  },
   reserveYourSauna: {
     title: "Reserve Your Sauna | SF Sauna Rental",
     description: "Check availability and reserve your home sauna rental in San Francisco. Choose infrared or steam, indoor or outdoor. Fast delivery and professional installation.",
