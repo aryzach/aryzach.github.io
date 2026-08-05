@@ -44,6 +44,7 @@ const routes = [
   '/pre-fab-sauna-installation-form',
   '/reserve-traditional-landing',
   '/reserve-traditional-landing-pay',
+  '/a2p-form-review',
 ];
 
 const PORT = 5173;
