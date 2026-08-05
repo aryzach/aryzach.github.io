@@ -321,6 +321,48 @@ export type Database = {
           },
         ]
       }
+      meta_conversion_events: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_id: string
+          event_name: string
+          id: string
+          response_code: number | null
+          sent_at: string | null
+          status: string
+          stripe_event_id: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_id: string
+          event_name: string
+          id?: string
+          response_code?: number | null
+          sent_at?: string | null
+          status?: string
+          stripe_event_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_id?: string
+          event_name?: string
+          id?: string
+          response_code?: number | null
+          sent_at?: string | null
+          status?: string
+          stripe_event_id?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pricing_config: {
         Row: {
           description: string | null
