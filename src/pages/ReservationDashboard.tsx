@@ -410,17 +410,61 @@ const ReservationDashboard = () => {
                 </Link>
               </CardContent>
             </Card>
-          ) : reservation ? (
+          : reservation ? (
             <>
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
-                {paid ? "Your sauna is temporarily reserved" : "Continue your reservation"}
-              </h1>
-              {paid && (
-                <p className="text-muted-foreground mb-8">
-                  We'll be in touch after your video consultation to confirm final installation timing.
-                </p>
+              {!consultScheduled && (
+                <>
+                  <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
+                    Next Step
+                  </h1>
+                  <div className="mb-6" />
+                  <Card className="mb-4">
+                    <CardHeader>
+                      <CardTitle className="text-base font-medium text-muted-foreground">
+                        Schedule your virtual home sauna consultation
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <Button asChild size="lg" className="w-full">
+                        <a href={calVideoHref} target="_blank" rel="noopener noreferrer">
+                          <Video className="mr-2" size={18} />
+                          Schedule Your Virtual Home Sauna Consultation
+                        </a>
+                      </Button>
+                      <div className="text-sm text-muted-foreground">
+                        <p className="mb-2">
+                          Please schedule this call when you’ll be at home. In this call, we’ll
+                        </p>
+                        <ul className="list-disc pl-5 space-y-1">
+                          <li>Take a look at the space where you’d like to put a sauna</li>
+                          <li>Assess your home electrical to ensure that a sauna will work in your space</li>
+                          <li>Answer any other questions you might have</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <div className="mb-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={() => setDetailsOpen((open) => !open)}
+                    >
+                      {detailsOpen ? "Hide Reservation Details" : "See Reservation Details"}
+                    </Button>
+                  </div>
+                </>
               )}
-              {!paid && <div className="mb-8" />}
+              <div className={cn(!consultScheduled && !detailsOpen && "hidden")}>
+                <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
+                  {paid ? "Your sauna is temporarily reserved" : "Continue your reservation"}
+                </h1>
+                {paid && (
+                  <p className="text-muted-foreground mb-8">
+                    We'll be in touch after your video consultation to confirm final installation timing.
+                  </p>
+                )}
+                {!paid && <div className="mb-8" />}
+
 
               {paid && holdDeadlinePretty && (
                 <p className="text-sm text-foreground mb-4">
