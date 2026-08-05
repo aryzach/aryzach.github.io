@@ -8,6 +8,7 @@ export const routes = [
   { path: '/how-it-started', priority: 0.6, changefreq: 'yearly' },
   { path: '/install-power', priority: 0.7, changefreq: 'monthly' },
   { path: '/policies', priority: 0.4, changefreq: 'yearly' },
+  { path: '/terms', priority: 0.4, changefreq: 'yearly' },
   { path: '/learn', priority: 0.6, changefreq: 'monthly' },
   { path: '/reserve-your-sauna', priority: 0.9, changefreq: 'monthly' },
   { path: '/learn-more', priority: 0.7, changefreq: 'monthly' },

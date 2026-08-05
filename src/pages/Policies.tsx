@@ -102,7 +102,26 @@ const Policies = () => {
               We may update this Privacy Policy as our business or legal obligations change. The Effective Date above will always reflect the latest version.
             </p>
 
-            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">8. Contact</h2>
+            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">8. SMS Communications</h2>
+            <p className="mb-4">
+              If you provide your mobile phone number through our website and explicitly consent to receive text messages, SF Sauna Rental may send you SMS messages related to:
+            </p>
+            <ul className="list-disc list-inside space-y-2 mb-6">
+              <li>Reservation requests</li>
+              <li>Installation scheduling</li>
+              <li>Delivery coordination</li>
+              <li>Customer support</li>
+              <li>Rental account updates</li>
+              <li>Other customer care communications</li>
+            </ul>
+            <p className="mb-4">Message frequency varies depending on your interactions with us.</p>
+            <p className="mb-4">Message and data rates may apply.</p>
+            <p className="mb-4">Reply STOP to unsubscribe from SMS messages at any time.</p>
+            <p className="mb-4">Reply HELP for assistance.</p>
+            <p className="mb-4">Your consent to receive SMS messages is not a condition of purchasing or renting our services.</p>
+            <p className="mb-6">We do not sell or share your mobile phone number with third parties for their own marketing purposes.</p>
+
+            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">9. Contact</h2>
             <p className="mb-6">
               For questions about this Privacy Policy, contact us at: <a href="mailto:info@sfsaunarental.com" className="text-primary hover:underline">info@sfsaunarental.com</a>
             </p>
