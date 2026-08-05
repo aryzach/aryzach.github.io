@@ -17,6 +17,29 @@ import { seoData } from "@/lib/seoData";
 const Index = () => {
   useSEO(seoData.home);
   useEffect(() => {
+    const styleId = "lc-widget-hidden-style";
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.textContent =
+        "chat-widget,[id^='lc_text-widget'],.lc_text-widget--btn,#lc_text-widget--root{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}";
+      document.head.appendChild(style);
+    }
+
+    if (document.getElementById("leadconnector-widget")) return;
+    const s = document.createElement("script");
+    s.id = "leadconnector-widget";
+    s.src = "https://widgets.leadconnectorhq.com/loader.js";
+    s.setAttribute(
+      "data-resources-url",
+      "https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+    );
+    s.setAttribute("data-widget-id", "6a73bd56141f399699930c60");
+    s.setAttribute("data-source", "WEB_USER");
+    document.body.appendChild(s);
+  }, []);
+
+  useEffect(() => {
     const jsonLd = {
       "@context": "https://schema.org",
       "@graph": [
