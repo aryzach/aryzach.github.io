@@ -5,6 +5,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
+import { buildHashedUserData, fetchSessionLineItems, sendMetaPurchase } from "../_shared/metaCapi.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -280,6 +281,17 @@ Deno.serve(async (req) => {
     await markProcessed("ignored");
     return text("ok", 200);
   }
+
+  // ---- Meta Conversions API: Purchase for the Reservation Deposit ----
+  // Runs independently of fulfillment; failures never affect the Stripe flow.
+  if (session.payment_status === "paid" && checkoutSessionId) {
+    try {
+      await sendMetaPurchaseForSession(supabase, event, session, checkoutSessionId, reservationId);
+    } catch (e) {
+      console.error("Meta CAPI block threw:", String(e).slice(0, 300));
+    }
+  }
+
   if (!reservationId) {
     console.warn("checkout.session.completed missing client_reference_id");
     await markProcessed("error", "missing client_reference_id");
