@@ -9,6 +9,7 @@ import { RentalAgreementSheet } from "@/components/contract/RentalAgreementSheet
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
+import { cn } from "@/lib/utils";
 import {
   CALCOM_VIDEO_CONSULT_LINK,
   CALCOM_INSTALLATION_LINK,
@@ -104,6 +105,7 @@ const ReservationDashboard = () => {
   });
   const [savingInfo, setSavingInfo] = useState(false);
   const [connectingBank, setConnectingBank] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const { getStatus } = useAvailability();
 
   const load = useCallback(async () => {
@@ -718,6 +720,7 @@ const ReservationDashboard = () => {
               <p className="text-xs text-muted-foreground text-center mt-2">
                 Save this private reservation link.
               </p>
+            </div>
             </>
           ) : null}
         </div>
