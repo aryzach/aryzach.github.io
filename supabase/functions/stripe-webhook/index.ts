@@ -52,6 +52,126 @@ async function verifyAny(
   return null;
 }
 
+// Sends the Meta Purchase event for a paid Reservation Deposit checkout session.
+// Durable idempotency via public.meta_conversion_events (event_id = session.id).
+async function sendMetaPurchaseForSession(
+  supabase: any,
+  event: any,
+  session: any,
+  sessionId: string,
+  reservationId: string | undefined,
+) {
+  const isLive = !!event.livemode;
+  const livePriceId = Deno.env.get("STRIPE_LIVE_RESERVATION_PRICE_ID");
+  const testPriceId = Deno.env.get("STRIPE_TEST_RESERVATION_PRICE_ID");
+  const expectedPriceId = isLive ? livePriceId : (testPriceId ?? livePriceId);
+  const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+
+  if (!expectedPriceId || !stripeKey) {
+    console.warn("Meta CAPI skipped: missing reservation price id or Stripe key.");
+    return;
+  }
+
+  // Durable idempotency check.
+  const { data: prior } = await supabase
+    .from("meta_conversion_events")
+    .select("id, status")
+    .eq("event_id", sessionId)
+    .maybeSingle();
+  if (prior?.status === "succeeded") {
+    console.log(`Meta CAPI: Purchase already sent for session ${sessionId} — skipping.`);
+    return;
+  }
+
+  // Confirm the deposit price is actually in the session's line items.
+  let lineItems: any[] = [];
+  try {
+    lineItems = await fetchSessionLineItems(stripeKey, sessionId);
+  } catch (e) {
+    console.error("Meta CAPI: line item fetch failed:", String(e).slice(0, 300));
+    return;
+  }
+  const matched = lineItems.find((li) => li?.price?.id === expectedPriceId);
+  if (!matched) {
+    console.log(`Meta CAPI: session ${sessionId} has no matching reservation deposit price — skipping.`);
+    return;
+  }
+
+  // Customer data: prefer session.customer_details, fall back to the reservation.
+  const cd = session.customer_details ?? {};
+  let email: string | null = cd.email ?? null;
+  let phone: string | null = cd.phone ?? null;
+  let firstName: string | null = null;
+  let lastName: string | null = null;
+  if (typeof cd.name === "string" && cd.name.trim()) {
+    const parts = cd.name.trim().split(/\s+/);
+    firstName = parts[0] ?? null;
+    lastName = parts.length > 1 ? parts.slice(1).join(" ") : null;
+  }
+  if ((!email || !phone || !firstName || !lastName) && reservationId) {
+    const { data: r } = await supabase
+      .from("reservations")
+      .select("email, phone, first_name, last_name")
+      .eq("id", reservationId)
+      .maybeSingle();
+    if (r) {
+      email = email || r.email || null;
+      phone = phone || r.phone || null;
+      firstName = firstName || r.first_name || null;
+      lastName = lastName || r.last_name || null;
+    }
+  }
+  const userData = await buildHashedUserData({ email, phone, firstName, lastName });
+
+  const value = typeof session.amount_total === "number" ? session.amount_total / 100 : 0;
+  const testEventCode = !isLive ? Deno.env.get("META_TEST_EVENT_CODE") ?? null : null;
+
+  await supabase.from("meta_conversion_events").upsert(
+    {
+      event_id: sessionId,
+      event_name: "Purchase",
+      stripe_event_id: event.id ?? null,
+      stripe_session_id: sessionId,
+      status: "pending",
+    },
+    { onConflict: "event_id" },
+  );
+
+  const result = await sendMetaPurchase({
+    eventId: sessionId,
+    value,
+    currency: (session.currency ?? "usd").toUpperCase(),
+    contentIds: [expectedPriceId],
+    contentName: "Reservation Deposit",
+    eventSourceUrl: "https://sfsaunarental.com/",
+    userData,
+    testEventCode,
+  });
+
+  console.log(
+    "Meta CAPI Purchase response:",
+    JSON.stringify({
+      http_status: result.status,
+      events_received: result.eventsReceived ?? null,
+      messages: result.messages ?? null,
+      fbtrace_id: result.fbtraceId ?? null,
+      ok: result.ok,
+      session_id: sessionId,
+      mode: isLive ? "live" : "test",
+    }),
+  );
+
+  await supabase
+    .from("meta_conversion_events")
+    .update({
+      status: result.ok ? "succeeded" : "failed",
+      response_code: result.status || null,
+      error_message: result.ok ? null : (result.error ?? "Meta send failed").slice(0, 500),
+      sent_at: result.ok ? new Date().toISOString() : null,
+    })
+    .eq("event_id", sessionId);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return text("Method not allowed", 405);
