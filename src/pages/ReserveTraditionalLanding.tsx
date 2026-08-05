@@ -61,7 +61,7 @@ const LandingHero = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8 order-2">
+        <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8 order-4">
           <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
             <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
             <span>200°F sauna with a real stone heater</span>
