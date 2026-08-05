@@ -765,6 +765,7 @@ const ReservationDashboard = () => {
                 Save this private reservation link.
               </p>
             </div>
+            </div>
             </>
           ) : null}
         </div>
