@@ -165,7 +165,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-white/70 text-sm">
-            © 2024 SF Sauna Rental. All rights reserved.
+            Zachary Smith DBA SF Sauna
           </p>
           
           <div className="flex gap-4">
