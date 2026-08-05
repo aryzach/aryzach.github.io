@@ -410,7 +410,7 @@ const ReservationDashboard = () => {
                 </Link>
               </CardContent>
             </Card>
-          : reservation ? (
+          ) : reservation ? (
             <>
               {!consultScheduled && (
                 <>
