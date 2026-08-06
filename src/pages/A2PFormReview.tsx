@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2 } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface FieldProps {
   label: string;
@@ -38,21 +40,24 @@ const A2PFormReview = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-background py-20 px-4">
-        <div className="max-w-2xl mx-auto text-center p-6">
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="max-w-2xl mx-auto text-center p-6 pt-32 pb-20 px-4">
           <CheckCircle2 className="mx-auto text-primary mb-3" size={44} />
           <h2 className="text-xl font-semibold text-foreground mb-2">Form Submitted</h2>
           <p className="text-sm text-muted-foreground">
             This is a demonstration page for A2P 10DLC compliance review. No data was sent to a backend.
           </p>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-20 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="max-w-2xl mx-auto pt-32 pb-20 px-4">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-4">
             A2P SMS Opt-In Demonstration
@@ -207,6 +212,7 @@ const A2PFormReview = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
