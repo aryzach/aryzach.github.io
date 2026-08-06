@@ -151,9 +151,6 @@ const LandingHero = () => {
         </div>
         <div className="flex flex-col items-center gap-3 order-5">
           <BookButton />
-          <div className="pt-4 w-full">
-            <EmailCapture />
-          </div>
         </div>
       </div>
     </section>
