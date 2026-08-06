@@ -5,7 +5,7 @@ import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import { useSEO } from "@/hooks/useSEO";
 import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
-import { getStripeReservationConfig } from "@/lib/reservationConfig";
+import { getStripeReservationConfig, CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 
 const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
@@ -182,9 +182,16 @@ const ReserveTraditionalLandingPay = () => {
           <PayButton />
 
           <div className="mt-8 text-left">
-            <div className="mb-6 text-center">
-              <p className="font-semibold text-foreground">Have questions before reserving?</p>
-              <p className="text-sm text-muted-foreground mt-1">Book a free video consultation first</p>
+            <div className="border-t border-border pt-4 pb-6 text-center">
+              <p className="text-sm text-muted-foreground">Have questions before reserving?</p>
+              <a
+                href={CALCOM_VIDEO_CONSULT_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-sm font-medium text-foreground underline underline-offset-4 hover:text-primary mt-1"
+              >
+                Book a free video consultation first
+              </a>
             </div>
             <button
               type="button"
