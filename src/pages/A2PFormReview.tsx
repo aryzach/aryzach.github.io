@@ -212,6 +212,7 @@ const A2PFormReview = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
