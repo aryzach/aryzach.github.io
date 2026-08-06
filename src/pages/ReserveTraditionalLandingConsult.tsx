@@ -32,7 +32,7 @@ const BookButton = ({ className }: { className?: string }) => (
     className={`bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap ${className ?? ""}`}
   >
     <a href={CALCOM_VIDEO_CONSULT_LINK} target="_blank" rel="noopener noreferrer">
-      Book a Free 30-Minute Home Sauna Planning Session
+      Book Free Home Sauna Consultation
       <ArrowRight className="ml-2" size={20} />
     </a>
   </Button>
@@ -151,9 +151,6 @@ const LandingHero = () => {
         </div>
         <div className="flex flex-col items-center gap-3 order-5">
           <BookButton />
-          <p className="font-sans text-[14px] md:text-[15px] leading-[1.6] text-white/85 max-w-md">
-            We'll walk your space over video, answer your questions, and map out the right sauna setup for your home — free, no obligation.
-          </p>
           <div className="pt-4 w-full">
             <EmailCapture />
           </div>
@@ -228,10 +225,7 @@ const ReserveTraditionalLandingConsult = () => {
 
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-xl mx-auto rounded-xl border border-border bg-card p-6 text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Free 30-minute planning session</h2>
-          <p className="text-sm text-muted-foreground mt-1 mb-5">
-            We'll walk your space over video, answer your questions, and map out the right sauna setup for your home — free, no obligation.
-          </p>
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-5">Free home sauna consultation</h2>
           <BookButton />
 
           <div className="mt-6">
