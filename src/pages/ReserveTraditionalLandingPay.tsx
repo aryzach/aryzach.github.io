@@ -182,6 +182,10 @@ const ReserveTraditionalLandingPay = () => {
           <PayButton />
 
           <div className="mt-8 text-left">
+            <div className="mb-6 text-center">
+              <p className="font-semibold text-foreground">Have questions before reserving?</p>
+              <p className="text-sm text-muted-foreground mt-1">Book a free video consultation first</p>
+            </div>
             <button
               type="button"
               onClick={() => setShowPricing((s) => !s)}
