@@ -125,7 +125,7 @@ const A2PFormReview = () => {
                   className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
                 <span className="text-sm text-muted-foreground leading-relaxed">
-                  I agree to receive customer care text messages from Zachary Smith DBA SF Sauna regarding my reservation request, installation scheduling, delivery coordination, rental account updates, and customer support. Message frequency varies. Message and data rates may apply. Reply STOP to opt out and HELP for assistance. Consent is not a condition of purchase. By checking this box, I agree to the{" "}
+                  I agree to receive customer care SMS messages from Zachary Smith DBA SF Sauna regarding my reservation request, installation scheduling, delivery coordination, rental updates, and customer support. Message frequency varies. Message & data rates may apply. Reply STOP to opt out and HELP for help. Consent is not a condition of purchase. By checking this box, I agree to the{" "}
                   <a href="/policies" className="text-foreground underline underline-offset-4 hover:text-primary">
                     Privacy Policy
                   </a>{" "}
@@ -136,6 +136,10 @@ const A2PFormReview = () => {
                   .
                 </span>
               </label>
+              <div className="mt-4 flex flex-col sm:flex-row sm:gap-4 text-sm">
+                <span className="font-medium text-foreground sm:w-40 shrink-0">Program Type:</span>
+                <span className="text-muted-foreground">Customer Care SMS</span>
+              </div>
             </div>
 
             <div className="pt-2">
@@ -143,7 +147,7 @@ const A2PFormReview = () => {
                 Submit Reservation Request
               </Button>
               <p className="text-xs text-muted-foreground text-center mt-2 leading-relaxed">
-                This demonstration form does not send data to a backend. SMS consent is optional.
+                SMS consent is optional.
               </p>
             </div>
           </form>
