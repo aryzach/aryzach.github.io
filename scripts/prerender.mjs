@@ -44,6 +44,7 @@ const routes = [
   '/pre-fab-sauna-installation-form',
   '/reserve-traditional-landing',
   '/reserve-traditional-landing-pay',
+  '/reserve-traditional-landing-consult',
   '/a2p-form-review',
 ];
 
