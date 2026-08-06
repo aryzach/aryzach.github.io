@@ -121,7 +121,20 @@ const Policies = () => {
             <p className="mb-4">Your consent to receive SMS messages is not a condition of purchasing or renting our services.</p>
             <p className="mb-6">We do not sell or share your mobile phone number with third parties for their own marketing purposes.</p>
 
-            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">9. Contact</h2>
+            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">9. SMS Privacy</h2>
+            <p className="mb-4">
+              If you opt in to receive SMS messages from Zachary Smith DBA SF Sauna, we use your mobile phone number solely to provide customer care communications related to your reservation request, installation scheduling, delivery coordination, rental updates, and customer support.
+            </p>
+            <p className="mb-4">Message frequency varies.</p>
+            <p className="mb-4">Message and data rates may apply.</p>
+            <p className="mb-4">You may opt out at any time by replying STOP.</p>
+            <p className="mb-4">Reply HELP for assistance.</p>
+            <p className="mb-4">We do not sell your personal information.</p>
+            <p className="mb-6">
+              No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Text messaging originator opt-in data and consent will not be shared with any third parties.
+            </p>
+
+            <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">10. Contact</h2>
             <p className="mb-6">
               For questions about this Privacy Policy, contact us at: <a href="mailto:info@sfsaunarental.com" className="text-primary hover:underline">info@sfsaunarental.com</a>
             </p>

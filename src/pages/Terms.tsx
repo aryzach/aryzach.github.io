@@ -49,13 +49,19 @@ const Terms = () => {
 
             <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">SMS Terms</h2>
             <p className="mb-4">
-              If you opt in to receive SMS messages from SF Sauna Rental, you agree to receive customer care and transactional text messages regarding your inquiry, reservation, installation, rental, account, and customer support.
+              By opting in to receive SMS messages from Zachary Smith DBA SF Sauna, you agree to receive customer care SMS messages regarding reservation requests, installation scheduling, delivery coordination, rental updates, and customer support.
             </p>
             <p className="mb-4">Message frequency varies.</p>
             <p className="mb-4">Message and data rates may apply.</p>
-            <p className="mb-4">Reply STOP to unsubscribe.</p>
+            <p className="mb-4">Reply STOP to unsubscribe at any time.</p>
             <p className="mb-4">Reply HELP for assistance.</p>
-            <p className="mb-6">Consent to receive SMS messages is not a condition of purchasing or renting our services.</p>
+            <p className="mb-4">Wireless carriers are not liable for delayed or undelivered messages.</p>
+            <p className="mb-4">You must be at least 18 years old or have permission from a parent or legal guardian to opt in.</p>
+            <p className="mb-4">Your consent is not a condition of purchasing any goods or services.</p>
+            <p className="mb-6">
+              For information about how we collect and use personal information, please review our{" "}
+              <a href="/policies" className="text-primary hover:underline">Privacy Policy</a>.
+            </p>
 
             <h2 className="text-2xl font-semibold text-foreground mt-8 mb-4">Changes</h2>
             <p className="mb-6">
