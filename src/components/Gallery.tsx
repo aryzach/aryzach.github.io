@@ -89,11 +89,14 @@ const Gallery = () => {
           </div>
           
           <div className="text-center mt-8">
-            <Link to="/learn-more">
-              <Button size="lg" className="bg-accent hover:bg-accent-dark text-white">
-                Interested? Send us a message to learn more
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              onClick={() => openReservation({ source: "Landing Page" })}
+              className="bg-accent hover:bg-accent-dark text-white"
+            >
+              Reserve Your Sauna
+            </Button>
+            <AskQuestionCTA className="mt-3" />
           </div>
         </div>
       </div>
