@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 
 const HowItWorksPage = () => {
   useSEO(seoData.howItWorks);
