@@ -80,33 +80,17 @@ const Hero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <form 
-          onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full order-5"
-        >
-          <Input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-label="Email address"
-            className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
-          />
-          <Button 
-            type="submit"
-            size="lg" 
-            disabled={submitting}
-            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
+        <div className="flex flex-col items-center gap-3 order-5">
+          <Button
+            size="lg"
+            onClick={() => open({ source: "Homepage Hero" })}
+            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap text-lg px-8"
           >
-            {submitting ? "Sending…" : "Learn More"}
+            Reserve Your Sauna
             <ArrowRight className="ml-2" size={20} />
           </Button>
-        </form>
-        {errorMsg && (
-          <p className="text-sm text-white/90 mt-2 order-5" role="alert">{errorMsg}</p>
-        )}
+          <AskQuestionCTA light />
+        </div>
       </div>
     </section>
   );
