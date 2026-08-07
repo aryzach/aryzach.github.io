@@ -83,7 +83,7 @@ const Hero = () => {
         <div className="flex flex-col items-center gap-3 order-5">
           <Button
             size="lg"
-            onClick={() => open({ source: "Homepage Hero" })}
+            onClick={() => open({ source: "Landing Page" })}
             className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap text-lg px-8"
           >
             Reserve Your Sauna
