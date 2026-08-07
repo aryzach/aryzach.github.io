@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useReservationModal } from "@/contexts/ReservationModal";
+import AskQuestionCTA from "@/components/AskQuestionCTA";
 
 const ReserveCTA = () => {
   const { open } = useReservationModal();
@@ -16,12 +17,15 @@ const ReserveCTA = () => {
         <Button
           size="lg"
           variant="outline"
-          onClick={() => open({ source: "Pricing Page" })}
+          onClick={() => open({ source: "Landing Page" })}
           className="text-lg px-8 border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
         >
-          Reserve Your Sauna Now
+          Reserve Your Sauna
           <ArrowRight className="ml-2" size={20} />
         </Button>
+        <div className="mt-4">
+          <AskQuestionCTA light />
+        </div>
       </div>
     </section>
   );

@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
+import { useReservationModal } from "@/contexts/ReservationModal";
+import AskQuestionCTA from "@/components/AskQuestionCTA";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [zipCode, setZipCode] = useState<string>("your area");
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { open } = useReservationModal();
 
   useEffect(() => {
     // Force video to play on mobile devices
@@ -34,25 +29,6 @@ const Hero = () => {
         console.log("Failed to fetch zip code:", error);
       });
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
-    setErrorMsg(null);
-    setSubmitting(true);
-    const res = await submitLeadToGHL({
-      form_source: "homepage_hero",
-      form_name: "Homepage Hero",
-      fields: { email },
-    });
-    setSubmitting(false);
-    if (res.ok) {
-      navigate("/email-more-info");
-    } else {
-      setErrorMsg("Something went wrong. Please try again.");
-      toast.error("We couldn't submit your email. Please try again.");
-    }
-  };
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -104,33 +80,17 @@ const Hero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <form 
-          onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto w-full order-5"
-        >
-          <Input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-label="Email address"
-            className="flex-1 bg-white/95 backdrop-blur-sm border-white/40 focus:border-[hsl(var(--color-accent))] h-12 px-4 text-base"
-          />
-          <Button 
-            type="submit"
-            size="lg" 
-            disabled={submitting}
-            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
+        <div className="flex flex-col items-center gap-3 order-5">
+          <Button
+            size="lg"
+            onClick={() => open({ source: "Landing Page" })}
+            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap text-lg px-8"
           >
-            {submitting ? "Sending…" : "Learn More"}
+            Reserve Your Sauna
             <ArrowRight className="ml-2" size={20} />
           </Button>
-        </form>
-        {errorMsg && (
-          <p className="text-sm text-white/90 mt-2 order-5" role="alert">{errorMsg}</p>
-        )}
+          <AskQuestionCTA light />
+        </div>
       </div>
     </section>
   );

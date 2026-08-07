@@ -1,18 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { useReservationModal } from "@/contexts/ReservationModal";
+import AskQuestionCTA from "@/components/AskQuestionCTA";
 
 const ServiceArea = () => {
+  const { open } = useReservationModal();
   return (
     <section id="service-area" className="py-4 md:py-6 bg-cedar-section">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
-          Not sure if you're in our service area? Get in touch
+          Ready for daily heat therapy at home?
         </h2>
-        <Link to="/learn-more">
-          <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            Contact Us
-          </Button>
-        </Link>
+        <Button
+          size="lg"
+          onClick={() => open({ source: "Landing Page" })}
+          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+        >
+          Reserve Your Sauna
+          <ArrowRight className="ml-2" size={20} />
+        </Button>
+        <AskQuestionCTA className="mt-3" />
       </div>
     </section>
   );
