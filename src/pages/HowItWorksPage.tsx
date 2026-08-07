@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
+import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 
 const HowItWorksPage = () => {
   useSEO(seoData.howItWorks);
@@ -84,9 +85,9 @@ const HowItWorksPage = () => {
                           className="font-sans font-medium mt-4"
                           asChild
                         >
-                          <a 
-                            href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1L2ygxB574Er3ifWJWFVA6V6p1mzpW3p2UMhDFNsd6iq8F3gkELDTYcmGvBiRxn_8u-yOdTFLb" 
-                            target="_blank" 
+                          <a
+                            href={CALCOM_VIDEO_CONSULT_LINK}
+                            target="_blank"
                             rel="noopener noreferrer"
                           >
                             Schedule Free Sauna Fit Check
@@ -133,9 +134,9 @@ const HowItWorksPage = () => {
               className="font-sans font-medium"
               asChild
             >
-              <a 
-                href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1L2ygxB574Er3ifWJWFVA6V6p1mzpW3p2UMhDFNsd6iq8F3gkELDTYcmGvBiRxn_8u-yOdTFLb" 
-                target="_blank" 
+              <a
+                href={CALCOM_VIDEO_CONSULT_LINK}
+                target="_blank"
                 rel="noopener noreferrer"
               >
                 Schedule Free Sauna Fit Check
