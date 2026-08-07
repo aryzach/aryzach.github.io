@@ -3,7 +3,8 @@ import saunaTemp from "@/assets/sauna-temp.png";
 import lindseySauna from "@/assets/lindsey-sauna.png";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useReservationModal } from "@/contexts/ReservationModal";
+import AskQuestionCTA from "@/components/AskQuestionCTA";
 
 const galleryItems = [
   { type: "image", src: gallery3, alt: "Steam sauna rental installed in SF home" },
@@ -12,6 +13,7 @@ const galleryItems = [
 ];
 
 const Gallery = () => {
+  const { open: openReservation } = useReservationModal();
   return (
     <section className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
