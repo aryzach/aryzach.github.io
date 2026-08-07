@@ -1,18 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
+import { useReservationModal } from "@/contexts/ReservationModal";
+import AskQuestionCTA from "@/components/AskQuestionCTA";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [zipCode, setZipCode] = useState<string>("your area");
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { open } = useReservationModal();
 
   useEffect(() => {
     // Force video to play on mobile devices
@@ -34,25 +29,6 @@ const Hero = () => {
         console.log("Failed to fetch zip code:", error);
       });
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
-    setErrorMsg(null);
-    setSubmitting(true);
-    const res = await submitLeadToGHL({
-      form_source: "homepage_hero",
-      form_name: "Homepage Hero",
-      fields: { email },
-    });
-    setSubmitting(false);
-    if (res.ok) {
-      navigate("/email-more-info");
-    } else {
-      setErrorMsg("Something went wrong. Please try again.");
-      toast.error("We couldn't submit your email. Please try again.");
-    }
-  };
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
