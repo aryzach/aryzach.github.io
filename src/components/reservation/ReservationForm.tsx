@@ -15,6 +15,7 @@ import { useAvailability } from "@/hooks/useAvailability";
 import { formatDatePretty } from "@/lib/availability";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
+import { markReservationSubmitted } from "@/lib/reservationConversion";
 
 export type ReservationSource =
   | "Pricing Page"
@@ -66,7 +67,7 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function pushReservationSubmittedEvent(saunaTypeId: string, city: string) {
+function pushReservationSubmittedEventNow(saunaTypeId: string, city: string) {
   const w = window as unknown as { dataLayer?: unknown[] };
   w.dataLayer = w.dataLayer || [];
   w.dataLayer.push({
@@ -174,7 +175,7 @@ const ReservationForm = ({
           intent: "waitlist",
           reservation_source: source,
         });
-        pushReservationSubmittedEvent(valid.sauna_type_id, valid.city);
+        pushReservationSubmittedEventNow(valid.sauna_type_id, valid.city);
         toast.success("You're on the waitlist. We'll be in touch.");
         onDone?.();
       } finally {
@@ -211,7 +212,11 @@ const ReservationForm = ({
         reservation_source: source,
         reservation_id: data.id,
       });
-      pushReservationSubmittedEvent(valid.sauna_type_id, valid.city);
+      markReservationSubmitted({
+        sauna_type: saunaTypeLabel(valid.sauna_type_id),
+        city: valid.city,
+        page_path: `/reservation/${data.id}`,
+      });
       navigate(`/reservation/${data.id}?token=${encodeURIComponent(data.token)}`);
       onDone?.();
     } finally {
