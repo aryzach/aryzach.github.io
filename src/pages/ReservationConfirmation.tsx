@@ -8,6 +8,7 @@ import { CheckCircle2, ExternalLink, Calendar, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveStripeLink, CALCOM_VIDEO_CONSULT_LINK, CALCOM_INSTALLATION_LINK } from "@/lib/reservationConfig";
 import { useSEO } from "@/hooks/useSEO";
+import { flushReservationSubmittedEvent } from "@/lib/reservationConversion";
 
 const ReservationConfirmation = () => {
   useSEO({
@@ -19,6 +20,8 @@ const ReservationConfirmation = () => {
   const reservationId = params.get("id");
   const typeId = params.get("type");
   const [paymentLink, setPaymentLink] = useState<string | null>(null);
+
+  useEffect(() => { flushReservationSubmittedEvent(); }, []);
 
   useEffect(() => {
     (async () => {

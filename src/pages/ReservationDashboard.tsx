@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { loadStripe } from "@stripe/stripe-js";
+import { flushReservationSubmittedEvent } from "@/lib/reservationConversion";
 
 interface Reservation {
   id: string;
@@ -130,6 +131,9 @@ const ReservationDashboard = () => {
   }, [id, token]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Fire the reservation conversion once, on the destination page.
+  useEffect(() => { flushReservationSubmittedEvent(); }, []);
 
   // Load the active Stripe payment link once.
   useEffect(() => {
