@@ -44,7 +44,7 @@ function esc(s: string): string {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 }
 
-const CALCOM = "https://cal.com/sfsaunarental/sf-sauna-video-consultation?overlayCalendar=true";
+const CALCOM = "https://cal.com/sf-sauna/sauna-compatibility-consultation?overlayCalendar=true";
 
 function shell(inner: string, previewText: string): string {
   return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>SF Sauna</title></head>
