@@ -88,9 +88,9 @@ const Pricing = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {CATEGORIES.map(({ key, title, blurb, imageFrom }, idx) => {
               const items = productsIn(key);
-              const indoor = items.find((p) => p.placement === "Indoor");
               const outdoor = items.find((p) => p.placement === "Outdoor");
-              const cards = [indoor, outdoor].filter(Boolean) as Product[];
+              const indoor = items.find((p) => p.placement === "Indoor");
+              const cards = [outdoor, indoor].filter(Boolean) as Product[];
               if (cards.length === 0) return null;
               const imageProduct =
                 items.find((p) => p.placement === imageFrom) || cards[0];
