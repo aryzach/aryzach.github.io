@@ -39,7 +39,7 @@ const HowItStarted = () => {
                 </p>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  After trying many other ways to fix my back and heal from pain, one day I tried sitting in my gym sauna before starting my physical therapy exercises.
+                  After trying many other ways to fix my back and heal from pain, I tried using my gym sauna before starting my physical therapy exercises.
                 </p>
 
                 <p className="text-lg text-muted-foreground leading-relaxed">
