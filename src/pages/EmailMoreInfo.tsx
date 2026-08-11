@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
+import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 
 const EmailMoreInfo = () => {
   useSEO(seoData.emailMoreInfo);
@@ -57,7 +58,7 @@ const EmailMoreInfo = () => {
                 className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-white font-sans font-medium"
               >
                 <a
-                  href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ2a4oLKVXzVRLEm5l1tFJnmJJKRW0EXphR7T1tB9cLXhEQxLhPvFVX1zP2yj7CLSUUGCCNyJTv5"
+                  href={CALCOM_VIDEO_CONSULT_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2"
