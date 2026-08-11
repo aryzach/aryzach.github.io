@@ -27,19 +27,43 @@ const HowItStarted = () => {
               
               <div className="w-full md:w-1/2 space-y-6">
                 <p className="text-lg text-foreground leading-relaxed">
-                  <span className="font-medium">Hey, I'm Zach, behind SF Sauna.</span>
+                  <span className="font-medium">Hey, I'm Zach, the guy behind SF Sauna.</span>
                 </p>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  When I was 27, I injured my back, which spiraled into three years of chronic pain and muscle tension. Using the gym sauna everyday was helpful, but as I got better, my life still revolved around getting to gym to use a sauna seven days a week.
+                  When I was 27, I was working on a farm and messed up my back.
                 </p>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  I wanted an easier option and thought others might too, so I put up a neighborhood flyer with the idea and 200+ people replied!
+                  This injury spiraled into three years of debilitating pain and muscle tension throughout my body.
                 </p>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  People in SF seemed to want more convenient sauna access but didn't have it, so I started SF Sauna to make it happen.
+                  After trying many other ways to fix my back and heal from pain, one day I tried sitting in my gym sauna before starting my physical therapy exercises.
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  I noticed two big things— I felt more "in my body" and attuned to physical sensations, and it was the first time in three years where my muscles felt loose.
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  I started to rely on this routine and felt so much better on days when I used the sauna. Now my pain and tension was getting better, but my life revolved around getting to gym to use a sauna seven days a week.
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  I wanted a sauna at home, but after looking into options, I realized the process was a mess— all traditional saunas required extensive home electrical modification, and the installation process was a hassle.
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  This was surprising and frustrating, and it seemed obvious to me that there could to be a better way. I became obsessed with making a sauna that avoided the complexity of every other sauna (removing the need for electrical infrastructure upgrades was the biggest one).
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  I spent months building and testing new sauna designs in my backyard until I made something I was happy with.
+                </p>
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  I realized other people might want something like this too, so I started SF Sauna to make it happen.
                 </p>
               </div>
             </div>
