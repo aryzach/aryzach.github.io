@@ -485,23 +485,11 @@ Deno.serve(async (req) => {
   const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
   const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
 
-  // Find eligible sauna: Available first, else earliest Incoming/Returning/Maintenance
-  // whose available_date <= preferred install date.
-  const { data: candidates } = await supabase
-    .from("sauna_inventory")
-    .select("*")
-    .eq("sauna_type_id", reservation.sauna_type_id)
-    .in("status", ["Available", "Incoming", "Returning", "Maintenance"]);
-
-  const available = (candidates ?? []).filter((c) => c.status === "Available");
-  const upcoming = (candidates ?? [])
-    .filter((c) => c.status !== "Available")
-    .filter((c) => c.available_date && c.available_date <= preferredDate)
-    .sort((a, b) => (a.available_date! < b.available_date! ? -1 : 1));
-
-  const chosen = available[0] ?? upcoming[0] ?? null;
-
-  const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
+  // Assign the sauna of this type that becomes available the soonest.
+  // The customer always goes into the FUTURE customer columns.
+  const { sauna: chosen } = await assignSoonestSauna(supabase, reservation, {
+    holdStatus: "Reservation Hold",
+  });
 
   if (!chosen) {
     // Mark for manual review, still mark paid.
@@ -529,17 +517,6 @@ Deno.serve(async (req) => {
     await markProcessed("success");
     return text("ok", 200);
   }
-
-  // Assign sauna. Preserve available_date exactly as-is.
-  await supabase
-    .from("sauna_inventory")
-    .update({
-      status: "Reservation Hold",
-      current_customer: customerName,
-      current_customer_id: reservationId,
-      reservation_id: reservationId,
-    })
-    .eq("id", chosen.id);
 
   await supabase
     .from("reservations")
