@@ -3,7 +3,6 @@ import { ArrowRight, Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useReservationModal } from "@/contexts/ReservationModal";
 import AskQuestionCTA from "@/components/AskQuestionCTA";
-import heroVideoAsset from "@/assets/0812.mp4.asset.json";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,7 +43,7 @@ const Hero = () => {
         poster="/hero-fallback.avif"
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src={heroVideoAsset.url} type="video/mp4" />
+        <source src="/hero-video.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay */}
