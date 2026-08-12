@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { assignSoonestSauna } from "../_shared/assignSauna.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -57,65 +58,22 @@ Deno.serve(async (req) => {
 
   if (readyForAssignment && !assignedInventoryId) {
     try {
-      const { data: type } = await supabase
-        .from("sauna_types")
-        .select("style, model_key, location")
-        .eq("id", reservation.sauna_type_id)
-        .maybeSingle();
-
-      if (type) {
-        const { data: candidates } = await supabase
-          .from("sauna_inventory")
-          .select("id, status, available_date, created_at, locations, current_customer_id, future_customer_id")
-          .eq("style", type.style)
-          .eq("model_key", type.model_key)
-          .contains("locations", [type.location])
-          .is("current_customer_id", null)
-          .is("future_customer_id", null)
-          .in("status", ["Available", "Incoming", "Returning", "Maintenance"]);
-
-        const eligible = (candidates ?? [])
-          .filter((c: any) => c.status === "Available" || c.available_date)
-          .sort((a: any, b: any) => {
-            const rank = (s: string) => (s === "Available" ? 0 : 1);
-            if (rank(a.status) !== rank(b.status)) return rank(a.status) - rank(b.status);
-            const ad = a.available_date ?? "9999-12-31";
-            const bd = b.available_date ?? "9999-12-31";
-            if (ad !== bd) return ad < bd ? -1 : 1;
-            return String(a.created_at).localeCompare(String(b.created_at));
-          });
-
-        const pick = eligible[0];
-        if (pick) {
-          const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
-          const { error: invErr } = await supabase
-            .from("sauna_inventory")
-            .update({
-              status: "Reservation Confirmed",
-              reservation_id: reservation.id,
-              future_customer_id: reservation.id,
-              future_customer: customerName,
-            })
-            .eq("id", pick.id)
-            .is("current_customer_id", null)
-            .is("future_customer_id", null);
-
-
-          if (!invErr) {
-            assignedInventoryId = pick.id;
-            await supabase
-              .from("reservations")
-              .update({ sauna_inventory_id: pick.id })
-              .eq("id", reservation.id);
-            (reservation as any).sauna_inventory_id = pick.id;
-            await supabase.from("reservation_events").insert({
-              reservation_id: reservation.id,
-              event_type: "Sauna Assigned",
-              message: "Sauna assigned after agreement and photo ID completion",
-              metadata: { sauna_inventory_id: pick.id },
-            });
-          }
-        }
+      const { sauna: pick } = await assignSoonestSauna(supabase, reservation as any, {
+        holdStatus: "Reservation Confirmed",
+      });
+      if (pick) {
+        assignedInventoryId = pick.id;
+        await supabase
+          .from("reservations")
+          .update({ sauna_inventory_id: pick.id })
+          .eq("id", reservation.id);
+        (reservation as any).sauna_inventory_id = pick.id;
+        await supabase.from("reservation_events").insert({
+          reservation_id: reservation.id,
+          event_type: "Sauna Assigned",
+          message: "Sauna assigned after agreement and photo ID completion",
+          metadata: { sauna_inventory_id: pick.id },
+        });
       }
     } catch (e) {
       console.error("sauna auto-assignment failed:", e);
@@ -130,13 +88,15 @@ Deno.serve(async (req) => {
   if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
-      .select("id, unit_code, status, available_date, reservation_id")
+      .select("id, unit_code, status, available_date, reservation_id, current_customer_id, future_customer_id")
       .eq("id", assignedInventoryId)
       .maybeSingle();
     if (inv) {
       const isReserved =
-        inv.reservation_id === reservation.id &&
-        ["Reservation Hold", "Reserved", "Reservation Confirmed", "Installed"].includes(inv.status);
+        (inv.future_customer_id === reservation.id ||
+          inv.current_customer_id === reservation.id ||
+          inv.reservation_id === reservation.id) &&
+        ["Reservation Hold", "Reserved", "Reservation Confirmed", "Transfer Planned", "Installed"].includes(inv.status);
       sauna_hold = { status: inv.status, is_reserved: isReserved };
       assigned_sauna = {
         id: inv.id as string,

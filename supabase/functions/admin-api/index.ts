@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
+import { assignSoonestSauna } from "../_shared/assignSauna.ts";
 import {
   setAchAsCustomerDefault,
   listCustomerSubscriptions,
@@ -178,7 +179,6 @@ Deno.serve(async (req) => {
 
         const nowIso = new Date().toISOString();
         const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
-        const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
 
         // If a sauna is already assigned, do not assign a second one.
         if (reservation.sauna_inventory_id) {
@@ -194,16 +194,9 @@ Deno.serve(async (req) => {
           return json({ ok: true, already_assigned: true });
         }
 
-        const { data: candidates } = await supabase
-          .from("sauna_inventory").select("*")
-          .eq("sauna_type_id", reservation.sauna_type_id)
-          .in("status", ["Available", "Incoming", "Returning", "Maintenance"]);
-        const available = (candidates ?? []).filter((c: any) => c.status === "Available");
-        const upcoming = (candidates ?? [])
-          .filter((c: any) => c.status !== "Available" && c.available_date && c.available_date <= preferredDate)
-          .sort((a: any, b: any) => (a.available_date < b.available_date ? -1 : 1));
-        const chosen = available[0] ?? upcoming[0] ?? null;
-        const customerName = `${reservation.first_name} ${reservation.last_name}`.trim();
+        const { sauna: chosen } = await assignSoonestSauna(supabase, reservation, {
+          holdStatus: "Reservation Hold",
+        });
 
         if (!chosen) {
           await supabase.from("reservations").update({
@@ -218,12 +211,6 @@ Deno.serve(async (req) => {
           return json({ ok: true, needs_review: true });
         }
 
-        await supabase.from("sauna_inventory").update({
-          status: "Reservation Hold",
-          current_customer: customerName,
-          current_customer_id: id,
-          reservation_id: id,
-        }).eq("id", chosen.id);
         await supabase.from("reservations").update({
           payment_status: "Paid", reservation_status: "Reservation Hold",
           sauna_inventory_id: chosen.id,
