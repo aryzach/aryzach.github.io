@@ -16,12 +16,7 @@ import infraredIndoorAsset from "@/assets/infrared-indoor.png.asset.json";
 import traditionalHeroAsset from "@/assets/traditional-hero.png.asset.json";
 import traditionalIndoorAsset from "@/assets/traditional-indoor.jpg.asset.json";
 
-// Lovable CDN assets are served from the Lovable-hosted origin. When this
-// site is deployed to GitHub Pages, the `/__l5e/...` path doesn't exist on
-// that host, so we always resolve asset URLs against the Lovable origin.
-const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
-const assetUrl = (a: { url: string }) =>
-  a.url.startsWith("http") ? a.url : `${LOVABLE_ASSET_ORIGIN}${a.url}`;
+import { assetUrl } from "./assetUrl";
 
 export type Category = "traditional" | "infrared" | "original";
 

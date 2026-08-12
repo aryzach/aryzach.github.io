@@ -7,11 +7,9 @@ import { useSEO } from "@/hooks/useSEO";
 import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
 import { getStripeReservationConfig, CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
+import { assetUrl } from "@/lib/assetUrl";
 
-const LOVABLE_ASSET_ORIGIN = "https://cedar-home-sanctuary.lovable.app";
-const video0802 = video0802Asset.url.startsWith("http")
-  ? video0802Asset.url
-  : `${LOVABLE_ASSET_ORIGIN}${video0802Asset.url}`;
+const video0802 = assetUrl(video0802Asset);
 
 const TERMS: CommitmentMonths[] = [1, 3, 6, 12];
 
