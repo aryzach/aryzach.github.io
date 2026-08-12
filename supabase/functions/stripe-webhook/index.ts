@@ -6,6 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
 import { buildHashedUserData, fetchSessionLineItems, sendMetaPurchase } from "../_shared/metaCapi.ts";
+import { assignSoonestSauna } from "../_shared/assignSauna.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -483,7 +484,6 @@ Deno.serve(async (req) => {
 
   const nowIso = new Date().toISOString();
   const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
-  const preferredDate = String(reservation.preferred_install_at).slice(0, 10);
 
   // Assign the sauna of this type that becomes available the soonest.
   // The customer always goes into the FUTURE customer columns.
