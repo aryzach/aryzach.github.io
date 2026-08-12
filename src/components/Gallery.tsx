@@ -1,6 +1,7 @@
 import gallery3 from "@/assets/gallery-3.jpg";
 import saunaTemp from "@/assets/sauna-temp.png";
 import outdoorSaunaAsset from "@/assets/gallery-outdoor-sauna.jpeg.asset.json";
+import { assetUrl } from "@/lib/assetUrl";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useReservationModal } from "@/contexts/ReservationModal";
@@ -9,7 +10,7 @@ import AskQuestionCTA from "@/components/AskQuestionCTA";
 const galleryItems = [
   { type: "image", src: gallery3, alt: "Steam sauna rental installed in SF home" },
   { type: "image", src: saunaTemp, alt: "Infrared sauna temperature display in San Francisco apartment" },
-  { type: "image", src: outdoorSaunaAsset.url, alt: "Outdoor cedar traditional sauna rental installed in a San Francisco backyard patio" },
+  { type: "image", src: assetUrl(outdoorSaunaAsset), alt: "Outdoor cedar traditional sauna rental installed in a San Francisco backyard patio" },
 ];
 
 const Gallery = () => {
