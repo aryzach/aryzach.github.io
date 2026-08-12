@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useReservationModal } from "@/contexts/ReservationModal";
 import AskQuestionCTA from "@/components/AskQuestionCTA";
 import howItWorksVideoAsset from "@/assets/0812.mp4.asset.json";
+import { assetUrl } from "@/lib/assetUrl";
 
 const HowItWorks = () => {
   const { open } = useReservationModal();
@@ -18,7 +19,7 @@ const HowItWorks = () => {
             playsInline
             className="w-full h-auto"
           >
-            <source src={howItWorksVideoAsset.url} type="video/mp4" />
+            <source src={assetUrl(howItWorksVideoAsset)} type="video/mp4" />
           </video>
         </div>
         <div className="flex flex-col items-center gap-3">
