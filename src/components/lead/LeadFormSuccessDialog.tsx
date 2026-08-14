@@ -33,8 +33,7 @@ const LeadFormSuccessDialog = ({ open, onOpenChange }: Props) => {
           <CheckCircle2 className="text-primary mb-1" size={40} />
           <DialogTitle className="text-left">Thanks, we'll be in touch shortly.</DialogTitle>
           <DialogDescription className="text-left">
-            If you'd like to reserve a sauna, lock-in your sauna with a refundable reservation
-            deposit and we'll set one aside for you.
+            Reserve a sauna with a refundable deposit. We'll set one aside for you and reach out to coordinate installation date.
           </DialogDescription>
         </DialogHeader>
         <Button
