@@ -144,6 +144,25 @@ function normalize(fields: LeadFields): LeadFields {
 // Track in-flight submissions to prevent duplicate clicks.
 const inflight = new Set<string>();
 
+/** Push the GTM conversion event after a successful lead submission. */
+function pushLeadConversionEvent(
+  form_source: string,
+  form_name: string,
+  fields: LeadFields,
+) {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as { dataLayer?: unknown[] };
+  w.dataLayer = w.dataLayer || [];
+  w.dataLayer.push({
+    event: "reservation_request_submitted",
+    form_source,
+    form_name,
+    ...(typeof fields.sauna_type === "string" ? { sauna_type: fields.sauna_type } : {}),
+    ...(typeof fields.city === "string" ? { city: fields.city } : {}),
+    page_path: window.location.pathname,
+  });
+}
+
 export async function submitLeadToGHL({
   form_source,
   form_name,
