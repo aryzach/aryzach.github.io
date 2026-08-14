@@ -9,8 +9,8 @@ export const seoData = {
     canonical: "https://sfsaunarental.com/"
   },
   pricing: {
-    title: "Sauna Rental Pricing | SF Sauna Rental",
-    description: "View monthly pricing for infrared and steam sauna rentals in San Francisco. Indoor and outdoor options starting at $169/mo. Free installation on 6+ month leases.",
+    title: "Sauna Rental Options | SF Sauna Rental",
+    description: "Compare infrared and traditional sauna rentals in San Francisco. Indoor and outdoor options with delivery, installation, and maintenance included.",
     canonical: "https://sfsaunarental.com/pricing"
   },
   howItWorks: {
