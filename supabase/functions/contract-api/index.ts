@@ -40,6 +40,8 @@ interface AuthedReservation {
   sauna_type_id: string;
   preferred_install_at: string;
   min_commitment_months: number | null;
+  custom_commitment_months: number | null;
+  custom_monthly_price: number | null;
   contract_status: string;
 }
 
@@ -52,7 +54,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, contract_status",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -116,6 +118,8 @@ Deno.serve(async (req) => {
             sauna_type_id: reservation.sauna_type_id,
             preferred_install_at: reservation.preferred_install_at,
             min_commitment_months: reservation.min_commitment_months,
+            custom_commitment_months: reservation.custom_commitment_months,
+            custom_monthly_price: reservation.custom_monthly_price,
           },
           contract: current,
           voided_contracts: list.filter((c: any) => c.status === "Voided"),
@@ -155,15 +159,24 @@ Deno.serve(async (req) => {
         }
         const saunaInfo = getSaunaTypeInfo(String(sauna_type ?? ""));
         if (!saunaInfo) return json({ error: "Please choose a sauna type." }, 400);
+        const hasCustomTerm =
+          typeof reservation.custom_commitment_months === "number" &&
+          typeof reservation.custom_monthly_price === "number";
         const months = Number(commitment_months);
-        if (!COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12)) {
+        if (
+          !COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12) &&
+          !(hasCustomTerm && months === reservation.custom_commitment_months)
+        ) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
         if (typeof preferred_installation_date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(preferred_installation_date)) {
           return json({ error: "Please choose a preferred installation date." }, 400);
         }
 
-        const monthlyPrice = getMonthlyPrice(saunaInfo.id, months);
+        const monthlyPrice =
+          hasCustomTerm && months === reservation.custom_commitment_months
+            ? reservation.custom_monthly_price
+            : getMonthlyPrice(saunaInfo.id, months);
         if (monthlyPrice == null) return json({ error: "No pricing available for that selection." }, 400);
         const streetAddress = installation_address.trim();
         const city = installation_city.trim();
