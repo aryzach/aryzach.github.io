@@ -31,8 +31,8 @@ const LeadFormSuccessDialog = ({ open, onOpenChange }: Props) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <CheckCircle2 className="text-primary mb-1" size={40} />
-          <DialogTitle className="text-left">Thanks, we'll be in touch shortly.</DialogTitle>
-          <DialogDescription className="text-left">
+          <DialogTitle className="text-left font-heading text-2xl md:text-3xl tracking-tight">Thanks, we'll be in touch shortly.</DialogTitle>
+          <DialogDescription className="text-left text-base md:text-lg text-foreground leading-relaxed font-sans">
             Reserve a sauna with a refundable deposit. We'll set one aside for you and reach out to coordinate installation date.
           </DialogDescription>
         </DialogHeader>
@@ -44,7 +44,7 @@ const LeadFormSuccessDialog = ({ open, onOpenChange }: Props) => {
             if (link) window.open(link, "_blank", "noopener,noreferrer");
           }}
         >
-          Pay $200 Reservation Deposit
+          Lock-in Sauna Reservation With Deposit
           <ExternalLink className="ml-2" size={16} />
         </Button>
       </DialogContent>
