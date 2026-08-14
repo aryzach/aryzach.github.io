@@ -157,7 +157,7 @@ const ReserveTraditionalLandingPay = () => {
     title: "Reserve a Traditional Sauna in San Francisco | SF Sauna",
     description:
       "Lock in your 2-person traditional sauna rental in San Francisco with a $200 reservation deposit. Delivery, installation, and maintenance included.",
-    canonical: "https://cedar-home-sanctuary.lovable.app/reserve-traditional-landing-pay",
+    canonical: "https://www.sfsaunarental.com/reserve-traditional-landing-pay",
   } as any);
 
   return (

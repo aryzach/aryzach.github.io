@@ -14,4 +14,4 @@ User-agent: *
 Allow: /
 Content-Signal: ai-train=no, search=yes, ai-input=no
 
-Sitemap: https://sfsaunarental.com/sitemap.xml
+Sitemap: https://www.sfsaunarental.com/sitemap.xml
