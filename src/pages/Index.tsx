@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import HealthBenefits from "@/components/HealthBenefits";
-import Packages from "@/components/Packages";
 import Gallery from "@/components/Gallery";
 import SocialProof from "@/components/SocialProof";
 import ServiceArea from "@/components/ServiceArea";
@@ -59,7 +58,6 @@ const Index = () => {
           "url": "https://www.sfsaunarental.com/",
           "image": "https://www.sfsaunarental.com/assets/gallery-3-Cj0B_JUQ.jpg",
           "telephone": "+1-415-489-0261",
-          "priceRange": "$$",
           "description": "Monthly sauna rentals for SF Bay Area homes and backyards. Dry and infrared saunas on 120V power with fast delivery, setup, and ongoing support.",
           "foundingDate": "2025-12-12",
           "address": {
@@ -88,19 +86,7 @@ const Index = () => {
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
             { "@type": "City", "name": "Oakland" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "description": "Indoor infrared sauna rental plans",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "priceCurrency": "USD",
-              "minPrice": 200,
-              "maxPrice": 1300,
-              "unitCode": "MON"
-            }
-          }
+          ]
         },
         {
           "@type": "Service",
@@ -110,19 +96,7 @@ const Index = () => {
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
             { "@type": "City", "name": "Oakland" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "description": "Outdoor infrared sauna rental plans",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "priceCurrency": "USD",
-              "minPrice": 300,
-              "maxPrice": 1300,
-              "unitCode": "MON"
-            }
-          }
+          ]
         },
         {
           "@type": "Service",
@@ -132,19 +106,7 @@ const Index = () => {
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
             { "@type": "City", "name": "Oakland" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "description": "Indoor steam sauna rental plans",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "priceCurrency": "USD",
-              "minPrice": 400,
-              "maxPrice": 1300,
-              "unitCode": "MON"
-            }
-          }
+          ]
         },
         {
           "@type": "Service",
@@ -154,19 +116,7 @@ const Index = () => {
           "areaServed": [
             { "@type": "City", "name": "San Francisco" },
             { "@type": "City", "name": "Oakland" }
-          ],
-          "offers": {
-            "@type": "Offer",
-            "priceCurrency": "USD",
-            "description": "Outdoor steam sauna rental plans",
-            "priceSpecification": {
-              "@type": "UnitPriceSpecification",
-              "priceCurrency": "USD",
-              "minPrice": 400,
-              "maxPrice": 1300,
-              "unitCode": "MON"
-            }
-          }
+          ]
         },
         {
           "@type": "FAQPage",
@@ -323,7 +273,6 @@ const Index = () => {
         <GoogleReviews />
         <HowItWorks />
         <HealthBenefits />
-        <Packages />
         <SocialProof />
         <ServiceArea />
         <FAQ />
