@@ -26,7 +26,6 @@ const PrefabSaunaInstallation = () => {
           "url": "https://www.sfsaunarental.com/",
           "image": "https://www.sfsaunarental.com/images/installation-IMG_9652.png",
           "telephone": "+1-415-489-0261",
-          "priceRange": "$$",
           "description": "Professional sauna installation services in the San Francisco Bay Area. We assemble and wire prefab, barrel, infrared, and custom saunas.",
           "address": {
             "@type": "PostalAddress",
