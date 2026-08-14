@@ -30,7 +30,7 @@ export const seoData = {
   },
   contact: {
     title: "Contact Us | SF Sauna Rental",
-    description: "Get in touch with SF Sauna Rental. Visit us at 1618 McAllister St, San Francisco or call (415) 489-0261. We're here to answer your sauna rental questions.",
+    description: "Contact SF Sauna Rental. Visit us at 1618 McAllister St, San Francisco or call (415) 489-0261. We're here to answer your sauna rental questions.",
     canonical: "https://sfsaunarental.com/contact"
   },
   policies: {

@@ -112,7 +112,7 @@ const EmailMoreInfo = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="w-full min-h-[120px]"
-                    placeholder="Tell us about your space, timeline, or any questions you have..."
+                    placeholder="Tell us about your plans, timeline, or any questions you have..."
                   />
                 </div>
 

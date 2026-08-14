@@ -92,7 +92,7 @@ const ServiceAreas = () => {
                 Not sure if we serve your area?
               </h3>
               <p className="text-lg text-muted-foreground mb-6">
-                We're expanding throughout the Bay Area. Get in touch to check availability.
+                We're expanding throughout the Bay Area. Contact us to check availability.
               </p>
               <Link 
                 to="/learn-more"
