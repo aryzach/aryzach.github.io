@@ -96,7 +96,7 @@ const Media = () => {
                   <div key={`cta-${index}`} className="flex items-center justify-center p-8 bg-cedar-section">
                     <Link to="/learn-more">
                       <Button size="lg" className="bg-accent hover:bg-accent-dark text-white">
-                        Get in touch
+                        Ask a question
                       </Button>
                     </Link>
                   </div>
