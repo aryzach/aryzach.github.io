@@ -280,6 +280,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               securityDeposit={securityDeposit}
               isSf={isSf}
               activeVersion={activeVersion}
+              customTerm={customTerm}
             />
           ) : step === "preview" && contract ? (
             <PreviewStep
@@ -340,7 +341,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -350,11 +351,17 @@ const ConfigureStep = ({
   securityDeposit: number;
   isSf: boolean;
   activeVersion: string;
+  customTerm?: { months: number; monthly: number } | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const installFee = useMemo(
-    () => (form.sauna_type ? getInstallFee(form.sauna_type, form.commitment_months) : null),
-    [form.sauna_type, form.commitment_months],
+    () =>
+      customTerm && form.commitment_months === customTerm.months
+        ? 0
+        : form.sauna_type
+          ? getInstallFee(form.sauna_type, form.commitment_months)
+          : null,
+    [form.sauna_type, form.commitment_months, customTerm],
   );
   return (
     <div className="space-y-8">
@@ -413,9 +420,19 @@ const ConfigureStep = ({
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {COMMITMENT_MONTHS.map((m) => {
-              const price = form.sauna_type ? getMonthlyPrice(form.sauna_type, m) : null;
-              const installFee = form.sauna_type ? getInstallFee(form.sauna_type, m) : null;
+            {(customTerm ? [customTerm.months] : [...COMMITMENT_MONTHS]).map((m) => {
+              const price =
+                customTerm && m === customTerm.months
+                  ? customTerm.monthly
+                  : form.sauna_type
+                    ? getMonthlyPrice(form.sauna_type, m)
+                    : null;
+              const installFee =
+                customTerm && m === customTerm.months
+                  ? 0
+                  : form.sauna_type
+                    ? getInstallFee(form.sauna_type, m)
+                    : null;
               const active = form.commitment_months === m;
               return (
                 <button
