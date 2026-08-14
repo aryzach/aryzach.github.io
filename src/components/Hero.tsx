@@ -1,13 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Check } from "lucide-react";
+import { Star, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useReservationModal } from "@/contexts/ReservationModal";
-import AskQuestionCTA from "@/components/AskQuestionCTA";
+import ContactLeadForm from "@/components/lead/ContactLeadForm";
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [zipCode, setZipCode] = useState<string>("your area");
-  const { open } = useReservationModal();
 
   useEffect(() => {
     // Force video to play on mobile devices
@@ -31,7 +28,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-28 md:py-32">
       {/* Video Background */}
       <video
         ref={videoRef}
@@ -80,16 +77,14 @@ const Hero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-3 order-5">
-          <Button
-            size="lg"
-            onClick={() => open({ source: "Landing Page" })}
-            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap text-lg px-8"
-          >
-            Reserve Your Sauna
-            <ArrowRight className="ml-2" size={20} />
-          </Button>
-          <AskQuestionCTA light />
+        <div className="order-5">
+          <ContactLeadForm
+            formSource="homepage_hero"
+            formName="Homepage Hero Contact"
+            title="Get in touch"
+            subtitle="Tell us about your space and we'll get back to you shortly."
+            overlay
+          />
         </div>
       </div>
     </section>

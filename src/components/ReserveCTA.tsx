@@ -1,10 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useReservationModal } from "@/contexts/ReservationModal";
-import AskQuestionCTA from "@/components/AskQuestionCTA";
+import ContactLeadForm from "@/components/lead/ContactLeadForm";
 
 const ReserveCTA = () => {
-  const { open } = useReservationModal();
   return (
     <section className="py-16 md:py-24 bg-primary">
       <div className="container mx-auto px-4 text-center">
@@ -14,18 +10,10 @@ const ReserveCTA = () => {
         <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
           Join the many San Franciscans enjoying daily heat therapy at home
         </p>
-        <Button
-          size="lg"
-          variant="outline"
-          onClick={() => open({ source: "Landing Page" })}
-          className="text-lg px-8 border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-        >
-          Reserve Your Sauna
-          <ArrowRight className="ml-2" size={20} />
-        </Button>
-        <div className="mt-4">
-          <AskQuestionCTA light />
-        </div>
+        <ContactLeadForm
+          formSource="homepage_footer_cta"
+          formName="Homepage Bottom CTA Contact"
+        />
       </div>
     </section>
   );
