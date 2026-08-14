@@ -16,7 +16,7 @@ Use this skill when the user wants to rent a sauna in the San Francisco Bay Area
 
 ## Pricing
 
-See https://www.sfsaunarental.com/#pricing or `/service-desc.json` for the current OpenAPI description.
+Rental rates are not published. Ask SF Sauna Rental at info@sfsaunarental.com for current pricing.
 
 ## Notes
 

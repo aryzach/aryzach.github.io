@@ -199,8 +199,6 @@ const FinnishSaunaSF = () => {
   ],
   "offers": {
     "@type": "Offer",
-    "priceCurrency": "USD",
-    "price": "Varies",
     "description": "Monthly steam sauna rental with delivery, installation, and ongoing support."
   }
 }
