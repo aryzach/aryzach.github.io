@@ -417,53 +417,7 @@ const ReservationDashboard = () => {
             </Card>
           ) : reservation ? (
             <>
-              {!consultScheduled && (
-                <>
-                  <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
-                    Next Step
-                  </h1>
-                  <div className="mb-6" />
-                  <Card className="mb-4">
-                    <CardContent className="space-y-5 pt-6">
-                      <Button asChild size="lg" className="w-full">
-                        <a href={calVideoHref} target="_blank" rel="noopener noreferrer">
-                          <Video className="mr-2" size={18} />
-                          Schedule Your Virtual Home Sauna Consultation
-                        </a>
-                      </Button>
-                      <div className="text-sm text-muted-foreground">
-                        <p className="mb-3">
-                          Please schedule this call when you’ll be at home. In this call, we’ll:
-                        </p>
-                        <ul className="space-y-2">
-                          <li className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
-                            <span>Take a look at the space where you’d like to put a sauna</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
-                            <span>Assess your home electrical to ensure that a sauna will work in your space</span>
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
-                            <span>Answer any other questions you might have</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <div className="mb-2">
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => setDetailsOpen((open) => !open)}
-                    >
-                      {detailsOpen ? "Hide Reservation Details" : "See Reservation Details"}
-                    </Button>
-                  </div>
-                </>
-              )}
-              <div className={cn(!consultScheduled && !detailsOpen && "hidden")}>
+              <div>
                 <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
                   {paid ? "Your sauna is temporarily reserved" : "Continue your reservation"}
                 </h1>
