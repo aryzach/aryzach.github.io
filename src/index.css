@@ -110,6 +110,14 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 10%;
     --sidebar-border: 33 17% 83%;
     --sidebar-ring: 28 45% 56%;
+
+    --input-overlay: 0 0% 0% / 0.45;
+    --input-overlay-foreground: 0 0% 100%;
+    --input-overlay-border: 0 0% 100% / 0.18;
+    --input-overlay-border-focus: 0 0% 100% / 0.45;
+    --input-overlay-placeholder: 0 0% 100% / 0.55;
+    --input-overlay-label-focus: 0 0% 100% / 0.95;
+    --input-overlay-ring: 0 0% 100% / 0.25;
   }
 
   .dark {
