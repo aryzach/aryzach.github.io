@@ -20,13 +20,6 @@ const IndoorInfraredLanding = () => {
     }
   }, []);
 
-  const pricing = [
-    { duration: "1 month", price: "$500", priceDetail: "/mo", installFee: "$200 install" },
-    { duration: "3 months", price: "$400", priceDetail: "/mo", installFee: "$200 install" },
-    { duration: "6 months", price: "$300", priceDetail: "/mo", installFee: "Free install", popular: true },
-      { duration: "12 months", price: "$200", priceDetail: "/mo", installFee: "Free install" },
-  ];
-
   const benefits = [
     "Comfortable 150°F heat — great for longer sessions",
     "Faster warmup time — ready in 15-20 minutes",
@@ -54,9 +47,6 @@ const IndoorInfraredLanding = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
                   Reserve Your Sauna
-                </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <a href="#pricing">View Pricing</a>
                 </Button>
               </div>
             </div>
