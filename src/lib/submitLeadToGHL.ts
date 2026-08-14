@@ -21,6 +21,7 @@ type UtmKey = (typeof UTM_KEYS)[number];
 type UtmMap = Partial<Record<UtmKey, string>>;
 
 const UTM_STORAGE_KEY = "sf_sauna_utm";
+const UTM_SOURCE_KEY = "utm_source";
 
 function readStoredUtms(): UtmMap {
   try {
@@ -51,11 +52,27 @@ export function captureUtmParams(): UtmMap {
       // ignore quota / privacy-mode errors
     }
   }
+  if (found.utm_source) {
+    try {
+      localStorage.setItem(UTM_SOURCE_KEY, found.utm_source);
+    } catch {
+      // ignore quota / privacy-mode errors
+    }
+  }
   return merged;
 }
 
 function currentUtms(): UtmMap {
-  return readStoredUtms();
+  const stored = readStoredUtms();
+  if (!stored.utm_source) {
+    try {
+      const standalone = localStorage.getItem(UTM_SOURCE_KEY);
+      if (standalone) stored.utm_source = standalone;
+    } catch {
+      // ignore privacy-mode errors
+    }
+  }
+  return stored;
 }
 
 /** Split a "Full Name" into first + last. Last name may be empty. */
@@ -156,7 +173,12 @@ export async function submitLeadToGHL({
 
   const utms = currentUtms();
 
-  const payload = { ...meta, ...utms, ...cleaned };
+  const payload = {
+    ...meta,
+    ...utms,
+    utm_source: utms.utm_source || "direct",
+    ...cleaned,
+  };
 
   inflight.add(form_source);
   const controller = new AbortController();
