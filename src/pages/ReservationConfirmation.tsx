@@ -14,6 +14,7 @@ const ReservationConfirmation = () => {
   useSEO({
     title: "Reservation Received — SF Sauna Rental",
     description: "Complete your reservation by paying the reservation fee and scheduling your video consultation and installation.",
+    noindex: true,
   });
 
   const [params] = useSearchParams();

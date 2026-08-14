@@ -137,7 +137,8 @@ export const seoData = {
   thankYou: {
     title: "Thank You | SF Sauna Rental",
     description: "Thank you for contacting SF Sauna Rental. We'll be in touch shortly about your home sauna rental.",
-    canonical: "https://www.sfsaunarental.com/thank-you"
+    canonical: "https://www.sfsaunarental.com/thank-you",
+    noindex: true
   },
   reservationPayment: {
     title: "Complete Your Reservation | SF Sauna Rental",
