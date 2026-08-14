@@ -204,7 +204,7 @@ const ReserveTraditionalLandingConsult = () => {
     title: "Free Home Sauna Planning Session | SF Sauna",
     description:
       "Book a free 30-minute home sauna planning session in San Francisco. We'll review your space and map out the right traditional sauna rental setup.",
-    canonical: "https://cedar-home-sanctuary.lovable.app/reserve-traditional-landing-consult",
+    canonical: "https://www.sfsaunarental.com/reserve-traditional-landing-consult",
   } as any);
 
   return (

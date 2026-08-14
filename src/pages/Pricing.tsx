@@ -67,6 +67,7 @@ const Pricing = () => {
     title: "Sauna Options — SF Sauna Rental",
     description:
       "Choose the sauna type and placement that fits your home. Availability and reservation details on every product.",
+    canonical: "https://www.sfsaunarental.com/pricing",
   });
 
   const { getStatus } = useAvailability();

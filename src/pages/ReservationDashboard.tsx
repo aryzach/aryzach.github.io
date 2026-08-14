@@ -78,6 +78,7 @@ const ReservationDashboard = () => {
   useSEO({
     title: "Continue Your Reservation — SF Sauna Rental",
     description: "Complete your sauna reservation.",
+    noindex: true,
   });
 
   const { id } = useParams<{ id: string }>();

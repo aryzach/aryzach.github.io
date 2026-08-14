@@ -4,9 +4,10 @@ interface SEOProps {
   title: string;
   description: string;
   canonical?: string;
+  noindex?: boolean;
 }
 
-export function useSEO({ title, description, canonical }: SEOProps) {
+export function useSEO({ title, description, canonical, noindex }: SEOProps) {
   useEffect(() => {
     // Update title
     document.title = title;
@@ -38,6 +39,28 @@ export function useSEO({ title, description, canonical }: SEOProps) {
         document.head.appendChild(canonicalTag);
       }
       canonicalTag.setAttribute('href', canonical);
+
+      // Keep og:url self-referencing the same URL
+      let ogUrl = document.querySelector('meta[property="og:url"]');
+      if (!ogUrl) {
+        ogUrl = document.createElement('meta');
+        ogUrl.setAttribute('property', 'og:url');
+        document.head.appendChild(ogUrl);
+      }
+      ogUrl.setAttribute('content', canonical);
+    }
+
+    // Robots directive (utility pages opt out of indexing)
+    let robotsTag = document.querySelector('meta[name="robots"]');
+    if (noindex) {
+      if (!robotsTag) {
+        robotsTag = document.createElement('meta');
+        robotsTag.setAttribute('name', 'robots');
+        document.head.appendChild(robotsTag);
+      }
+      robotsTag.setAttribute('content', 'noindex, nofollow');
+    } else if (robotsTag) {
+      robotsTag.remove();
     }
 
     // Cleanup: restore defaults on unmount
@@ -46,6 +69,7 @@ export function useSEO({ title, description, canonical }: SEOProps) {
       if (metaDescription) {
         metaDescription.setAttribute('content', 'Monthly sauna rentals for SF Bay Area homes and backyards. Dry and infrared saunas on 120V power with fast delivery, setup, and ongoing support.');
       }
+      document.querySelector('meta[name="robots"]')?.remove();
     };
-  }, [title, description, canonical]);
+  }, [title, description, canonical, noindex]);
 }

@@ -130,7 +130,7 @@ const ReserveTraditionalLanding = () => {
     title: "Traditional Sauna Rental in San Francisco | SF Sauna",
     description:
       "Rent a 2-person traditional sauna in San Francisco. 200°F löyly heat, indoor or outdoor, delivered and installed.",
-    canonical: "https://cedar-home-sanctuary.lovable.app/reserve-traditional-landing",
+    canonical: "https://www.sfsaunarental.com/reserve-traditional-landing",
   } as any);
 
   return (
