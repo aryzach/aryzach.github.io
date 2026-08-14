@@ -70,13 +70,8 @@ const ContactLeadForm = ({
 
   return (
     <>
-      <div
-        className={`w-full max-w-xl mx-auto text-left ${
-          overlay
-            ? ""
-            : "rounded-2xl border border-border bg-card p-5 md:p-6"
-        } ${className}`}
-      >
+      <div className={`w-full max-w-xl mx-auto text-left ${className}`}>
+
         {title && (
           <h3 className="text-xl font-semibold text-foreground">{title}</h3>
         )}
