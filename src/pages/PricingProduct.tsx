@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { useAvailability } from "@/hooks/useAvailability";
-import { getProduct, type Category, type PricingTier } from "@/lib/pricingCatalog";
+import { getProduct, type Category } from "@/lib/pricingCatalog";
 import AvailabilityLine from "@/components/pricing/AvailabilityLine";
 import { useReservationModal } from "@/contexts/ReservationModal";
 
@@ -66,61 +66,19 @@ const PricingProduct = () => {
                 <AvailabilityLine status={status} size="md" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
-                {product.tiers.map((tier) => (
-                  <TierCard
-                    key={tier.months}
-                    tier={tier}
-                  />
-                ))}
-              </div>
-              <div className="mt-5">
+              <div className="mt-1">
                 <Button size="lg" onClick={handleReserve} disabled={!canReserve} className="w-full md:w-auto">
                   {canReserve ? "Reserve Now" : "Currently unavailable"}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
-                Longer commitments unlock lower monthly rates and free installation. After your initial term, continue month-to-month.
+                Flexible rental terms. After your initial term, continue month-to-month.
               </p>
             </div>
           </div>
         </div>
       </main>
       <Footer />
-    </div>
-  );
-};
-
-interface TierProps {
-  tier: PricingTier;
-}
-
-const TierCard = ({ tier }: TierProps) => {
-  const highlighted = !!tier.badge;
-  return (
-    <div
-      className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
-        highlighted
-          ? "bg-card border-primary shadow-lg"
-          : "bg-card border-border"
-      }`}
-    >
-      {tier.badge && (
-        <div className="absolute -top-2.5 left-4 md:left-1/2 md:-translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
-          {tier.badge}
-        </div>
-      )}
-      <div className="text-xs uppercase tracking-widest text-muted-foreground md:mb-1 shrink-0">
-        {tier.months} {tier.months === 1 ? "Month" : "Months"}
-      </div>
-      <div className="flex items-baseline gap-1 md:mb-2">
-        <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">${tier.monthly}</span>
-        <span className="text-xs text-muted-foreground leading-none">/ mo</span>
-      </div>
-
-      <div className="text-xs text-card-foreground text-right md:text-left">
-        {tier.installFee === 0 ? "Free installation" : `$${tier.installFee} installation`}
-      </div>
     </div>
   );
 };
