@@ -197,7 +197,6 @@ const SaunaRentalSF = () => {
   "email": "info@sfsaunarental.com",
   "image": "https://sfsaunarental.com/YOUR-HERO.jpg",
   "description": "San Francisco's #1 sauna rental service. We deliver and install infrared and steam saunas in apartments, homes, and backyards.",
-  "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "San Francisco",

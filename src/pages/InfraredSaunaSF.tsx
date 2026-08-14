@@ -213,8 +213,6 @@ const InfraredSaunaSF = () => {
   ],
   "offers": {
     "@type": "Offer",
-    "priceCurrency": "USD",
-    "price": "Varies",
     "description": "Monthly infrared sauna rental including delivery, installation, and teardown."
   }
 }

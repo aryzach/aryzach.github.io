@@ -44,7 +44,7 @@ const PlacementCard = ({
   status: AvailabilityStatus;
 }) => {
   const canReserve = status.status !== "unavailable";
-  const ctaLabel = canReserve ? "View Pricing & Reserve" : "View Pricing & Inquire";
+  const ctaLabel = canReserve ? "View Details & Reserve" : "View Details & Inquire";
 
   return (
     <Link
@@ -64,9 +64,9 @@ const PlacementCard = ({
 
 const Pricing = () => {
   useSEO({
-    title: "Options & Pricing — SF Sauna Rental",
+    title: "Sauna Options — SF Sauna Rental",
     description:
-      "Choose the sauna type and placement that fits your home. Pricing, availability, and reservation details on every product.",
+      "Choose the sauna type and placement that fits your home. Availability and reservation details on every product.",
   });
 
   const { getStatus } = useAvailability();
@@ -78,7 +78,7 @@ const Pricing = () => {
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
             <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-foreground mb-5">
-              Options & Pricing
+              Sauna Options
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
               Choose the sauna type and placement that fits your home.
@@ -95,9 +95,6 @@ const Pricing = () => {
               const imageProduct =
                 items.find((p) => p.placement === imageFrom) || cards[0];
               const imagePositionClass = "object-center";
-              const startingAt = Math.min(
-                ...cards.flatMap((p) => p.tiers.map((t) => t.monthly)),
-              );
               return (
                 <section
                   key={key}
@@ -118,13 +115,7 @@ const Pricing = () => {
                     <p className="text-muted-foreground leading-relaxed mb-3 flex-grow">
                       {blurb}
                     </p>
-                    <div className="flex items-baseline gap-1 mb-6">
-                      <span className="text-sm text-muted-foreground">From</span>
-                      <span className="text-2xl font-semibold text-card-foreground ml-1">
-                        ${startingAt}
-                      </span>
-                      <span className="text-sm text-muted-foreground">/ month</span>
-                    </div>
+                    <div className="mb-6" />
                     <div className="grid grid-cols-1 gap-4">
                       {cards.map((p) => (
                         <PlacementCard

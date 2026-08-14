@@ -20,13 +20,6 @@ const IndoorInfraredLanding = () => {
     }
   }, []);
 
-  const pricing = [
-    { duration: "1 month", price: "$500", priceDetail: "/mo", installFee: "$200 install" },
-    { duration: "3 months", price: "$400", priceDetail: "/mo", installFee: "$200 install" },
-    { duration: "6 months", price: "$300", priceDetail: "/mo", installFee: "Free install", popular: true },
-      { duration: "12 months", price: "$200", priceDetail: "/mo", installFee: "Free install" },
-  ];
-
   const benefits = [
     "Comfortable 150°F heat — great for longer sessions",
     "Faster warmup time — ready in 15-20 minutes",
@@ -54,9 +47,6 @@ const IndoorInfraredLanding = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
                   Reserve Your Sauna
-                </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <a href="#pricing">View Pricing</a>
                 </Button>
               </div>
             </div>
@@ -125,40 +115,6 @@ const IndoorInfraredLanding = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 px-4 bg-muted/30">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-display text-3xl md:text-4xl font-semibold text-center mb-4">
-            Indoor Infrared Pricing
-          </h2>
-          <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            Flexible monthly plans with no long-term commitment required. Installation is free on 6+ month leases.
-          </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pricing.map((plan, index) => (
-              <div
-                key={index}
-                className={`bg-background rounded-xl p-6 shadow-sm border ${
-                  plan.popular ? "border-[hsl(var(--color-accent))] ring-2 ring-[hsl(var(--color-accent))]/20" : "border-border"
-                }`}
-              >
-                {plan.popular && (
-                  <div className="text-xs font-medium text-[hsl(var(--color-accent))] mb-2">
-                    MOST POPULAR
-                  </div>
-                )}
-                <div className="text-sm text-muted-foreground mb-1">{plan.duration}</div>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-3xl font-display font-semibold">{plan.price}</span>
-                  <span className="text-muted-foreground">{plan.priceDetail}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">{plan.installFee}</div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

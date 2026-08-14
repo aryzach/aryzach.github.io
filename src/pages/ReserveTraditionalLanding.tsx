@@ -1,18 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import { Star, Check, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ReservationForm from "@/components/reservation/ReservationForm";
+import { useEffect, useRef } from "react";
+import { Star, Check } from "lucide-react";
+import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
-import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
-import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
 
 const video0802 = assetUrl(video0802Asset);
-
-const TERMS: CommitmentMonths[] = [1, 3, 6, 12];
 
 const galleryItems = [
   { type: "video" as const, src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
@@ -22,14 +17,13 @@ const galleryItems = [
 
 const LandingHero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { open } = useReservationModal();
 
   useEffect(() => {
     videoRef.current?.play().catch(() => {});
   }, []);
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-28 md:py-32">
       <video
         ref={videoRef}
         autoPlay
@@ -73,15 +67,12 @@ const LandingHero = () => {
             <span>Simple monthly plan, maintenance + pickup included</span>
           </div>
         </div>
-        <div className="flex justify-center order-5">
-          <Button
-            size="lg"
-            onClick={() => open({ saunaTypeId: "indoor_traditional_standard", source: "Landing Page" })}
-            className="bg-[hsl(var(--color-accent))] hover:bg-[hsl(var(--color-accent-dark))] text-[hsl(var(--color-white))] font-sans font-medium whitespace-nowrap"
-          >
-            Reserve Your Sauna
-            <ArrowRight className="ml-2" size={20} />
-          </Button>
+        <div className="order-5">
+          <ContactLeadForm
+            formSource="traditional_landing_hero"
+            formName="Traditional Landing Hero Contact"
+            overlay
+          />
         </div>
       </div>
     </section>
@@ -138,12 +129,9 @@ const ReserveTraditionalLanding = () => {
   useSEO({
     title: "Traditional Sauna Rental in San Francisco | SF Sauna",
     description:
-      "Rent a 2-person traditional sauna in San Francisco. 200°F löyly heat, indoor or outdoor, delivered and installed. See pricing and reserve online.",
+      "Rent a 2-person traditional sauna in San Francisco. 200°F löyly heat, indoor or outdoor, delivered and installed.",
     canonical: "https://cedar-home-sanctuary.lovable.app/reserve-traditional-landing",
   } as any);
-
-  const [showPricing, setShowPricing] = useState(false);
-  const tiers = PRICING_TIERS.indoor_traditional_standard;
 
   return (
     <main className="min-h-screen bg-background">
@@ -152,67 +140,24 @@ const ReserveTraditionalLanding = () => {
       <LandingGallery />
 
       <section className="container mx-auto px-4 py-16">
-        <div className="max-w-xl mx-auto rounded-xl border border-border bg-card p-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Reserve your sauna</h2>
-          <p className="text-sm text-muted-foreground mt-1 mb-5">A few quick details and we'll set aside your spot.</p>
-          <ReservationForm
-            source="Landing Page"
-            initialSaunaTypeId="indoor_traditional_standard"
-            saunaTypeIds={["indoor_traditional_standard", "outdoor_traditional_standard"]}
-            className="space-y-4"
-          />
-
-          <div className="mt-8">
-            <button
-              type="button"
-              onClick={() => setShowPricing((s) => !s)}
-              className="w-full flex items-center justify-between rounded-xl border border-border bg-card p-4 text-left hover:bg-accent/50 transition-colors"
-              aria-expanded={showPricing}
-            >
-              <span className="font-semibold text-foreground">{showPricing ? "Hide pricing" : "See pricing"}</span>
-              {showPricing ? (
-                <ChevronUp size={18} className="text-muted-foreground" />
-              ) : (
-                <ChevronDown size={18} className="text-muted-foreground" />
-              )}
-            </button>
-            {showPricing && (
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
-                {TERMS.map((months) => {
-                  const t = tiers[months];
-                  const highlighted = !!t.badge;
-                  return (
-                    <div
-                      key={months}
-                      className={`relative rounded-2xl p-4 md:p-5 flex flex-row md:flex-col items-center md:items-start justify-between gap-3 md:gap-0 border transition-shadow ${
-                        highlighted ? "bg-card border-primary shadow-lg" : "bg-card border-border"
-                      }`}
-                    >
-                      {t.badge && (
-                        <div className="absolute -top-2.5 left-4 md:left-1/2 md:-translate-x-1/2 bg-primary text-primary-foreground text-[10px] md:text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap">
-                          {t.badge}
-                        </div>
-                      )}
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground md:mb-1 shrink-0">
-                        {months} {months === 1 ? "Month" : "Months"}
-                      </div>
-                      <div className="flex items-baseline gap-1 md:mb-2">
-                        <span className="text-xl md:text-2xl font-semibold text-card-foreground leading-none">${t.monthly}</span>
-                        <span className="text-xs text-muted-foreground leading-none">/ mo</span>
-                      </div>
-                      <div className="text-xs text-card-foreground text-right md:text-left">
-                        {t.installFee === 0 ? "Free installation" : `$${t.installFee} installation`}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
+        <ContactLeadForm
+          formSource="traditional_landing_mid"
+          formName="Traditional Landing Contact"
+          title="Get in touch"
+          subtitle="Tell us about your space and we'll get back to you shortly."
+        />
       </section>
 
       <FAQ showInstallationGuide={false} />
+
+      <section className="container mx-auto px-4 py-16">
+        <ContactLeadForm
+          formSource="traditional_landing_bottom"
+          formName="Traditional Landing Bottom Contact"
+          title="Still have questions?"
+          subtitle="Send us a note and we'll get back to you shortly."
+        />
+      </section>
     </main>
   );
 };

@@ -3,9 +3,7 @@ import saunaTemp from "@/assets/sauna-temp.png";
 import outdoorSaunaAsset from "@/assets/gallery-outdoor-sauna.jpeg.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
 import { Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useReservationModal } from "@/contexts/ReservationModal";
-import AskQuestionCTA from "@/components/AskQuestionCTA";
+import ContactLeadForm from "@/components/lead/ContactLeadForm";
 
 const galleryItems = [
   { type: "image", src: gallery3, alt: "Steam sauna rental installed in SF home" },
@@ -14,7 +12,6 @@ const galleryItems = [
 ];
 
 const Gallery = () => {
-  const { open: openReservation } = useReservationModal();
   return (
     <section className="py-16 md:py-24 bg-cedar-section">
       <div className="container mx-auto px-4">
@@ -91,15 +88,11 @@ const Gallery = () => {
             </div>
           </div>
           
-          <div className="text-center mt-8">
-            <Button
-              size="lg"
-              onClick={() => openReservation({ source: "Landing Page" })}
-              className="bg-accent hover:bg-accent-dark text-white"
-            >
-              Reserve Your Sauna
-            </Button>
-            <AskQuestionCTA className="mt-3" />
+          <div className="mt-8">
+            <ContactLeadForm
+              formSource="homepage_gallery"
+              formName="Homepage Gallery Contact"
+            />
           </div>
         </div>
       </div>
