@@ -237,29 +237,30 @@ All colors MUST be HSL.
     @apply top-2 -translate-y-0 text-[10px];
   }
 
-  .input-overlay {
+  .floating-label-field .floating-label-input.input-overlay,
+  .floating-label-field .floating-label-textarea.input-overlay {
     background-color: hsl(var(--input-overlay));
     border-color: hsl(var(--input-overlay-border));
     color: hsl(var(--input-overlay-foreground));
   }
 
-  .input-overlay::placeholder {
+  .floating-label-field .input-overlay::placeholder {
     color: transparent;
   }
 
-  .input-overlay:focus {
+  .floating-label-field .input-overlay:focus {
     border-color: hsl(var(--input-overlay-border-focus));
     box-shadow: 0 0 0 2px hsl(var(--input-overlay-ring));
     outline: none;
   }
 
-  .input-overlay ~ .floating-label,
-  .input-overlay:focus ~ .floating-label,
-  .input-overlay:not(:placeholder-shown) ~ .floating-label {
+  .floating-label-field .input-overlay ~ .floating-label,
+  .floating-label-field .input-overlay:focus ~ .floating-label,
+  .floating-label-field .input-overlay:not(:placeholder-shown) ~ .floating-label {
     color: hsl(var(--input-overlay-placeholder));
   }
 
-  .input-overlay:focus ~ .floating-label {
+  .floating-label-field .input-overlay:focus ~ .floating-label {
     color: hsl(var(--input-overlay-label-focus));
   }
 }
