@@ -193,6 +193,7 @@ export async function submitLeadToGHL({
     if (!res.ok) {
       return { ok: false, status: res.status, error: `HTTP ${res.status}` };
     }
+    pushLeadConversionEvent(form_source, form_name, cleaned);
     return { ok: true, status: res.status };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Network error";
