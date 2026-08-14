@@ -143,8 +143,6 @@ const ReserveTraditionalLanding = () => {
         <ContactLeadForm
           formSource="traditional_landing_mid"
           formName="Traditional Landing Contact"
-          title="Get in touch"
-          subtitle="Tell us about your space and we'll get back to you shortly."
         />
       </section>
 

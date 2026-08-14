@@ -81,8 +81,6 @@ const Hero = () => {
           <ContactLeadForm
             formSource="homepage_hero"
             formName="Homepage Hero Contact"
-            title="Get in touch"
-            subtitle="Tell us about your space and we'll get back to you shortly."
             overlay
           />
         </div>
