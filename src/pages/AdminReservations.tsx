@@ -205,7 +205,7 @@ function timelineFor(row: InventoryRow): string {
 }
 
 const AdminReservations = () => {
-  useSEO({ title: "Admin — Inventory", description: "Internal sauna inventory admin." });
+  useSEO({ title: "Admin — Inventory", description: "Internal sauna inventory admin.", noindex: true });
 
   const [password, setPassword] = useState<string>(() => sessionStorage.getItem(PASSWORD_STORAGE_KEY) || "");
   const [authed, setAuthed] = useState(false);
