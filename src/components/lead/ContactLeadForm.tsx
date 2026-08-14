@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import LeadFormSuccessDialog from "@/components/lead/LeadFormSuccessDialog";
@@ -27,27 +24,23 @@ interface Props {
   title?: string;
   subtitle?: string;
   className?: string;
-  /** Renders the card with a light/blurred surface for dark backgrounds. */
+  /** Renders the form for a dark background with transparent, dark inputs. */
   overlay?: boolean;
 }
 
 const ContactLeadForm = ({
   formSource,
   formName = "Contact Request",
-  title = "Get in touch",
-  subtitle = "Tell us about your space and we'll get back to you shortly.",
+  title,
+  subtitle,
   className = "",
   overlay = false,
 }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const methods = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const { handleSubmit, reset, formState } = methods;
 
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
@@ -78,62 +71,131 @@ const ContactLeadForm = ({
   return (
     <>
       <div
-        className={`w-full max-w-xl mx-auto rounded-2xl border p-5 md:p-6 text-left ${
+        className={`w-full max-w-xl mx-auto text-left ${
           overlay
-            ? "border-white/20 bg-background/90 backdrop-blur-sm"
-            : "border-border bg-card"
+            ? ""
+            : "rounded-2xl border border-border bg-card p-5 md:p-6"
         } ${className}`}
       >
         {title && (
           <h3 className="text-xl font-semibold text-foreground">{title}</h3>
         )}
-        {subtitle && <p className="text-sm text-muted-foreground mt-1 mb-4">{subtitle}</p>}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="First name" error={errors.first_name?.message}>
-              <Input {...register("first_name")} autoComplete="given-name" />
-            </Field>
-            <Field label="Last name" error={errors.last_name?.message}>
-              <Input {...register("last_name")} autoComplete="family-name" />
-            </Field>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Field label="Email" error={errors.email?.message}>
-              <Input type="email" {...register("email")} autoComplete="email" />
-            </Field>
-            <Field label="Phone" error={errors.phone?.message}>
-              <Input type="tel" {...register("phone")} autoComplete="tel" />
-            </Field>
-          </div>
-          <Field label="Message (optional)" error={errors.message?.message}>
-            <Textarea rows={3} {...register("message")} />
-          </Field>
-          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Sending…" : "Send"}
-          </Button>
-        </form>
+        {subtitle && (
+          <p className="text-sm text-muted-foreground mt-1 mb-4">{subtitle}</p>
+        )}
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FloatingField
+                name="first_name"
+                label="First name"
+                error={formState.errors.first_name?.message}
+                overlay={overlay}
+                autoComplete="given-name"
+              />
+              <FloatingField
+                name="last_name"
+                label="Last name"
+                error={formState.errors.last_name?.message}
+                overlay={overlay}
+                autoComplete="family-name"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FloatingField
+                name="email"
+                label="Email"
+                type="email"
+                error={formState.errors.email?.message}
+                overlay={overlay}
+                autoComplete="email"
+              />
+              <FloatingField
+                name="phone"
+                label="Phone"
+                type="tel"
+                error={formState.errors.phone?.message}
+                overlay={overlay}
+                autoComplete="tel"
+              />
+            </div>
+            <FloatingField
+              name="message"
+              label="Message (optional)"
+              isTextarea
+              rows={3}
+              error={formState.errors.message?.message}
+              overlay={overlay}
+            />
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={submitting}
+            >
+              {submitting ? "Sending…" : "Learn more"}
+            </Button>
+          </form>
+        </FormProvider>
       </div>
       <LeadFormSuccessDialog open={success} onOpenChange={setSuccess} />
     </>
   );
 };
 
-const Field = ({
+const FloatingField = ({
+  name,
   label,
   error,
-  children,
+  type = "text",
+  overlay,
+  autoComplete,
+  rows,
+  isTextarea = false,
 }: {
+  name: keyof FormValues;
   label: string;
   error?: string;
-  children: React.ReactNode;
-}) => (
-  <div>
-    <Label className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5 block">
-      {label}
-    </Label>
-    {children}
-    {error && <p className="text-xs text-destructive mt-1">{error}</p>}
-  </div>
-);
+  type?: string;
+  overlay?: boolean;
+  autoComplete?: string;
+  rows?: number;
+  isTextarea?: boolean;
+}) => {
+  const { register } = useFormContext<FormValues>();
+
+  const inputClass = [
+    isTextarea ? "floating-label-textarea" : "floating-label-input",
+    overlay ? "input-overlay" : "",
+  ].join(" ");
+
+  return (
+    <div className="floating-label-field">
+      {isTextarea ? (
+        <textarea
+          id={name}
+          rows={rows}
+          placeholder=" "
+          autoComplete={autoComplete}
+          className={inputClass}
+          {...register(name)}
+        />
+      ) : (
+        <input
+          id={name}
+          type={type}
+          placeholder=" "
+          autoComplete={autoComplete}
+          className={inputClass}
+          {...register(name)}
+        />
+      )}
+      <label htmlFor={name} className="floating-label">
+        {label}
+      </label>
+      {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+    </div>
+  );
+};
 
 export default ContactLeadForm;
