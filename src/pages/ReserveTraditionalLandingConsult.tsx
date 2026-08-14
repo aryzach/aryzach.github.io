@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Star, Check, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Check, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import { useSEO } from "@/hooks/useSEO";
-import { PRICING_TIERS, type CommitmentMonths } from "@/lib/generatedPricing";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
@@ -15,7 +14,6 @@ import { assetUrl } from "@/lib/assetUrl";
 
 const video0802 = assetUrl(video0802Asset);
 
-const TERMS: CommitmentMonths[] = [1, 3, 6, 12];
 
 const galleryItems = [
   { type: "video" as const, src: "/media/billwalkthrough.mp4", alt: "Walkthrough of a traditional sauna rental in San Francisco" },
