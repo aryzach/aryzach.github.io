@@ -207,3 +207,59 @@ All colors MUST be HSL.
     @apply text-body;
   }
 }
+
+@layer components {
+  .floating-label-field {
+    position: relative;
+  }
+
+  .floating-label-field .floating-label-input,
+  .floating-label-field .floating-label-textarea {
+    @apply h-12 w-full rounded-lg border border-border bg-background px-3 pt-5 pb-1.5 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0;
+  }
+
+  .floating-label-field .floating-label-textarea {
+    @apply min-h-[88px] resize-y;
+  }
+
+  .floating-label-field .floating-label {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground transition-all duration-200 pointer-events-none;
+  }
+
+  .floating-label-field .floating-label-textarea + .floating-label {
+    @apply top-5;
+  }
+
+  .floating-label-field .floating-label-input:focus ~ .floating-label,
+  .floating-label-field .floating-label-input:not(:placeholder-shown) ~ .floating-label,
+  .floating-label-field .floating-label-textarea:focus ~ .floating-label,
+  .floating-label-field .floating-label-textarea:not(:placeholder-shown) ~ .floating-label {
+    @apply top-2 -translate-y-0 text-[10px];
+  }
+
+  .input-overlay {
+    background-color: hsl(var(--input-overlay));
+    border-color: hsl(var(--input-overlay-border));
+    color: hsl(var(--input-overlay-foreground));
+  }
+
+  .input-overlay::placeholder {
+    color: transparent;
+  }
+
+  .input-overlay:focus {
+    border-color: hsl(var(--input-overlay-border-focus));
+    box-shadow: 0 0 0 2px hsl(var(--input-overlay-ring));
+    outline: none;
+  }
+
+  .input-overlay ~ .floating-label,
+  .input-overlay:focus ~ .floating-label,
+  .input-overlay:not(:placeholder-shown) ~ .floating-label {
+    color: hsl(var(--input-overlay-placeholder));
+  }
+
+  .input-overlay:focus ~ .floating-label {
+    color: hsl(var(--input-overlay-label-focus));
+  }
+}
