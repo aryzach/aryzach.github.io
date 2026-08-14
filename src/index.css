@@ -215,8 +215,9 @@ All colors MUST be HSL.
 
   .floating-label-field .floating-label-input,
   .floating-label-field .floating-label-textarea {
-    @apply h-12 w-full rounded-lg border border-border bg-background px-3 pt-5 pb-1.5 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0;
+    @apply h-12 w-full rounded-lg border border-border bg-muted px-3 pt-5 pb-1.5 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0;
   }
+
 
   .floating-label-field .floating-label-textarea {
     @apply min-h-[88px] resize-y;
