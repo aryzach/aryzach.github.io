@@ -73,6 +73,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [typedName, setTypedName] = useState("");
   const [acks, setAcks] = useState<Record<string, boolean>>({});
   const [signing, setSigning] = useState(false);
+  const [customTerm, setCustomTerm] = useState<{ months: number; monthly: number } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -86,6 +87,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       setActiveVersion(data.active_agreement_version?.version_name ?? "");
       setMasterAgreementUrl(data.master_agreement_url ?? null);
       setContract(c ?? null);
+      const hasCustom =
+        typeof r.custom_commitment_months === "number" && typeof r.custom_monthly_price === "number";
+      const custom = hasCustom
+        ? { months: r.custom_commitment_months as number, monthly: r.custom_monthly_price as number }
+        : null;
+      setCustomTerm(custom);
       // Split any prior "street, city" back into fields where possible.
       const priorAddress: string = c?.installation_address ?? r.install_address ?? "";
       const priorStreet =
@@ -102,7 +109,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         installation_address: priorStreet,
         installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.sauna_type_id ?? "",
-        commitment_months: c?.commitment_months ?? r.min_commitment_months ?? 6,
+        commitment_months: c?.commitment_months ?? custom?.months ?? r.min_commitment_months ?? 6,
         insurance_selected: !!c?.insurance_selected,
         second_heater_selected: !!c?.second_heater_selected,
         preferred_installation_date:
@@ -131,8 +138,11 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
-    () => (form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null),
-    [form.sauna_type, form.commitment_months],
+    () => {
+      if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
+      return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
+    },
+    [form.sauna_type, form.commitment_months, customTerm],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
@@ -270,6 +280,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               securityDeposit={securityDeposit}
               isSf={isSf}
               activeVersion={activeVersion}
+              customTerm={customTerm}
             />
           ) : step === "preview" && contract ? (
             <PreviewStep
@@ -330,7 +341,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -340,11 +351,17 @@ const ConfigureStep = ({
   securityDeposit: number;
   isSf: boolean;
   activeVersion: string;
+  customTerm?: { months: number; monthly: number } | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const installFee = useMemo(
-    () => (form.sauna_type ? getInstallFee(form.sauna_type, form.commitment_months) : null),
-    [form.sauna_type, form.commitment_months],
+    () =>
+      customTerm && form.commitment_months === customTerm.months
+        ? 0
+        : form.sauna_type
+          ? getInstallFee(form.sauna_type, form.commitment_months)
+          : null,
+    [form.sauna_type, form.commitment_months, customTerm],
   );
   return (
     <div className="space-y-8">
@@ -403,9 +420,19 @@ const ConfigureStep = ({
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {COMMITMENT_MONTHS.map((m) => {
-              const price = form.sauna_type ? getMonthlyPrice(form.sauna_type, m) : null;
-              const installFee = form.sauna_type ? getInstallFee(form.sauna_type, m) : null;
+            {(customTerm ? [customTerm.months] : [...COMMITMENT_MONTHS]).map((m) => {
+              const price =
+                customTerm && m === customTerm.months
+                  ? customTerm.monthly
+                  : form.sauna_type
+                    ? getMonthlyPrice(form.sauna_type, m)
+                    : null;
+              const installFee =
+                customTerm && m === customTerm.months
+                  ? 0
+                  : form.sauna_type
+                    ? getInstallFee(form.sauna_type, m)
+                    : null;
               const active = form.commitment_months === m;
               return (
                 <button
