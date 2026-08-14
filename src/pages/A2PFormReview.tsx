@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSEO } from "@/hooks/useSEO";
 
 interface FieldProps {
   label: string;
@@ -23,6 +24,12 @@ const Field = ({ label, error, children }: FieldProps) => (
 );
 
 const A2PFormReview = () => {
+  useSEO({
+    title: "Contact Form Review — SF Sauna Rental",
+    description: "Demonstration contact form for A2P 10DLC campaign review.",
+    noindex: true,
+  });
+
   const [submitted, setSubmitted] = useState(false);
   const [smsConsent, setSmsConsent] = useState(false);
   const [formData, setFormData] = useState({
