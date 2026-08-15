@@ -11,6 +11,7 @@ import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
+import { isValidEmail } from "@/lib/validation";
 
 const video0802 = assetUrl(video0802Asset);
 

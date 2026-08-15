@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
+import { validateContact } from "@/lib/validation";
 
 const EmailMoreInfo = () => {
   useSEO(seoData.emailMoreInfo);

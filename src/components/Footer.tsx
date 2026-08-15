@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Instagram, MapPin, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
+import { isValidEmail } from "@/lib/validation";
 
 const Footer = () => {
   const location = useLocation();

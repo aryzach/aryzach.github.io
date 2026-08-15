@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
+import { validateContact } from "@/lib/validation";
 
 const ContactPage = () => {
   useSEO(seoData.contact);

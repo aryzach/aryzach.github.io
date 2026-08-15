@@ -18,6 +18,7 @@ import {
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
 import { CheckCircle } from "lucide-react";
+import { validateContact } from "@/lib/validation";
 
 const PrefabSaunaInstallationForm = () => {
   useSEO(seoData.prefabSaunaInstallationForm);
