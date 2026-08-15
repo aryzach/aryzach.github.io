@@ -121,9 +121,9 @@ const TraditionalSaunaSpecs = () => {
       <main className="pt-20 md:pt-24">
         {/* Hero */}
         <section className="container mx-auto px-4 py-12 md:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-16 items-start">
             <div className="order-1 lg:order-1">
-              <div className="aspect-[4/5] w-full overflow-hidden rounded-lg bg-muted">
+              <div className="aspect-square w-full overflow-hidden rounded-lg bg-muted">
                 <img
                   src={traditionalHero}
                   alt="Traditional sauna rental installed on a San Francisco patio"
@@ -132,7 +132,7 @@ const TraditionalSaunaSpecs = () => {
                 />
               </div>
             </div>
-            <div className="order-2 lg:order-2">
+            <div className="order-2 lg:order-2 lg:pt-2">
               <p className="uppercase text-xs font-bold tracking-[0.18em] text-foreground/70 mb-3">
                 SF Sauna Rental
               </p>
