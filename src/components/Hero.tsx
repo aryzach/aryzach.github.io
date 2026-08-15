@@ -50,9 +50,9 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 text-center max-w-[1100px] flex flex-col">
         {/* H1 first in DOM for SEO, visually reordered with CSS */}
         <h1 className="font-heading text-[40px] md:text-[56px] font-semibold text-white mb-6 leading-[1.1] tracking-[-0.01em] order-3">
-          A personal sauna — in your home this week.
+          Rent a sauna for your home
         </h1>
-        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[14px] font-normal mb-8 -mt-16 order-1">
+        <div className="flex items-center justify-center gap-2 text-white/90 font-sans text-[14px] font-normal mb-8 order-1">
           <a href="https://share.google/bqGJ8MiXfwNgvigwm" target="_blank" rel="noopener noreferrer" className="hover:underline">Serving 50+ Sweaty San Franciscans</a>
           <div className="flex">
             {[...Array(5)].map((_, i) => (
@@ -60,9 +60,6 @@ const Hero = () => {
             ))}
           </div>
         </div>
-        <p className="font-sans text-[16px] md:text-[18px] leading-[1.6] text-white/90 mb-3 font-normal order-2">
-          Make daily heat therapy effortless.
-        </p>
         <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8 order-4">
           <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
             <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
