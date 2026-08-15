@@ -50,6 +50,7 @@ import ReserveTraditionalLanding from "./pages/ReserveTraditionalLanding";
 import ReserveTraditionalLandingPay from "./pages/ReserveTraditionalLandingPay";
 import ReserveTraditionalLandingConsult from "./pages/ReserveTraditionalLandingConsult";
 import A2PFormReview from "./pages/A2PFormReview";
+import TraditionalSaunaSpecs from "./pages/TraditionalSaunaSpecs";
 import { registerWebMCP } from "@/lib/webmcp";
 import { captureUtmParams } from "@/lib/submitLeadToGHL";
 
@@ -167,6 +168,7 @@ const App = () => (
           <Route path="/reserve-traditional-landing-pay" element={<ReserveTraditionalLandingPay />} />
           <Route path="/reserve-traditional-landing-consult" element={<ReserveTraditionalLandingConsult />} />
           <Route path="/a2p-form-review" element={<A2PFormReview />} />
+          <Route path="/traditional-sauna-specs" element={<TraditionalSaunaSpecs />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
