@@ -117,6 +117,7 @@ const ReservationForm = ({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    mode: "onBlur",
     defaultValues: {
       sauna_type_id: initialSaunaTypeId ?? "",
       preferred_install_date: "",
@@ -262,7 +263,13 @@ const ReservationForm = ({
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Phone" error={errors.phone?.message}>
-          <Input type="tel" {...register("phone")} autoComplete="tel" />
+          <Input
+            type="tel"
+            inputMode="tel"
+            {...register("phone")}
+            onChange={(e) => setValue("phone", formatPhoneInput(e.target.value))}
+            autoComplete="tel"
+          />
         </Field>
         <Field label="City" error={errors.city?.message}>
           <Input {...register("city")} autoComplete="address-level2" />
