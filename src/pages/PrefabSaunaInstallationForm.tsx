@@ -40,6 +40,11 @@ const PrefabSaunaInstallationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const invalid = validateContact({ email, phone });
+    if (invalid) {
+      toast.error(invalid);
+      return;
+    }
     setSubmitting(true);
     const { first_name, last_name } = splitFullName(name);
     const folder = (email || "anonymous").replace(/[^a-zA-Z0-9._-]/g, "_");

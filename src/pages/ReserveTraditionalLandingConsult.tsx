@@ -44,6 +44,10 @@ const EmailCapture = ({ variant = "hero" }: { variant?: "hero" | "card" }) => {
     e.preventDefault();
     if (submitting) return;
     setErrorMsg(null);
+    if (!isValidEmail(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
     setSubmitting(true);
     const res = await submitLeadToGHL({
       form_source: "reserve_traditional_landing_consult_email",

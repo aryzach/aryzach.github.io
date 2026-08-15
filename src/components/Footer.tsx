@@ -16,6 +16,10 @@ const Footer = () => {
     e.preventDefault();
     if (submitting) return;
     setErrorMsg(null);
+    if (!isValidEmail(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
     setSubmitting(true);
     const res = await submitLeadToGHL({
       form_source: "footer_newsletter",
