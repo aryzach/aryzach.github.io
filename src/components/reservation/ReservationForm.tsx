@@ -16,6 +16,7 @@ import { formatDatePretty } from "@/lib/availability";
 import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import { markReservationSubmitted } from "@/lib/reservationConversion";
+import { emailSchema, phoneSchema, formatPhoneInput } from "@/lib/validation";
 
 export type ReservationSource =
   | "Pricing Page"
@@ -29,8 +30,8 @@ export type ReservationSource =
 const schema = z.object({
   first_name: z.string().trim().min(1, "Required").max(80),
   last_name: z.string().trim().min(1, "Required").max(80),
-  email: z.string().trim().email("Invalid email").max(255),
-  phone: z.string().trim().min(7, "Invalid phone").max(40),
+  email: emailSchema,
+  phone: phoneSchema,
   city: z.string().trim().min(1, "Required").max(120),
   sauna_type_id: z.string().min(1, "Required"),
   preferred_install_date: z.string().min(1, "Required"),
