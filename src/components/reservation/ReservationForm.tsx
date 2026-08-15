@@ -23,6 +23,7 @@ export type ReservationSource =
   | "Direct Link"
   | "Landing Page"
   | "Admin"
+  | "Traditional Specs Page"
   | "Unknown";
 
 const schema = z.object({

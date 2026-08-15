@@ -43,6 +43,7 @@ export const routes = [
   '/reserve-traditional-landing-pay',
   '/reserve-traditional-landing-consult',
   '/a2p-form-review',
+  '/traditional-sauna-specs',
 ];
 
 // Vite config for root GitHub Pages site (aryzach.github.io)

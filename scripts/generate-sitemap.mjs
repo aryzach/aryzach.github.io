@@ -43,6 +43,7 @@ const entries = [
   { path: '/reserve-traditional-landing', changefreq: 'monthly', priority: '0.8' },
   { path: '/reserve-traditional-landing-pay', changefreq: 'monthly', priority: '0.7' },
   { path: '/reserve-traditional-landing-consult', changefreq: 'monthly', priority: '0.7' },
+  { path: '/traditional-sauna-specs', changefreq: 'monthly', priority: '0.8' },
 ];
 
 const xml = [
