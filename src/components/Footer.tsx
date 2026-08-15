@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Instagram, MapPin, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
+import { isValidEmail } from "@/lib/validation";
 
 const Footer = () => {
   const location = useLocation();
@@ -16,6 +17,10 @@ const Footer = () => {
     e.preventDefault();
     if (submitting) return;
     setErrorMsg(null);
+    if (!isValidEmail(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
     setSubmitting(true);
     const res = await submitLeadToGHL({
       form_source: "footer_newsletter",

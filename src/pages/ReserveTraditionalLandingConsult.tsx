@@ -11,6 +11,7 @@ import { CALCOM_VIDEO_CONSULT_LINK } from "@/lib/reservationConfig";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
+import { isValidEmail } from "@/lib/validation";
 
 const video0802 = assetUrl(video0802Asset);
 
@@ -44,6 +45,10 @@ const EmailCapture = ({ variant = "hero" }: { variant?: "hero" | "card" }) => {
     e.preventDefault();
     if (submitting) return;
     setErrorMsg(null);
+    if (!isValidEmail(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
     setSubmitting(true);
     const res = await submitLeadToGHL({
       form_source: "reserve_traditional_landing_consult_email",

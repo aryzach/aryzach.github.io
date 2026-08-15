@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import LeadFormSuccessDialog from "@/components/lead/LeadFormSuccessDialog";
+import { emailSchema, phoneSchema, formatPhoneInput } from "@/lib/validation";
 
 const schema = z.object({
   first_name: z.string().trim().min(1, "Required").max(80),
   last_name: z.string().trim().min(1, "Required").max(80),
-  email: z.string().trim().email("Invalid email").max(255),
-  phone: z.string().trim().min(7, "Invalid phone").max(40),
+  email: emailSchema,
+  phone: phoneSchema,
   message: z.string().trim().max(1000).optional(),
 });
 
@@ -39,7 +40,7 @@ const ContactLeadForm = ({
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const methods = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const methods = useForm<FormValues>({ resolver: zodResolver(schema), mode: "onBlur" });
   const { handleSubmit, reset, formState } = methods;
 
   const onSubmit = async (values: FormValues) => {
@@ -157,7 +158,8 @@ const FloatingField = ({
   rows?: number;
   isTextarea?: boolean;
 }) => {
-  const { register } = useFormContext<FormValues>();
+  const { register, setValue } = useFormContext<FormValues>();
+  const isPhone = name === "phone";
 
   const inputClass = [
     isTextarea ? "floating-label-textarea" : "floating-label-input",
@@ -179,10 +181,16 @@ const FloatingField = ({
         <input
           id={name}
           type={type}
+          inputMode={isPhone ? "tel" : undefined}
           placeholder=" "
           autoComplete={autoComplete}
           className={inputClass}
           {...register(name)}
+          onChange={
+            isPhone
+              ? (e) => setValue(name, formatPhoneInput(e.target.value), { shouldValidate: false })
+              : register(name).onChange
+          }
         />
       )}
       <label htmlFor={name} className="floating-label">

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { submitLeadToGHL, splitFullName } from "@/lib/submitLeadToGHL";
+import { validateContact } from "@/lib/validation";
 
 const LearnMore = () => {
   useSEO(seoData.learnMore);
@@ -23,6 +24,11 @@ const LearnMore = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const invalid = validateContact({ email, phone, phoneRequired: false });
+    if (invalid) {
+      toast.error(invalid);
+      return;
+    }
     setSubmitting(true);
     const { first_name, last_name } = splitFullName(name);
     const res = await submitLeadToGHL({
