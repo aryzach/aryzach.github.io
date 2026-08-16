@@ -8,10 +8,6 @@ const faqs = [
     answer: "Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel. Infrared heats your body directly for a gentler sweat at 150°F.",
   },
   {
-    question: "What power do they need? Will this overload my apartment?",
-    answer: "All units use standard 120V household outlets, same load class as a hair dryer. No special wiring, panel upgrades, or electrician.",
-  },
-  {
     question: "Why rent instead of buy?",
     answer: `Buying a traditional sauna is a bigger commitment than most people realize. Nearly all require modifications to your home's electrical system and a licensed electrician, which can add $3,000–$6,000 to the purchase price and turn installation into a weeks- or months-long project.
 
@@ -20,6 +16,10 @@ Our sauna is different. We've built the only traditional sauna that plugs into a
 We handle delivery, installation, maintenance, and pickup, so you never have to coordinate contractors or deal with repairs. If you move, we can move the sauna with you.
 
 And you can actually live with a traditional sauna before deciding whether you want to own one long term. There's no big upfront investment or long-term commitment. Try it, see how much you use it, and buy later if ownership makes sense.`,
+  },
+  {
+    question: "What power is needed?",
+    answer: "All units use standard 120V household outlets, same load class as a hair dryer. No special wiring, panel upgrades, or electrician.",
   },
   {
     question: "How much space do I need?",
