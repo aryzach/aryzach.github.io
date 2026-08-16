@@ -44,6 +44,7 @@ export const routes = [
   '/reserve-traditional-landing-consult',
   '/a2p-form-review',
   '/traditional-sauna-specs',
+  '/blog/landing/How-to-Fix-All-Your-Sleep-Issues-in-1-Day',
 ];
 
 // Vite config for root GitHub Pages site (aryzach.github.io)

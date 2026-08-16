@@ -47,6 +47,7 @@ const routes = [
   '/reserve-traditional-landing-consult',
   '/a2p-form-review',
   '/traditional-sauna-specs',
+  '/blog/landing/How-to-Fix-All-Your-Sleep-Issues-in-1-Day',
 ];
 
 const PORT = 5173;
