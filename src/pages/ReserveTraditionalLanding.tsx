@@ -3,6 +3,7 @@ import { Star, Check } from "lucide-react";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
+import SocialProof from "@/components/SocialProof";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
@@ -209,6 +210,17 @@ const ReserveTraditionalLanding = () => {
 
       <HowItWorks />
       <FAQ showInstallationGuide={false} />
+
+      <SocialProof />
+
+      <section className="container mx-auto px-4 py-16">
+        <ContactLeadForm
+          formSource="traditional_landing_after_social"
+          formName="Traditional Landing After Social Proof Contact"
+          title="Ready to rent a sauna?"
+          subtitle="Send us a note and we'll get back to you shortly."
+        />
+      </section>
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
