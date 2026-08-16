@@ -23,7 +23,11 @@ And you can actually live with a traditional sauna before deciding whether you w
   },
   {
     question: "How much space do I need?",
-    answer: "Indoor: 48\" W × 42\" D × 76\" H. Outdoor: 58\" W × 46\" D × 85\" H.",
+    answer: `About 4' x 4'
+
+Here are the exact dimensions:
+Indoor: 48" W × 42" D × 76" H
+Outdoor: 58" W × 46" D × 85" H`,
   },
   {
     question: "Can these go indoors or outdoors?",
