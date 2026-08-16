@@ -4,6 +4,7 @@ import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
+import VideoTestimonials from "@/components/VideoTestimonials";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
@@ -166,9 +167,9 @@ const ReserveTraditionalLanding = () => {
       </section>
 
       <HowItWorksSection />
-      <FAQ showInstallationGuide={false} />
+      <FAQ showInstallationGuide={false} className="!pb-8 md:!pb-10" />
 
-      <SocialProof />
+      <SocialProof className="!pt-0" />
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
@@ -178,6 +179,8 @@ const ReserveTraditionalLanding = () => {
           subtitle="Send us a note and we'll get back to you shortly."
         />
       </section>
+
+      <VideoTestimonials />
     </main>
   );
 };
