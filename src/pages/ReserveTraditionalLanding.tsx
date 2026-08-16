@@ -3,6 +3,7 @@ import { Star, Check } from "lucide-react";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
+import SocialProof from "@/components/SocialProof";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
