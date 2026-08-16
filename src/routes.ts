@@ -37,6 +37,7 @@ export const routes = [
   { path: '/pre-fab-sauna-installation-form', priority: 0.6, changefreq: 'monthly' },
   { path: '/reservation-system', priority: 0.9, changefreq: 'weekly' },
   { path: '/traditional-sauna-specs', priority: 0.8, changefreq: 'monthly' },
+  { path: '/blog/landing/How-to-Fix-All-Your-Sleep-Issues-in-1-Day', priority: 0.7, changefreq: 'monthly' },
 ] as const;
 
 export const routePaths = routes.map(r => r.path);
