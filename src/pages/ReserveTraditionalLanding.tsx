@@ -111,13 +111,19 @@ const LandingGallery = () => (
             <p className="text-muted-foreground text-sm leading-relaxed">
               ~4' x 4' footprint. Normal outlet.
               <br /><br />
+              Assembled on-site. Fits through doorways and up stairs.
+              <br /><br />
               Indoor or outdoor. Apartment, living room, balcony or backyard.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
-            <h4 className="font-semibold text-xl mb-3 text-foreground">We handle installation.</h4>
+            <h4 className="font-semibold text-xl mb-3 text-foreground">Traditional sauna heat</h4>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              We'll check your space and confirm your outlets will work for a sauna over a video call.
+              200°F
+              <br /><br />
+              Real stone heater.
+              <br /><br />
+              Pour water, get steam.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
@@ -136,34 +142,34 @@ const LandingGallery = () => (
 
 const HowItWorks = () => (
   <section className="py-16 md:py-24 bg-background">
-    <div className="container mx-auto px-4 max-w-5xl">
+    <div className="container mx-auto px-4">
       <h2 className="text-3xl md:text-5xl font-semibold text-center mb-12 text-foreground">How It Works</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-cedar-section rounded-lg p-6 md:p-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">1</span>
-            <h4 className="font-semibold text-lg text-foreground">Tell us about your space</h4>
+            <h4 className="font-semibold text-lg text-foreground">Call</h4>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            Our saunas are ~4' x 4' and use a normal outlet. We'll help you figure out which sauna will fit and make sure your electrical setup will work.
+            We'll check your space and confirm your outlet will work for a sauna over a video call.
           </p>
         </div>
         <div className="bg-cedar-section rounded-lg p-6 md:p-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">2</span>
-            <h4 className="font-semibold text-lg text-foreground">We deliver and install it</h4>
+            <h4 className="font-semibold text-lg text-foreground">Installation</h4>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            We bring the sauna to your home and handle the setup. Indoor, outdoor, apartment, backyard, garage, balcony. We'll figure out the logistics.
+            We'll install the sauna in under 2 hours.
           </p>
         </div>
         <div className="bg-cedar-section rounded-lg p-6 md:p-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">3</span>
-            <h4 className="font-semibold text-lg text-foreground">Sauna whenever you want</h4>
+            <h4 className="font-semibold text-lg text-foreground">Enjoy your sauna</h4>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            It's yours for the length of your rental. Use it every day if you want. We handle maintenance while you have it.
+            Use your sauna whenever you want. We handle all maintenance.
           </p>
         </div>
         <div className="bg-cedar-section rounded-lg p-6 md:p-8">
