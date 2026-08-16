@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: "How long does setup take?",
-    answer: "Plan for 3 hours. We position it, plug it in, test it, and walk you through everything.",
+    answer: "Plan for 2 hours. We position it, plug it in, test it, and walk you through everything.",
   },
   {
     question: "How long does it take to heat up?",
