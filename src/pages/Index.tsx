@@ -9,6 +9,7 @@ import ServiceArea from "@/components/ServiceArea";
 import FAQ from "@/components/FAQ";
 import ReserveCTA from "@/components/ReserveCTA";
 import GoogleReviews from "@/components/GoogleReviews";
+import VideoTestimonials from "@/components/VideoTestimonials";
 import Footer from "@/components/Footer";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
@@ -276,6 +277,7 @@ const Index = () => {
         <SocialProof />
         <ServiceArea />
         <FAQ />
+        <VideoTestimonials />
         <ReserveCTA />
       </main>
       <Footer />
