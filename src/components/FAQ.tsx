@@ -22,7 +22,6 @@ We handle delivery, installation, maintenance, and pickup, so you never have to 
 And you can actually live with a traditional sauna before deciding whether you want to own one long term. There's no big upfront investment or long-term commitment. Try it, see how much you use it, and buy later if ownership makes sense.`,
   },
   {
-  {
     question: "How much space do I need?",
     answer: "Indoor: 48\" W × 42\" D × 76\" H. Outdoor: 58\" W × 46\" D × 85\" H.",
   },
