@@ -4,12 +4,22 @@ import { Link } from "react-router-dom";
 
 const faqs = [
   {
-    question: "What's the difference between infrared and steam saunas?",
-    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel.",
+    question: "What's the difference between an infrared and traditional sauna?",
+    answer: "Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel. Infrared heats your body directly for a gentler sweat at 150°F.",
   },
   {
     question: "What power do they need? Will this overload my apartment?",
     answer: "All units use standard 120V household outlets, same load class as a hair dryer. No special wiring, panel upgrades, or electrician.",
+  },
+  {
+    question: "Why rent instead of buy?",
+    answer: `Buying a traditional sauna is a bigger commitment than most people realize. Nearly all require modifications to your home's electrical system and a licensed electrician, which can add $3,000–$6,000 to the purchase price and turn installation into a weeks- or months-long project.
+
+Our sauna is different. We've built the only traditional sauna that plugs into a normal outlet, making it landlord-friendly and possible to use without permanently modifying your home.
+
+We handle delivery, installation, maintenance, and pickup, so you never have to coordinate contractors or deal with repairs. If you move, we can move the sauna with you.
+
+And you can actually live with a traditional sauna before deciding whether you want to own one long term. There's no big upfront investment or long-term commitment. Try it, see how much you use it, and buy later if ownership makes sense.`,
   },
   {
     question: "How much space do I need?",
@@ -25,11 +35,11 @@ const faqs = [
   },
   {
     question: "How long does setup take?",
-    answer: "Plan for 3 hours. We position it, plug it in, test it, and walk you through everything.",
+    answer: "Plan for 2 hours. We position it, plug it in, test it, and walk you through everything.",
   },
   {
     question: "How long does it take to heat up?",
-    answer: "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 200°F in 40–60 minutes.",
+    answer: "180°F in 40–60 minutes, and 200°F in 60-90 minutes.",
   },
   {
     question: "Do I need to leave it running?",
