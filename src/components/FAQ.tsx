@@ -85,11 +85,12 @@ Outdoor: 58" W × 46" D × 85" H`,
 
 interface FAQProps {
   showInstallationGuide?: boolean;
+  className?: string;
 }
 
-const FAQ = ({ showInstallationGuide = true }: FAQProps) => {
+const FAQ = ({ showInstallationGuide = true, className = "" }: FAQProps) => {
   return (
-    <section id="faq" className="py-16 md:py-24 bg-background">
+    <section id="faq" className={`py-16 md:py-24 bg-background ${className}`}>
       <div className="container mx-auto px-4 max-w-3xl">
         <h2 className="text-3xl md:text-5xl font-semibold text-center mb-4 text-foreground">
           Frequently Asked Questions
