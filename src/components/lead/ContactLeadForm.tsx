@@ -13,6 +13,7 @@ const schema = z.object({
   last_name: z.string().trim().min(1, "Required").max(80),
   email: emailSchema,
   phone: phoneSchema,
+  placement: z.string().trim().min(1, "Required").max(200),
   message: z.string().trim().max(1000).optional(),
 });
 
@@ -55,6 +56,8 @@ const ContactLeadForm = ({
           name: `${values.first_name} ${values.last_name}`.trim(),
           email: values.email,
           phone: values.phone,
+          placement: values.placement,
+          sauna_placement: values.placement,
           message: values.message,
         },
       });
@@ -116,10 +119,16 @@ const ContactLeadForm = ({
               />
             </div>
             <FloatingField
+              name="placement"
+              label="Where are you considering putting a sauna? Backyard, living room, garage, etc"
+              error={formState.errors.placement?.message}
+              overlay={overlay}
+            />
+            <FloatingField
               name="message"
               label="Message (optional)"
               isTextarea
-              rows={3}
+              rows={1}
               error={formState.errors.message?.message}
               overlay={overlay}
             />
