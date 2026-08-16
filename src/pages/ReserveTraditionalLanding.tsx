@@ -111,13 +111,19 @@ const LandingGallery = () => (
             <p className="text-muted-foreground text-sm leading-relaxed">
               ~4' x 4' footprint. Normal outlet.
               <br /><br />
+              Assembled on-site. Fits through doorways and up stairs.
+              <br /><br />
               Indoor or outdoor. Apartment, living room, balcony or backyard.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
-            <h4 className="font-semibold text-xl mb-3 text-foreground">We handle installation.</h4>
+            <h4 className="font-semibold text-xl mb-3 text-foreground">Traditional sauna heat</h4>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              We'll check your space and confirm your outlets will work for a sauna over a video call.
+              200°F
+              <br /><br />
+              Real stone heater.
+              <br /><br />
+              Pour water, get steam.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
