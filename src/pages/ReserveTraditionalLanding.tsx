@@ -105,24 +105,27 @@ const LandingGallery = () => (
       </div>
 
       <div className="mt-16 max-w-5xl mx-auto">
-        <h3 className="text-2xl md:text-3xl font-semibold text-center mb-10 text-foreground">Why SF Sauna?</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
-            <h4 className="font-semibold text-lg mb-3 text-foreground">Fits almost anywhere.</h4>
-            <p className="text-muted-foreground leading-relaxed">
-              They take up ~4' x 4' of space. Indoor or outdoor. Apartment, living room, balcony or backyard.
+          <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
+            <h4 className="font-semibold text-xl mb-3 text-foreground">Fits almost anywhere.</h4>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              ~4' x 4' footprint. Normal outlet.
+              <br /><br />
+              Indoor or outdoor. Apartment, living room, balcony or backyard.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
-            <h4 className="font-semibold text-lg mb-3 text-foreground">We handle installation.</h4>
-            <p className="text-muted-foreground leading-relaxed">
-              We'll check your space and electrical setup first.
+          <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
+            <h4 className="font-semibold text-xl mb-3 text-foreground">We handle installation.</h4>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              We'll check your space and confirm your outlets will work for a sauna over a video call.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
-            <h4 className="font-semibold text-lg mb-3 text-foreground">No ownership headache.</h4>
-            <p className="text-muted-foreground leading-relaxed">
+          <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
+            <h4 className="font-semibold text-xl mb-3 text-foreground">No ownership headache.</h4>
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Delivery, setup, maintenance and pickup included.
+              <br /><br />
+              Never worry, we provide service 7-days per week.
             </p>
           </div>
         </div>
