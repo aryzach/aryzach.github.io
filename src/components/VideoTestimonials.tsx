@@ -24,7 +24,7 @@ const VideoTestimonials = ({ className }: { className?: string }) => (
             playsInline
             preload="metadata"
             aria-label={v.label}
-            className="w-full aspect-video rounded-lg bg-charcoal object-contain"
+            className="w-full aspect-[9/16] rounded-lg bg-charcoal object-cover"
           >
             <source src={v.src} type="video/mp4" />
           </video>
