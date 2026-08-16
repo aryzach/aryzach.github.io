@@ -193,7 +193,6 @@ const ReserveTraditionalLanding = () => {
       <LandingHero />
       <ReviewWall className="bg-background" />
       <LandingGallery />
-      <HowItWorks />
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
@@ -202,6 +201,7 @@ const ReserveTraditionalLanding = () => {
         />
       </section>
 
+      <HowItWorks />
       <FAQ showInstallationGuide={false} />
 
       <section className="container mx-auto px-4 py-16">
