@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const faqs = [
   {
-    question: "What's the difference between infrared and steam saunas?",
-    answer: "Infrared heats your body directly for a gentler sweat at 150°F. Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel.",
+    question: "What's the difference between an infrared and traditional sauna?",
+    answer: "Traditional saunas heat the air with a traditional heater and rocks, running 200°F for a more classic feel. Infrared heats your body directly for a gentler sweat at 150°F.",
   },
   {
     question: "What power do they need? Will this overload my apartment?",
