@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "How long does it take to heat up?",
-    answer: "Infrared reaches ~150°F in ~30-40 minutes. Traditional saunas hit 200°F in 40–60 minutes.",
+    answer: "180°F in 40–60 minutes, and 200°F in 60-90 minutes.",
   },
   {
     question: "Do I need to leave it running?",
