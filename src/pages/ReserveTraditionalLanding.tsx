@@ -4,9 +4,11 @@ import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
+import HowItWorksSection from "@/components/HowItWorksSection";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
+
 
 const video0802 = assetUrl(video0802Asset);
 
@@ -141,51 +143,6 @@ const LandingGallery = () => (
   </section>
 );
 
-const HowItWorks = () => (
-  <section className="py-16 md:py-24 bg-background">
-    <div className="container mx-auto px-4">
-      <h2 className="text-3xl md:text-5xl font-semibold text-center mb-12 text-foreground">How It Works</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">1</span>
-            <h4 className="font-semibold text-lg text-foreground">Call</h4>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            We'll check your space and confirm your outlet will work for a sauna over a video call.
-          </p>
-        </div>
-        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">2</span>
-            <h4 className="font-semibold text-lg text-foreground">Installation</h4>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            We'll install the sauna in under 2 hours.
-          </p>
-        </div>
-        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">3</span>
-            <h4 className="font-semibold text-lg text-foreground">Enjoy your sauna</h4>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            Use your sauna whenever you want. We handle all maintenance.
-          </p>
-        </div>
-        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">4</span>
-            <h4 className="font-semibold text-lg text-foreground">Keep it or we pick it up</h4>
-          </div>
-          <p className="text-muted-foreground leading-relaxed">
-            At the end of your rental, keep renting, buy your sauna, or have us come take it away.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-);
 
 const ReserveTraditionalLanding = () => {
   useSEO({
@@ -208,7 +165,7 @@ const ReserveTraditionalLanding = () => {
         />
       </section>
 
-      <HowItWorks />
+      <HowItWorksSection />
       <FAQ showInstallationGuide={false} />
 
       <SocialProof />
@@ -218,15 +175,6 @@ const ReserveTraditionalLanding = () => {
           formSource="traditional_landing_after_social"
           formName="Traditional Landing After Social Proof Contact"
           title="Ready to rent a sauna?"
-          subtitle="Send us a note and we'll get back to you shortly."
-        />
-      </section>
-
-      <section className="container mx-auto px-4 py-16">
-        <ContactLeadForm
-          formSource="traditional_landing_bottom"
-          formName="Traditional Landing Bottom Contact"
-          title="Still have questions?"
           subtitle="Send us a note and we'll get back to you shortly."
         />
       </section>
