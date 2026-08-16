@@ -118,12 +118,12 @@ const ContactLeadForm = ({
                 autoComplete="tel"
               />
             </div>
-            <FloatingField
-              name="placement"
-              label="Where are you considering putting a sauna? Backyard, living room, garage, etc"
-              error={formState.errors.placement?.message}
-              overlay={overlay}
-            />
+      <FloatingField
+        name="placement"
+        label="Where would you put a sauna? Yard, living room, garage, etc"
+        error={formState.errors.placement?.message}
+        overlay={overlay}
+      />
             <FloatingField
               name="message"
               label="Message (optional)"
