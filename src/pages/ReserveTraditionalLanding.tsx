@@ -104,21 +104,73 @@ const LandingGallery = () => (
         ))}
       </div>
 
-      <div className="mt-16 max-w-4xl mx-auto">
-        <h3 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-foreground">Why SF Sauna?</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {[
-            "Fast service throughout the SF Bay Area",
-            "Professional installation + removal included",
-            "Standard 120V power (no electrician needed)",
-            "Month-to-month after initial term",
-            "Apartment-friendly setups",
-          ].map((text) => (
-            <div key={text} className="flex items-start gap-3">
-              <Check className="text-primary flex-shrink-0 mt-0.5" size={24} strokeWidth={2.5} />
-              <span className="text-muted-foreground">{text}</span>
-            </div>
-          ))}
+      <div className="mt-16 max-w-5xl mx-auto">
+        <h3 className="text-2xl md:text-3xl font-semibold text-center mb-10 text-foreground">Why SF Sauna?</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
+            <h4 className="font-semibold text-lg mb-3 text-foreground">Fits almost anywhere.</h4>
+            <p className="text-muted-foreground leading-relaxed">
+              They take up ~4' x 4' of space. Indoor or outdoor. Apartment, living room, balcony or backyard.
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
+            <h4 className="font-semibold text-lg mb-3 text-foreground">We handle installation.</h4>
+            <p className="text-muted-foreground leading-relaxed">
+              We'll check your space and electrical setup first.
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-6 md:p-8 border border-border shadow-sm">
+            <h4 className="font-semibold text-lg mb-3 text-foreground">No ownership headache.</h4>
+            <p className="text-muted-foreground leading-relaxed">
+              Delivery, setup, maintenance and pickup included.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const HowItWorks = () => (
+  <section className="py-16 md:py-24 bg-background">
+    <div className="container mx-auto px-4 max-w-5xl">
+      <h2 className="text-3xl md:text-5xl font-semibold text-center mb-12 text-foreground">How It Works</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">1</span>
+            <h4 className="font-semibold text-lg text-foreground">Tell us about your space</h4>
+          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            Our saunas are ~4' x 4' and use a normal outlet. We'll help you figure out which sauna will fit and make sure your electrical setup will work.
+          </p>
+        </div>
+        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">2</span>
+            <h4 className="font-semibold text-lg text-foreground">We deliver and install it</h4>
+          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            We bring the sauna to your home and handle the setup. Indoor, outdoor, apartment, backyard, garage, balcony. We'll figure out the logistics.
+          </p>
+        </div>
+        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">3</span>
+            <h4 className="font-semibold text-lg text-foreground">Sauna whenever you want</h4>
+          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            It's yours for the length of your rental. Use it every day if you want. We handle maintenance while you have it.
+          </p>
+        </div>
+        <div className="bg-cedar-section rounded-lg p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm">4</span>
+            <h4 className="font-semibold text-lg text-foreground">Keep it or we pick it up</h4>
+          </div>
+          <p className="text-muted-foreground leading-relaxed">
+            At the end of your rental, keep renting, buy your sauna, or have us come take it away.
+          </p>
         </div>
       </div>
     </div>
