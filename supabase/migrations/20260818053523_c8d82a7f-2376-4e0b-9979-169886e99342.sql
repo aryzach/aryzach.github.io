@@ -1,0 +1,1 @@
+update public.reservations set min_commitment_months = 3, custom_commitment_months = 24, custom_monthly_price = 300 where id = '7de7fccd-3bc0-4949-b70b-ad82382b7881';
