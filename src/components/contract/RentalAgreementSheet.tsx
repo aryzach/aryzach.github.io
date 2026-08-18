@@ -74,6 +74,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [acks, setAcks] = useState<Record<string, boolean>>({});
   const [signing, setSigning] = useState(false);
   const [customTerm, setCustomTerm] = useState<{ months: number; monthly: number } | null>(null);
+  const [minMonths, setMinMonths] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -93,6 +94,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         ? { months: r.custom_commitment_months as number, monthly: r.custom_monthly_price as number }
         : null;
       setCustomTerm(custom);
+      setMinMonths(typeof r.min_commitment_months === "number" ? r.min_commitment_months : null);
       // Split any prior "street, city" back into fields where possible.
       const priorAddress: string = c?.installation_address ?? r.install_address ?? "";
       const priorStreet =
@@ -281,6 +283,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               isSf={isSf}
               activeVersion={activeVersion}
               customTerm={customTerm}
+              minMonths={minMonths}
             />
           ) : step === "preview" && contract ? (
             <PreviewStep
@@ -341,7 +344,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, minMonths,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -352,8 +355,14 @@ const ConfigureStep = ({
   isSf: boolean;
   activeVersion: string;
   customTerm?: { months: number; monthly: number } | null;
+  minMonths?: number | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
+  const termOptions = useMemo(() => {
+    const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
+    const all = customTerm ? [...base, customTerm.months] : base;
+    return Array.from(new Set(all)).sort((a, b) => a - b);
+  }, [customTerm, minMonths]);
   const installFee = useMemo(
     () =>
       customTerm && form.commitment_months === customTerm.months
@@ -420,7 +429,7 @@ const ConfigureStep = ({
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {(customTerm ? [customTerm.months] : [...COMMITMENT_MONTHS]).map((m) => {
+            {termOptions.map((m) => {
               const price =
                 customTerm && m === customTerm.months
                   ? customTerm.monthly

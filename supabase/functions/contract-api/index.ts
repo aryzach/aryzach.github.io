@@ -172,6 +172,13 @@ Deno.serve(async (req) => {
         if (typeof preferred_installation_date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(preferred_installation_date)) {
           return json({ error: "Please choose a preferred installation date." }, 400);
         }
+        const minMonths = typeof reservation.min_commitment_months === "number"
+          ? reservation.min_commitment_months
+          : null;
+        const isCustomMonths = hasCustomTerm && months === reservation.custom_commitment_months;
+        if (minMonths && !isCustomMonths && months < minMonths) {
+          return json({ error: "Please choose an initial commitment length." }, 400);
+        }
 
         const monthlyPrice =
           hasCustomTerm && months === reservation.custom_commitment_months
