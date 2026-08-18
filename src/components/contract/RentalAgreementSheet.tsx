@@ -420,7 +420,7 @@ const ConfigureStep = ({
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {(customTerm ? [customTerm.months] : [...COMMITMENT_MONTHS]).map((m) => {
+            {termOptions.map((m) => {
               const price =
                 customTerm && m === customTerm.months
                   ? customTerm.monthly
