@@ -97,6 +97,15 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
           all applicable delivery, stair/elevator, site-preparation, equipment, and other charges are due
           upon delivery.
         </p>
+        <p>
+          <span className="font-semibold text-slate-900">Purchase option.</span> Renter may elect to purchase
+          the rented sauna for a purchase price of $6,500. Fifty percent (50%) of the rental payments actually
+          paid by Renter under this Agreement will be credited toward that purchase price. The heater is not
+          included in the purchase and will be removed by Owner at or before transfer of the unit; a new
+          heater can be readily installed by the buyer at the buyer's own cost. Any purchase is subject to
+          Owner's written confirmation and remains subject to the other terms of the Master Agreement; where
+          those terms conflict with this paragraph, this Rental Summary controls.
+        </p>
       </section>
     </div>
   );
