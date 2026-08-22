@@ -261,17 +261,7 @@ const ReservationDashboard = () => {
       const { data, error } = await supabase.functions.invoke("stripe-setup-intent", {
         body: { id, token },
       });
-      let err = (data as any)?.error as string | undefined;
-      if (!err && error) {
-        // Surface the real edge-function error body instead of "non-2xx status code".
-        try {
-          const ctx = (error as any)?.context;
-          const text = ctx && typeof ctx.text === "function" ? await ctx.text() : "";
-          err = text ? (JSON.parse(text)?.error ?? text) : (error as any).message;
-        } catch {
-          err = (error as any).message;
-        }
-      }
+      const err = (error as any)?.message || (data as any)?.error;
       if (err) throw new Error(err);
       if (data?.already_connected) {
         toast.success("Bank already connected");

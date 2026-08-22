@@ -61,58 +61,16 @@ Deno.serve(async (req) => {
     });
   }
 
-  let customerId: string | null = reservation.stripe_customer_id ?? null;
-
-  // No Stripe Customer yet — find one by email or create it.
-  if (!customerId) {
-    if (!reservation.email) {
-      return json({ error: "Reservation has no email on file. Please contact support." }, 409);
-    }
-    try {
-      const searchUrl = new URL("https://api.stripe.com/v1/customers");
-      searchUrl.searchParams.set("email", reservation.email);
-      searchUrl.searchParams.set("limit", "1");
-      const findRes = await fetch(searchUrl.toString(), {
-        headers: { Authorization: `Bearer ${stripeKey}` },
-      });
-      const found = await findRes.json();
-      if (findRes.ok && Array.isArray(found.data) && found.data.length > 0) {
-        customerId = found.data[0].id;
-      } else {
-        const createRes = await fetch("https://api.stripe.com/v1/customers", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${stripeKey}`,
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Idempotency-Key": `customer_${reservation.id}`,
-          },
-          body: formEncode({
-            email: reservation.email,
-            name: `${reservation.first_name ?? ""} ${reservation.last_name ?? ""}`.trim(),
-            "metadata[reservation_id]": reservation.id,
-          }),
-        });
-        const created = await createRes.json();
-        if (!createRes.ok) {
-          console.error("Customer create failed:", created);
-          return json({ error: created.error?.message ?? "Could not create Stripe customer" }, 500);
-        }
-        customerId = created.id;
-      }
-    } catch (e) {
-      console.error("Customer lookup/create error:", e);
-      return json({ error: (e as Error).message }, 500);
-    }
-
-    await supabase
-      .from("reservations")
-      .update({ stripe_customer_id: customerId, stripe_customer_linkage_missing: false })
-      .eq("id", reservation.id);
+  if (!reservation.stripe_customer_id) {
+    return json({
+      error: "This reservation is not yet linked to a Stripe Customer. Please contact support.",
+      linkage_missing: true,
+    }, 409);
   }
 
   // Create SetupIntent.
   const params: Record<string, string> = {
-    customer: customerId!,
+    customer: reservation.stripe_customer_id,
     "payment_method_types[]": "us_bank_account",
     usage: "off_session",
     "payment_method_options[us_bank_account][verification_method]": "instant",
