@@ -8,12 +8,24 @@ import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import LeadFormSuccessDialog from "@/components/lead/LeadFormSuccessDialog";
 import { emailSchema, phoneSchema, formatPhoneInput } from "@/lib/validation";
 
+const GOAL_OPTIONS = [
+  "Sleep",
+  "Stress & relaxation",
+  "Pain, soreness & muscle recovery",
+  "Exercise & athletic recovery",
+  "General health & longevity",
+  "Convenience / sauna more often",
+  "I just love sauna",
+  "Other",
+];
+
 const schema = z.object({
   first_name: z.string().trim().min(1, "Required").max(80),
   last_name: z.string().trim().min(1, "Required").max(80),
   email: emailSchema,
   phone: phoneSchema,
-  placement: z.string().trim().min(1, "Required").max(200),
+  goals: z.array(z.string()).min(1, "Select at least one"),
+  goals_detail: z.string().trim().min(1, "Required").max(1000),
   message: z.string().trim().max(1000).optional(),
 });
 
