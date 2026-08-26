@@ -11,12 +11,12 @@ import { emailSchema, phoneSchema, formatPhoneInput } from "@/lib/validation";
 const GOAL_OPTIONS = [
   "Sleep",
   "Stress & relaxation",
-  "Pain, soreness & muscle recovery",
-  "Exercise & athletic recovery",
-  "General health & longevity",
-  "Convenience / sauna more often",
+  "Pain & soreness",
+  "Exercise recovery",
+  "Longevity",
+  "Convenience",
+  "Spend time with others",
   "I just love sauna",
-  "Other",
 ];
 
 const schema = z.object({
