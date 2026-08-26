@@ -156,14 +156,14 @@ const RentVsBuySection = () => {
     { feature: "Moving service", buy: false, rent: true },
   ];
 
-  const renderCell = (value: string | boolean) => {
+  const renderCell = (value: string | boolean, bold?: boolean) => {
     if (value === true) {
-      return <Check className="mx-auto text-[hsl(var(--color-accent))]" size={18} strokeWidth={2.5} />;
+      return <Check className="mx-auto text-green-600" size={18} strokeWidth={2.5} />;
     }
     if (value === false) {
       return <X className="mx-auto text-destructive" size={18} strokeWidth={2.5} />;
     }
-    return <span>{value}</span>;
+    return <span className={bold ? "font-bold" : undefined}>{value}</span>;
   };
 
   return (
