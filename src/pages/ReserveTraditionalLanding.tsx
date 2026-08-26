@@ -151,7 +151,6 @@ const RentVsBuySection = () => {
   const { open } = useReservationModal();
 
   const buyItems = [
-    "Sauna only",
     "Heater not included",
     "Installation: $995",
     "Delivery: $495",
