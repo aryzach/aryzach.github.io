@@ -179,12 +179,19 @@ const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) =
   };
 
   return (
-    <div className="pt-1">
-      <p className={`text-sm font-medium mb-2 ${overlay ? "text-white/90" : "text-foreground"}`}>
-        What are you hoping a home sauna will help with?{" "}
-        <span className={`font-normal ${overlay ? "text-white/70" : "text-muted-foreground"}`}>
-          Select all that apply.
-        </span>
+    <div
+      className={`rounded-lg border p-3 ${overlay ? "" : "bg-muted border-border"}`}
+      style={
+        overlay
+          ? {
+              backgroundColor: "hsl(var(--input-overlay))",
+              borderColor: "hsl(var(--input-overlay-border))",
+            }
+          : undefined
+      }
+    >
+      <p className={`text-[10px] font-medium uppercase tracking-[0.12em] mb-2 ${overlay ? "text-white/90" : "text-foreground/80"}`}>
+        What are you hoping a home sauna will help with?
       </p>
       <div className="grid grid-cols-2 gap-2">
         {GOAL_OPTIONS.map((option) => {
@@ -195,12 +202,12 @@ const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) =
               type="button"
               aria-pressed={checked}
               onClick={() => toggle(option)}
-              className={`rounded-full border px-3 py-2 text-sm leading-snug text-center transition-colors cursor-pointer select-none ${
+              className={`rounded-lg border px-3 py-2.5 text-sm leading-snug text-center transition-colors cursor-pointer select-none ${
                 checked
                   ? "border-primary bg-primary text-primary-foreground font-medium"
                   : overlay
-                    ? "border-white/30 bg-white/5 text-white/80 hover:border-white/60 hover:text-white"
-                    : "border-border bg-background text-muted-foreground hover:border-primary/60 hover:text-foreground"
+                    ? "border-white/30 bg-white/5 text-white/90 hover:border-white/60 hover:text-white"
+                    : "border-border bg-background text-foreground/80 hover:border-primary/60 hover:text-foreground"
               }`}
             >
               {option}
@@ -208,7 +215,7 @@ const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) =
           );
         })}
       </div>
-      {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+      {error && <p className="text-xs text-destructive mt-2">{error}</p>}
     </div>
   );
 };
