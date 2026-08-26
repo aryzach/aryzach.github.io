@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
-import { Star, Check } from "lucide-react";
+import { Star, Check, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import VideoTestimonials from "@/components/VideoTestimonials";
 import HowItWorksSection from "@/components/HowItWorksSection";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
