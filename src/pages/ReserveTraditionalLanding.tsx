@@ -192,14 +192,10 @@ const RentVsBuySection = () => {
               <p className="text-muted-foreground text-sm mt-1">Sauna only</p>
             </div>
             <ul className="space-y-3 mb-6 flex-grow">
-              {buyItems.map((item) => (
-                <li key={item.text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
-                  {item.icon === "x" ? (
-                    <X className="text-muted-foreground/70 flex-shrink-0 mt-0.5" size={16} />
-                  ) : (
-                    <span className="text-muted-foreground/70 flex-shrink-0 w-4 text-center mt-0.5">+</span>
-                  )}
-                  <span>{item.text}</span>
+              {buyItems.map((text) => (
+                <li key={text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
+                  <span className="text-muted-foreground/70 flex-shrink-0 w-4 text-center">•</span>
+                  <span>{text}</span>
                 </li>
               ))}
             </ul>
