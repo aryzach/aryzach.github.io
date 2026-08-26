@@ -227,15 +227,9 @@ const RentVsBuySection = () => {
           <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
             Rent from $300/mo. Everything included.
           </p>
-          <p className="text-sm text-muted-foreground mb-6 font-sans">
+          <p className="text-sm text-muted-foreground font-sans">
             Sauna, heater, delivery, installation, maintenance & pickup included.
           </p>
-          <Button
-            size="lg"
-            onClick={() => open({ source: "Landing Page", saunaTypeId: "traditional" })}
-          >
-            See if a sauna works for your home
-          </Button>
         </div>
       </div>
     </section>
