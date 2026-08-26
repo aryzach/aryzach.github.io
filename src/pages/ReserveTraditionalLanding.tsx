@@ -1,13 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Star, Check, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import VideoTestimonials from "@/components/VideoTestimonials";
 import HowItWorksSection from "@/components/HowItWorksSection";
-import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
@@ -148,8 +146,6 @@ const LandingGallery = () => (
 
 
 const RentVsBuySection = () => {
-  const { open } = useReservationModal();
-
   const rows = [
     { feature: "Price", buy: "$8,485+", rent: "$300/mo" },
     { feature: "Heater", buy: "Extra", rent: true },
@@ -227,15 +223,9 @@ const RentVsBuySection = () => {
           <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
             Rent from $300/mo. Everything included.
           </p>
-          <p className="text-sm text-muted-foreground mb-6 font-sans">
+          <p className="text-sm text-muted-foreground font-sans">
             Sauna, heater, delivery, installation, maintenance & pickup included.
           </p>
-          <Button
-            size="lg"
-            onClick={() => open({ source: "Landing Page", saunaTypeId: "traditional" })}
-          >
-            See if a sauna works for your home
-          </Button>
         </div>
       </div>
     </section>
@@ -257,7 +247,7 @@ const ReserveTraditionalLanding = () => {
       <LandingGallery />
       <RentVsBuySection />
 
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 pt-4 pb-16">
         <ContactLeadForm
           formSource="traditional_landing_mid"
           formName="Traditional Landing Contact"
