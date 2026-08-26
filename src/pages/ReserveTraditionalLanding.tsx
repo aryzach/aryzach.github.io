@@ -152,22 +152,22 @@ const RentVsBuySection = () => {
 
   const rows = [
     { feature: "Price", buy: "$8,485+", rent: "$300/mo" },
-    { feature: "Heater", buy: "Extra", rent: "included", included: true },
-    { feature: "Delivery", buy: "$495", rent: "included", included: true },
-    { feature: "Installation", buy: "$995", rent: "included", included: true },
+    { feature: "Heater", buy: "Extra", rent: true },
+    { feature: "Delivery", buy: "$495", rent: true },
+    { feature: "Installation", buy: "$995", rent: true },
     { feature: "Maintenance", buy: false, rent: true },
     { feature: "Pickup", buy: false, rent: true },
     { feature: "Moving service", buy: false, rent: true },
   ];
 
-  const renderCell = (value: string | boolean, accent = false) => {
+  const renderCell = (value: string | boolean) => {
     if (value === true) {
       return <Check className="mx-auto text-[hsl(var(--color-accent))]" size={18} strokeWidth={2.5} />;
     }
     if (value === false) {
       return <X className="mx-auto text-destructive" size={18} strokeWidth={2.5} />;
     }
-    return <span className={accent ? "text-[hsl(var(--color-accent))] font-semibold" : ""}>{value}</span>;
+    return <span>{value}</span>;
   };
 
   return (
@@ -183,11 +183,11 @@ const RentVsBuySection = () => {
         </div>
 
         <div className="bg-background rounded-lg border border-border overflow-hidden relative">
-          {/* Subtle tint behind the Rent column */}
-          <div className="absolute top-0 right-0 bottom-0 w-1/3 bg-[hsl(var(--color-accent)/0.06)] pointer-events-none" />
+          {/* Subtle tint behind the Rent column (1fr out of 4fr = 25%) */}
+          <div className="absolute top-0 right-0 bottom-0 w-1/4 bg-[hsl(var(--color-accent)/0.05)] pointer-events-none" />
 
           {/* Header */}
-          <div className="grid grid-cols-[2fr_1fr_1fr] border-b border-border text-[11px] md:text-xs font-semibold text-foreground uppercase tracking-wider">
+          <div className="grid grid-cols-[2fr_1fr_1fr] border-b border-border text-xs font-sans font-semibold text-foreground">
             <div className="p-3 md:p-4" />
             <div className="p-3 md:p-4 text-center">Buy</div>
             <div className="p-3 md:p-4 text-center">Rent</div>
@@ -197,37 +197,37 @@ const RentVsBuySection = () => {
           {rows.map((row, index) => (
             <div
               key={row.feature}
-              className={`grid grid-cols-[2fr_1fr_1fr] text-sm ${index !== rows.length - 1 ? "border-b border-border" : ""}`}
+              className={`grid grid-cols-[2fr_1fr_1fr] font-sans text-sm text-foreground ${index !== rows.length - 1 ? "border-b border-border" : ""}`}
             >
-              <div className="p-3 md:p-4 text-foreground font-medium">{row.feature}</div>
-              <div className="p-3 md:p-4 text-center text-muted-foreground">{renderCell(row.buy)}</div>
-              <div className="p-3 md:p-4 text-center text-foreground font-medium">{renderCell(row.rent, true)}</div>
+              <div className="p-3 md:p-4 font-medium">{row.feature}</div>
+              <div className="p-3 md:p-4 text-center">{renderCell(row.buy)}</div>
+              <div className="p-3 md:p-4 text-center">{renderCell(row.rent)}</div>
             </div>
           ))}
 
           {/* To get started — emphasized */}
-          <div className="grid grid-cols-[2fr_1fr_1fr] border-t-2 border-border bg-[hsl(var(--color-accent)/0.04)]">
-            <div className="p-3 md:p-4 text-foreground font-semibold text-sm md:text-base flex items-center">
+          <div className="grid grid-cols-[2fr_1fr_1fr] border-t-2 border-border bg-[hsl(var(--color-accent)/0.04)] font-sans">
+            <div className="p-3 md:p-4 font-semibold text-sm md:text-base flex items-center">
               To get started
             </div>
-            <div className="p-3 md:p-4 text-center text-destructive font-heading text-base md:text-lg font-semibold flex items-center justify-center">
+            <div className="p-3 md:p-4 text-center text-base md:text-lg font-semibold flex items-center justify-center">
               $10,485+
             </div>
-            <div className="p-3 md:p-4 text-center text-[hsl(var(--color-accent))] font-heading text-base md:text-lg font-semibold flex items-center justify-center">
+            <div className="p-3 md:p-4 text-center text-base md:text-lg font-semibold flex items-center justify-center">
               $300/mo
             </div>
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground mt-3 px-1">
+        <p className="text-xs text-muted-foreground mt-3 px-1 font-sans">
           Buy total: $8,995 sauna + $995 installation + $495 delivery. Heater sold separately.
         </p>
 
         <div className="mt-8 md:mt-10 text-center">
-          <p className="font-heading text-xl md:text-2xl font-semibold text-foreground mb-2">
+          <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
             Rent from $300/mo. Everything included.
           </p>
-          <p className="text-sm text-muted-foreground mb-6">
+          <p className="text-sm text-muted-foreground mb-6 font-sans">
             Sauna, heater, delivery, installation, maintenance & pickup included.
           </p>
           <Button
