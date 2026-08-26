@@ -190,16 +190,19 @@ const RentVsBuySection = () => {
           </div>
 
           {/* Comparison rows */}
-          {rows.map((row, index) => (
-            <div
-              key={row.feature}
-              className={`grid grid-cols-[2fr_1fr_1fr] font-sans text-sm text-foreground ${index !== rows.length - 1 ? "border-b border-border" : ""}`}
-            >
-              <div className="p-3 md:p-4 font-medium">{row.feature}</div>
-              <div className="p-3 md:p-4 text-center">{renderCell(row.buy)}</div>
-              <div className="p-3 md:p-4 text-center">{renderCell(row.rent)}</div>
-            </div>
-          ))}
+          {rows.map((row, index) => {
+            const isPrice = row.feature === "Price";
+            return (
+              <div
+                key={row.feature}
+                className={`grid grid-cols-[2fr_1fr_1fr] font-sans text-sm text-foreground ${index !== rows.length - 1 ? "border-b border-border" : ""}`}
+              >
+                <div className="p-3 md:p-4 font-medium">{row.feature}</div>
+                <div className="p-3 md:p-4 text-center">{renderCell(row.buy, isPrice)}</div>
+                <div className="p-3 md:p-4 text-center">{renderCell(row.rent, isPrice)}</div>
+              </div>
+            );
+          })}
 
           {/* To get started — emphasized */}
           <div className="grid grid-cols-[2fr_1fr_1fr] border-t-2 border-border bg-[hsl(var(--color-accent)/0.04)] font-sans">
@@ -214,10 +217,6 @@ const RentVsBuySection = () => {
             </div>
           </div>
         </div>
-
-        <p className="text-xs text-muted-foreground mt-3 px-1 font-sans">
-          Buy total: $8,995 sauna + $995 installation + $495 delivery. Heater sold separately.
-        </p>
 
         <div className="mt-8 md:mt-10 text-center">
           <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
