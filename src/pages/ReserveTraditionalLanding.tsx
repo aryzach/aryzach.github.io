@@ -265,6 +265,7 @@ const ReserveTraditionalLanding = () => {
       <LandingHero />
       <ReviewWall className="bg-background" />
       <LandingGallery />
+      <RentVsBuySection />
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
