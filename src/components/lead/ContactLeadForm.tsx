@@ -15,7 +15,7 @@ const GOAL_OPTIONS = [
   "Exercise recovery",
   "Longevity",
   "Convenience",
-  "Spend time with others",
+  "Share with others",
   "I just love sauna",
 ];
 
