@@ -146,8 +146,6 @@ const LandingGallery = () => (
 
 
 const RentVsBuySection = () => {
-  const { open } = useReservationModal();
-
   const rows = [
     { feature: "Price", buy: "$8,485+", rent: "$300/mo" },
     { feature: "Heater", buy: "Extra", rent: true },
