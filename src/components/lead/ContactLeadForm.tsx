@@ -8,12 +8,24 @@ import { submitLeadToGHL } from "@/lib/submitLeadToGHL";
 import LeadFormSuccessDialog from "@/components/lead/LeadFormSuccessDialog";
 import { emailSchema, phoneSchema, formatPhoneInput } from "@/lib/validation";
 
+const GOAL_OPTIONS = [
+  "Sleep",
+  "Stress & relaxation",
+  "Pain, soreness & muscle recovery",
+  "Exercise & athletic recovery",
+  "General health & longevity",
+  "Convenience / sauna more often",
+  "I just love sauna",
+  "Other",
+];
+
 const schema = z.object({
   first_name: z.string().trim().min(1, "Required").max(80),
   last_name: z.string().trim().min(1, "Required").max(80),
   email: emailSchema,
   phone: phoneSchema,
-  placement: z.string().trim().min(1, "Required").max(200),
+  goals: z.array(z.string()).min(1, "Select at least one"),
+  goals_detail: z.string().trim().min(1, "Required").max(1000),
   message: z.string().trim().max(1000).optional(),
 });
 
@@ -41,7 +53,11 @@ const ContactLeadForm = ({
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const methods = useForm<FormValues>({ resolver: zodResolver(schema), mode: "onBlur" });
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+    defaultValues: { goals: [] },
+  });
   const { handleSubmit, reset, formState } = methods;
 
   const onSubmit = async (values: FormValues) => {
@@ -56,8 +72,9 @@ const ContactLeadForm = ({
           name: `${values.first_name} ${values.last_name}`.trim(),
           email: values.email,
           phone: values.phone,
-          placement: values.placement,
-          sauna_placement: values.placement,
+          goals: values.goals.join(", "),
+          sauna_goals: values.goals.join(", "),
+          goals_detail: values.goals_detail,
           message: values.message,
         },
       });
@@ -118,12 +135,18 @@ const ContactLeadForm = ({
                 autoComplete="tel"
               />
             </div>
-      <FloatingField
-        name="placement"
-        label="Where would you put a sauna? Yard, living room, garage, etc"
-        error={formState.errors.placement?.message}
-        overlay={overlay}
-      />
+            <GoalsField
+              overlay={overlay}
+              error={formState.errors.goals?.message}
+            />
+            <FloatingField
+              name="goals_detail"
+              label="Tell us a bit more about your answer above."
+              isTextarea
+              rows={2}
+              error={formState.errors.goals_detail?.message}
+              overlay={overlay}
+            />
             <FloatingField
               name="message"
               label="Message (optional)"
@@ -145,6 +168,51 @@ const ContactLeadForm = ({
       </div>
       <LeadFormSuccessDialog open={success} onOpenChange={setSuccess} />
     </>
+  );
+};
+
+const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) => {
+  const { watch, setValue } = useFormContext<FormValues>();
+  const selected = watch("goals") || [];
+
+  const toggle = (option: string) => {
+    const next = selected.includes(option)
+      ? selected.filter((o) => o !== option)
+      : [...selected, option];
+    setValue("goals", next, { shouldValidate: true });
+  };
+
+  return (
+    <div className="pt-1">
+      <p className={`text-sm font-medium mb-2 ${overlay ? "text-white/90" : "text-foreground"}`}>
+        What are you hoping a home sauna will help with?{" "}
+        <span className={`font-normal ${overlay ? "text-white/70" : "text-muted-foreground"}`}>
+          Select all that apply.
+        </span>
+      </p>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+        {GOAL_OPTIONS.map((option) => {
+          const checked = selected.includes(option);
+          return (
+            <label
+              key={option}
+              className={`flex items-center gap-2 text-sm cursor-pointer select-none ${
+                overlay ? "text-white/80" : "text-muted-foreground"
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggle(option)}
+                className="h-4 w-4 shrink-0 accent-primary cursor-pointer"
+              />
+              <span className="leading-snug">{option}</span>
+            </label>
+          );
+        })}
+      </div>
+      {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+    </div>
   );
 };
 
