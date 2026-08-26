@@ -151,12 +151,13 @@ const RentVsBuySection = () => {
   const { open } = useReservationModal();
 
   const buyItems = [
-    { icon: "x", text: "Heater not included" },
-    { icon: "plus", text: "Installation: $995" },
-    { icon: "plus", text: "Delivery: $495" },
-    { icon: "x", text: "You handle maintenance" },
-    { icon: "x", text: "You handle pickup/moving" },
-  ] as const;
+    "Sauna only",
+    "Heater not included",
+    "Installation: $995",
+    "Delivery: $495",
+    "You handle maintenance",
+    "You handle pickup/moving",
+  ];
 
   const rentItems = [
     "Traditional sauna included",
