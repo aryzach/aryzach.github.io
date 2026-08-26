@@ -150,98 +150,92 @@ const LandingGallery = () => (
 const RentVsBuySection = () => {
   const { open } = useReservationModal();
 
-  const buyItems = [
-    "Heater not included",
-    "Installation: $995",
-    "Delivery: $495",
-    "You handle maintenance",
-    "You handle pickup/moving",
+  const rows = [
+    { feature: "Price", buy: "$8,485+", rent: "$300/mo" },
+    { feature: "Heater", buy: "Extra", rent: "included", included: true },
+    { feature: "Delivery", buy: "$495", rent: "included", included: true },
+    { feature: "Installation", buy: "$995", rent: "included", included: true },
+    { feature: "Maintenance", buy: false, rent: true },
+    { feature: "Pickup", buy: false, rent: true },
+    { feature: "Moving service", buy: false, rent: true },
   ];
 
-  const rentItems = [
-    "Traditional sauna included",
-    "Stone heater included",
-    "Delivery included",
-    "Installation included",
-    "Maintenance included",
-    "Pickup included",
-    "We'll move it if you move",
-    "Flexible rental options",
-  ];
+  const renderCell = (value: string | boolean, accent = false) => {
+    if (value === true) {
+      return <Check className="mx-auto text-[hsl(var(--color-accent))]" size={18} strokeWidth={2.5} />;
+    }
+    if (value === false) {
+      return <X className="mx-auto text-destructive" size={18} strokeWidth={2.5} />;
+    }
+    return <span className={accent ? "text-[hsl(var(--color-accent))] font-semibold" : ""}>{value}</span>;
+  };
 
   return (
-    <section className="py-16 md:py-24 bg-cedar-section">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-10 md:mb-14">
-          <h2 className="font-heading text-h2-mobile md:text-h2-desktop font-semibold text-foreground mb-4">
+    <section className="py-14 md:py-20 bg-cedar-section">
+      <div className="container mx-auto px-4 max-w-2xl">
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="font-heading text-h2-mobile md:text-h2-desktop font-semibold text-foreground mb-3">
             A sauna at home, without buying one.
           </h2>
-          <p className="text-body text-muted-foreground max-w-2xl mx-auto">
-            Try having a sauna at home before spending thousands to own one.
+          <p className="text-body text-muted-foreground max-w-lg mx-auto">
+            Try it before committing $9,000+ to ownership.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          {/* Buy Your Own */}
-          <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange flex flex-col">
-            <h3 className="font-heading text-lg font-semibold text-foreground mb-4 tracking-wide uppercase">
-              Buy Your Own
-            </h3>
-            <div className="mb-5">
-              <span className="font-heading text-4xl md:text-5xl font-semibold text-foreground">$8,995</span>
-              <p className="text-muted-foreground text-sm mt-1">Sauna only</p>
-            </div>
-            <ul className="space-y-3 mb-6 flex-grow">
-              {buyItems.map((text) => (
-                <li key={text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
-                  <span className="text-muted-foreground/70 flex-shrink-0 w-4 text-center">•</span>
-                  <span>{text}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="pt-5 border-t border-border">
-              <p className="font-heading text-2xl md:text-3xl font-semibold text-foreground">$10,485+ upfront</p>
-              <p className="text-muted-foreground text-xs mt-1">before heater</p>
-            </div>
+        <div className="bg-background rounded-lg border border-border overflow-hidden relative">
+          {/* Subtle tint behind the Rent column */}
+          <div className="absolute top-0 right-0 bottom-0 w-1/3 bg-[hsl(var(--color-accent)/0.06)] pointer-events-none" />
+
+          {/* Header */}
+          <div className="grid grid-cols-[2fr_1fr_1fr] border-b border-border text-[11px] md:text-xs font-semibold text-foreground uppercase tracking-wider">
+            <div className="p-3 md:p-4" />
+            <div className="p-3 md:p-4 text-center">Buy</div>
+            <div className="p-3 md:p-4 text-center">Rent</div>
           </div>
 
-          {/* Rent From SF Sauna */}
-          <div className="bg-background rounded-lg p-6 md:p-8 border-[3px] border-warm-orange flex flex-col relative shadow-sm">
-            <span className="inline-block self-start bg-[hsl(var(--color-accent))] text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
-              Try It First
-            </span>
-            <h3 className="font-heading text-lg font-semibold text-foreground mb-4 tracking-wide uppercase">
-              Rent From SF Sauna
-            </h3>
-            <div className="mb-5">
-              <span className="font-heading text-5xl md:text-6xl font-semibold text-foreground">From $300</span>
-              <span className="text-muted-foreground text-lg md:text-xl">/month</span>
+          {/* Comparison rows */}
+          {rows.map((row, index) => (
+            <div
+              key={row.feature}
+              className={`grid grid-cols-[2fr_1fr_1fr] text-sm ${index !== rows.length - 1 ? "border-b border-border" : ""}`}
+            >
+              <div className="p-3 md:p-4 text-foreground font-medium">{row.feature}</div>
+              <div className="p-3 md:p-4 text-center text-muted-foreground">{renderCell(row.buy)}</div>
+              <div className="p-3 md:p-4 text-center text-foreground font-medium">{renderCell(row.rent, true)}</div>
             </div>
-            <ul className="space-y-3 mb-6 flex-grow">
-              {rentItems.map((text) => (
-                <li key={text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
-                  <Check className="text-[hsl(var(--color-accent))] flex-shrink-0 mt-0.5" size={16} />
-                  <span>{text}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="pt-5 border-t border-border">
-              <p className="font-heading text-2xl md:text-3xl font-semibold text-foreground">$300/mo to get started</p>
+          ))}
+
+          {/* To get started — emphasized */}
+          <div className="grid grid-cols-[2fr_1fr_1fr] border-t-2 border-border bg-[hsl(var(--color-accent)/0.04)]">
+            <div className="p-3 md:p-4 text-foreground font-semibold text-sm md:text-base flex items-center">
+              To get started
+            </div>
+            <div className="p-3 md:p-4 text-center text-destructive font-heading text-base md:text-lg font-semibold flex items-center justify-center">
+              $10,485+
+            </div>
+            <div className="p-3 md:p-4 text-center text-[hsl(var(--color-accent))] font-heading text-base md:text-lg font-semibold flex items-center justify-center">
+              $300/mo
             </div>
           </div>
         </div>
 
-        <div className="mt-10 md:mt-14 text-center">
-          <p className="text-foreground font-medium mb-5 text-lg">Try it before committing $10,000+ to ownership.</p>
+        <p className="text-xs text-muted-foreground mt-3 px-1">
+          Buy total: $8,995 sauna + $995 installation + $495 delivery. Heater sold separately.
+        </p>
+
+        <div className="mt-8 md:mt-10 text-center">
+          <p className="font-heading text-xl md:text-2xl font-semibold text-foreground mb-2">
+            Rent from $300/mo. Everything included.
+          </p>
+          <p className="text-sm text-muted-foreground mb-6">
+            Sauna, heater, delivery, installation, maintenance & pickup included.
+          </p>
           <Button
             size="lg"
             onClick={() => open({ source: "Landing Page", saunaTypeId: "traditional" })}
           >
             See if a sauna works for your home
           </Button>
-          <p className="text-sm text-muted-foreground mt-4">
-            Delivery, installation, maintenance & pickup included with rental.
-          </p>
         </div>
       </div>
     </section>
