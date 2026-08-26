@@ -72,7 +72,7 @@ const ContactLeadForm = ({
           name: `${values.first_name} ${values.last_name}`.trim(),
           email: values.email,
           phone: values.phone,
-          goals: values.goals.join(", "),
+          goals: values.goals,
           sauna_goals: values.goals.join(", "),
           goals_detail: values.goals_detail,
           message: values.message,
@@ -142,16 +142,12 @@ const ContactLeadForm = ({
             <FloatingField
               name="goals_detail"
               label="Tell us a bit more about your answer above."
-              isTextarea
-              rows={2}
               error={formState.errors.goals_detail?.message}
               overlay={overlay}
             />
             <FloatingField
               name="message"
               label="Message (optional)"
-              isTextarea
-              rows={1}
               error={formState.errors.message?.message}
               overlay={overlay}
             />
@@ -190,24 +186,25 @@ const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) =
           Select all that apply.
         </span>
       </p>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+      <div className="grid grid-cols-2 gap-2">
         {GOAL_OPTIONS.map((option) => {
           const checked = selected.includes(option);
           return (
-            <label
+            <button
               key={option}
-              className={`flex items-center gap-2 text-sm cursor-pointer select-none ${
-                overlay ? "text-white/80" : "text-muted-foreground"
+              type="button"
+              aria-pressed={checked}
+              onClick={() => toggle(option)}
+              className={`rounded-full border px-3 py-2 text-sm leading-snug text-center transition-colors cursor-pointer select-none ${
+                checked
+                  ? "border-primary bg-primary text-primary-foreground font-medium"
+                  : overlay
+                    ? "border-white/30 bg-white/5 text-white/80 hover:border-white/60 hover:text-white"
+                    : "border-border bg-background text-muted-foreground hover:border-primary/60 hover:text-foreground"
               }`}
             >
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={() => toggle(option)}
-                className="h-4 w-4 shrink-0 accent-primary cursor-pointer"
-              />
-              <span className="leading-snug">{option}</span>
-            </label>
+              {option}
+            </button>
           );
         })}
       </div>
