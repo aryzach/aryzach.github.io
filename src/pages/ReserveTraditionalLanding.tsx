@@ -147,10 +147,10 @@ const LandingGallery = () => (
 
 const RentVsBuySection = () => {
   const rows = [
-    { feature: "Price", buy: "$8,485+", rent: "$300/mo" },
+    { feature: "Price", buy: "$8,485", rent: "$300/mo" },
     { feature: "Heater", buy: "Extra", rent: true },
     { feature: "Delivery", buy: "$495", rent: true },
-    { feature: "Installation", buy: "$995", rent: true },
+    { feature: "Installation", buy: "$1,495", rent: true },
     { feature: "Maintenance", buy: false, rent: true },
     { feature: "Pickup", buy: false, rent: true },
     { feature: "Moving service", buy: false, rent: true },
