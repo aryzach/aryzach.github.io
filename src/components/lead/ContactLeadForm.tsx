@@ -53,7 +53,11 @@ const ContactLeadForm = ({
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const methods = useForm<FormValues>({ resolver: zodResolver(schema), mode: "onBlur" });
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+    defaultValues: { goals: [] },
+  });
   const { handleSubmit, reset, formState } = methods;
 
   const onSubmit = async (values: FormValues) => {
@@ -68,8 +72,9 @@ const ContactLeadForm = ({
           name: `${values.first_name} ${values.last_name}`.trim(),
           email: values.email,
           phone: values.phone,
-          placement: values.placement,
-          sauna_placement: values.placement,
+          goals: values.goals.join(", "),
+          sauna_goals: values.goals.join(", "),
+          goals_detail: values.goals_detail,
           message: values.message,
         },
       });
