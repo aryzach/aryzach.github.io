@@ -142,16 +142,12 @@ const ContactLeadForm = ({
             <FloatingField
               name="goals_detail"
               label="Tell us a bit more about your answer above."
-              isTextarea
-              rows={1}
               error={formState.errors.goals_detail?.message}
               overlay={overlay}
             />
             <FloatingField
               name="message"
               label="Message (optional)"
-              isTextarea
-              rows={1}
               error={formState.errors.message?.message}
               overlay={overlay}
             />
