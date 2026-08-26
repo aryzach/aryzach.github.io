@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Star, Check, X } from "lucide-react";
+import { Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
