@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Star, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import ReviewWall from "@/components/ReviewWall";
 import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import VideoTestimonials from "@/components/VideoTestimonials";
 import HowItWorksSection from "@/components/HowItWorksSection";
+import { useReservationModal } from "@/contexts/ReservationModal";
 import { useSEO } from "@/hooks/useSEO";
 import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
@@ -145,6 +147,107 @@ const LandingGallery = () => (
 );
 
 
+const RentVsBuySection = () => {
+  const { open } = useReservationModal();
+
+  const buyItems = [
+    "Heater not included",
+    "Installation: $995",
+    "Delivery: $495",
+    "You handle maintenance",
+    "You handle pickup/moving",
+  ];
+
+  const rentItems = [
+    "Traditional sauna included",
+    "Stone heater included",
+    "Delivery included",
+    "Installation included",
+    "Maintenance included",
+    "Pickup included",
+    "We'll move it if you move",
+    "Flexible rental options",
+  ];
+
+  return (
+    <section className="py-16 md:py-24 bg-cedar-section">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="font-heading text-h2-mobile md:text-h2-desktop font-semibold text-foreground mb-4">
+            A sauna at home, without buying one.
+          </h2>
+          <p className="text-body text-muted-foreground max-w-2xl mx-auto">
+            Try having a sauna at home before spending thousands to own one.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          {/* Buy Your Own */}
+          <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange flex flex-col">
+            <h3 className="font-heading text-lg font-semibold text-foreground mb-4 tracking-wide uppercase">
+              Buy Your Own
+            </h3>
+            <div className="mb-5">
+              <span className="font-heading text-4xl md:text-5xl font-semibold text-foreground">$8,995</span>
+              <p className="text-muted-foreground text-sm mt-1">Sauna only</p>
+            </div>
+            <ul className="space-y-3 mb-6 flex-grow">
+              {buyItems.map((text) => (
+                <li key={text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
+                  <span className="text-muted-foreground/70 flex-shrink-0 w-4 text-center">•</span>
+                  <span>{text}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-5 border-t border-border">
+              <p className="font-heading text-2xl md:text-3xl font-semibold text-foreground">$10,485+ upfront</p>
+              <p className="text-muted-foreground text-xs mt-1">before heater</p>
+            </div>
+          </div>
+
+          {/* Rent From SF Sauna */}
+          <div className="bg-background rounded-lg p-6 md:p-8 border-[3px] border-warm-orange flex flex-col relative shadow-sm">
+            <span className="inline-block self-start bg-[hsl(var(--color-accent))] text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
+              Try It First
+            </span>
+            <h3 className="font-heading text-lg font-semibold text-foreground mb-4 tracking-wide uppercase">
+              Rent From SF Sauna
+            </h3>
+            <div className="mb-5">
+              <span className="font-heading text-5xl md:text-6xl font-semibold text-foreground">From $300</span>
+              <span className="text-muted-foreground text-lg md:text-xl">/month</span>
+            </div>
+            <ul className="space-y-3 mb-6 flex-grow">
+              {rentItems.map((text) => (
+                <li key={text} className="flex items-start gap-2.5 text-muted-foreground text-sm">
+                  <Check className="text-[hsl(var(--color-accent))] flex-shrink-0 mt-0.5" size={16} />
+                  <span>{text}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-5 border-t border-border">
+              <p className="font-heading text-2xl md:text-3xl font-semibold text-foreground">$300/mo to get started</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 md:mt-14 text-center">
+          <p className="text-foreground font-medium mb-5 text-lg">Try it before committing $10,000+ to ownership.</p>
+          <Button
+            size="lg"
+            onClick={() => open({ source: "Landing Page", saunaTypeId: "traditional" })}
+          >
+            See if a sauna works for your home
+          </Button>
+          <p className="text-sm text-muted-foreground mt-4">
+            Delivery, installation, maintenance & pickup included with rental.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const ReserveTraditionalLanding = () => {
   useSEO({
     title: "Traditional Sauna Rental in San Francisco | SF Sauna",
@@ -158,6 +261,7 @@ const ReserveTraditionalLanding = () => {
       <LandingHero />
       <ReviewWall className="bg-background" />
       <LandingGallery />
+      <RentVsBuySection />
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
