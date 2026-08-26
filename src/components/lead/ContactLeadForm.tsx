@@ -190,7 +190,7 @@ const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) =
           : undefined
       }
     >
-      <p className={`text-sm font-medium mb-2 ${overlay ? "text-white/80" : "text-muted-foreground"}`}>
+      <p className={`text-base font-medium mb-2 ${overlay ? "text-white/80" : "text-muted-foreground"}`}>
         What are you hoping a home sauna will help with?
       </p>
       <div className="grid grid-cols-2 gap-2">
