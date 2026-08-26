@@ -251,7 +251,7 @@ const ReserveTraditionalLanding = () => {
       <LandingGallery />
       <RentVsBuySection />
 
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 pt-4 pb-16">
         <ContactLeadForm
           formSource="traditional_landing_mid"
           formName="Traditional Landing Contact"
