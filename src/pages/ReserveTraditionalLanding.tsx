@@ -173,9 +173,6 @@ const RentVsBuySection = () => {
           <h2 className="font-heading text-h2-mobile md:text-h2-desktop font-semibold text-foreground mb-3">
             A sauna at home, without buying one.
           </h2>
-          <p className="text-body text-muted-foreground max-w-lg mx-auto">
-            Try it before committing $9,000+ to ownership.
-          </p>
         </div>
 
         <div className="bg-background rounded-lg border border-border overflow-hidden relative">
