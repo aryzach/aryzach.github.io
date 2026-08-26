@@ -207,7 +207,7 @@ const RentVsBuySection = () => {
               To get started
             </div>
             <div className="p-3 md:p-4 text-center text-base md:text-lg font-semibold flex items-center justify-center">
-              $9,975+
+              $10,475
             </div>
             <div className="p-3 md:p-4 text-center text-base md:text-lg font-semibold flex items-center justify-center">
               $300/mo
