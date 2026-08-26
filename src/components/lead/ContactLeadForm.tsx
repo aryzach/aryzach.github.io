@@ -171,6 +171,51 @@ const ContactLeadForm = ({
   );
 };
 
+const GoalsField = ({ overlay, error }: { overlay?: boolean; error?: string }) => {
+  const { watch, setValue } = useFormContext<FormValues>();
+  const selected = watch("goals") || [];
+
+  const toggle = (option: string) => {
+    const next = selected.includes(option)
+      ? selected.filter((o) => o !== option)
+      : [...selected, option];
+    setValue("goals", next, { shouldValidate: true });
+  };
+
+  return (
+    <div className="pt-1">
+      <p className={`text-sm font-medium mb-2 ${overlay ? "text-white/90" : "text-foreground"}`}>
+        What are you hoping a home sauna will help with?{" "}
+        <span className={`font-normal ${overlay ? "text-white/70" : "text-muted-foreground"}`}>
+          Select all that apply.
+        </span>
+      </p>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+        {GOAL_OPTIONS.map((option) => {
+          const checked = selected.includes(option);
+          return (
+            <label
+              key={option}
+              className={`flex items-center gap-2 text-sm cursor-pointer select-none ${
+                overlay ? "text-white/80" : "text-muted-foreground"
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggle(option)}
+                className="h-4 w-4 shrink-0 accent-primary cursor-pointer"
+              />
+              <span className="leading-snug">{option}</span>
+            </label>
+          );
+        })}
+      </div>
+      {error && <p className="text-xs text-destructive mt-1">{error}</p>}
+    </div>
+  );
+};
+
 const FloatingField = ({
   name,
   label,
