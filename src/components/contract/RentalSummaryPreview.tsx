@@ -37,7 +37,6 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Rental Summary</h2>
         <div className="mt-3 text-xs text-slate-500 flex flex-wrap gap-x-6 gap-y-1">
           <span>Reservation ID: <span className="font-mono">{summary.reservation_id.slice(0, 8)}</span></span>
-          <span>Master Agreement: {summary.agreement_version}</span>
         </div>
       </header>
 

@@ -188,7 +188,7 @@ async function buildRentalSummary(
     x: MARGIN_X, y: c.y - 22, size: 22, font: bold, color: rgb(0.06, 0.09, 0.14),
   });
   c.y -= 30;
-  const meta = `Reservation ID: ${s.reservation_id.slice(0, 8)}    Master Agreement: ${s.agreement_version}`;
+  const meta = `Reservation ID: ${s.reservation_id.slice(0, 8)}`;
   c.page.drawText(meta, {
     x: MARGIN_X, y: c.y - 9, size: 9, font, color: rgb(0.4, 0.45, 0.53),
   });
@@ -281,7 +281,7 @@ async function buildAuditPage(
   drawHeading(c, "Agreement identifiers");
   drawKV(c, "Reservation ID", a.reservation_id);
   drawKV(c, "Contract ID", a.contract_id);
-  drawKV(c, "Master Agreement version", a.agreement_version);
+  
 
   drawHeading(c, "Acknowledgments accepted");
   for (const ack of a.acknowledgments) {
@@ -340,7 +340,7 @@ export async function buildSignedContractPdf(params: {
 
   doc.setTitle(`SF Sauna Rental Agreement — ${params.summary.customer_legal_name}`);
   doc.setAuthor("SF Sauna Rental");
-  doc.setSubject(`Signed rental agreement (${params.summary.agreement_version})`);
+  doc.setSubject("Signed rental agreement");
   doc.setCreationDate(new Date());
 
   return await doc.save();
