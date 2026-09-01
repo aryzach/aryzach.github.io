@@ -511,11 +511,6 @@ const ConfigureStep = ({
         )}
       </Section>
 
-      {activeVersion && (
-        <p className="text-xs text-muted-foreground">
-          Master Agreement: <span className="text-foreground font-medium">{activeVersion}</span>
-        </p>
-      )}
     </div>
   );
 };
