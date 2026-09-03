@@ -75,6 +75,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [signing, setSigning] = useState(false);
   const [customTerm, setCustomTerm] = useState<{ months: number; monthly: number } | null>(null);
   const [minMonths, setMinMonths] = useState<number | null>(null);
+  const [customDeposit, setCustomDeposit] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -95,6 +96,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         : null;
       setCustomTerm(custom);
       setMinMonths(typeof r.min_commitment_months === "number" ? r.min_commitment_months : null);
+      setCustomDeposit(typeof r.custom_security_deposit === "number" ? r.custom_security_deposit : null);
       // Split any prior "street, city" back into fields where possible.
       const priorAddress: string = c?.installation_address ?? r.install_address ?? "";
       const priorStreet =
@@ -152,8 +154,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     [isSf, form.installation_address, form.installation_city],
   );
   const securityDeposit = useMemo(
-    () => (form.sauna_type ? getSecurityDeposit(form.sauna_type) : 0),
-    [form.sauna_type],
+    () => (customDeposit != null ? customDeposit : form.sauna_type ? getSecurityDeposit(form.sauna_type) : 0),
+    [form.sauna_type, customDeposit],
   );
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
