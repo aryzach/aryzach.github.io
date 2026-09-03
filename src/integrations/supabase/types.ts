@@ -520,8 +520,10 @@ export type Database = {
           created_at: string
           custom_commitment_months: number | null
           custom_monthly_price: number | null
+          custom_security_deposit: number | null
           default_payment_method_status: string | null
           default_payment_method_updated_at: string | null
+          default_sauna_type: string | null
           email: string
           first_name: string
           hold_created_at: string | null
@@ -570,8 +572,10 @@ export type Database = {
           created_at?: string
           custom_commitment_months?: number | null
           custom_monthly_price?: number | null
+          custom_security_deposit?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
+          default_sauna_type?: string | null
           email: string
           first_name: string
           hold_created_at?: string | null
@@ -620,8 +624,10 @@ export type Database = {
           created_at?: string
           custom_commitment_months?: number | null
           custom_monthly_price?: number | null
+          custom_security_deposit?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
+          default_sauna_type?: string | null
           email?: string
           first_name?: string
           hold_created_at?: string | null
