@@ -189,7 +189,10 @@ Deno.serve(async (req) => {
         const city = installation_city.trim();
         const combinedAddress = `${streetAddress}, ${city}`;
         const deliveryFee = getDeliveryFee(city) === 0 ? 0 : getDeliveryFee(combinedAddress);
-        const securityDeposit = getSecurityDeposit(saunaInfo.id);
+        const securityDeposit =
+          typeof reservation.custom_security_deposit === "number"
+            ? reservation.custom_security_deposit
+            : getSecurityDeposit(saunaInfo.id);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
 
