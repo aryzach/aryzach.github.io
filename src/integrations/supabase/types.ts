@@ -514,11 +514,13 @@ export type Database = {
           ach_last_error: string | null
           ach_status: string
           admin_notes: string | null
+          allowed_commitment_months: number[] | null
           city: string | null
           consult_status: string
           contract_status: string
           created_at: string
           custom_commitment_months: number | null
+          custom_install_fee: number | null
           custom_monthly_price: number | null
           custom_security_deposit: number | null
           default_payment_method_status: string | null
@@ -566,11 +568,13 @@ export type Database = {
           ach_last_error?: string | null
           ach_status?: string
           admin_notes?: string | null
+          allowed_commitment_months?: number[] | null
           city?: string | null
           consult_status?: string
           contract_status?: string
           created_at?: string
           custom_commitment_months?: number | null
+          custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_security_deposit?: number | null
           default_payment_method_status?: string | null
@@ -618,11 +622,13 @@ export type Database = {
           ach_last_error?: string | null
           ach_status?: string
           admin_notes?: string | null
+          allowed_commitment_months?: number[] | null
           city?: string | null
           consult_status?: string
           contract_status?: string
           created_at?: string
           custom_commitment_months?: number | null
+          custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_security_deposit?: number | null
           default_payment_method_status?: string | null
