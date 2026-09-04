@@ -244,7 +244,7 @@ const AdminReservations = () => {
     customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>(STATUS_PRESET as unknown as string[]);
   const INVENTORY_COLS: [ColKey, string][] = [
     ["id", "ID"],
     ["location", "Location"],
