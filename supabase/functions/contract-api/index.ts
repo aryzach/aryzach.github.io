@@ -42,6 +42,10 @@ interface AuthedReservation {
   min_commitment_months: number | null;
   custom_commitment_months: number | null;
   custom_monthly_price: number | null;
+  custom_security_deposit: number | null;
+  custom_install_fee: number | null;
+  allowed_commitment_months: number[] | null;
+  default_sauna_type: string | null;
   contract_status: string;
 }
 
@@ -120,6 +124,10 @@ Deno.serve(async (req) => {
             min_commitment_months: reservation.min_commitment_months,
             custom_commitment_months: reservation.custom_commitment_months,
             custom_monthly_price: reservation.custom_monthly_price,
+            custom_security_deposit: reservation.custom_security_deposit,
+            custom_install_fee: reservation.custom_install_fee,
+            allowed_commitment_months: reservation.allowed_commitment_months,
+            default_sauna_type: reservation.default_sauna_type,
           },
           contract: current,
           voided_contracts: list.filter((c: any) => c.status === "Voided"),
