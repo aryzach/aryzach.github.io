@@ -875,6 +875,8 @@ const AdminReservations = () => {
                             options={STATUSES as unknown as string[]}
                             value={statusFilter}
                             onChange={setStatusFilter}
+                            preset={STATUS_PRESET as unknown as string[]}
+                            presetLabel="Active (preset)"
                           />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
