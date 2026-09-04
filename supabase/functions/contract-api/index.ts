@@ -179,6 +179,12 @@ Deno.serve(async (req) => {
         if (minMonths && !isCustomMonths && months < minMonths) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
+        const allowedMonths = Array.isArray(reservation.allowed_commitment_months)
+          ? (reservation.allowed_commitment_months as number[])
+          : null;
+        if (allowedMonths?.length && !allowedMonths.includes(months)) {
+          return json({ error: "Please choose an initial commitment length." }, 400);
+        }
 
         const monthlyPrice =
           hasCustomTerm && months === reservation.custom_commitment_months
