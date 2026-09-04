@@ -54,7 +54,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, default_sauna_type, contract_status",
     )
     .eq("id", id)
     .eq("secure_token", token)
