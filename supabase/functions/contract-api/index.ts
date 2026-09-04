@@ -42,6 +42,10 @@ interface AuthedReservation {
   min_commitment_months: number | null;
   custom_commitment_months: number | null;
   custom_monthly_price: number | null;
+  custom_security_deposit: number | null;
+  custom_install_fee: number | null;
+  allowed_commitment_months: number[] | null;
+  default_sauna_type: string | null;
   contract_status: string;
 }
 
