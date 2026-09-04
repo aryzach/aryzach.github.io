@@ -73,7 +73,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [typedName, setTypedName] = useState("");
   const [acks, setAcks] = useState<Record<string, boolean>>({});
   const [signing, setSigning] = useState(false);
-  const [customTerm, setCustomTerm] = useState<{ months: number; monthly: number } | null>(null);
+  const [customTerm, setCustomTerm] = useState<{ months: number; monthly: number; installFee: number } | null>(null);
+  const [allowedMonths, setAllowedMonths] = useState<number[] | null>(null);
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
 
@@ -92,9 +93,18 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       const hasCustom =
         typeof r.custom_commitment_months === "number" && typeof r.custom_monthly_price === "number";
       const custom = hasCustom
-        ? { months: r.custom_commitment_months as number, monthly: r.custom_monthly_price as number }
+        ? {
+            months: r.custom_commitment_months as number,
+            monthly: r.custom_monthly_price as number,
+            installFee: typeof r.custom_install_fee === "number" ? (r.custom_install_fee as number) : 0,
+          }
         : null;
       setCustomTerm(custom);
+      setAllowedMonths(
+        Array.isArray(r.allowed_commitment_months) && r.allowed_commitment_months.length
+          ? (r.allowed_commitment_months as number[])
+          : null,
+      );
       setMinMonths(typeof r.min_commitment_months === "number" ? r.min_commitment_months : null);
       setCustomDeposit(typeof r.custom_security_deposit === "number" ? r.custom_security_deposit : null);
       // Split any prior "street, city" back into fields where possible.
@@ -286,6 +296,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               activeVersion={activeVersion}
               customTerm={customTerm}
               minMonths={minMonths}
+              allowedMonths={allowedMonths}
             />
           ) : step === "preview" && contract ? (
             <PreviewStep
@@ -346,7 +357,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, minMonths,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, minMonths, allowedMonths,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -356,19 +367,21 @@ const ConfigureStep = ({
   securityDeposit: number;
   isSf: boolean;
   activeVersion: string;
-  customTerm?: { months: number; monthly: number } | null;
+  customTerm?: { months: number; monthly: number; installFee: number } | null;
   minMonths?: number | null;
+  allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const termOptions = useMemo(() => {
     const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
     const all = customTerm ? [...base, customTerm.months] : base;
-    return Array.from(new Set(all)).sort((a, b) => a - b);
-  }, [customTerm, minMonths]);
+    const unique = Array.from(new Set(all)).sort((a, b) => a - b);
+    return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
+  }, [customTerm, minMonths, allowedMonths]);
   const installFee = useMemo(
     () =>
       customTerm && form.commitment_months === customTerm.months
-        ? 0
+        ? customTerm.installFee
         : form.sauna_type
           ? getInstallFee(form.sauna_type, form.commitment_months)
           : null,
@@ -440,7 +453,7 @@ const ConfigureStep = ({
                     : null;
               const installFee =
                 customTerm && m === customTerm.months
-                  ? 0
+                  ? customTerm.installFee
                   : form.sauna_type
                     ? getInstallFee(form.sauna_type, m)
                     : null;
