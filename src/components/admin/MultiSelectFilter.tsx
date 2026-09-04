@@ -7,12 +7,16 @@ export function MultiSelectFilter({
   onChange,
   allLabel = "All",
   className,
+  preset,
+  presetLabel = "Preset",
 }: {
   options: string[];
   value: string[];
   onChange: (v: string[]) => void;
   allLabel?: string;
   className?: string;
+  preset?: string[];
+  presetLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -54,6 +58,15 @@ export function MultiSelectFilter({
           >
             {allLabel}
           </button>
+          {preset && (
+            <button
+              type="button"
+              className="w-full text-left px-2 py-1 text-xs hover:bg-muted rounded"
+              onClick={() => onChange(preset)}
+            >
+              {presetLabel}
+            </button>
+          )}
           <div className="my-1 border-t border-border" />
           {options.map((o) => (
             <label
