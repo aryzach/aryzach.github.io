@@ -5,21 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
-import { Download } from "lucide-react";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-accounting-pw";
 
 interface AccountingRow {
   reservation_id: string;
   name: string;
-  email: string | null;
-  sauna_type: string | null;
-  city: string | null;
-  contract_status: string | null;
-  contract_id: string | null;
-  contract_downloadable: boolean;
+  unit_code: string | null;
   commitment_months: number | null;
   monthly_price: number | null;
   security_deposit: number | null;
@@ -93,15 +86,6 @@ const Accounting = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
 
-  const download = async (row: AccountingRow) => {
-    try {
-      const { url } = await call({ action: "contract_download_url", contract_id: row.contract_id });
-      window.open(url, "_blank", "noopener");
-    } catch (e) {
-      toast.error((e as Error).message || "Could not open contract");
-    }
-  };
-
   const totals = useMemo(() => {
     const monthly = rows.reduce(
       (sum, r) =>
@@ -163,7 +147,7 @@ const Accounting = () => {
                 <thead className="bg-muted/50">
                   <tr className="text-left">
                     <th className="px-3 py-2 font-medium">Customer</th>
-                    <th className="px-3 py-2 font-medium">Sauna</th>
+                    <th className="px-3 py-2 font-medium">Sauna #</th>
                     <th className="px-3 py-2 font-medium">Term</th>
                     <th className="px-3 py-2 font-medium">Monthly</th>
                     <th className="px-3 py-2 font-medium">Security deposit</th>
@@ -173,17 +157,13 @@ const Accounting = () => {
                     <th className="px-3 py-2 font-medium">Damage protection</th>
                     <th className="px-3 py-2 font-medium">Second heater</th>
                     <th className="px-3 py-2 font-medium">Stair / elevator</th>
-                    <th className="px-3 py-2 font-medium">Contract</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((r) => (
                     <tr key={r.reservation_id} className="border-t border-border align-top">
-                      <td className="px-3 py-2">
-                        <div className="font-medium text-foreground">{r.name}</div>
-                        <div className="text-xs text-muted-foreground">{r.email}</div>
-                      </td>
-                      <td className="px-3 py-2">{r.sauna_type ?? "—"}</td>
+                      <td className="px-3 py-2 font-medium text-foreground">{r.name}</td>
+                      <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
                       <td className="px-3 py-2">{r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
                       <td className="px-3 py-2 font-medium">{money(r.monthly_price)}</td>
                       <td className="px-3 py-2">{money(r.security_deposit)}</td>
@@ -197,20 +177,11 @@ const Accounting = () => {
                         {r.second_heater_selected ? `${money(r.second_heater_monthly_price)}/mo` : "—"}
                       </td>
                       <td className="px-3 py-2">{money(r.stair_elevator_charge)}</td>
-                      <td className="px-3 py-2">
-                        {r.contract_downloadable ? (
-                          <Button size="sm" variant="outline" onClick={() => download(r)}>
-                            <Download className="h-3.5 w-3.5 mr-1" /> Download
-                          </Button>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">{r.contract_status ?? "None"}</span>
-                        )}
-                      </td>
                     </tr>
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={12} className="px-3 py-8 text-center text-muted-foreground">
+                      <td colSpan={11} className="px-3 py-8 text-center text-muted-foreground">
                         No customers yet.
                       </td>
                     </tr>
