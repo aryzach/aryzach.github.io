@@ -29,3 +29,5 @@ verify_jwt = false
 
 [functions.x402]
 verify_jwt = false
+[functions.accounting-api]
+verify_jwt = false
