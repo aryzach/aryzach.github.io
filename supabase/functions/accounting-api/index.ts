@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
         return json({ ok: true });
 
       case "list_accounting": {
-        const [resRes, conRes] = await Promise.all([
+        const [resRes, conRes, invRes] = await Promise.all([
           supabase
             .from("reservations")
             .select(
@@ -64,14 +64,26 @@ Deno.serve(async (req) => {
             .select("*")
             .eq("status", "Signed")
             .order("created_at", { ascending: false }),
+          supabase
+            .from("sauna_inventory")
+            .select("unit_code, current_customer_id, future_customer_id"),
         ]);
         if (resRes.error) throw resRes.error;
         if (conRes.error) throw conRes.error;
+        if (invRes.error) throw invRes.error;
 
         const contractsByReservation = new Map<string, any>();
         for (const c of conRes.data ?? []) {
           if (!contractsByReservation.has(c.reservation_id)) {
             contractsByReservation.set(c.reservation_id, c);
+          }
+        }
+
+        const unitByReservation = new Map<string, string | null>();
+        for (const u of invRes.data ?? []) {
+          if (u.current_customer_id) unitByReservation.set(u.current_customer_id, u.unit_code);
+          if (u.future_customer_id && !unitByReservation.has(u.future_customer_id)) {
+            unitByReservation.set(u.future_customer_id, u.unit_code);
           }
         }
 
@@ -90,23 +102,14 @@ Deno.serve(async (req) => {
           }
 
           const name =
-            c?.customer_legal_name ||
             `${(r.first_name ?? "").trim()} ${(r.last_name ?? "").trim()}`.trim() ||
-            r.email;
+            c?.customer_legal_name ||
+            "—";
 
           return {
             reservation_id: r.id,
             name,
-            email: r.email,
-            phone: r.phone,
-            sauna_type: c?.sauna_type ?? r.sauna_type_id,
-            city: r.city,
-            reservation_status: r.reservation_status,
-            payment_status: r.payment_status,
-            contract_status: c?.status ?? r.contract_status,
-            contract_id: c?.id ?? null,
-            contract_downloadable: !!c?.signed_pdf_storage_path,
-            signed_at: c?.signed_at ?? null,
+            unit_code: unitByReservation.get(r.id) ?? null,
             commitment_months: months,
             monthly_price: c?.monthly_price ?? null,
             security_deposit: c?.security_deposit ?? null,
@@ -120,6 +123,7 @@ Deno.serve(async (req) => {
             reservation_deposit: 200,
           };
         });
+
 
         return json({ rows });
       }
