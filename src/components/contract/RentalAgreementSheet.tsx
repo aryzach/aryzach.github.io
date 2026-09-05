@@ -466,18 +466,23 @@ const ConfigureStep = ({
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {termOptions.map((m) => {
+              const opt = customOptions?.find((o) => o.months === m);
               const price =
-                customTerm && m === customTerm.months
-                  ? customTerm.monthly
-                  : form.sauna_type
-                    ? getMonthlyPrice(form.sauna_type, m)
-                    : null;
+                opt
+                  ? opt.monthly
+                  : customTerm && m === customTerm.months
+                    ? customTerm.monthly
+                    : form.sauna_type
+                      ? getMonthlyPrice(form.sauna_type, m)
+                      : null;
               const installFee =
-                customTerm && m === customTerm.months
-                  ? customTerm.installFee
-                  : form.sauna_type
-                    ? getInstallFee(form.sauna_type, m)
-                    : null;
+                opt
+                  ? opt.installFee
+                  : customTerm && m === customTerm.months
+                    ? customTerm.installFee
+                    : form.sauna_type
+                      ? getInstallFee(form.sauna_type, m)
+                      : null;
               const active = form.commitment_months === m;
               return (
                 <button
