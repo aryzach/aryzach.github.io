@@ -42,6 +42,7 @@ import PrefabSaunaInstallationForm from "./pages/PrefabSaunaInstallationForm";
 import ReservationSystem from "./pages/ReservationSystem";
 import ReservationConfirmation from "./pages/ReservationConfirmation";
 import AdminReservations from "./pages/AdminReservations";
+import Accounting from "./pages/Accounting";
 import ReservationDashboard from "./pages/ReservationDashboard";
 import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
@@ -163,6 +164,7 @@ const App = () => (
           <Route path="/reservation-system" element={<ReservationSystem />} />
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
           <Route path="/admin" element={<AdminReservations />} />
+          <Route path="/accounting" element={<Accounting />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
           <Route path="/care" element={<Care />} />
           <Route path="/reserve-traditional-landing" element={<ReserveTraditionalLanding />} />
