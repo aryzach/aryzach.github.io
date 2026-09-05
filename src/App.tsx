@@ -164,6 +164,7 @@ const App = () => (
           <Route path="/reservation-system" element={<ReservationSystem />} />
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
           <Route path="/admin" element={<AdminReservations />} />
+          <Route path="/accounting" element={<Accounting />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
           <Route path="/care" element={<Care />} />
           <Route path="/reserve-traditional-landing" element={<ReserveTraditionalLanding />} />
