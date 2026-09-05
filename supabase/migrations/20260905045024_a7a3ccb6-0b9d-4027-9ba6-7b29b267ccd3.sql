@@ -1,0 +1,2 @@
+ALTER TABLE public.reservations ADD COLUMN IF NOT EXISTS custom_pricing_options jsonb DEFAULT NULL;
+COMMENT ON COLUMN public.reservations.custom_pricing_options IS 'Optional JSON array of custom contract pricing options: [{"months": int, "monthly_price": int, "install_fee": int}]. When set, these are the only commitment terms offered on the contract.';

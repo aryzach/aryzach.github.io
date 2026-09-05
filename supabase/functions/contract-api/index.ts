@@ -45,6 +45,7 @@ interface AuthedReservation {
   custom_security_deposit: number | null;
   custom_install_fee: number | null;
   allowed_commitment_months: number[] | null;
+  custom_pricing_options: { months: number; monthly_price: number; install_fee: number }[] | null;
   default_sauna_type: string | null;
   contract_status: string;
 }
@@ -58,7 +59,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, default_sauna_type, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, custom_pricing_options, default_sauna_type, contract_status",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -127,6 +128,7 @@ Deno.serve(async (req) => {
             custom_security_deposit: reservation.custom_security_deposit,
             custom_install_fee: reservation.custom_install_fee,
             allowed_commitment_months: reservation.allowed_commitment_months,
+            custom_pricing_options: reservation.custom_pricing_options,
             default_sauna_type: reservation.default_sauna_type,
           },
           contract: current,
@@ -170,8 +172,16 @@ Deno.serve(async (req) => {
         const hasCustomTerm =
           typeof reservation.custom_commitment_months === "number" &&
           typeof reservation.custom_monthly_price === "number";
+        const customOptions = Array.isArray(reservation.custom_pricing_options)
+          ? reservation.custom_pricing_options
+          : null;
         const months = Number(commitment_months);
-        if (
+        const matchedOption = customOptions?.find((o) => Number(o?.months) === months) ?? null;
+        if (customOptions?.length) {
+          if (!matchedOption) {
+            return json({ error: "Please choose an initial commitment length." }, 400);
+          }
+        } else if (
           !COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12) &&
           !(hasCustomTerm && months === reservation.custom_commitment_months)
         ) {
@@ -183,7 +193,8 @@ Deno.serve(async (req) => {
         const minMonths = typeof reservation.min_commitment_months === "number"
           ? reservation.min_commitment_months
           : null;
-        const isCustomMonths = hasCustomTerm && months === reservation.custom_commitment_months;
+        const isCustomMonths =
+          (hasCustomTerm && months === reservation.custom_commitment_months) || !!matchedOption;
         if (minMonths && !isCustomMonths && months < minMonths) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
@@ -195,9 +206,11 @@ Deno.serve(async (req) => {
         }
 
         const monthlyPrice =
-          hasCustomTerm && months === reservation.custom_commitment_months
-            ? reservation.custom_monthly_price
-            : getMonthlyPrice(saunaInfo.id, months);
+          matchedOption
+            ? Number(matchedOption.monthly_price)
+            : hasCustomTerm && months === reservation.custom_commitment_months
+              ? reservation.custom_monthly_price
+              : getMonthlyPrice(saunaInfo.id, months);
         if (monthlyPrice == null) return json({ error: "No pricing available for that selection." }, 400);
         const streetAddress = installation_address.trim();
         const city = installation_city.trim();

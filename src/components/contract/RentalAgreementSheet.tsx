@@ -77,6 +77,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [allowedMonths, setAllowedMonths] = useState<number[] | null>(null);
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
+  const [customOptions, setCustomOptions] = useState<{ months: number; monthly: number; installFee: number }[] | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -100,6 +101,16 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           }
         : null;
       setCustomTerm(custom);
+      const opts = Array.isArray(r.custom_pricing_options)
+        ? (r.custom_pricing_options as any[])
+            .map((o) => ({
+              months: Number(o?.months),
+              monthly: Number(o?.monthly_price),
+              installFee: Number(o?.install_fee ?? 0),
+            }))
+            .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
+        : null;
+      setCustomOptions(opts?.length ? opts : null);
       setAllowedMonths(
         Array.isArray(r.allowed_commitment_months) && r.allowed_commitment_months.length
           ? (r.allowed_commitment_months as number[])
@@ -123,7 +134,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         installation_address: priorStreet,
         installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.default_sauna_type ?? r.sauna_type_id ?? "",
-        commitment_months: c?.commitment_months ?? custom?.months ?? r.min_commitment_months ?? 6,
+        commitment_months: c?.commitment_months ?? custom?.months ?? opts?.[0]?.months ?? r.min_commitment_months ?? 6,
         insurance_selected: !!c?.insurance_selected,
         second_heater_selected: !!c?.second_heater_selected,
         preferred_installation_date:
@@ -153,10 +164,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
+      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      if (opt) return opt.monthly;
       if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
       return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
     },
-    [form.sauna_type, form.commitment_months, customTerm],
+    [form.sauna_type, form.commitment_months, customTerm, customOptions],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
@@ -295,6 +308,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               isSf={isSf}
               activeVersion={activeVersion}
               customTerm={customTerm}
+              customOptions={customOptions}
               minMonths={minMonths}
               allowedMonths={allowedMonths}
             />
@@ -357,7 +371,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, minMonths, allowedMonths,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, customOptions, minMonths, allowedMonths,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -368,24 +382,31 @@ const ConfigureStep = ({
   isSf: boolean;
   activeVersion: string;
   customTerm?: { months: number; monthly: number; installFee: number } | null;
+  customOptions?: { months: number; monthly: number; installFee: number }[] | null;
   minMonths?: number | null;
   allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const termOptions = useMemo(() => {
+    if (customOptions?.length) {
+      return customOptions.map((o) => o.months).sort((a, b) => a - b);
+    }
     const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
     const all = customTerm ? [...base, customTerm.months] : base;
     const unique = Array.from(new Set(all)).sort((a, b) => a - b);
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
-  }, [customTerm, minMonths, allowedMonths]);
+  }, [customTerm, customOptions, minMonths, allowedMonths]);
   const installFee = useMemo(
-    () =>
-      customTerm && form.commitment_months === customTerm.months
+    () => {
+      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      if (opt) return opt.installFee;
+      return customTerm && form.commitment_months === customTerm.months
         ? customTerm.installFee
         : form.sauna_type
           ? getInstallFee(form.sauna_type, form.commitment_months)
-          : null,
-    [form.sauna_type, form.commitment_months, customTerm],
+          : null;
+    },
+    [form.sauna_type, form.commitment_months, customTerm, customOptions],
   );
   return (
     <div className="space-y-8">
@@ -445,18 +466,23 @@ const ConfigureStep = ({
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {termOptions.map((m) => {
+              const opt = customOptions?.find((o) => o.months === m);
               const price =
-                customTerm && m === customTerm.months
-                  ? customTerm.monthly
-                  : form.sauna_type
-                    ? getMonthlyPrice(form.sauna_type, m)
-                    : null;
+                opt
+                  ? opt.monthly
+                  : customTerm && m === customTerm.months
+                    ? customTerm.monthly
+                    : form.sauna_type
+                      ? getMonthlyPrice(form.sauna_type, m)
+                      : null;
               const installFee =
-                customTerm && m === customTerm.months
-                  ? customTerm.installFee
-                  : form.sauna_type
-                    ? getInstallFee(form.sauna_type, m)
-                    : null;
+                opt
+                  ? opt.installFee
+                  : customTerm && m === customTerm.months
+                    ? customTerm.installFee
+                    : form.sauna_type
+                      ? getInstallFee(form.sauna_type, m)
+                      : null;
               const active = form.commitment_months === m;
               return (
                 <button

@@ -522,6 +522,7 @@ export type Database = {
           custom_commitment_months: number | null
           custom_install_fee: number | null
           custom_monthly_price: number | null
+          custom_pricing_options: Json | null
           custom_security_deposit: number | null
           default_payment_method_status: string | null
           default_payment_method_updated_at: string | null
@@ -576,6 +577,7 @@ export type Database = {
           custom_commitment_months?: number | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
+          custom_pricing_options?: Json | null
           custom_security_deposit?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
@@ -630,6 +632,7 @@ export type Database = {
           custom_commitment_months?: number | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
+          custom_pricing_options?: Json | null
           custom_security_deposit?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
