@@ -77,6 +77,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [allowedMonths, setAllowedMonths] = useState<number[] | null>(null);
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
+  const [customOptions, setCustomOptions] = useState<{ months: number; monthly: number; installFee: number }[] | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -100,6 +101,16 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           }
         : null;
       setCustomTerm(custom);
+      const opts = Array.isArray(r.custom_pricing_options)
+        ? (r.custom_pricing_options as any[])
+            .map((o) => ({
+              months: Number(o?.months),
+              monthly: Number(o?.monthly_price),
+              installFee: Number(o?.install_fee ?? 0),
+            }))
+            .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
+        : null;
+      setCustomOptions(opts?.length ? opts : null);
       setAllowedMonths(
         Array.isArray(r.allowed_commitment_months) && r.allowed_commitment_months.length
           ? (r.allowed_commitment_months as number[])
