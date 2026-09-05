@@ -62,6 +62,7 @@ Deno.serve(async (req) => {
           supabase
             .from("contracts")
             .select("*")
+            .eq("status", "Signed")
             .order("created_at", { ascending: false }),
         ]);
         if (resRes.error) throw resRes.error;
@@ -69,14 +70,14 @@ Deno.serve(async (req) => {
 
         const contractsByReservation = new Map<string, any>();
         for (const c of conRes.data ?? []) {
-          const prev = contractsByReservation.get(c.reservation_id);
-          // Prefer signed contract, else most recent (already sorted desc).
-          if (!prev || (c.status === "Signed" && prev.status !== "Signed")) {
+          if (!contractsByReservation.has(c.reservation_id)) {
             contractsByReservation.set(c.reservation_id, c);
           }
         }
 
-        const rows = (resRes.data ?? []).map((r: any) => {
+        const rows = (resRes.data ?? [])
+          .filter((r: any) => contractsByReservation.has(r.id))
+          .map((r: any) => {
           const c = contractsByReservation.get(r.id) ?? null;
           const months = c?.commitment_months ?? null;
           let installFee: number | null = null;
