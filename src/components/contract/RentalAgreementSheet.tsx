@@ -134,7 +134,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         installation_address: priorStreet,
         installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.default_sauna_type ?? r.sauna_type_id ?? "",
-        commitment_months: c?.commitment_months ?? custom?.months ?? r.min_commitment_months ?? 6,
+        commitment_months: c?.commitment_months ?? custom?.months ?? opts?.[0]?.months ?? r.min_commitment_months ?? 6,
         insurance_selected: !!c?.insurance_selected,
         second_heater_selected: !!c?.second_heater_selected,
         preferred_installation_date:
@@ -164,10 +164,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
+      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      if (opt) return opt.monthly;
       if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
       return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
     },
-    [form.sauna_type, form.commitment_months, customTerm],
+    [form.sauna_type, form.commitment_months, customTerm, customOptions],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
