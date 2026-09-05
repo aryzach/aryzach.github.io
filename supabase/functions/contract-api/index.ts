@@ -172,8 +172,16 @@ Deno.serve(async (req) => {
         const hasCustomTerm =
           typeof reservation.custom_commitment_months === "number" &&
           typeof reservation.custom_monthly_price === "number";
+        const customOptions = Array.isArray(reservation.custom_pricing_options)
+          ? reservation.custom_pricing_options
+          : null;
         const months = Number(commitment_months);
-        if (
+        const matchedOption = customOptions?.find((o) => Number(o?.months) === months) ?? null;
+        if (customOptions?.length) {
+          if (!matchedOption) {
+            return json({ error: "Please choose an initial commitment length." }, 400);
+          }
+        } else if (
           !COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12) &&
           !(hasCustomTerm && months === reservation.custom_commitment_months)
         ) {
@@ -185,7 +193,8 @@ Deno.serve(async (req) => {
         const minMonths = typeof reservation.min_commitment_months === "number"
           ? reservation.min_commitment_months
           : null;
-        const isCustomMonths = hasCustomTerm && months === reservation.custom_commitment_months;
+        const isCustomMonths =
+          (hasCustomTerm && months === reservation.custom_commitment_months) || !!matchedOption;
         if (minMonths && !isCustomMonths && months < minMonths) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
@@ -197,9 +206,11 @@ Deno.serve(async (req) => {
         }
 
         const monthlyPrice =
-          hasCustomTerm && months === reservation.custom_commitment_months
-            ? reservation.custom_monthly_price
-            : getMonthlyPrice(saunaInfo.id, months);
+          matchedOption
+            ? Number(matchedOption.monthly_price)
+            : hasCustomTerm && months === reservation.custom_commitment_months
+              ? reservation.custom_monthly_price
+              : getMonthlyPrice(saunaInfo.id, months);
         if (monthlyPrice == null) return json({ error: "No pricing available for that selection." }, 400);
         const streetAddress = installation_address.trim();
         const city = installation_city.trim();
