@@ -308,6 +308,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               isSf={isSf}
               activeVersion={activeVersion}
               customTerm={customTerm}
+              customOptions={customOptions}
               minMonths={minMonths}
               allowedMonths={allowedMonths}
             />
