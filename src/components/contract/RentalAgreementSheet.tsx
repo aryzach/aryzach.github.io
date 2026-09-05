@@ -371,7 +371,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, minMonths, allowedMonths,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, customOptions, minMonths, allowedMonths,
 }: {
   form: FormState;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
@@ -382,24 +382,31 @@ const ConfigureStep = ({
   isSf: boolean;
   activeVersion: string;
   customTerm?: { months: number; monthly: number; installFee: number } | null;
+  customOptions?: { months: number; monthly: number; installFee: number }[] | null;
   minMonths?: number | null;
   allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const termOptions = useMemo(() => {
+    if (customOptions?.length) {
+      return customOptions.map((o) => o.months).sort((a, b) => a - b);
+    }
     const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
     const all = customTerm ? [...base, customTerm.months] : base;
     const unique = Array.from(new Set(all)).sort((a, b) => a - b);
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
-  }, [customTerm, minMonths, allowedMonths]);
+  }, [customTerm, customOptions, minMonths, allowedMonths]);
   const installFee = useMemo(
-    () =>
-      customTerm && form.commitment_months === customTerm.months
+    () => {
+      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      if (opt) return opt.installFee;
+      return customTerm && form.commitment_months === customTerm.months
         ? customTerm.installFee
         : form.sauna_type
           ? getInstallFee(form.sauna_type, form.commitment_months)
-          : null,
-    [form.sauna_type, form.commitment_months, customTerm],
+          : null;
+    },
+    [form.sauna_type, form.commitment_months, customTerm, customOptions],
   );
   return (
     <div className="space-y-8">
