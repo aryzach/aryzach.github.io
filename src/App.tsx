@@ -42,6 +42,7 @@ import PrefabSaunaInstallationForm from "./pages/PrefabSaunaInstallationForm";
 import ReservationSystem from "./pages/ReservationSystem";
 import ReservationConfirmation from "./pages/ReservationConfirmation";
 import AdminReservations from "./pages/AdminReservations";
+import Accounting from "./pages/Accounting";
 import ReservationDashboard from "./pages/ReservationDashboard";
 import { ReservationModalProvider } from "@/contexts/ReservationModal";
 import NotFound from "./pages/NotFound";
