@@ -121,6 +121,8 @@ export const ReservationsListPanel = ({
     "Reservation Hold",
     "Reservation Confirmed",
     "Needs Manual Review",
+    "Returning",
+    "Transfer Planned",
   ]);
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
