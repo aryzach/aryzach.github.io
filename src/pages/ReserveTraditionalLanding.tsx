@@ -147,7 +147,7 @@ const LandingGallery = () => (
 
 const RentVsBuySection = () => {
   const rows = [
-    { feature: "Price", buy: "$8,485", rent: "$300/mo" },
+    { feature: "Price", buy: "$8,485", rent: "$300+/mo" },
     { feature: "Heater", buy: "Extra", rent: true },
     { feature: "Delivery", buy: "$495", rent: true },
     { feature: "Installation", buy: "$1,495", rent: true },
@@ -210,14 +210,14 @@ const RentVsBuySection = () => {
               $10,475
             </div>
             <div className="p-3 md:p-4 text-center text-base md:text-lg font-semibold flex items-center justify-center">
-              $300/mo
+              $300+/mo
             </div>
           </div>
         </div>
 
         <div className="mt-8 md:mt-10 text-center">
           <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
-            Rent from $300/mo. Everything included.
+            Rates starting from $300/mo. Everything included.
           </p>
           <p className="text-sm text-muted-foreground font-sans">
             Sauna, heater, delivery, installation, maintenance & pickup included.
