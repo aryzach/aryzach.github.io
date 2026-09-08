@@ -43,7 +43,7 @@ const FIELDS: FieldDef[] = [
     label: "Are you comfortable independently moving ~80 lb, 6' × 4' panels, including on stairs?",
     type: "yesno",
   },
-  { name: "anything_else", label: "Anything else we should know? (optional)", type: "textarea", optional: true },
+  { name: "anything_else", label: "Anything else we should know?", type: "textarea", optional: true },
 ];
 
 const CustomerOperationsLead = () => {
