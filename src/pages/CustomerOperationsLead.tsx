@@ -156,6 +156,16 @@ const CustomerOperationsLead = () => {
             </div>
           </div>
 
+          <video
+            src={assetUrl(customerOperationsLeadVideo)}
+            controls
+            muted
+            playsInline
+            preload="metadata"
+            className="w-full rounded-lg border border-border bg-black"
+            aria-label="Customer Operations Lead role overview video"
+          />
+
           {/* About the role */}
           <div className="rounded-lg border border-border p-5">
             <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
