@@ -4,7 +4,7 @@
 const WEBHOOK_URL =
   (import.meta.env.VITE_GHL_HIRING_WEBHOOK_URL as string | undefined) ??
   (import.meta.env.VITE_GHL_INBOUND_WEBHOOK_URL as string | undefined) ??
-  "";
+  "https://services.leadconnectorhq.com/hooks/zyM3BNze9gmgtLAoCCQ0/webhook-trigger/a695d8cd-6c35-49f7-92b0-ad7208e52df4";
 
 const PIPELINE_ID = (import.meta.env.VITE_GHL_HIRING_PIPELINE_ID as string | undefined) ?? "";
 const STAGE_ID = (import.meta.env.VITE_GHL_HIRING_STAGE_ID as string | undefined) ?? "";
