@@ -122,10 +122,6 @@ const CustomerOperationsLead = () => {
           ))}
         </div>
 
-        <p className="mt-3 font-sans text-[15px] text-muted-foreground">
-          Part-time · ~5–10 installs/month · Volume-dependent
-        </p>
-
         <div className="mt-10 space-y-6 font-sans text-[17px] leading-relaxed text-foreground">
           {/* Quick facts */}
           <div className="rounded-lg border border-border bg-muted/30 p-5">
