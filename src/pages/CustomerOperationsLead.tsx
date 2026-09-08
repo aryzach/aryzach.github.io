@@ -222,15 +222,6 @@ const CustomerOperationsLead = () => {
           </div>
         </div>
 
-        {!done && (
-          <a
-            href="#apply"
-            className="mt-10 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Apply
-          </a>
-        )}
-
         <hr className="my-14 border-border" />
 
         {done ? (
@@ -246,9 +237,6 @@ const CustomerOperationsLead = () => {
         ) : (
           <section id="apply">
             <h2 className="font-heading text-[28px] tracking-tight text-foreground">Apply</h2>
-            <p className="mt-2 font-sans text-[16px] text-muted-foreground">
-              No cover letter. Short, straightforward answers are better.
-            </p>
 
             <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
               {FIELDS.map((f) => (
