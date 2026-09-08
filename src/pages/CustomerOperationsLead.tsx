@@ -109,10 +109,19 @@ const CustomerOperationsLead = () => {
           Customer Operations Lead
         </h1>
 
-        <p className="mt-4 font-sans text-[17px] leading-relaxed text-foreground">
-          SF Bay Area · Flexible side job
-          <br />
-          $1,500–$4,000+/month part-time depending on volume
+        <div className="mt-4 flex flex-wrap gap-2">
+          {["SF Bay Area", "Flexible part-time job", "$1,500–$4,000+/month"].map((pill) => (
+            <span
+              key={pill}
+              className="rounded-full border border-border bg-muted/40 px-3 py-1 font-sans text-[14px] font-medium text-foreground"
+            >
+              {pill}
+            </span>
+          ))}
+        </div>
+
+        <p className="mt-3 font-sans text-[15px] text-muted-foreground">
+          Part-time · ~5–10 installs/month · Volume-dependent
         </p>
 
         <div className="mt-10 space-y-6 font-sans text-[17px] leading-relaxed text-foreground">
