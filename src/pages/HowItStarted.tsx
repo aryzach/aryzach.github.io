@@ -31,13 +31,17 @@ const HowItStarted = () => {
                 </p>
                 
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  When I was 27, I was working on a farm and messed up my back.
+                  When I was 27, I was working on a farm and tweaked my back.
                 </p>
-                
+
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  This injury spiraled into three years of debilitating pain and muscle tension throughout my body.
+                  This injury spiraled into debilitating pain and muscle tension throughout my body.
                 </p>
-                
+
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  For the next three years, my life revolved around managing my pain, coordinating my life to avoid flare-ups, and trying to find ways to fix my back for good. After years of failed attempts, I started reckoning with the possibility that this might be something I live with for the rest of my life.
+                </p>
+
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   After trying many other ways to fix my back and heal from pain, I tried using my gym sauna before starting my physical therapy exercises.
                 </p>
