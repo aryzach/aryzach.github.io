@@ -141,7 +141,7 @@ const CustomerOperationsLead = () => {
                 <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
                   Schedule
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">~5–10 installs/month</p>
+                <p className="mt-0.5 font-semibold text-foreground">~5–10 installs/month, part-time</p>
               </div>
               <div>
                 <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -153,7 +153,7 @@ const CustomerOperationsLead = () => {
                 <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
                   Type
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">Flexible side job</p>
+                <p className="mt-0.5 font-semibold text-foreground">Flexible part-time job</p>
               </div>
             </div>
           </div>
