@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { submitApplicationToGHL } from "@/lib/submitApplicationToGHL";
 import { isValidEmail, isValidPhone, formatPhoneInput } from "@/lib/validation";
+import { assetUrl } from "@/lib/assetUrl";
+import customerOperationsLeadVideo from "@/assets/customer-operations-lead-video.mov.asset.json";
 
 const ROLE = "Customer Operations Lead";
 const SOURCE = "Customer Operations Lead Application";
@@ -120,10 +122,6 @@ const CustomerOperationsLead = () => {
           ))}
         </div>
 
-        <p className="mt-3 font-sans text-[15px] text-muted-foreground">
-          Part-time · ~5–10 installs/month · Volume-dependent
-        </p>
-
         <div className="mt-10 space-y-6 font-sans text-[17px] leading-relaxed text-foreground">
           {/* Quick facts */}
           <div className="rounded-lg border border-border bg-muted/30 p-5">
@@ -157,6 +155,16 @@ const CustomerOperationsLead = () => {
               </div>
             </div>
           </div>
+
+          <video
+            src={assetUrl(customerOperationsLeadVideo)}
+            controls
+            muted
+            playsInline
+            preload="metadata"
+            className="w-full rounded-lg border border-border bg-black"
+            aria-label="Customer Operations Lead role overview video"
+          />
 
           {/* About the role */}
           <div className="rounded-lg border border-border p-5">
