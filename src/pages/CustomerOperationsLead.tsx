@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { submitApplicationToGHL } from "@/lib/submitApplicationToGHL";
 import { isValidEmail, isValidPhone, formatPhoneInput } from "@/lib/validation";
+import { assetUrl } from "@/lib/assetUrl";
+import customerOperationsLeadVideo from "@/assets/customer-operations-lead-video.mov.asset.json";
 
 const ROLE = "Customer Operations Lead";
 const SOURCE = "Customer Operations Lead Application";
