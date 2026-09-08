@@ -18,37 +18,30 @@ const FIELDS: FieldDef[] = [
   { name: "full_name", label: "Full name", autoComplete: "name" },
   { name: "phone", label: "Phone", type: "tel", autoComplete: "tel" },
   { name: "email", label: "Email", type: "email", autoComplete: "email" },
-  { name: "city_neighborhood", label: "City / neighborhood" },
   { name: "current_work", label: "What do you currently do for work?", type: "textarea" },
-  { name: "why_interested", label: "Why does this job sound interesting to you?", type: "textarea" },
   {
     name: "vehicle",
-    label: "What vehicle do you own? Include year, make, model, and cargo/bed setup.",
+    label: "What truck or van do you own?\nYear, make, model.",
     type: "textarea",
   },
-  { name: "weekly_schedule", label: "What does your typical weekly schedule look like?", type: "textarea" },
+  {
+    name: "weekly_schedule",
+    label: "What's your general weekday/weekend availability?",
+    type: "textarea",
+  },
+  { name: "why_interested", label: "Why does this job sound like a good fit for you?", type: "textarea" },
   {
     name: "hands_on_experience",
-    label: "Tell us about something you've built, installed, repaired, or moved.",
+    label: "Tell us about something you've built, moved, repaired, or installed that you're proud of.",
     type: "textarea",
   },
-  {
-    name: "long_term_fit",
-    label: "What would make a side job like this worth keeping for 2–3+ years?",
-    type: "textarea",
-  },
-  {
-    name: "job_gone_wrong",
-    label: "Tell us about a time a physical job/project went wrong. What did you do?",
-    type: "textarea",
-  },
+  { name: "city_neighborhood", label: "Where in the Bay Area do you live?" },
   {
     name: "can_move_panels",
     label: "Are you comfortable independently moving ~80 lb, 6' × 4' panels, including on stairs?",
     type: "yesno",
   },
-  { name: "owns_truck_or_van", label: "Do you own a suitable truck or cargo van?", type: "yesno" },
-  { name: "anything_else", label: "Anything else we should know?", type: "textarea", optional: true },
+  { name: "anything_else", label: "Anything else we should know? (optional)", type: "textarea", optional: true },
 ];
 
 const CustomerOperationsLead = () => {
