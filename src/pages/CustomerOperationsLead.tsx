@@ -158,11 +158,12 @@ const CustomerOperationsLead = () => {
 
           <video
             src={assetUrl(customerOperationsLeadVideo)}
-            controls
+            autoPlay
+            loop
             muted
             playsInline
             preload="metadata"
-            className="w-full rounded-lg border border-border bg-black"
+            className="mx-auto w-4/5 rounded-lg border border-border bg-black"
             aria-label="Customer Operations Lead role overview video"
           />
 
