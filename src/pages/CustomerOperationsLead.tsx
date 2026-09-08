@@ -122,52 +122,115 @@ const CustomerOperationsLead = () => {
           $1,500–$4,000+/month part-time depending on volume
         </p>
 
-        <div className="mt-10 space-y-5 font-sans text-[17px] leading-relaxed text-foreground">
-          <p>SF Sauna rents and installs home saunas around the Bay Area.</p>
-          <p>
-            We're looking for someone to completely own the customer experience after a
-            sale: schedule the install, pick up and transport the sauna, move it into the
-            customer's home, assemble it, show them how it works, and make sure they're
-            happy.
-          </p>
-          <p>
-            Most months are ~5–10 installs/removals. You set a consistent weekly
-            availability and can work this around another job.
-          </p>
+        <div className="mt-10 space-y-6 font-sans text-[17px] leading-relaxed text-foreground">
+          {/* Quick facts */}
+          <div className="rounded-lg border border-border bg-muted/30 p-5">
+            <p className="font-heading text-[18px] tracking-tight text-foreground">
+              At a glance
+            </p>
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Pay
+                </p>
+                <p className="mt-0.5 font-semibold text-foreground">$1,500–$4,000+/month</p>
+              </div>
+              <div>
+                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Schedule
+                </p>
+                <p className="mt-0.5 font-semibold text-foreground">~5–10 installs/month</p>
+              </div>
+              <div>
+                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Location
+                </p>
+                <p className="mt-0.5 font-semibold text-foreground">SF Bay Area</p>
+              </div>
+              <div>
+                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Type
+                </p>
+                <p className="mt-0.5 font-semibold text-foreground">Flexible side job</p>
+              </div>
+            </div>
+          </div>
 
-          <div>
-            <p>The job comes down to four things, in this order:</p>
-            <ol className="mt-3 space-y-1.5 pl-5 list-decimal marker:text-muted-foreground">
-              <li>Make the customer happy.</li>
-              <li>Don't damage their home.</li>
-              <li>Don't damage the sauna.</li>
-              <li>Get the sauna installed and working.</li>
+          {/* About the role */}
+          <div className="rounded-lg border border-border p-5">
+            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+              About the role
+            </p>
+            <p className="mt-3">
+              SF Sauna rents and installs home saunas around the Bay Area.
+            </p>
+            <p className="mt-3">
+              We're looking for someone to <strong>completely own the customer experience</strong>{" "}
+              after a sale: schedule the install, pick up and transport the sauna, move it into
+              the customer's home, assemble it, show them how it works, and make sure they're
+              happy.
+            </p>
+            <p className="mt-3">
+              Most months are <strong>~5–10 installs/removals</strong>. You set a consistent
+              weekly availability and can work this around another job.
+            </p>
+          </div>
+
+          {/* The four priorities */}
+          <div className="rounded-lg border border-border p-5">
+            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+              The job comes down to four things, in this order
+            </p>
+            <ol className="mt-4 space-y-3">
+              {[
+                "Make the customer happy.",
+                "Don't damage their home.",
+                "Don't damage the sauna.",
+                "Get the sauna installed and working.",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[13px] font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <span className="pt-0.5">{item}</span>
+                </li>
+              ))}
             </ol>
           </div>
 
-          <div>
-            <p>You should:</p>
-            <ul className="mt-3 space-y-1.5 pl-5 list-disc marker:text-muted-foreground">
-              <li>Be exceptionally reliable and good with customers</li>
-              <li>Be handy, careful, strong, and good at figuring things out</li>
-              <li>Own a truck or cargo van</li>
-              <li>
-                Be able to independently move ~80 lb, 6' × 4' sauna panels, including on
-                stairs
-              </li>
-              <li>Have a consistent enough schedule that we can rely on you</li>
-              <li>Want a great side job you could keep for years</li>
+          {/* What we're looking for */}
+          <div className="rounded-lg border border-border p-5">
+            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+              You should
+            </p>
+            <ul className="mt-4 space-y-3">
+              {[
+                "Be exceptionally reliable and good with customers",
+                "Be handy, careful, strong, and good at figuring things out",
+                "Own a truck or cargo van",
+                "Be able to independently move ~80 lb, 6' × 4' sauna panels, including on stairs",
+                "Have a consistent enough schedule that we can rely on you",
+                "Want a great side job you could keep for years",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{item}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <p>
-            Occasionally you'll also help receive sauna shipments, prep equipment, and
-            handle miscellaneous field operations.
-          </p>
-          <p>
-            We're less interested in your résumé than whether we'd trust you to take a
-            customer from us and know they'll be taken care of.
-          </p>
+          {/* Closing */}
+          <div className="rounded-lg border border-border p-5">
+            <p>
+              Occasionally you'll also help receive sauna shipments, prep equipment, and
+              handle miscellaneous field operations.
+            </p>
+            <p className="mt-3">
+              We're less interested in your résumé than whether we'd trust you to take a
+              customer from us and know they'll be taken care of.
+            </p>
+          </div>
         </div>
 
         {!done && (
