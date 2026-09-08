@@ -53,6 +53,7 @@ import ReserveTraditionalLandingConsult from "./pages/ReserveTraditionalLandingC
 import A2PFormReview from "./pages/A2PFormReview";
 import TraditionalSaunaSpecs from "./pages/TraditionalSaunaSpecs";
 import SleepIssuesLanding from "./pages/blog/SleepIssuesLanding";
+import CustomerOperationsLead from "./pages/CustomerOperationsLead";
 import { registerWebMCP } from "@/lib/webmcp";
 import { captureUtmParams } from "@/lib/submitLeadToGHL";
 
@@ -172,6 +173,7 @@ const App = () => (
           <Route path="/reserve-traditional-landing-consult" element={<ReserveTraditionalLandingConsult />} />
           <Route path="/a2p-form-review" element={<A2PFormReview />} />
           <Route path="/traditional-sauna-specs" element={<TraditionalSaunaSpecs />} />
+          <Route path="/careers/customer-operations-lead" element={<CustomerOperationsLead />} />
           <Route path="/blog/landing/How-to-Fix-All-Your-Sleep-Issues-in-1-Day" element={<SleepIssuesLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
