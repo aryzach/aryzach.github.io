@@ -187,28 +187,6 @@ const CustomerOperationsLead = () => {
             </p>
           </div>
 
-          {/* The four priorities */}
-          <div className="rounded-lg border border-border p-5">
-            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
-              The job comes down to four things, in this order
-            </p>
-            <ol className="mt-4 space-y-3">
-              {[
-                "Make the customer happy.",
-                "Don't damage their home.",
-                "Don't damage the sauna.",
-                "Get the sauna installed and working.",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[13px] font-bold text-primary">
-                    {i + 1}
-                  </span>
-                  <span className="pt-0.5">{item}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
           {/* What we're looking for */}
           <div className="rounded-lg border border-border p-5">
             <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -244,15 +222,6 @@ const CustomerOperationsLead = () => {
           </div>
         </div>
 
-        {!done && (
-          <a
-            href="#apply"
-            className="mt-10 inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Apply
-          </a>
-        )}
-
         <hr className="my-14 border-border" />
 
         {done ? (
@@ -268,9 +237,6 @@ const CustomerOperationsLead = () => {
         ) : (
           <section id="apply">
             <h2 className="font-heading text-[28px] tracking-tight text-foreground">Apply</h2>
-            <p className="mt-2 font-sans text-[16px] text-muted-foreground">
-              No cover letter. Short, straightforward answers are better.
-            </p>
 
             <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
               {FIELDS.map((f) => (
