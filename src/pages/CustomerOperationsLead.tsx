@@ -187,28 +187,6 @@ const CustomerOperationsLead = () => {
             </p>
           </div>
 
-          {/* The four priorities */}
-          <div className="rounded-lg border border-border p-5">
-            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
-              The job comes down to four things, in this order
-            </p>
-            <ol className="mt-4 space-y-3">
-              {[
-                "Make the customer happy.",
-                "Don't damage their home.",
-                "Don't damage the sauna.",
-                "Get the sauna installed and working.",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[13px] font-bold text-primary">
-                    {i + 1}
-                  </span>
-                  <span className="pt-0.5">{item}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
           {/* What we're looking for */}
           <div className="rounded-lg border border-border p-5">
             <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
