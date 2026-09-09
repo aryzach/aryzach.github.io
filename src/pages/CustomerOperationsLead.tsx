@@ -130,7 +130,7 @@ const CustomerOperationsLead = () => {
       }
       if (!pixelFiredRef.current) {
         pixelFiredRef.current = true;
-        trackCustomerOpsApplication();
+        trackSubmitApplication();
       }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
