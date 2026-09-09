@@ -24,6 +24,7 @@ interface AccountingRow {
   second_heater_monthly_price: number;
   stair_elevator_charge: number | null;
   reservation_deposit: number;
+  payment_method: string;
 }
 
 const money = (v: number | null | undefined) =>
