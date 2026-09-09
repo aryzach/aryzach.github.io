@@ -34,10 +34,10 @@ function ensureMetaPixel() {
   window.fbq("init", META_PIXEL_ID);
 }
 
-/** Fire the CustomerOpsApplication conversion exactly once per successful submission. */
-function trackCustomerOpsApplication() {
+/** Fire the SubmitApplication conversion exactly once per successful submission. */
+function trackSubmitApplication() {
   ensureMetaPixel();
-  window.fbq?.("trackCustom", "CustomerOpsApplication");
+  window.fbq?.("track", "SubmitApplication");
 }
 
 const ROLE = "Customer Operations Lead";
