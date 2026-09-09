@@ -168,6 +168,7 @@ const Accounting = () => {
                       <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
                       <td className="px-3 py-2">{r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
                       <td className="px-3 py-2 font-medium">{money(r.monthly_price)}</td>
+                      <td className="px-3 py-2">{r.payment_method ?? "—"}</td>
                       <td className="px-3 py-2">{money(r.security_deposit)}</td>
                       <td className="px-3 py-2">{money(r.reservation_deposit)}</td>
                       <td className="px-3 py-2">{money(r.install_fee)}</td>
