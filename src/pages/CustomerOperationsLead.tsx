@@ -260,24 +260,27 @@ const CustomerOperationsLead = () => {
 
         {done ? (
           <section id="apply" className="py-4">
-            <h2 className="font-heading text-[28px] tracking-tight text-foreground">
+            <h2 className="font-heading text-[26px] tracking-tight text-foreground">
               Application received.
             </h2>
-            <p className="mt-3 font-sans text-[17px] leading-relaxed text-foreground">
+            <p className="mt-3 font-sans text-[16px] leading-relaxed text-foreground">
               Thanks for applying. If it looks like there could be a fit, we'll reach out
               to set up a short conversation.
             </p>
           </section>
         ) : (
           <section id="apply">
-            <h2 className="font-heading text-[28px] tracking-tight text-foreground">Apply</h2>
+            <h2 className="font-heading text-[26px] tracking-tight text-foreground">Apply</h2>
+            <p className="mt-2 font-sans text-[15px] text-muted-foreground">
+              Short, straightforward answers are better.
+            </p>
 
-            <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
+            <form onSubmit={onSubmit} noValidate className="mt-6 space-y-5">
               {FIELDS.map((f) => (
                 <div key={f.name}>
                   <label
                     htmlFor={f.name}
-                    className="block font-sans text-[16px] leading-snug text-foreground"
+                    className="block font-sans text-[15px] leading-snug text-foreground"
                   >
                     {f.label}
                     {f.optional && (
@@ -286,7 +289,7 @@ const CustomerOperationsLead = () => {
                   </label>
 
                   {f.type === "yesno" ? (
-                    <div className="mt-2.5 flex gap-2">
+                    <div className="mt-2 flex gap-2">
                       {["Yes", "No"].map((opt) => {
                         const active = values[f.name] === opt;
                         return (
@@ -295,7 +298,7 @@ const CustomerOperationsLead = () => {
                             type="button"
                             aria-pressed={active}
                             onClick={() => set(f.name, opt)}
-                            className={`rounded-md border px-5 py-2 font-sans text-[16px] transition-colors ${
+                            className={`rounded-md border px-5 py-2 font-sans text-[15px] transition-colors ${
                               active
                                 ? "border-primary bg-primary text-primary-foreground"
                                 : "border-border bg-background text-foreground/80 hover:border-primary/60"
@@ -332,7 +335,7 @@ const CustomerOperationsLead = () => {
                   )}
 
                   {errors[f.name] && (
-                    <p className="mt-1.5 font-sans text-[14px] text-destructive">
+                    <p className="mt-1.5 font-sans text-[13px] text-destructive">
                       {errors[f.name]}
                     </p>
                   )}
@@ -340,13 +343,13 @@ const CustomerOperationsLead = () => {
               ))}
 
               {formError && (
-                <p className="font-sans text-[15px] text-destructive">{formError}</p>
+                <p className="font-sans text-[14px] text-destructive">{formError}</p>
               )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-md bg-primary px-6 py-3.5 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="w-full rounded-md bg-primary px-6 py-3 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
                 {submitting ? "Sending…" : "Submit application"}
               </button>
