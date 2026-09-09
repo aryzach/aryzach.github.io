@@ -19,7 +19,7 @@ function ensureMetaPixel() {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   if (window.fbq) return;
   const w = window as unknown as { fbq: any; _fbq: any };
-  const n = (w.fbq = function (...args: unknown[]) {
+  const n: any = (w.fbq = function (...args: unknown[]) {
     n.callMethod ? n.callMethod(...args) : n.queue.push(args);
   });
   if (!w._fbq) w._fbq = n;
