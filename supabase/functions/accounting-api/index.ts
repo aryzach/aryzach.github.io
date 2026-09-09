@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
           supabase
             .from("reservations")
             .select(
-              "id, first_name, last_name, email, phone, city, install_address, sauna_type_id, reservation_status, payment_status, contract_status, custom_install_fee, custom_pricing_options, created_at",
+              "id, first_name, last_name, email, phone, city, install_address, sauna_type_id, reservation_status, payment_status, contract_status, custom_install_fee, custom_pricing_options, created_at, default_payment_method_status",
             )
             .order("created_at", { ascending: false }),
           supabase
@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
             second_heater_monthly_price: c?.second_heater_monthly_price ?? 0,
             stair_elevator_charge: c?.stair_elevator_charge ?? null,
             reservation_deposit: 200,
+            payment_method: r.default_payment_method_status === "ACH" ? "Bank transfer / ACH" : "Credit card",
           };
         });
 

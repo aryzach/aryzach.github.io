@@ -24,6 +24,7 @@ interface AccountingRow {
   second_heater_monthly_price: number;
   stair_elevator_charge: number | null;
   reservation_deposit: number;
+  payment_method: string;
 }
 
 const money = (v: number | null | undefined) =>
@@ -150,6 +151,7 @@ const Accounting = () => {
                     <th className="px-3 py-2 font-medium">Sauna #</th>
                     <th className="px-3 py-2 font-medium">Term</th>
                     <th className="px-3 py-2 font-medium">Monthly</th>
+                    <th className="px-3 py-2 font-medium">Payment method</th>
                     <th className="px-3 py-2 font-medium">Security deposit</th>
                     <th className="px-3 py-2 font-medium">Reservation deposit</th>
                     <th className="px-3 py-2 font-medium">Installation</th>
@@ -166,6 +168,7 @@ const Accounting = () => {
                       <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
                       <td className="px-3 py-2">{r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
                       <td className="px-3 py-2 font-medium">{money(r.monthly_price)}</td>
+                      <td className="px-3 py-2">{r.payment_method ?? "—"}</td>
                       <td className="px-3 py-2">{money(r.security_deposit)}</td>
                       <td className="px-3 py-2">{money(r.reservation_deposit)}</td>
                       <td className="px-3 py-2">{money(r.install_fee)}</td>
@@ -181,7 +184,7 @@ const Accounting = () => {
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={11} className="px-3 py-8 text-center text-muted-foreground">
+                      <td colSpan={12} className="px-3 py-8 text-center text-muted-foreground">
                         No customers yet.
                       </td>
                     </tr>
