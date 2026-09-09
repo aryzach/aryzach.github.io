@@ -151,6 +151,7 @@ const Accounting = () => {
                     <th className="px-3 py-2 font-medium">Sauna #</th>
                     <th className="px-3 py-2 font-medium">Term</th>
                     <th className="px-3 py-2 font-medium">Monthly</th>
+                    <th className="px-3 py-2 font-medium">Payment method</th>
                     <th className="px-3 py-2 font-medium">Security deposit</th>
                     <th className="px-3 py-2 font-medium">Reservation deposit</th>
                     <th className="px-3 py-2 font-medium">Installation</th>
