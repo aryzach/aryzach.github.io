@@ -162,36 +162,33 @@ const CustomerOperationsLead = () => {
           ))}
         </div>
 
-        <div className="mt-10 space-y-6 font-sans text-[17px] leading-relaxed text-foreground">
+        <div className="mt-10 space-y-5 font-sans text-foreground">
           {/* Quick facts */}
           <div className="rounded-lg border border-border bg-muted/30 p-5">
-            <p className="font-heading text-[18px] tracking-tight text-foreground">
-              At a glance
-            </p>
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-4">
               <div>
-                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground">
                   Pay
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">$1,500–$4,000+/month</p>
+                <p className="mt-0.5 font-semibold">$1,500–$4,000+/month</p>
               </div>
               <div>
-                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground">
                   Schedule
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">~5–10 installs/month, part-time</p>
+                <p className="mt-0.5 font-semibold">~5–10 installs/month</p>
               </div>
               <div>
-                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground">
                   Location
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">SF Bay Area</p>
+                <p className="mt-0.5 font-semibold">SF Bay Area</p>
               </div>
               <div>
-                <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+                <p className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground">
                   Type
                 </p>
-                <p className="mt-0.5 font-semibold text-foreground">Flexible part-time job</p>
+                <p className="mt-0.5 font-semibold">Flexible part-time</p>
               </div>
             </div>
           </div>
@@ -210,36 +207,13 @@ const CustomerOperationsLead = () => {
           {/* About the role */}
           <div className="rounded-lg border border-border p-5">
             <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
-              About the role
+              What you'd do
             </p>
-            <p className="mt-3">
-              SF Sauna rents and installs home saunas around the Bay Area.
-            </p>
-            <p className="mt-3">
-              We're looking for someone to <strong>completely own the customer experience</strong>{" "}
-              after a sale: schedule the install, pick up and transport the sauna, move it into
-              the customer's home, assemble it, show them how it works, and make sure they're
-              happy.
-            </p>
-            <p className="mt-3">
-              Most months are <strong>~5–10 installs/removals</strong>. You set a consistent
-              weekly availability and can work this around another job.
-            </p>
-          </div>
-
-          {/* What we're looking for */}
-          <div className="rounded-lg border border-border p-5">
-            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
-              You should
-            </p>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-4 space-y-2.5 text-[16px] leading-snug">
               {[
-                "Be exceptionally reliable and good with customers",
-                "Be handy, careful, strong, and good at figuring things out",
-                "Own a truck or cargo van",
-                "Be able to independently move ~80 lb, 6' × 4' sauna panels, including on stairs",
-                "Have a consistent enough schedule that we can rely on you",
-                "Want a great side job you could keep for years",
+                "Own the customer experience after a sale",
+                "Schedule, transport, install, and walk customers through their sauna",
+                "~5–10 installs/removals per month, around your weekly availability",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
@@ -249,15 +223,35 @@ const CustomerOperationsLead = () => {
             </ul>
           </div>
 
-          {/* Closing */}
+          {/* What we're looking for */}
           <div className="rounded-lg border border-border p-5">
-            <p>
-              Occasionally you'll also help receive sauna shipments, prep equipment, and
-              handle miscellaneous field operations.
+            <p className="text-[14px] font-medium uppercase tracking-wide text-muted-foreground">
+              You should
             </p>
-            <p className="mt-3">
-              We're less interested in your résumé than whether we'd trust you to take a
-              customer from us and know they'll be taken care of.
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                "Reliable and good with customers",
+                "Handy, careful, and strong",
+                "Own a truck or cargo van",
+                "Can move ~80 lb, 6' × 4' panels on stairs",
+                "Consistent weekly availability",
+                "Want a long-term side job",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2.5 text-[16px] leading-snug">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Closing */}
+          <div className="rounded-lg border border-border p-5 text-[16px] leading-snug">
+            <p>
+              Occasionally you'll also help receive shipments and prep equipment.
+            </p>
+            <p className="mt-2 text-muted-foreground">
+              We're less interested in your résumé than whether we'd trust you with a customer.
             </p>
           </div>
         </div>
@@ -266,24 +260,27 @@ const CustomerOperationsLead = () => {
 
         {done ? (
           <section id="apply" className="py-4">
-            <h2 className="font-heading text-[28px] tracking-tight text-foreground">
+            <h2 className="font-heading text-[26px] tracking-tight text-foreground">
               Application received.
             </h2>
-            <p className="mt-3 font-sans text-[17px] leading-relaxed text-foreground">
+            <p className="mt-3 font-sans text-[16px] leading-relaxed text-foreground">
               Thanks for applying. If it looks like there could be a fit, we'll reach out
               to set up a short conversation.
             </p>
           </section>
         ) : (
           <section id="apply">
-            <h2 className="font-heading text-[28px] tracking-tight text-foreground">Apply</h2>
+            <h2 className="font-heading text-[26px] tracking-tight text-foreground">Apply</h2>
+            <p className="mt-2 font-sans text-[15px] text-muted-foreground">
+              Short, straightforward answers are better.
+            </p>
 
-            <form onSubmit={onSubmit} noValidate className="mt-8 space-y-6">
+            <form onSubmit={onSubmit} noValidate className="mt-6 space-y-5">
               {FIELDS.map((f) => (
                 <div key={f.name}>
                   <label
                     htmlFor={f.name}
-                    className="block font-sans text-[16px] leading-snug text-foreground"
+                    className="block font-sans text-[15px] leading-snug text-foreground"
                   >
                     {f.label}
                     {f.optional && (
@@ -292,7 +289,7 @@ const CustomerOperationsLead = () => {
                   </label>
 
                   {f.type === "yesno" ? (
-                    <div className="mt-2.5 flex gap-2">
+                    <div className="mt-2 flex gap-2">
                       {["Yes", "No"].map((opt) => {
                         const active = values[f.name] === opt;
                         return (
@@ -301,7 +298,7 @@ const CustomerOperationsLead = () => {
                             type="button"
                             aria-pressed={active}
                             onClick={() => set(f.name, opt)}
-                            className={`rounded-md border px-5 py-2 font-sans text-[16px] transition-colors ${
+                            className={`rounded-md border px-5 py-2 font-sans text-[15px] transition-colors ${
                               active
                                 ? "border-primary bg-primary text-primary-foreground"
                                 : "border-border bg-background text-foreground/80 hover:border-primary/60"
@@ -338,7 +335,7 @@ const CustomerOperationsLead = () => {
                   )}
 
                   {errors[f.name] && (
-                    <p className="mt-1.5 font-sans text-[14px] text-destructive">
+                    <p className="mt-1.5 font-sans text-[13px] text-destructive">
                       {errors[f.name]}
                     </p>
                   )}
@@ -346,13 +343,13 @@ const CustomerOperationsLead = () => {
               ))}
 
               {formError && (
-                <p className="font-sans text-[15px] text-destructive">{formError}</p>
+                <p className="font-sans text-[14px] text-destructive">{formError}</p>
               )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-md bg-primary px-6 py-3.5 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+                className="w-full rounded-md bg-primary px-6 py-3 font-sans text-[16px] font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
               >
                 {submitting ? "Sending…" : "Submit application"}
               </button>
