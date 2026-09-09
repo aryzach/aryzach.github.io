@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
             second_heater_monthly_price: c?.second_heater_monthly_price ?? 0,
             stair_elevator_charge: c?.stair_elevator_charge ?? null,
             reservation_deposit: 200,
+            payment_method: r.default_payment_method_status === "ACH" ? "Bank transfer / ACH" : "Credit card",
           };
         });
 
