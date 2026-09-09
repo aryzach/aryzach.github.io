@@ -1,9 +1,44 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { submitApplicationToGHL } from "@/lib/submitApplicationToGHL";
 import { isValidEmail, isValidPhone, formatPhoneInput } from "@/lib/validation";
 import { assetUrl } from "@/lib/assetUrl";
 import customerOperationsLeadVideo from "@/assets/customer-operations-lead-video.mov.asset.json";
+
+const META_PIXEL_ID = "4118300791794953";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    _fbq?: unknown;
+  }
+}
+
+/** Load the Meta Pixel base code only if it isn't already present (e.g. via GTM). */
+function ensureMetaPixel() {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (window.fbq) return;
+  const w = window as unknown as { fbq: any; _fbq: any };
+  const n: any = (w.fbq = function (...args: unknown[]) {
+    n.callMethod ? n.callMethod(...args) : n.queue.push(args);
+  });
+  if (!w._fbq) w._fbq = n;
+  n.push = n;
+  n.loaded = true;
+  n.version = "2.0";
+  n.queue = [];
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://connect.facebook.net/en_US/fbevents.js";
+  document.head.appendChild(s);
+  window.fbq("init", META_PIXEL_ID);
+}
+
+/** Fire the CustomerOpsApplication conversion exactly once per successful submission. */
+function trackCustomerOpsApplication() {
+  ensureMetaPixel();
+  window.fbq?.("trackCustom", "CustomerOpsApplication");
+}
 
 const ROLE = "Customer Operations Lead";
 const SOURCE = "Customer Operations Lead Application";
@@ -59,6 +94,7 @@ const CustomerOperationsLead = () => {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const pixelFiredRef = useRef(false);
 
   const set = (name: string, value: string) =>
     setValues((v) => ({ ...v, [name]: value }));
@@ -91,6 +127,10 @@ const CustomerOperationsLead = () => {
       if (!res.ok) {
         setFormError("Something went wrong. Please try again.");
         return;
+      }
+      if (!pixelFiredRef.current) {
+        pixelFiredRef.current = true;
+        trackCustomerOpsApplication();
       }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
