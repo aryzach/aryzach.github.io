@@ -128,6 +128,10 @@ const CustomerOperationsLead = () => {
         setFormError("Something went wrong. Please try again.");
         return;
       }
+      if (!pixelFiredRef.current) {
+        pixelFiredRef.current = true;
+        trackCustomerOpsApplication();
+      }
       setDone(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
