@@ -94,6 +94,7 @@ const CustomerOperationsLead = () => {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const pixelFiredRef = useRef(false);
 
   const set = (name: string, value: string) =>
     setValues((v) => ({ ...v, [name]: value }));
