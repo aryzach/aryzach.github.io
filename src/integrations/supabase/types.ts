@@ -520,6 +520,7 @@ export type Database = {
           contract_status: string
           created_at: string
           custom_commitment_months: number | null
+          custom_contract_terms: Json | null
           custom_install_fee: number | null
           custom_monthly_price: number | null
           custom_pricing_options: Json | null
@@ -575,6 +576,7 @@ export type Database = {
           contract_status?: string
           created_at?: string
           custom_commitment_months?: number | null
+          custom_contract_terms?: Json | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_pricing_options?: Json | null
@@ -630,6 +632,7 @@ export type Database = {
           contract_status?: string
           created_at?: string
           custom_commitment_months?: number | null
+          custom_contract_terms?: Json | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_pricing_options?: Json | null
