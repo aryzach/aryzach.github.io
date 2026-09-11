@@ -75,7 +75,7 @@ export function ColResizeHandle({ onMouseDown }: { onMouseDown: (e: React.MouseE
     <span
       onMouseDown={onMouseDown}
       onClick={(e) => e.stopPropagation()}
-      className="absolute top-0 right-0 h-full w-1 cursor-col-resize hover:bg-primary/40 active:bg-primary/60"
+      className="absolute top-0 -right-1 z-20 h-full w-2 cursor-col-resize hover:bg-primary/40 active:bg-primary/60"
       aria-hidden
     />
   );
