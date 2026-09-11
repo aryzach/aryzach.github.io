@@ -31,36 +31,42 @@ export function useResizableColumns<T extends string>(
     }
   }, [storageKey, widths]);
 
+  const widthsRef = useRef(widths);
+  widthsRef.current = widths;
   const dragRef = useRef<{ col: T; startX: number; startW: number } | null>(null);
 
   const startResize = useCallback(
     (col: T, e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      const startW = widths[col] ?? defaultWidth;
+      const startW = widthsRef.current[col] ?? defaultWidth;
       dragRef.current = { col, startX: e.clientX, startW };
       const onMove = (ev: MouseEvent) => {
         const d = dragRef.current;
         if (!d) return;
+        ev.preventDefault();
         const w = Math.max(50, d.startW + (ev.clientX - d.startX));
-        setWidths((p) => ({ ...p, [d.col]: w }));
+        setWidths((p) => (p[d.col] === w ? p : { ...p, [d.col]: w }));
       };
       const onUp = () => {
         dragRef.current = null;
-        window.removeEventListener("mousemove", onMove);
-        window.removeEventListener("mouseup", onUp);
+        window.removeEventListener("mousemove", onMove, true);
+        window.removeEventListener("mouseup", onUp, true);
         document.body.style.cursor = "";
         document.body.style.userSelect = "";
       };
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
-      window.addEventListener("mousemove", onMove);
-      window.addEventListener("mouseup", onUp);
+      window.addEventListener("mousemove", onMove, true);
+      window.addEventListener("mouseup", onUp, true);
     },
-    [widths, defaultWidth],
+    [defaultWidth],
   );
 
-  return { widths, startResize };
+  // Total table width (excluding any extra fixed leading columns the caller adds).
+  const totalWidth = cols.reduce((sum, c) => sum + (widths[c] ?? defaultWidth), 0);
+
+  return { widths, startResize, totalWidth };
 }
 
 // Small handle to render inside each <th>. Absolute-positioned to the right edge.
