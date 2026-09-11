@@ -7,6 +7,7 @@ import {
   getMonthlyPrice,
   getSaunaTypeInfo,
   getSecurityDeposit,
+  getInstallFee,
 } from "../_shared/pricing.ts";
 import { buildSignedContractPdf, sha256Hex } from "../_shared/pdfBuilder.ts";
 
@@ -222,6 +223,13 @@ Deno.serve(async (req) => {
           typeof reservation.custom_security_deposit === "number"
             ? reservation.custom_security_deposit
             : getSecurityDeposit(saunaInfo.id);
+        const installationFee =
+          matchedOption && matchedOption.install_fee != null
+            ? Number(matchedOption.install_fee)
+            : hasCustomTerm && months === reservation.custom_commitment_months &&
+                typeof reservation.custom_install_fee === "number"
+              ? reservation.custom_install_fee
+              : getInstallFee(saunaInfo.id, months);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
 
@@ -266,6 +274,7 @@ Deno.serve(async (req) => {
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,
+          installation_fee: installationFee,
           delivery_fee: deliveryFee,
           security_deposit: securityDeposit,
           insurance_selected: insurance,
@@ -300,6 +309,7 @@ Deno.serve(async (req) => {
           rental_summary_snapshot: rentalSummary,
           pricing_snapshot: {
             monthly_price: monthlyPrice,
+            installation_fee: installationFee,
             delivery_fee: deliveryFee,
             security_deposit: securityDeposit,
             insurance_monthly: INSURANCE_MONTHLY,

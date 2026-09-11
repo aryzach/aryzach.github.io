@@ -11,6 +11,7 @@ interface Summary {
   placement: "indoor" | "outdoor";
   commitment_months: number;
   monthly_price: number;
+  installation_fee?: number;
   delivery_fee: number;
   security_deposit: number;
   insurance_selected: boolean;
@@ -65,6 +66,10 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
         <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-3">Pricing</h3>
         <div className="rounded-md border border-slate-200 divide-y divide-slate-200">
           <PriceRow label="Monthly rental" value={`${formatUSD(summary.monthly_price)} / month`} emphasize />
+          <PriceRow
+            label="Installation fee"
+            value={summary.installation_fee ? formatUSD(summary.installation_fee) : "Included"}
+          />
           <PriceRow label="Delivery fee" value={formatUSD(summary.delivery_fee)} />
           <PriceRow label="Security deposit" value={formatUSD(summary.security_deposit)} />
           <PriceRow
