@@ -21,6 +21,7 @@ export interface RentalSummarySnapshot {
   placement: "indoor" | "outdoor";
   commitment_months: number;
   monthly_price: number;
+  installation_fee?: number;
   delivery_fee: number;
   security_deposit: number;
   insurance_selected: boolean;
@@ -209,6 +210,7 @@ async function buildRentalSummary(
 
   drawHeading(c, "Pricing");
   drawPriceRow(c, "Monthly rental", `${fmtUSD(s.monthly_price)} / month`, true);
+  drawPriceRow(c, "Installation fee", s.installation_fee ? fmtUSD(s.installation_fee) : "Included");
   drawPriceRow(c, "Delivery fee", fmtUSD(s.delivery_fee));
   drawPriceRow(c, "Security deposit (refundable)", fmtUSD(s.security_deposit));
   drawPriceRow(
