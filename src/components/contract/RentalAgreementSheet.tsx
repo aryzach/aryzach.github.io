@@ -77,6 +77,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [allowedMonths, setAllowedMonths] = useState<number[] | null>(null);
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
+  const [customDeliveryFee, setCustomDeliveryFee] = useState<number | null>(null);
   const [customOptions, setCustomOptions] = useState<{ months: number; monthly: number; installFee: number }[] | null>(null);
 
   const load = useCallback(async () => {
@@ -118,6 +119,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       );
       setMinMonths(typeof r.min_commitment_months === "number" ? r.min_commitment_months : null);
       setCustomDeposit(typeof r.custom_security_deposit === "number" ? r.custom_security_deposit : null);
+      setCustomDeliveryFee(typeof r.custom_delivery_fee === "number" ? r.custom_delivery_fee : null);
       // Split any prior "street, city" back into fields where possible.
       const priorAddress: string = c?.installation_address ?? r.install_address ?? "";
       const priorStreet =
@@ -173,8 +175,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
-    () => (isSf ? 0 : getDeliveryFee(`${form.installation_address}, ${form.installation_city}`)),
-    [isSf, form.installation_address, form.installation_city],
+    () => customDeliveryFee != null
+      ? customDeliveryFee
+      : isSf
+        ? 0
+        : getDeliveryFee(`${form.installation_address}, ${form.installation_city}`),
+    [customDeliveryFee, isSf, form.installation_address, form.installation_city],
   );
   const securityDeposit = useMemo(
     () => (customDeposit != null ? customDeposit : form.sauna_type ? getSecurityDeposit(form.sauna_type) : 0),

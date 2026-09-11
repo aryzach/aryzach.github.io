@@ -23,12 +23,14 @@ export interface RentalSummarySnapshot {
   monthly_price: number;
   installation_fee?: number;
   delivery_fee: number;
+  delivery_fee_note?: string | null;
   security_deposit: number;
   insurance_selected: boolean;
   insurance_monthly_price: number;
   second_heater_selected: boolean;
   second_heater_monthly_price: number;
   stair_elevator_charge: number | null;
+  stair_elevator_charge_note?: string | null;
   preferred_installation_date: string;
   installation_city?: string;
   installation_street?: string;
@@ -211,7 +213,11 @@ async function buildRentalSummary(
   drawHeading(c, "Pricing");
   drawPriceRow(c, "Monthly rental", `${fmtUSD(s.monthly_price)} / month`, true);
   drawPriceRow(c, "Installation fee", s.installation_fee ? fmtUSD(s.installation_fee) : "Included");
-  drawPriceRow(c, "Delivery fee", fmtUSD(s.delivery_fee));
+  drawPriceRow(
+    c,
+    "Delivery fee",
+    `${fmtUSD(s.delivery_fee)}${s.delivery_fee_note ? ` - ${s.delivery_fee_note}` : ""}`,
+  );
   drawPriceRow(c, "Security deposit (refundable)", fmtUSD(s.security_deposit));
   drawPriceRow(
     c,
@@ -226,7 +232,9 @@ async function buildRentalSummary(
   drawPriceRow(
     c,
     "Stair / elevator charge",
-    s.stair_elevator_charge == null ? "To be confirmed before delivery" : fmtUSD(s.stair_elevator_charge),
+    s.stair_elevator_charge == null
+      ? "To be confirmed before delivery"
+      : `${fmtUSD(s.stair_elevator_charge)}${s.stair_elevator_charge_note ? ` - ${s.stair_elevator_charge_note}` : ""}`,
   );
 
   c.y -= 10;
