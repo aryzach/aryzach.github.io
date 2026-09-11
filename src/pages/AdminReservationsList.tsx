@@ -444,7 +444,7 @@ export const ReservationsListPanel = ({
       )}
 
       <div className="overflow-x-auto border border-border rounded-md bg-card">
-        <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+        <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: totalWidth + 32, minWidth: "100%" }}>
           <colgroup>
             <col style={{ width: 32 }} />
             {cols.map(([k]) => (
