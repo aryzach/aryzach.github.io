@@ -45,6 +45,8 @@ interface AuthedReservation {
   custom_monthly_price: number | null;
   custom_security_deposit: number | null;
   custom_install_fee: number | null;
+  custom_delivery_fee: number | null;
+  custom_stair_elevator_charge: number | null;
   allowed_commitment_months: number[] | null;
   custom_pricing_options: { months: number; monthly_price: number; install_fee: number }[] | null;
   default_sauna_type: string | null;
@@ -61,7 +63,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, custom_pricing_options, default_sauna_type, custom_contract_terms, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, custom_delivery_fee, custom_stair_elevator_charge, allowed_commitment_months, custom_pricing_options, default_sauna_type, custom_contract_terms, contract_status",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -129,6 +131,8 @@ Deno.serve(async (req) => {
             custom_monthly_price: reservation.custom_monthly_price,
             custom_security_deposit: reservation.custom_security_deposit,
             custom_install_fee: reservation.custom_install_fee,
+            custom_delivery_fee: reservation.custom_delivery_fee,
+            custom_stair_elevator_charge: reservation.custom_stair_elevator_charge,
             allowed_commitment_months: reservation.allowed_commitment_months,
             custom_pricing_options: reservation.custom_pricing_options,
             default_sauna_type: reservation.default_sauna_type,
@@ -218,7 +222,12 @@ Deno.serve(async (req) => {
         const streetAddress = installation_address.trim();
         const city = installation_city.trim();
         const combinedAddress = `${streetAddress}, ${city}`;
-        const deliveryFee = getDeliveryFee(city) === 0 ? 0 : getDeliveryFee(combinedAddress);
+        const deliveryFee =
+          typeof reservation.custom_delivery_fee === "number"
+            ? reservation.custom_delivery_fee
+            : getDeliveryFee(city) === 0
+              ? 0
+              : getDeliveryFee(combinedAddress);
         const securityDeposit =
           typeof reservation.custom_security_deposit === "number"
             ? reservation.custom_security_deposit
@@ -232,6 +241,10 @@ Deno.serve(async (req) => {
               : getInstallFee(saunaInfo.id, months);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
+        const stairElevatorCharge =
+          typeof reservation.custom_stair_elevator_charge === "number"
+            ? reservation.custom_stair_elevator_charge
+            : existing?.stair_elevator_charge ?? null;
 
         // ---- Flag sauna-type mismatch with reservation-assigned inventory ----
         const flags: string[] = [];
@@ -281,7 +294,7 @@ Deno.serve(async (req) => {
           insurance_monthly_price: insurance ? INSURANCE_MONTHLY : 0,
           second_heater_selected: secondHeater,
           second_heater_monthly_price: secondHeater ? SECOND_HEATER_MONTHLY : 0,
-          stair_elevator_charge: existing?.stair_elevator_charge ?? null,
+          stair_elevator_charge: stairElevatorCharge,
           preferred_installation_date,
           custom_terms: Array.isArray(reservation.custom_contract_terms)
             ? reservation.custom_contract_terms
@@ -305,6 +318,7 @@ Deno.serve(async (req) => {
           insurance_monthly_price: insurance ? INSURANCE_MONTHLY : 0,
           second_heater_selected: secondHeater,
           second_heater_monthly_price: secondHeater ? SECOND_HEATER_MONTHLY : 0,
+          stair_elevator_charge: stairElevatorCharge,
           preferred_installation_date,
           rental_summary_snapshot: rentalSummary,
           pricing_snapshot: {
