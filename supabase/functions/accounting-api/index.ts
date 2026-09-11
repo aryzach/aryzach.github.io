@@ -79,16 +79,15 @@ Deno.serve(async (req) => {
           }
         }
 
+        // Only current customers (physically installed) appear on this list.
+        // Future customers (e.g. transfer planned) are excluded entirely.
         const unitByReservation = new Map<string, string | null>();
         for (const u of invRes.data ?? []) {
           if (u.current_customer_id) unitByReservation.set(u.current_customer_id, u.unit_code);
-          if (u.future_customer_id && !unitByReservation.has(u.future_customer_id)) {
-            unitByReservation.set(u.future_customer_id, u.unit_code);
-          }
         }
 
         const rows = (resRes.data ?? [])
-          .filter((r: any) => contractsByReservation.has(r.id))
+          .filter((r: any) => contractsByReservation.has(r.id) && unitByReservation.has(r.id))
           .map((r: any) => {
           const c = contractsByReservation.get(r.id) ?? null;
           const months = c?.commitment_months ?? null;
