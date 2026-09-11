@@ -31,6 +31,7 @@ export interface RentalSummarySnapshot {
   preferred_installation_date: string;
   installation_city?: string;
   installation_street?: string;
+  custom_terms?: { heading: string; paragraphs: string[] }[] | null;
 }
 
 export interface AuditInfo {
