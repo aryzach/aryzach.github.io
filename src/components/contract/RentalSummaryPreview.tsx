@@ -13,12 +13,14 @@ interface Summary {
   monthly_price: number;
   installation_fee?: number;
   delivery_fee: number;
+  delivery_fee_note?: string | null;
   security_deposit: number;
   insurance_selected: boolean;
   insurance_monthly_price: number;
   second_heater_selected: boolean;
   second_heater_monthly_price: number;
   stair_elevator_charge: number | null;
+  stair_elevator_charge_note?: string | null;
   preferred_installation_date: string;
   custom_terms?: { heading: string; paragraphs: string[] }[] | null;
 }
@@ -70,7 +72,10 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             label="Installation fee"
             value={summary.installation_fee ? formatUSD(summary.installation_fee) : "Included"}
           />
-          <PriceRow label="Delivery fee" value={formatUSD(summary.delivery_fee)} />
+          <PriceRow
+            label="Delivery fee"
+            value={`${formatUSD(summary.delivery_fee)}${summary.delivery_fee_note ? ` — ${summary.delivery_fee_note}` : ""}`}
+          />
           <PriceRow label="Security deposit" value={formatUSD(summary.security_deposit)} />
           <PriceRow
             label="Optional insurance"
@@ -85,7 +90,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             value={
               summary.stair_elevator_charge == null
                 ? "To be confirmed before delivery"
-                : formatUSD(summary.stair_elevator_charge)
+                : `${formatUSD(summary.stair_elevator_charge)}${summary.stair_elevator_charge_note ? ` — ${summary.stair_elevator_charge_note}` : ""}`
             }
           />
         </div>

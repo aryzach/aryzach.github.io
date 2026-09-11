@@ -289,12 +289,20 @@ Deno.serve(async (req) => {
           monthly_price: monthlyPrice,
           installation_fee: installationFee,
           delivery_fee: deliveryFee,
+          delivery_fee_note:
+            typeof reservation.custom_delivery_fee === "number" && deliveryFee === 0
+              ? "Waived for 24-month commitment"
+              : null,
           security_deposit: securityDeposit,
           insurance_selected: insurance,
           insurance_monthly_price: insurance ? INSURANCE_MONTHLY : 0,
           second_heater_selected: secondHeater,
           second_heater_monthly_price: secondHeater ? SECOND_HEATER_MONTHLY : 0,
           stair_elevator_charge: stairElevatorCharge,
+          stair_elevator_charge_note:
+            typeof reservation.custom_stair_elevator_charge === "number" && stairElevatorCharge === 0
+              ? "Waived for installation access shown during virtual walkthrough"
+              : null,
           preferred_installation_date,
           custom_terms: Array.isArray(reservation.custom_contract_terms)
             ? reservation.custom_contract_terms
