@@ -299,7 +299,6 @@ Deno.serve(async (req) => {
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,
-          installation_fee: installationFee,
           delivery_fee: deliveryFee,
           security_deposit: securityDeposit,
           insurance_selected: insurance,
