@@ -375,7 +375,7 @@ export const ReservationsListPanel = ({
     ["consult", "Consult"], ["id", "ID"], ["contract", "Contract"],
     ["created", "Created"], ["magic_link_opened", "Magic Link Opened"],
   ];
-  const { widths, startResize } = useResizableColumns<ColKey | "actions">(
+  const { widths, startResize, totalWidth } = useResizableColumns<ColKey | "actions">(
     "admin.reservations.colWidths.v1",
     [...cols.map(([k]) => k), "actions"] as (ColKey | "actions")[],
     140,
