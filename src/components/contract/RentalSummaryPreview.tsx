@@ -19,6 +19,7 @@ interface Summary {
   second_heater_monthly_price: number;
   stair_elevator_charge: number | null;
   preferred_installation_date: string;
+  custom_terms?: { heading: string; paragraphs: string[] }[] | null;
 }
 
 function fmtDate(d: string) {
@@ -84,6 +85,28 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
           />
         </div>
       </section>
+
+      {Array.isArray(summary.custom_terms) && summary.custom_terms.length > 0 && (
+        <section>
+          <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-3">
+            Customer-specific terms
+          </h3>
+          <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+            {summary.custom_terms.map((t) => (
+              <div key={t.heading}>
+                <p className="font-medium text-slate-900">{t.heading}</p>
+                {t.paragraphs.map((p, i) => (
+                  <p key={i} className="mt-1">{p}</p>
+                ))}
+              </div>
+            ))}
+            <p className="text-xs text-slate-600">
+              These customer-specific terms are part of this Rental Agreement and control over any
+              conflicting provision of the Master Agreement.
+            </p>
+          </div>
+        </section>
+      )}
 
       <section className="space-y-4 text-xs text-slate-600 leading-relaxed pt-4 border-t border-slate-200">
         <p>

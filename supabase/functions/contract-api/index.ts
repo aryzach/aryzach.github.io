@@ -47,6 +47,7 @@ interface AuthedReservation {
   allowed_commitment_months: number[] | null;
   custom_pricing_options: { months: number; monthly_price: number; install_fee: number }[] | null;
   default_sauna_type: string | null;
+  custom_contract_terms: { heading: string; paragraphs: string[] }[] | null;
   contract_status: string;
 }
 
@@ -59,7 +60,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, custom_pricing_options, default_sauna_type, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, allowed_commitment_months, custom_pricing_options, default_sauna_type, custom_contract_terms, contract_status",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -130,6 +131,7 @@ Deno.serve(async (req) => {
             allowed_commitment_months: reservation.allowed_commitment_months,
             custom_pricing_options: reservation.custom_pricing_options,
             default_sauna_type: reservation.default_sauna_type,
+            custom_contract_terms: reservation.custom_contract_terms,
           },
           contract: current,
           voided_contracts: list.filter((c: any) => c.status === "Voided"),
@@ -272,6 +274,9 @@ Deno.serve(async (req) => {
           second_heater_monthly_price: secondHeater ? SECOND_HEATER_MONTHLY : 0,
           stair_elevator_charge: existing?.stair_elevator_charge ?? null,
           preferred_installation_date,
+          custom_terms: Array.isArray(reservation.custom_contract_terms)
+            ? reservation.custom_contract_terms
+            : null,
           flags,
           snapshotted_at: nowIso,
         };

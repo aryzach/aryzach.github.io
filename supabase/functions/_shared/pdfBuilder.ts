@@ -31,6 +31,7 @@ export interface RentalSummarySnapshot {
   preferred_installation_date: string;
   installation_city?: string;
   installation_street?: string;
+  custom_terms?: { heading: string; paragraphs: string[] }[] | null;
 }
 
 export interface AuditInfo {
@@ -244,6 +245,28 @@ async function buildRentalSummary(
     "Purchase option. Renter may elect to purchase the rented sauna for a purchase price of $6,500. Fifty percent (50%) of the rental payments actually paid by Renter under this Agreement will be credited toward that purchase price. The heater is not included in the purchase and will be removed by Owner at or before transfer of the unit; a new heater can be readily installed by the buyer at the buyer's own cost. Any purchase is subject to Owner's written confirmation and remains subject to the other terms of the Master Agreement; where those terms conflict with this paragraph, this Rental Summary controls.",
     9, 3,
   );
+
+  const customTerms = Array.isArray(s.custom_terms) ? s.custom_terms : [];
+  if (customTerms.length) {
+    drawHeading(c, "Customer-specific terms");
+    for (const t of customTerms) {
+      ensureRoom(c, 24);
+      c.page.drawText(t.heading, {
+        x: MARGIN_X, y: c.y - 10, size: 10, font: c.bold, color: rgb(0.09, 0.12, 0.18),
+      });
+      c.y -= 14;
+      for (const p of t.paragraphs ?? []) {
+        drawParagraph(c, p, 9, 3);
+        c.y -= 3;
+      }
+      c.y -= 4;
+    }
+    drawParagraph(
+      c,
+      "These customer-specific terms are part of this Rental Agreement and control over any conflicting provision of the Master Agreement or this Rental Summary. All other terms remain unchanged.",
+      9, 3,
+    );
+  }
 }
 
 async function buildAuditPage(
