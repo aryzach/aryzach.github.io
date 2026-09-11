@@ -241,11 +241,6 @@ Deno.serve(async (req) => {
               : getInstallFee(saunaInfo.id, months);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
-        const stairElevatorCharge =
-          typeof reservation.custom_stair_elevator_charge === "number"
-            ? reservation.custom_stair_elevator_charge
-            : existing?.stair_elevator_charge ?? null;
-
         // ---- Flag sauna-type mismatch with reservation-assigned inventory ----
         const flags: string[] = [];
         if (saunaInfo.id !== reservation.sauna_type_id) {
@@ -271,6 +266,10 @@ Deno.serve(async (req) => {
           .in("status", ["Not Started", "Draft Created", "Ready to Sign", "Replacement Required"])
           .order("created_at", { ascending: false })
           .maybeSingle();
+        const stairElevatorCharge =
+          typeof reservation.custom_stair_elevator_charge === "number"
+            ? reservation.custom_stair_elevator_charge
+            : existing?.stair_elevator_charge ?? null;
 
         const nowIso = new Date().toISOString();
         const rentalSummary = {
