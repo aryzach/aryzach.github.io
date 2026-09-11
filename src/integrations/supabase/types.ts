@@ -521,10 +521,12 @@ export type Database = {
           created_at: string
           custom_commitment_months: number | null
           custom_contract_terms: Json | null
+          custom_delivery_fee: number | null
           custom_install_fee: number | null
           custom_monthly_price: number | null
           custom_pricing_options: Json | null
           custom_security_deposit: number | null
+          custom_stair_elevator_charge: number | null
           default_payment_method_status: string | null
           default_payment_method_updated_at: string | null
           default_sauna_type: string | null
@@ -577,10 +579,12 @@ export type Database = {
           created_at?: string
           custom_commitment_months?: number | null
           custom_contract_terms?: Json | null
+          custom_delivery_fee?: number | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_pricing_options?: Json | null
           custom_security_deposit?: number | null
+          custom_stair_elevator_charge?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
           default_sauna_type?: string | null
@@ -633,10 +637,12 @@ export type Database = {
           created_at?: string
           custom_commitment_months?: number | null
           custom_contract_terms?: Json | null
+          custom_delivery_fee?: number | null
           custom_install_fee?: number | null
           custom_monthly_price?: number | null
           custom_pricing_options?: Json | null
           custom_security_deposit?: number | null
+          custom_stair_elevator_charge?: number | null
           default_payment_method_status?: string | null
           default_payment_method_updated_at?: string | null
           default_sauna_type?: string | null
