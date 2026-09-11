@@ -259,7 +259,7 @@ const AdminReservations = () => {
     ["notes", "Notes"],
     ["updated", "Updated"],
   ];
-  const { widths: invWidths, startResize: startInvResize } = useResizableColumns<ColKey | "actions">(
+  const { widths: invWidths, startResize: startInvResize, totalWidth: invTotalWidth } = useResizableColumns<ColKey | "actions">(
     "admin.inventory.colWidths.v1",
     [...INVENTORY_COLS.map(([k]) => k), "actions"] as (ColKey | "actions")[],
     130,
