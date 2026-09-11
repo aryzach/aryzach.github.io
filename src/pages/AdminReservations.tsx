@@ -259,7 +259,7 @@ const AdminReservations = () => {
     ["notes", "Notes"],
     ["updated", "Updated"],
   ];
-  const { widths: invWidths, startResize: startInvResize } = useResizableColumns<ColKey | "actions">(
+  const { widths: invWidths, startResize: startInvResize, totalWidth: invTotalWidth } = useResizableColumns<ColKey | "actions">(
     "admin.inventory.colWidths.v1",
     [...INVENTORY_COLS.map(([k]) => k), "actions"] as (ColKey | "actions")[],
     130,
@@ -807,7 +807,7 @@ const AdminReservations = () => {
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
-                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: invTotalWidth + 32, minWidth: "100%" }}>
                     <colgroup>
                       <col style={{ width: 32 }} />
                       {INVENTORY_COLS.map(([k]) => (

@@ -375,7 +375,7 @@ export const ReservationsListPanel = ({
     ["consult", "Consult"], ["id", "ID"], ["contract", "Contract"],
     ["created", "Created"], ["magic_link_opened", "Magic Link Opened"],
   ];
-  const { widths, startResize } = useResizableColumns<ColKey | "actions">(
+  const { widths, startResize, totalWidth } = useResizableColumns<ColKey | "actions">(
     "admin.reservations.colWidths.v1",
     [...cols.map(([k]) => k), "actions"] as (ColKey | "actions")[],
     140,
@@ -444,7 +444,7 @@ export const ReservationsListPanel = ({
       )}
 
       <div className="overflow-x-auto border border-border rounded-md bg-card">
-        <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+        <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: totalWidth + 32, minWidth: "100%" }}>
           <colgroup>
             <col style={{ width: 32 }} />
             {cols.map(([k]) => (
