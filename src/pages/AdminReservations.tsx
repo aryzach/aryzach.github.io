@@ -807,7 +807,7 @@ const AdminReservations = () => {
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="overflow-x-auto border border-border rounded-md bg-card">
-                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", minWidth: "100%" }}>
+                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: invTotalWidth + 32, minWidth: "100%" }}>
                     <colgroup>
                       <col style={{ width: 32 }} />
                       {INVENTORY_COLS.map(([k]) => (
