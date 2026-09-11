@@ -77,3 +77,9 @@ export function getDeliveryFee(cityOrAddress: string | null | undefined): number
   if (isSanFranciscoCity(cityOrAddress)) return 0;
   return isSanFranciscoAddress(cityOrAddress) ? 0 : DELIVERY_FEE_OUTSIDE_SF;
 }
+export function getInstallFee(saunaTypeId: string, months: number): number {
+  const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
+  if (!table) return 0;
+  const row = table[months as 1 | 3 | 6 | 12];
+  return row ? row.installFee : 0;
+}
