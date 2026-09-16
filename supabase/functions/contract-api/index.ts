@@ -183,7 +183,15 @@ Deno.serve(async (req) => {
           ? reservation.custom_pricing_options
           : null;
         const months = Number(commitment_months);
-        const matchedOption = customOptions?.find((o) => Number(o?.months) === months) ?? null;
+        const requestedVariant =
+          typeof body?.pricing_variant === "string" && body.pricing_variant ? body.pricing_variant : null;
+        const matchedOption =
+          customOptions?.find(
+            (o: any) => Number(o?.months) === months && (o?.variant ?? null) === requestedVariant,
+          ) ??
+          customOptions?.find((o) => Number(o?.months) === months) ??
+          null;
+        const selectedVariant = (matchedOption as any)?.variant ?? null;
         if (customOptions?.length) {
           if (!matchedOption) {
             return json({ error: "Please choose an initial commitment length." }, 400);
