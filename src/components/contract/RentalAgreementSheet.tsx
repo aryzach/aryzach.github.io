@@ -43,6 +43,7 @@ interface FormState {
   installation_city: string;
   sauna_type: string;
   commitment_months: number;
+  pricing_variant: string | null;
   insurance_selected: boolean;
   second_heater_selected: boolean;
   preferred_installation_date: string; // YYYY-MM-DD
@@ -56,6 +57,7 @@ const empty: FormState = {
   installation_city: "",
   sauna_type: "",
   commitment_months: 6,
+  pricing_variant: null,
   insurance_selected: false,
   second_heater_selected: false,
   preferred_installation_date: "",
