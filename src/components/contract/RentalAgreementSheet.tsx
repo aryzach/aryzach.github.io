@@ -498,52 +498,67 @@ const ConfigureStep = ({
 
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {termOptions.map((m) => {
-              const opt = customOptions?.find((o) => o.months === m);
-              const price =
-                opt
-                  ? opt.monthly
-                  : customTerm && m === customTerm.months
-                    ? customTerm.monthly
-                    : form.sauna_type
-                      ? getMonthlyPrice(form.sauna_type, m)
-                      : null;
-              const installFee =
-                opt
-                  ? opt.installFee
-                  : customTerm && m === customTerm.months
-                    ? customTerm.installFee
-                    : form.sauna_type
-                      ? getInstallFee(form.sauna_type, m)
-                      : null;
-              const active = form.commitment_months === m;
-              return (
-                <button
-                  type="button"
-                  key={m}
-                  onClick={() => set("commitment_months", m)}
-                  className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
-                    active
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-background hover:border-primary/60"
-                  }`}
-                >
-                  <span>{commitmentLabel(m)}</span>
-                  <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
-                    {price != null ? `${formatUSD(price)}/mo` : "—"}
-                  </span>
-                  <span className={`text-[10px] ${active ? "text-primary-foreground/80" : "text-muted-foreground/80"}`}>
-                    {installFee != null
-                      ? installFee > 0
-                        ? `+${formatUSD(installFee)} install fee`
-                        : "Free installation"
-                      : "—"}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {variantGroups ? (
+            <div className="space-y-4">
+              {variantGroups.map((g) => (
+                <div key={g.variant ?? "standard"}>
+                  <p className="text-sm font-medium mb-2">{g.variant ?? "Standard"}</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {g.options.map((o) => {
+                      const active =
+                        form.commitment_months === o.months &&
+                        (form.pricing_variant ?? null) === (o.variant ?? null);
+                      return (
+                        <TermButton
+                          key={`${g.variant}-${o.months}`}
+                          months={o.months}
+                          price={o.monthly}
+                          installFee={o.installFee}
+                          active={active}
+                          onClick={() => {
+                            set("commitment_months", o.months);
+                            set("pricing_variant", o.variant ?? null);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {termOptions.map((m) => {
+                const opt = findOption(customOptions, m, form.pricing_variant);
+                const price =
+                  opt
+                    ? opt.monthly
+                    : customTerm && m === customTerm.months
+                      ? customTerm.monthly
+                      : form.sauna_type
+                        ? getMonthlyPrice(form.sauna_type, m)
+                        : null;
+                const fee =
+                  opt
+                    ? opt.installFee
+                    : customTerm && m === customTerm.months
+                      ? customTerm.installFee
+                      : form.sauna_type
+                        ? getInstallFee(form.sauna_type, m)
+                        : null;
+                return (
+                  <TermButton
+                    key={m}
+                    months={m}
+                    price={price}
+                    installFee={fee}
+                    active={form.commitment_months === m}
+                    onClick={() => set("commitment_months", m)}
+                  />
+                );
+              })}
+            </div>
+          )}
         </Field>
         <div className="rounded-md border border-border divide-y divide-border bg-card">
           <PriceRow
