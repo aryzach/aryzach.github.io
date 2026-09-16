@@ -110,6 +110,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               months: Number(o?.months),
               monthly: Number(o?.monthly_price),
               installFee: Number(o?.install_fee ?? 0),
+              variant: typeof o?.variant === "string" && o.variant ? (o.variant as string) : null,
             }))
             .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
         : null;
@@ -139,6 +140,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.default_sauna_type ?? r.sauna_type_id ?? "",
         commitment_months: c?.commitment_months ?? custom?.months ?? opts?.[0]?.months ?? r.min_commitment_months ?? 6,
+        pricing_variant:
+          c?.rental_summary_snapshot?.pricing_variant ?? opts?.[0]?.variant ?? null,
         insurance_selected: !!c?.insurance_selected,
         second_heater_selected: !!c?.second_heater_selected,
         preferred_installation_date:
