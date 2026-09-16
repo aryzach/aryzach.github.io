@@ -80,7 +80,9 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
   const [customDeliveryFee, setCustomDeliveryFee] = useState<number | null>(null);
-  const [customOptions, setCustomOptions] = useState<{ months: number; monthly: number; installFee: number }[] | null>(null);
+  const [customOptions, setCustomOptions] = useState<
+    { months: number; monthly: number; installFee: number; variant: string | null }[] | null
+  >(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -171,12 +173,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
-      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.monthly;
       if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
       return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
     },
-    [form.sauna_type, form.commitment_months, customTerm, customOptions],
+    [form.sauna_type, form.commitment_months, form.pricing_variant, customTerm, customOptions],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
@@ -222,6 +224,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           installation_city: form.installation_city.trim(),
           sauna_type: form.sauna_type,
           commitment_months: form.commitment_months,
+          pricing_variant: form.pricing_variant,
           insurance_selected: form.insurance_selected,
           second_heater_selected: form.second_heater_selected && (saunaInfo?.allowsSecondHeater ?? false),
           preferred_installation_date: form.preferred_installation_date,
