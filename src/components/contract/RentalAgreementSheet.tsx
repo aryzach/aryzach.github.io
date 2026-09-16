@@ -35,6 +35,17 @@ interface Props {
 
 type Step = "configure" | "preview" | "sign" | "signed";
 
+type PricingOption = { months: number; monthly: number; installFee: number; variant: string | null };
+
+const findOption = (
+  options: PricingOption[] | null | undefined,
+  months: number,
+  variant: string | null,
+) =>
+  options?.find((o) => o.months === months && (o.variant ?? null) === (variant ?? null)) ??
+  options?.find((o) => o.months === months) ??
+  null;
+
 interface FormState {
   customer_legal_name: string;
   phone: string;
@@ -396,14 +407,23 @@ const ConfigureStep = ({
   isSf: boolean;
   activeVersion: string;
   customTerm?: { months: number; monthly: number; installFee: number } | null;
-  customOptions?: { months: number; monthly: number; installFee: number }[] | null;
+  customOptions?: PricingOption[] | null;
   minMonths?: number | null;
   allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
+  const variantGroups = useMemo(() => {
+    if (!customOptions?.length) return null;
+    const variants = Array.from(new Set(customOptions.map((o) => o.variant ?? null)));
+    if (variants.length < 2) return null;
+    return variants.map((v) => ({
+      variant: v,
+      options: customOptions.filter((o) => (o.variant ?? null) === v).sort((a, b) => a.months - b.months),
+    }));
+  }, [customOptions]);
   const termOptions = useMemo(() => {
     if (customOptions?.length) {
-      return customOptions.map((o) => o.months).sort((a, b) => a - b);
+      return Array.from(new Set(customOptions.map((o) => o.months))).sort((a, b) => a - b);
     }
     const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
     const all = customTerm ? [...base, customTerm.months] : base;
@@ -412,7 +432,7 @@ const ConfigureStep = ({
   }, [customTerm, customOptions, minMonths, allowedMonths]);
   const installFee = useMemo(
     () => {
-      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.installFee;
       return customTerm && form.commitment_months === customTerm.months
         ? customTerm.installFee
