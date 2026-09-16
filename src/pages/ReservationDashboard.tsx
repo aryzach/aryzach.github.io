@@ -528,36 +528,6 @@ const ReservationDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <StepRow
-                    done={consultScheduled}
-                    label="Schedule Video Consultation"
-                    sublabel={
-                      reservation.video_consult_scheduled_at
-                        ? new Date(reservation.video_consult_scheduled_at).toLocaleString(undefined, {
-                            dateStyle: "long",
-                            timeStyle: "short",
-                          })
-                        : undefined
-                    }
-                    action={
-                      <Button asChild size="sm" variant="outline">
-                        <a href={calVideoHref} target="_blank" rel="noopener noreferrer">
-                          <Video className="mr-1.5" size={14} />
-                          {consultScheduled
-                            ? "View / Reschedule"
-                            : "Schedule"}
-                        </a>
-                      </Button>
-                    }
-                  />
-                  <div className="pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    After the call
-                  </div>
-                  <StepRow
-                    done={consultComplete}
-                    label="Video Consultation Complete"
-                    sublabel="We'll mark this complete after your call."
-                  />
-                  <StepRow
                     done={contractStatus === "Signed"}
                     label="Complete Rental Agreement"
                     action={
@@ -618,6 +588,33 @@ const ReservationDashboard = () => {
                         </Button>
                       </div>
                     }
+                  />
+                  <StepRow
+                    done={consultScheduled}
+                    label="Schedule Video Consultation"
+                    sublabel={
+                      reservation.video_consult_scheduled_at
+                        ? new Date(reservation.video_consult_scheduled_at).toLocaleString(undefined, {
+                            dateStyle: "long",
+                            timeStyle: "short",
+                          })
+                        : undefined
+                    }
+                    action={
+                      <Button asChild size="sm" variant="outline">
+                        <a href={calVideoHref} target="_blank" rel="noopener noreferrer">
+                          <Video className="mr-1.5" size={14} />
+                          {consultScheduled
+                            ? "View / Reschedule"
+                            : "Schedule"}
+                        </a>
+                      </Button>
+                    }
+                  />
+                  <StepRow
+                    done={consultComplete}
+                    label="Video Consultation Complete"
+                    sublabel="We'll mark this complete after your call."
                   />
                   <StepRow
                     done={
