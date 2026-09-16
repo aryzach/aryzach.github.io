@@ -758,6 +758,34 @@ const SignedStep = ({
 };
 
 // ---------- Small helpers ----------
+const TermButton = ({
+  months, price, installFee, active, onClick,
+}: {
+  months: number;
+  price: number | null;
+  installFee: number | null;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
+      active
+        ? "border-primary bg-primary text-primary-foreground"
+        : "border-border bg-background hover:border-primary/60"
+    }`}
+  >
+    <span>{commitmentLabel(months)}</span>
+    <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+      {price != null ? `${formatUSD(price)}/mo` : "—"}
+    </span>
+    <span className={`text-[10px] ${active ? "text-primary-foreground/80" : "text-muted-foreground/80"}`}>
+      {installFee != null ? (installFee > 0 ? `+${formatUSD(installFee)} install fee` : "Free installation") : "—"}
+    </span>
+  </button>
+);
+
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="space-y-3">
     <h3 className="text-sm font-semibold text-foreground">{title}</h3>
