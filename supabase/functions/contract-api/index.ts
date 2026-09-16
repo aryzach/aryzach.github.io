@@ -183,7 +183,15 @@ Deno.serve(async (req) => {
           ? reservation.custom_pricing_options
           : null;
         const months = Number(commitment_months);
-        const matchedOption = customOptions?.find((o) => Number(o?.months) === months) ?? null;
+        const requestedVariant =
+          typeof body?.pricing_variant === "string" && body.pricing_variant ? body.pricing_variant : null;
+        const matchedOption =
+          customOptions?.find(
+            (o: any) => Number(o?.months) === months && (o?.variant ?? null) === requestedVariant,
+          ) ??
+          customOptions?.find((o) => Number(o?.months) === months) ??
+          null;
+        const selectedVariant = (matchedOption as any)?.variant ?? null;
         if (customOptions?.length) {
           if (!matchedOption) {
             return json({ error: "Please choose an initial commitment length." }, 400);
@@ -281,8 +289,9 @@ Deno.serve(async (req) => {
           installation_address: combinedAddress,
           installation_street: streetAddress,
           installation_city: city,
-          sauna_type: saunaInfo.label,
+          sauna_type: selectedVariant ? `${saunaInfo.label} — ${selectedVariant}` : saunaInfo.label,
           sauna_type_id: saunaInfo.id,
+          pricing_variant: selectedVariant,
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,
@@ -315,7 +324,7 @@ Deno.serve(async (req) => {
           phone: (phone ?? "").toString().trim() || null,
           email: email.trim(),
           installation_address: combinedAddress,
-          sauna_type: saunaInfo.label,
+          sauna_type: selectedVariant ? `${saunaInfo.label} — ${selectedVariant}` : saunaInfo.label,
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,

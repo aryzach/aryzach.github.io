@@ -35,6 +35,17 @@ interface Props {
 
 type Step = "configure" | "preview" | "sign" | "signed";
 
+type PricingOption = { months: number; monthly: number; installFee: number; variant: string | null };
+
+const findOption = (
+  options: PricingOption[] | null | undefined,
+  months: number,
+  variant: string | null,
+) =>
+  options?.find((o) => o.months === months && (o.variant ?? null) === (variant ?? null)) ??
+  options?.find((o) => o.months === months) ??
+  null;
+
 interface FormState {
   customer_legal_name: string;
   phone: string;
@@ -43,6 +54,7 @@ interface FormState {
   installation_city: string;
   sauna_type: string;
   commitment_months: number;
+  pricing_variant: string | null;
   insurance_selected: boolean;
   second_heater_selected: boolean;
   preferred_installation_date: string; // YYYY-MM-DD
@@ -56,6 +68,7 @@ const empty: FormState = {
   installation_city: "",
   sauna_type: "",
   commitment_months: 6,
+  pricing_variant: null,
   insurance_selected: false,
   second_heater_selected: false,
   preferred_installation_date: "",
@@ -78,7 +91,9 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const [minMonths, setMinMonths] = useState<number | null>(null);
   const [customDeposit, setCustomDeposit] = useState<number | null>(null);
   const [customDeliveryFee, setCustomDeliveryFee] = useState<number | null>(null);
-  const [customOptions, setCustomOptions] = useState<{ months: number; monthly: number; installFee: number }[] | null>(null);
+  const [customOptions, setCustomOptions] = useState<
+    { months: number; monthly: number; installFee: number; variant: string | null }[] | null
+  >(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -108,6 +123,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
               months: Number(o?.months),
               monthly: Number(o?.monthly_price),
               installFee: Number(o?.install_fee ?? 0),
+              variant: typeof o?.variant === "string" && o.variant ? (o.variant as string) : null,
             }))
             .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
         : null;
@@ -137,6 +153,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         installation_city: priorCity,
         sauna_type: c?.rental_summary_snapshot?.sauna_type_id ?? r.default_sauna_type ?? r.sauna_type_id ?? "",
         commitment_months: c?.commitment_months ?? custom?.months ?? opts?.[0]?.months ?? r.min_commitment_months ?? 6,
+        pricing_variant:
+          c?.rental_summary_snapshot?.pricing_variant ?? opts?.[0]?.variant ?? null,
         insurance_selected: !!c?.insurance_selected,
         second_heater_selected: !!c?.second_heater_selected,
         preferred_installation_date:
@@ -166,12 +184,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
-      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.monthly;
       if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
       return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
     },
-    [form.sauna_type, form.commitment_months, customTerm, customOptions],
+    [form.sauna_type, form.commitment_months, form.pricing_variant, customTerm, customOptions],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
@@ -217,6 +235,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           installation_city: form.installation_city.trim(),
           sauna_type: form.sauna_type,
           commitment_months: form.commitment_months,
+          pricing_variant: form.pricing_variant,
           insurance_selected: form.insurance_selected,
           second_heater_selected: form.second_heater_selected && (saunaInfo?.allowsSecondHeater ?? false),
           preferred_installation_date: form.preferred_installation_date,
@@ -388,14 +407,23 @@ const ConfigureStep = ({
   isSf: boolean;
   activeVersion: string;
   customTerm?: { months: number; monthly: number; installFee: number } | null;
-  customOptions?: { months: number; monthly: number; installFee: number }[] | null;
+  customOptions?: PricingOption[] | null;
   minMonths?: number | null;
   allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
+  const variantGroups = useMemo(() => {
+    if (!customOptions?.length) return null;
+    const variants = Array.from(new Set(customOptions.map((o) => o.variant ?? null)));
+    if (variants.length < 2) return null;
+    return variants.map((v) => ({
+      variant: v,
+      options: customOptions.filter((o) => (o.variant ?? null) === v).sort((a, b) => a.months - b.months),
+    }));
+  }, [customOptions]);
   const termOptions = useMemo(() => {
     if (customOptions?.length) {
-      return customOptions.map((o) => o.months).sort((a, b) => a - b);
+      return Array.from(new Set(customOptions.map((o) => o.months))).sort((a, b) => a - b);
     }
     const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
     const all = customTerm ? [...base, customTerm.months] : base;
@@ -404,7 +432,7 @@ const ConfigureStep = ({
   }, [customTerm, customOptions, minMonths, allowedMonths]);
   const installFee = useMemo(
     () => {
-      const opt = customOptions?.find((o) => o.months === form.commitment_months);
+      const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.installFee;
       return customTerm && form.commitment_months === customTerm.months
         ? customTerm.installFee
@@ -470,52 +498,67 @@ const ConfigureStep = ({
 
       <Section title="Term & pricing">
         <Field label="Initial commitment — After your initial term, continue month-to-month.">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {termOptions.map((m) => {
-              const opt = customOptions?.find((o) => o.months === m);
-              const price =
-                opt
-                  ? opt.monthly
-                  : customTerm && m === customTerm.months
-                    ? customTerm.monthly
-                    : form.sauna_type
-                      ? getMonthlyPrice(form.sauna_type, m)
-                      : null;
-              const installFee =
-                opt
-                  ? opt.installFee
-                  : customTerm && m === customTerm.months
-                    ? customTerm.installFee
-                    : form.sauna_type
-                      ? getInstallFee(form.sauna_type, m)
-                      : null;
-              const active = form.commitment_months === m;
-              return (
-                <button
-                  type="button"
-                  key={m}
-                  onClick={() => set("commitment_months", m)}
-                  className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
-                    active
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-background hover:border-primary/60"
-                  }`}
-                >
-                  <span>{commitmentLabel(m)}</span>
-                  <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
-                    {price != null ? `${formatUSD(price)}/mo` : "—"}
-                  </span>
-                  <span className={`text-[10px] ${active ? "text-primary-foreground/80" : "text-muted-foreground/80"}`}>
-                    {installFee != null
-                      ? installFee > 0
-                        ? `+${formatUSD(installFee)} install fee`
-                        : "Free installation"
-                      : "—"}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {variantGroups ? (
+            <div className="space-y-4">
+              {variantGroups.map((g) => (
+                <div key={g.variant ?? "standard"}>
+                  <p className="text-sm font-medium mb-2">{g.variant ?? "Standard"}</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {g.options.map((o) => {
+                      const active =
+                        form.commitment_months === o.months &&
+                        (form.pricing_variant ?? null) === (o.variant ?? null);
+                      return (
+                        <TermButton
+                          key={`${g.variant}-${o.months}`}
+                          months={o.months}
+                          price={o.monthly}
+                          installFee={o.installFee}
+                          active={active}
+                          onClick={() => {
+                            set("commitment_months", o.months);
+                            set("pricing_variant", o.variant ?? null);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {termOptions.map((m) => {
+                const opt = findOption(customOptions, m, form.pricing_variant);
+                const price =
+                  opt
+                    ? opt.monthly
+                    : customTerm && m === customTerm.months
+                      ? customTerm.monthly
+                      : form.sauna_type
+                        ? getMonthlyPrice(form.sauna_type, m)
+                        : null;
+                const fee =
+                  opt
+                    ? opt.installFee
+                    : customTerm && m === customTerm.months
+                      ? customTerm.installFee
+                      : form.sauna_type
+                        ? getInstallFee(form.sauna_type, m)
+                        : null;
+                return (
+                  <TermButton
+                    key={m}
+                    months={m}
+                    price={price}
+                    installFee={fee}
+                    active={form.commitment_months === m}
+                    onClick={() => set("commitment_months", m)}
+                  />
+                );
+              })}
+            </div>
+          )}
         </Field>
         <div className="rounded-md border border-border divide-y divide-border bg-card">
           <PriceRow
@@ -715,6 +758,34 @@ const SignedStep = ({
 };
 
 // ---------- Small helpers ----------
+const TermButton = ({
+  months, price, installFee, active, onClick,
+}: {
+  months: number;
+  price: number | null;
+  installFee: number | null;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
+      active
+        ? "border-primary bg-primary text-primary-foreground"
+        : "border-border bg-background hover:border-primary/60"
+    }`}
+  >
+    <span>{commitmentLabel(months)}</span>
+    <span className={`text-xs ${active ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+      {price != null ? `${formatUSD(price)}/mo` : "—"}
+    </span>
+    <span className={`text-[10px] ${active ? "text-primary-foreground/80" : "text-muted-foreground/80"}`}>
+      {installFee != null ? (installFee > 0 ? `+${formatUSD(installFee)} install fee` : "Free installation") : "—"}
+    </span>
+  </button>
+);
+
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="space-y-3">
     <h3 className="text-sm font-semibold text-foreground">{title}</h3>
