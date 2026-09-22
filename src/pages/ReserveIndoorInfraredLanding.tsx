@@ -95,9 +95,22 @@ const LandingGallery = () => (
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             ) : (
-              <video autoPlay muted loop playsInline preload="metadata" className="w-full h-full object-cover">
-                <source src={item.src} type="video/mp4" />
-              </video>
+              <video
+                src={item.src}
+                autoPlay
+                muted
+                defaultMuted
+                loop
+                playsInline
+                preload="auto"
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    el.play().catch(() => {});
+                  }
+                }}
+                className="w-full h-full object-cover"
+              />
             )}
             <div className="absolute inset-0 bg-accent/10 pointer-events-none" />
           </div>
