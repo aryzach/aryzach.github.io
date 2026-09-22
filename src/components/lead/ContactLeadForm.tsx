@@ -40,6 +40,8 @@ interface Props {
   className?: string;
   /** Renders the form for a dark background with transparent, dark inputs. */
   overlay?: boolean;
+  /** Sauna type reported to GHL. Defaults to "traditional". */
+  saunaType?: string;
 }
 
 const ContactLeadForm = ({
@@ -49,6 +51,7 @@ const ContactLeadForm = ({
   subtitle,
   className = "",
   overlay = false,
+  saunaType = "traditional",
 }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -76,6 +79,7 @@ const ContactLeadForm = ({
           sauna_goals: values.goals.join(", "),
           goals_detail: values.goals_detail,
           message: values.message,
+          sauna_type: saunaType,
         },
       });
       if (!res.ok) {
