@@ -69,6 +69,7 @@ const LandingHero = () => {
         </div>
         <div className="order-5">
           <ContactLeadForm
+            saunaType="Indoor Infrared"
             formSource="infrared_landing_hero"
             formName="Infrared Landing Hero Contact"
             overlay
@@ -185,6 +186,7 @@ const ReserveIndoorInfraredLanding = () => {
 
       <section className="container mx-auto px-4 pt-4 pb-16">
         <ContactLeadForm
+            saunaType="Indoor Infrared"
           formSource="infrared_landing_mid"
           formName="Infrared Landing Contact"
         />
@@ -197,6 +199,7 @@ const ReserveIndoorInfraredLanding = () => {
 
       <section className="container mx-auto px-4 py-16">
         <ContactLeadForm
+            saunaType="Indoor Infrared"
           formSource="infrared_landing_after_social"
           formName="Infrared Landing After Social Proof Contact"
           title="Ready to rent a sauna?"

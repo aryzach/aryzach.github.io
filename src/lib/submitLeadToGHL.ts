@@ -197,6 +197,11 @@ export async function submitLeadToGHL({
     ...utms,
     utm_source: utms.utm_source || "direct",
     ...cleaned,
+    // Every form reports a sauna_type; defaults to traditional site-wide.
+    sauna_type:
+      typeof cleaned.sauna_type === "string" && cleaned.sauna_type
+        ? cleaned.sauna_type
+        : "traditional",
   };
 
   inflight.add(form_source);
