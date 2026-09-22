@@ -104,7 +104,7 @@ const IndoorInfraredLanding = () => {
                 </div>
                 <div className="flex items-center gap-2 text-foreground">
                   <Clock className="w-5 h-5 text-[hsl(var(--color-accent))]" />
-                  <span>45-min setup</span>
+                  <span>2-hour installation</span>
                 </div>
                 <div className="flex items-center gap-2 text-foreground">
                   <Shield className="w-5 h-5 text-[hsl(var(--color-accent))]" />
