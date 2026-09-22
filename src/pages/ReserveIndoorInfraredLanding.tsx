@@ -6,18 +6,16 @@ import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import { useSEO } from "@/hooks/useSEO";
-import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
+import galleryIndoorInfraredAsset from "@/assets/gallery-indoor-infrared-room.jpeg.asset.json";
 
 
-const video0802 = assetUrl(video0802Asset);
 const video0804 = "https://id-preview--c82befae-ecc0-44e6-8bc1-a4554e5e12f4.lovable.app/media/0804.mp4";
+const galleryIndoorInfrared = assetUrl(galleryIndoorInfraredAsset);
 
 const galleryItems = [
-  { type: "video" as const, src: "/media/billwalkthrough.mp4", alt: "Walkthrough of an indoor infrared sauna rental in San Francisco" },
-  { type: "image" as const, src: "/media/upload-15.jpeg", alt: "Indoor infrared sauna rental in a San Francisco home" },
   { type: "video" as const, src: video0804, alt: "Indoor infrared sauna rental installation in San Francisco" },
-  { type: "video" as const, src: video0802, alt: "Indoor infrared sauna rental setup in a San Francisco home" },
+  { type: "image" as const, src: galleryIndoorInfrared, alt: "Indoor infrared sauna rental in a San Francisco apartment living room" },
 ];
 
 const LandingHero = () => {
@@ -118,7 +116,7 @@ const LandingGallery = () => (
               <br /><br />
               Assembled on-site. Fits through doorways and up stairs.
               <br /><br />
-              Indoor or outdoor. Apartment, living room, balcony or backyard.
+              Living room, apartment, garage or office.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
@@ -149,7 +147,7 @@ const LandingGallery = () => (
 const RatesSection = () => (
   <section className="py-14 md:py-20 bg-cedar-section">
     <div className="container mx-auto px-4 max-w-2xl">
-      <div className="mt-8 md:mt-10 text-center">
+      <div className="text-center">
         <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
           Rates starting at $200/mo. Everything included.
         </p>
