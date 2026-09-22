@@ -10,7 +10,6 @@ import { assetUrl } from "@/lib/assetUrl";
 import galleryIndoorInfraredAsset from "@/assets/gallery-indoor-infrared-room.jpeg.asset.json";
 
 
-const video0802 = assetUrl(video0802Asset);
 const video0804 = "https://id-preview--c82befae-ecc0-44e6-8bc1-a4554e5e12f4.lovable.app/media/0804.mp4";
 const galleryIndoorInfrared = assetUrl(galleryIndoorInfraredAsset);
 
