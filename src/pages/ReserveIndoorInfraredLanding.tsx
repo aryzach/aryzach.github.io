@@ -6,7 +6,6 @@ import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import { useSEO } from "@/hooks/useSEO";
-import video0802Asset from "@/assets/0802.mp4.asset.json";
 import { assetUrl } from "@/lib/assetUrl";
 import galleryIndoorInfraredAsset from "@/assets/gallery-indoor-infrared-room.jpeg.asset.json";
 
