@@ -49,6 +49,7 @@ import NotFound from "./pages/NotFound";
 import Care from "./pages/Care";
 import ReserveTraditionalLanding from "./pages/ReserveTraditionalLanding";
 import ReserveTraditionalLandingPay from "./pages/ReserveTraditionalLandingPay";
+import ReserveIndoorInfraredLanding from "./pages/ReserveIndoorInfraredLanding";
 import ReserveTraditionalLandingConsult from "./pages/ReserveTraditionalLandingConsult";
 import A2PFormReview from "./pages/A2PFormReview";
 import TraditionalSaunaSpecs from "./pages/TraditionalSaunaSpecs";
@@ -169,6 +170,7 @@ const App = () => (
           <Route path="/reservation/:id" element={<ReservationDashboard />} />
           <Route path="/care" element={<Care />} />
           <Route path="/reserve-traditional-landing" element={<ReserveTraditionalLanding />} />
+          <Route path="/reserve-indoor-infrared-landing" element={<ReserveIndoorInfraredLanding />} />
           <Route path="/reserve-traditional-landing-pay" element={<ReserveTraditionalLandingPay />} />
           <Route path="/reserve-traditional-landing-consult" element={<ReserveTraditionalLandingConsult />} />
           <Route path="/a2p-form-review" element={<A2PFormReview />} />
