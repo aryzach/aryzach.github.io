@@ -6,12 +6,9 @@ import FAQ from "@/components/FAQ";
 import SocialProof from "@/components/SocialProof";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import { useSEO } from "@/hooks/useSEO";
-import { assetUrl } from "@/lib/assetUrl";
-import galleryIndoorInfraredAsset from "@/assets/gallery-indoor-infrared-room.jpeg.asset.json";
 
-
-const video0804 = "https://id-preview--c82befae-ecc0-44e6-8bc1-a4554e5e12f4.lovable.app/media/0804.mp4";
-const galleryIndoorInfrared = assetUrl(galleryIndoorInfraredAsset);
+const video0804 = `${import.meta.env.BASE_URL}media/0804.mp4`;
+const galleryIndoorInfrared = `${import.meta.env.BASE_URL}images/gallery-indoor-infrared-room.jpeg`;
 
 const galleryItems = [
   { type: "video" as const, src: video0804, alt: "Indoor infrared sauna rental installation in San Francisco" },
@@ -98,9 +95,21 @@ const LandingGallery = () => (
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
             ) : (
-              <video autoPlay muted loop playsInline preload="metadata" className="w-full h-full object-cover">
-                <source src={item.src} type="video/mp4" />
-              </video>
+              <video
+                src={item.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    el.play().catch(() => {});
+                  }
+                }}
+                className="w-full h-full object-cover"
+              />
             )}
             <div className="absolute inset-0 bg-accent/10 pointer-events-none" />
           </div>
