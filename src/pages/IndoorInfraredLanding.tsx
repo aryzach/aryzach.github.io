@@ -1,17 +1,14 @@
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
-import { Link } from "react-router-dom";
-import { useReservationModal } from "@/contexts/ReservationModal";
 import { Check, Thermometer, Users, Zap, Clock, Shield } from "lucide-react";
+import ContactLeadForm from "@/components/lead/ContactLeadForm";
 import lindseyLivingRoom from "@/assets/lindsey-sauna-living-room.png";
 import indoorInfraredImg from "@/assets/indoorinfrared.png";
 import GoogleReviews from "@/components/GoogleReviews";
 
 const IndoorInfraredLanding = () => {
   useSEO(seoData.indoorInfraredLanding);
-  const { open: openReservation } = useReservationModal();
 
   // Google Ads conversion tracking
   useEffect(() => {
@@ -44,11 +41,11 @@ const IndoorInfraredLanding = () => {
               <p className="text-lg text-muted-foreground max-w-lg">
                 Experience deep, therapeutic heat in the comfort of your home. Our infrared saunas plug into any standard 120V outlet — no special wiring required.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
-                  Reserve Your Sauna
-                </Button>
-              </div>
+              <ContactLeadForm
+                saunaType="Indoor Infrared"
+                formSource="indoor_infrared_sauna_rental_hero"
+                formName="Indoor Infrared Sauna Rental Hero Contact"
+              />
             </div>
             <div className="relative">
               <img
@@ -159,9 +156,11 @@ const IndoorInfraredLanding = () => {
           <p className="text-muted-foreground text-lg">
             Reserve your indoor infrared sauna today. We'll handle delivery, setup, and ongoing support.
           </p>
-          <Button size="lg" onClick={() => openReservation({ source: "Direct Link" })}>
-            Reserve Your Sauna Now
-          </Button>
+          <ContactLeadForm
+            saunaType="Indoor Infrared"
+            formSource="indoor_infrared_sauna_rental_footer"
+            formName="Indoor Infrared Sauna Rental Footer Contact"
+          />
         </div>
       </section>
     </div>
