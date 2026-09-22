@@ -149,7 +149,7 @@ const LandingGallery = () => (
 const RatesSection = () => (
   <section className="py-14 md:py-20 bg-cedar-section">
     <div className="container mx-auto px-4 max-w-2xl">
-      <div className="mt-8 md:mt-10 text-center">
+      <div className="text-center">
         <p className="font-sans text-xl md:text-2xl font-semibold text-foreground mb-2">
           Rates starting at $200/mo. Everything included.
         </p>
