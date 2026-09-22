@@ -61,7 +61,7 @@ const LandingHero = () => {
         <div className="flex flex-col items-start text-left max-w-md mx-auto mb-8 order-4">
           <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
             <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
-            <span>200°F sauna with a real stone heater</span>
+            <span>Gentle ~150°F infrared heat</span>
           </div>
           <div className="flex items-center gap-2 text-white/90 font-sans text-[16px] md:text-[17px] leading-[1.6] mb-2">
             <Check className="text-[hsl(var(--color-accent))] flex-shrink-0" size={18} />
@@ -122,13 +122,13 @@ const LandingGallery = () => (
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
-            <h4 className="font-semibold text-xl mb-3 text-foreground">Traditional sauna heat</h4>
+            <h4 className="font-semibold text-xl mb-3 text-foreground">Gentle infrared heat</h4>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              200°F
+              ~150°F soothing warmth.
               <br /><br />
-              Real stone heater.
+              Heats your body directly, not the air.
               <br /><br />
-              Pour water, get steam.
+              Warm up in minutes.
             </p>
           </div>
           <div className="bg-background rounded-lg p-6 md:p-8 border-2 border-warm-orange">
