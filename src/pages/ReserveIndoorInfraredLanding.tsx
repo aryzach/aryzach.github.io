@@ -99,7 +99,6 @@ const LandingGallery = () => (
                 src={item.src}
                 autoPlay
                 muted
-                defaultMuted
                 loop
                 playsInline
                 preload="auto"
