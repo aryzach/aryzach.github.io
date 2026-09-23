@@ -10,12 +10,13 @@ import GoogleReviews from "@/components/GoogleReviews";
 const IndoorInfraredLanding = () => {
   useSEO(seoData.indoorInfraredLanding);
 
-  // Google Ads conversion tracking
-  useEffect(() => {
+  // Google Ads conversion tracking — fired only after a successful form submit.
+  const handleFormSuccess = () => {
     if (window.gtag) {
       window.gtag('event', 'ads_conversion_Submit_lead_form_1', {});
     }
-  }, []);
+  };
+
 
   const benefits = [
     "Comfortable 150°F heat — great for longer sessions",
