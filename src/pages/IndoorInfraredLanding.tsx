@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { seoData } from "@/lib/seoData";
 import { Check, Thermometer, Users, Zap, Clock, Shield } from "lucide-react";
@@ -10,12 +10,16 @@ import GoogleReviews from "@/components/GoogleReviews";
 const IndoorInfraredLanding = () => {
   useSEO(seoData.indoorInfraredLanding);
 
-  // Google Ads conversion tracking
-  useEffect(() => {
+  // Google Ads conversion tracking — fired only after a successful form submit.
+  const adsFired = useRef(false);
+  const handleFormSuccess = () => {
+    if (adsFired.current) return;
+    adsFired.current = true;
     if (window.gtag) {
       window.gtag('event', 'ads_conversion_Submit_lead_form_1', {});
     }
-  }, []);
+  };
+
 
   const benefits = [
     "Comfortable 150°F heat — great for longer sessions",
@@ -45,6 +49,7 @@ const IndoorInfraredLanding = () => {
                 saunaType="Indoor Infrared"
                 formSource="indoor_infrared_sauna_rental_hero"
                 formName="Indoor Infrared Sauna Rental Hero Contact"
+                onSuccess={handleFormSuccess}
               />
             </div>
             <div className="relative">
@@ -160,6 +165,7 @@ const IndoorInfraredLanding = () => {
             saunaType="Indoor Infrared"
             formSource="indoor_infrared_sauna_rental_footer"
             formName="Indoor Infrared Sauna Rental Footer Contact"
+            onSuccess={handleFormSuccess}
           />
         </div>
       </section>
