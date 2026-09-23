@@ -42,6 +42,8 @@ interface Props {
   overlay?: boolean;
   /** Sauna type reported to GHL. Defaults to "traditional". */
   saunaType?: string;
+  /** Called after a successful submission (used for conversion tracking). */
+  onSuccess?: () => void;
 }
 
 const ContactLeadForm = ({
@@ -52,6 +54,7 @@ const ContactLeadForm = ({
   className = "",
   overlay = false,
   saunaType = "traditional",
+  onSuccess,
 }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -88,6 +91,7 @@ const ContactLeadForm = ({
       }
       reset();
       setSuccess(true);
+      onSuccess?.();
     } finally {
       setSubmitting(false);
     }
