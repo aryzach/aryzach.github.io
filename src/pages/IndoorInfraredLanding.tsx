@@ -46,6 +46,7 @@ const IndoorInfraredLanding = () => {
                 saunaType="Indoor Infrared"
                 formSource="indoor_infrared_sauna_rental_hero"
                 formName="Indoor Infrared Sauna Rental Hero Contact"
+                onSuccess={handleFormSuccess}
               />
             </div>
             <div className="relative">
