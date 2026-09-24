@@ -34,7 +34,8 @@ type SaunaStatus =
   | "Maintenance"
   | "Incoming"
   | "Transfer Planned"
-  | "Sold";
+  | "Sold"
+  | "Pre-sold";
 
 const STATUSES: SaunaStatus[] = [
   "Available",
@@ -46,6 +47,7 @@ const STATUSES: SaunaStatus[] = [
   "Incoming",
   "Transfer Planned",
   "Sold",
+  "Pre-sold",
 ];
 
 // Default status filter preset: everything except Installed, Maintenance, Sold.
@@ -63,6 +65,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
   "Incoming": "bg-sky-100 text-sky-900 border-sky-200",
   "Transfer Planned": "bg-indigo-100 text-indigo-900 border-indigo-200",
   "Sold": "bg-gray-200 text-gray-900 border-gray-300",
+  "Pre-sold": "bg-teal-100 text-teal-900 border-teal-200",
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
@@ -206,6 +209,8 @@ function timelineFor(row: InventoryRow): string {
       return `Transfer planned${row.future_customer ? ` to ${row.future_customer}` : ""}${row.available_date ? ` · ${fmtDate(row.available_date)}` : ""}`;
     case "Sold":
       return "Sold";
+    case "Pre-sold":
+      return `Pre-sold${row.future_customer ? ` to ${row.future_customer}` : row.current_customer ? ` to ${row.current_customer}` : ""}`;
   }
 }
 
