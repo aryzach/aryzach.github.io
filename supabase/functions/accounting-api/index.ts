@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
             .order("created_at", { ascending: false }),
           supabase
             .from("sauna_inventory")
-            .select("unit_code, current_customer_id, future_customer_id"),
+            .select("unit_code, status, current_customer_id, future_customer_id"),
         ]);
         if (resRes.error) throw resRes.error;
         if (conRes.error) throw conRes.error;
@@ -93,13 +93,21 @@ Deno.serve(async (req) => {
             unitByReservation.set(u.future_customer_id, u.unit_code);
           }
         }
+        const soldIds = new Set<string>();
+        for (const u of invRes.data ?? []) {
+          if (["Sold", "Pre-sold"].includes(u.status)) {
+            if (u.current_customer_id) soldIds.add(u.current_customer_id);
+            if (u.future_customer_id) soldIds.add(u.future_customer_id);
+          }
+        }
         const depositPaid = (r: any) =>
           ["paid", "succeeded", "complete", "completed"].includes(String(r.payment_status ?? "").toLowerCase());
 
         const rows = (resRes.data ?? [])
           .filter((r: any) =>
             (contractsByReservation.has(r.id) && currentIds.has(r.id)) ||
-            (depositPaid(r) && unitByReservation.has(r.id)))
+            (depositPaid(r) && unitByReservation.has(r.id)) ||
+            soldIds.has(r.id))
           .map((r: any) => {
           const c = contractsByReservation.get(r.id) ?? null;
           const months = c?.commitment_months ?? null;
