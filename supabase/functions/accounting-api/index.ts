@@ -127,6 +127,7 @@ Deno.serve(async (req) => {
 
           return {
             reservation_id: r.id,
+            is_sale: soldIds.has(r.id),
             name,
             unit_code: unitByReservation.get(r.id) ?? null,
             commitment_months: months,

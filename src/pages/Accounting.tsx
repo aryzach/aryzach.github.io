@@ -13,6 +13,7 @@ interface AccountingRow {
   reservation_id: string;
   name: string;
   unit_code: string | null;
+  is_sale: boolean;
   commitment_months: number | null;
   monthly_price: number | null;
   security_deposit: number | null;
@@ -166,7 +167,7 @@ const Accounting = () => {
                     <tr key={r.reservation_id} className="border-t border-border align-top">
                       <td className="px-3 py-2 font-medium text-foreground">{r.name}</td>
                       <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
-                      <td className="px-3 py-2">{r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
+                      <td className="px-3 py-2">{r.is_sale ? "Sale" : r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
                       <td className="px-3 py-2 font-medium">{money(r.monthly_price)}</td>
                       <td className="px-3 py-2">{r.payment_method ?? "—"}</td>
                       <td className="px-3 py-2">{money(r.security_deposit)}</td>
