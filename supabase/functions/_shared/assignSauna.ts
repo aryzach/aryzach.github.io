@@ -89,3 +89,110 @@ export async function assignSoonestSauna(
   if (error || !updated) return { sauna: null, reason: "assignment_failed" };
   return { sauna: updated };
 }
+
+/**
+ * Adds a qualifying reservation (deposit paid or contract signed) to the
+ * waitlist. Idempotent per reservation.
+ */
+export async function addReservationToWaitlist(
+  supabase: Client,
+  reservation: any,
+  reason: string,
+) {
+  const city = reservation.city ?? null;
+  const pref = reservation.preferred_install_at
+    ? String(reservation.preferred_install_at).slice(0, 10)
+    : null;
+  const { error } = await supabase.from("waitlist_entries").upsert(
+    {
+      reservation_id: reservation.id,
+      first_name: reservation.first_name ?? "",
+      last_name: reservation.last_name ?? "",
+      email: reservation.email ?? "",
+      phone: reservation.phone ?? null,
+      city,
+      sauna_type_id: reservation.sauna_type_id,
+      preferred_install_date: pref,
+      reservation_source: reservation.reservation_source ?? "Unknown",
+      status: "Open",
+      reason,
+    },
+    { onConflict: "reservation_id" },
+  );
+  if (error) console.error("waitlist upsert failed:", error);
+}
+
+/** Marks a reservation's waitlist entry as converted once it gets a sauna. */
+export async function convertWaitlistEntry(supabase: Client, reservationId: string) {
+  await supabase
+    .from("waitlist_entries")
+    .update({ status: "Converted" })
+    .eq("reservation_id", reservationId)
+    .eq("status", "Open");
+}
+
+/**
+ * After a contract is signed: sync the reservation's sauna type to the signed
+ * contract, release any future assignment of a different type, then assign a
+ * matching sauna or add them to the waitlist.
+ */
+export async function syncSaunaAfterContract(
+  supabase: Client,
+  reservationId: string,
+  contractSaunaTypeId: string | null,
+) {
+  const { data: reservation } = await supabase
+    .from("reservations").select("*").eq("id", reservationId).maybeSingle();
+  if (!reservation) return;
+
+  if (contractSaunaTypeId && contractSaunaTypeId !== reservation.sauna_type_id) {
+    await supabase.from("reservations")
+      .update({ sauna_type_id: contractSaunaTypeId }).eq("id", reservationId);
+    reservation.sauna_type_id = contractSaunaTypeId;
+  }
+
+  // Current customers are admin-managed; leave them alone.
+  const { data: currentUnit } = await supabase.from("sauna_inventory")
+    .select("id").eq("current_customer_id", reservationId).maybeSingle();
+  if (currentUnit) return;
+
+  const { data: futureUnit } = await supabase.from("sauna_inventory")
+    .select("*").eq("future_customer_id", reservationId).maybeSingle();
+
+  if (futureUnit) {
+    if (futureUnit.sauna_type_id === reservation.sauna_type_id) {
+      await convertWaitlistEntry(supabase, reservationId);
+      return;
+    }
+    // Wrong type — release it.
+    await supabase.from("sauna_inventory").update({
+      future_customer_id: null,
+      future_customer: null,
+      status: futureUnit.current_customer_id ? "Installed" : "Available",
+    }).eq("id", futureUnit.id);
+    await supabase.from("reservations")
+      .update({ sauna_inventory_id: null }).eq("id", reservationId);
+  }
+
+  const { sauna } = await assignSoonestSauna(supabase, reservation, {
+    holdStatus: "Reservation Confirmed",
+  });
+  if (sauna) {
+    await supabase.from("reservations")
+      .update({ sauna_inventory_id: sauna.id }).eq("id", reservationId);
+    await supabase.from("reservation_events").insert({
+      reservation_id: reservationId,
+      event_type: "Sauna Assigned",
+      message: "Sauna assigned to match signed contract",
+      metadata: { sauna_inventory_id: sauna.id },
+    });
+    await convertWaitlistEntry(supabase, reservationId);
+  } else {
+    await addReservationToWaitlist(supabase, reservation, "Contract signed, no matching sauna");
+    await supabase.from("reservation_events").insert({
+      reservation_id: reservationId,
+      event_type: "Added to Waitlist",
+      message: "Contract signed but no matching sauna available",
+    });
+  }
+}
