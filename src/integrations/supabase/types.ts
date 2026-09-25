@@ -900,6 +900,8 @@ export type Database = {
           last_name: string
           phone: string | null
           preferred_install_date: string | null
+          reason: string | null
+          reservation_id: string | null
           reservation_source: string
           sauna_type_id: string
           status: string
@@ -915,6 +917,8 @@ export type Database = {
           last_name: string
           phone?: string | null
           preferred_install_date?: string | null
+          reason?: string | null
+          reservation_id?: string | null
           reservation_source?: string
           sauna_type_id: string
           status?: string
@@ -930,12 +934,22 @@ export type Database = {
           last_name?: string
           phone?: string | null
           preferred_install_date?: string | null
+          reason?: string | null
+          reservation_id?: string | null
           reservation_source?: string
           sauna_type_id?: string
           status?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "waitlist_entries_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
