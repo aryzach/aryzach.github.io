@@ -10,6 +10,7 @@ import {
   getInstallFee,
 } from "../_shared/pricing.ts";
 import { buildSignedContractPdf, sha256Hex } from "../_shared/pdfBuilder.ts";
+import { syncSaunaAfterContract } from "../_shared/assignSauna.ts";
 
 const ACKNOWLEDGMENTS: { key: string; text: string }[] = [
   { key: "reviewed_agreement", text: "I have reviewed and agree to the Rental Summary and the Master Agreement." },
@@ -532,6 +533,13 @@ Deno.serve(async (req) => {
           .from("reservations")
           .update({ contract_status: "Complete" })
           .eq("id", reservation.id);
+
+        try {
+          const snap = (updated?.rental_summary_snapshot ?? contract.rental_summary_snapshot ?? {}) as any;
+          await syncSaunaAfterContract(supabase, reservation.id, snap.sauna_type_id ?? null);
+        } catch (e) {
+          console.error("post-sign sauna sync failed:", e);
+        }
 
         // Return a signed URL for immediate download/view.
         const { data: signed } = await supabase.storage
