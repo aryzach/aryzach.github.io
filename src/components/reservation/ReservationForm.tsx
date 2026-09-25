@@ -127,7 +127,9 @@ const ReservationForm = ({
 
   const selectedSaunaTypeId = watch("sauna_type_id");
   const availability = getStatus(selectedSaunaTypeId || null);
-  const isWaitlistMode = availability.status === "unavailable" && !!selectedSaunaTypeId;
+  // The waitlist is only for customers who paid a deposit or signed a contract;
+  // it's managed automatically by the backend, never joined from this form.
+  const isWaitlistMode = false;
 
   const minDate = useMemo(() => {
     const today = todayISO();

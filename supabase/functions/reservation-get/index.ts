@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { assignSoonestSauna } from "../_shared/assignSauna.ts";
+import { assignSoonestSauna, convertWaitlistEntry } from "../_shared/assignSauna.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
           message: "Sauna assigned after agreement and photo ID completion",
           metadata: { sauna_inventory_id: pick.id },
         });
+        await convertWaitlistEntry(supabase, reservation.id);
       }
     } catch (e) {
       console.error("sauna auto-assignment failed:", e);

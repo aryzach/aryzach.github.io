@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
 import { buildHashedUserData, fetchSessionLineItems, sendMetaPurchase } from "../_shared/metaCapi.ts";
-import { assignSoonestSauna } from "../_shared/assignSauna.ts";
+import { addReservationToWaitlist, assignSoonestSauna } from "../_shared/assignSauna.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -511,6 +511,7 @@ Deno.serve(async (req) => {
       { reservation_id: reservationId, event_type: "Payment Received", message: "Reservation payment received." },
       { reservation_id: reservationId, event_type: "Needs Manual Review", message: "No eligible sauna available for auto-assignment." },
     ]);
+    await addReservationToWaitlist(supabase, reservation, "Deposit paid, no matching sauna");
     try {
       await sendReservationEmail(supabase, reservationId, "payment_received");
     } catch (e) { console.error("payment_received email threw:", e); }
