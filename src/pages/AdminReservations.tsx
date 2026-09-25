@@ -175,6 +175,7 @@ interface InventoryRow {
   current_customer_id: string | null;
   future_customer_id: string | null;
   install_date: string | null;
+  minimum_term_ends: string | null;
   available_date: string | null;
   admin_notes: string | null;
   reservation_id: string | null;
@@ -240,13 +241,14 @@ const AdminReservations = () => {
     | "customer"
     | "future_customer"
     | "install"
+    | "committed"
     | "available"
     | "timeline"
     | "notes"
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     id: "", location: "", style: "", model: "", status: "",
-    customer: "", future_customer: "", install: "", available: "", timeline: "", notes: "", updated: "",
+    customer: "", future_customer: "", install: "", committed: "", available: "", timeline: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [statusFilter, setStatusFilter] = useState<string[]>(STATUS_PRESET as unknown as string[]);
@@ -259,6 +261,7 @@ const AdminReservations = () => {
     ["customer", "Current Customer"],
     ["future_customer", "Future Customer"],
     ["install", "Install"],
+    ["committed", "Committed until"],
     ["available", "Available"],
     ["timeline", "Timeline"],
     ["notes", "Notes"],
@@ -584,6 +587,7 @@ const AdminReservations = () => {
     customer: r.current_customer || "",
     future_customer: r.future_customer || "",
     install: r.install_date || "",
+    committed: r.minimum_term_ends || "",
     available: r.available_date || "",
     timeline: timelineFor(r),
     notes: r.admin_notes || "",
@@ -894,6 +898,9 @@ const AdminReservations = () => {
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.install} onChange={(e) => setColFilter("install", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.committed} onChange={(e) => setColFilter("committed", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.available} onChange={(e) => setColFilter("available", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
@@ -969,6 +976,7 @@ const AdminReservations = () => {
                             <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
                             </td>
+                            <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
                             </td>
@@ -1056,6 +1064,9 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
+                          </td>
+                          <td className="px-1 py-0.5 border-r border-border">
+                            <DateCell value={r.minimum_term_ends} onSave={(v) => updateCell(r.id, "minimum_term_ends", v)} />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />

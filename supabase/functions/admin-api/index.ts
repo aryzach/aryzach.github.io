@@ -309,7 +309,7 @@ Deno.serve(async (req) => {
           "indoor_outdoor_eligibility", "status",
           "current_customer", "future_customer",
           "current_customer_id", "future_customer_id",
-          "install_date",
+          "install_date", "minimum_term_ends",
           "available_date",
           "admin_notes",
         ];
