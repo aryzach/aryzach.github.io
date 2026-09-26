@@ -139,10 +139,11 @@ export const WaitlistPanel = ({ callAdmin }: Props) => {
   if (loading) return <p className="text-muted-foreground">Loading waitlist…</p>;
 
   return (
-    <div className="overflow-x-auto">
+    <div>
       <div className="mb-2 text-sm text-muted-foreground">{filtered.length} entries</div>
+      <div className="max-h-[calc(100vh-12rem)] overflow-auto border border-border rounded-md bg-card">
       <table className="w-full text-xs border-collapse">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-muted shadow-[0_1px_0_0_hsl(var(--border))]">
           <tr className="text-left border-b border-border">
             {cols.map((c) => (
               <th
@@ -214,6 +215,7 @@ export const WaitlistPanel = ({ callAdmin }: Props) => {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };

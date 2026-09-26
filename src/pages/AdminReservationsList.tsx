@@ -443,7 +443,7 @@ export const ReservationsListPanel = ({
         </div>
       )}
 
-      <div className="overflow-x-auto border border-border rounded-md bg-card">
+      <div className="max-h-[calc(100vh-12rem)] overflow-auto border border-border rounded-md bg-card">
         <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: totalWidth + 32, minWidth: "100%" }}>
           <colgroup>
             <col style={{ width: 32 }} />
@@ -452,7 +452,7 @@ export const ReservationsListPanel = ({
             ))}
             <col style={{ width: widths["actions"] }} />
           </colgroup>
-          <thead className="bg-muted/60 text-[10px] uppercase tracking-wide text-muted-foreground">
+          <thead className="sticky top-0 z-10 bg-muted text-[10px] uppercase tracking-wide text-muted-foreground shadow-[0_1px_0_0_hsl(var(--border))]">
             <tr>
               <th className="px-2 py-1.5 border-r border-border w-8">
                 <input
