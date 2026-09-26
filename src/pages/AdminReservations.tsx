@@ -16,6 +16,7 @@ import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
 import { MultiSelectFilter } from "@/components/admin/MultiSelectFilter";
+import { RevenueDashboard, type RevenueUnit } from "@/components/admin/RevenueDashboard";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 
@@ -178,6 +179,9 @@ interface InventoryRow {
   minimum_term_ends: string | null;
   available_date: string | null;
   admin_notes: string | null;
+  monthly_price: number | null;
+  current_contract: RevenueUnit["current_contract"];
+  future_contract: RevenueUnit["future_contract"];
   reservation_id: string | null;
   updated_at: string;
   created_at: string;
@@ -225,7 +229,7 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
+  const [tab, setTab] = useState<"dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -244,11 +248,12 @@ const AdminReservations = () => {
     | "committed"
     | "available"
     | "timeline"
+    | "monthly"
     | "notes"
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     id: "", location: "", style: "", model: "", status: "",
-    customer: "", future_customer: "", install: "", committed: "", available: "", timeline: "", notes: "", updated: "",
+    customer: "", future_customer: "", install: "", committed: "", available: "", timeline: "", monthly: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [statusFilter, setStatusFilter] = useState<string[]>(STATUS_PRESET as unknown as string[]);
@@ -264,6 +269,7 @@ const AdminReservations = () => {
     ["committed", "Committed until"],
     ["available", "Available"],
     ["timeline", "Timeline"],
+    ["monthly", "$/mo"],
     ["notes", "Notes"],
     ["updated", "Updated"],
   ];
@@ -590,6 +596,7 @@ const AdminReservations = () => {
     committed: r.minimum_term_ends || "",
     available: r.available_date || "",
     timeline: timelineFor(r),
+    monthly: r.monthly_price == null ? "" : String(r.monthly_price),
     notes: r.admin_notes || "",
     updated: r.updated_at,
   });
@@ -705,7 +712,7 @@ const AdminReservations = () => {
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-3 max-w-[1600px]">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-semibold text-foreground">Admin — Inventory</h1>
+            <h1 className="text-3xl font-semibold text-foreground">Admin</h1>
             <div className="flex gap-2">
               <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
@@ -724,6 +731,7 @@ const AdminReservations = () => {
           </div>
 
           <div className="mb-4 inline-flex rounded-md border border-border bg-card p-0.5">
+            <Button variant={tab === "dashboard" ? "default" : "ghost"} size="sm" onClick={() => setTab("dashboard")}>Dashboard</Button>
             <button
               type="button"
               className={`px-3 py-1.5 text-sm rounded ${tab === "inventory" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
@@ -754,6 +762,8 @@ const AdminReservations = () => {
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
           <StripeStatusCard callAdmin={callAdmin} />
+
+          {tab === "dashboard" && <RevenueDashboard inventory={inventory} />}
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />
@@ -815,7 +825,7 @@ const AdminReservations = () => {
 
           <section className="mb-10">
             <div className="space-y-3">
-                <div className="overflow-x-auto border border-border rounded-md bg-card">
+                <div className="max-h-[calc(100vh-12rem)] overflow-auto border border-border rounded-md bg-card">
                   <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: invTotalWidth + 32, minWidth: "100%" }}>
                     <colgroup>
                       <col style={{ width: 32 }} />
@@ -907,6 +917,9 @@ const AdminReservations = () => {
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.timeline} onChange={(e) => setColFilter("timeline", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
+                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.monthly} onChange={(e) => setColFilter("monthly", e.target.value)} />
+                        </th>
+                        <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.notes} onChange={(e) => setColFilter("notes", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
@@ -981,6 +994,7 @@ const AdminReservations = () => {
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
                             </td>
                             <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
+                            <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
                             <td className="px-1 py-1 border-r border-border">
                               <Input className="h-7 text-xs" value={draft.admin_notes} onChange={(e) => setD("admin_notes", e.target.value)} placeholder="Notes" />
                             </td>
@@ -994,7 +1008,7 @@ const AdminReservations = () => {
                           </tr>
                           {draftError && (
                             <tr className="bg-destructive/10">
-                              <td colSpan={14} className="px-3 py-2 text-xs text-destructive">
+                              <td colSpan={INVENTORY_COLS.length + 2} className="px-3 py-2 text-xs text-destructive">
                                 {draftErrorField ? <><strong className="capitalize">{draftErrorField.replace(/_/g, " ")}:</strong> {draftError}</> : draftError}
                               </td>
                             </tr>
@@ -1002,7 +1016,7 @@ const AdminReservations = () => {
                         </>
                       )}
                       {filtered.length === 0 && !draft && (
-                        <tr><td colSpan={14} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
+                        <tr><td colSpan={INVENTORY_COLS.length + 2} className="px-3 py-6 text-center text-muted-foreground">No saunas match.</td></tr>
                       )}
                       {filtered.map((r) => (
                         <tr key={r.id} className="border-t border-border hover:bg-muted/20">
@@ -1072,6 +1086,7 @@ const AdminReservations = () => {
                             <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />
                           </td>
                           <td className="px-2 py-1 border-r border-border text-muted-foreground whitespace-nowrap">{timelineFor(r)}</td>
+                          <td className="px-2 py-1 border-r border-border tabular-nums whitespace-nowrap">{r.monthly_price == null ? "—" : r.monthly_price.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}</td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.admin_notes || ""} onSave={(v) => updateCell(r.id, "admin_notes", v || null)} />
                           </td>
