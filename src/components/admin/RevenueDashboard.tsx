@@ -11,6 +11,7 @@ export interface RevenueUnit {
   install_date: string | null;
   available_date: string | null;
   minimum_term_ends: string | null;
+  monthly_price?: number | null;
   current_contract: { monthly_price: number; commitment_months: number; signed_at: string | null } | null;
   future_contract: { monthly_price: number; commitment_months: number; signed_at: string | null } | null;
 }
@@ -41,18 +42,21 @@ export function RevenueDashboard({ inventory }: { inventory: RevenueUnit[] }) {
         if (["Sold", "Pre-sold", "Cancelled", "Refunded"].includes(unit.status)) continue;
         const category = unit.model_key === "original" ? "original" : unit.style === "infrared" ? "infrared" : "traditional";
         if (type !== "all" && type !== category) continue;
+        // Current renter: signed contract rate, else the inventory $/mo (CRM) when a "Committed until" date exists.
+        const current = unit.current_contract?.signed_at ? unit.current_contract : null;
+        const currentRate = current?.monthly_price ?? (unit.minimum_term_ends ? unit.monthly_price ?? null : null);
         const periods = [
-          { contract: unit.current_contract, begins: unit.install_date, committedUntil: unit.minimum_term_ends },
-          { contract: unit.future_contract, begins: unit.available_date, committedUntil: null },
+          { rate: currentRate, months: current?.commitment_months ?? 0, begins: unit.install_date, committedUntil: unit.minimum_term_ends },
+          { rate: unit.future_contract?.signed_at ? unit.future_contract.monthly_price : null, months: unit.future_contract?.commitment_months ?? 0, begins: unit.available_date, committedUntil: null },
         ];
-        for (const { contract, begins, committedUntil } of periods) {
-          if (!contract?.signed_at || !begins || !Number.isFinite(contract.monthly_price) || contract.commitment_months <= 0) continue;
+        for (const { rate, months: term, begins, committedUntil } of periods) {
+          if (rate == null || !Number.isFinite(rate) || !begins) continue;
           const beginning = parseDay(begins);
           if (!beginning) continue;
-          // Prefer the hand-set "Committed until" date on inventory; fall back to contract math.
           const override = committedUntil ? parseDay(committedUntil) : null;
-          const end = override ?? addMonths(beginning, contract.commitment_months);
-          if (beginning < next && end > first) revenue += contract.monthly_price;
+          const end = override ?? (term > 0 ? addMonths(beginning, term) : null);
+          if (!end) continue;
+          if (beginning < next && end > first) revenue += rate;
         }
       }
       return { month: first.toLocaleDateString("en-US", { month: "short", year: "2-digit" }), revenue };
