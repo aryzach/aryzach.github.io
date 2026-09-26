@@ -187,37 +187,6 @@ interface InventoryRow {
   created_at: string;
 }
 
-function fmtDate(d: string | null): string {
-  if (!d) return "—";
-  const [y, m, day] = d.split("-").map((n) => parseInt(n, 10));
-  if (!y) return d;
-  return new Date(y, m - 1, day).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-}
-
-function timelineFor(row: InventoryRow): string {
-  switch (row.status) {
-    case "Available":
-      return "Available now";
-    case "Reservation Hold":
-      return `Held for ${row.current_customer || "(unknown)"}`;
-    case "Reservation Confirmed":
-      return `Confirmed for ${row.current_customer || "(unknown)"}`;
-    case "Installed":
-      return `Installed with ${row.current_customer || "(unknown)"}${row.install_date ? ` · installed ${fmtDate(row.install_date)}` : ""}${row.future_customer ? ` · next: ${row.future_customer}` : ""}`;
-    case "Returning":
-      return `Returning · available ${fmtDate(row.available_date)}`;
-    case "Maintenance":
-      return `Maintenance · available ${fmtDate(row.available_date)}`;
-    case "Incoming":
-      return `Incoming · available ${fmtDate(row.available_date)}`;
-    case "Transfer Planned":
-      return `Transfer planned${row.future_customer ? ` to ${row.future_customer}` : ""}${row.available_date ? ` · ${fmtDate(row.available_date)}` : ""}`;
-    case "Sold":
-      return "Sold";
-    case "Pre-sold":
-      return `Pre-sold${row.future_customer ? ` to ${row.future_customer}` : row.current_customer ? ` to ${row.current_customer}` : ""}`;
-  }
-}
 
 const AdminReservations = () => {
   useSEO({ title: "Admin — Inventory", description: "Internal sauna inventory admin.", noindex: true });
@@ -247,13 +216,12 @@ const AdminReservations = () => {
     | "install"
     | "committed"
     | "available"
-    | "timeline"
     | "monthly"
     | "notes"
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
     id: "", location: "", style: "", model: "", status: "",
-    customer: "", future_customer: "", install: "", committed: "", available: "", timeline: "", monthly: "", notes: "", updated: "",
+    customer: "", future_customer: "", install: "", committed: "", available: "", monthly: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
   const [statusFilter, setStatusFilter] = useState<string[]>(STATUS_PRESET as unknown as string[]);
@@ -268,7 +236,6 @@ const AdminReservations = () => {
     ["install", "Install"],
     ["committed", "Committed until"],
     ["available", "Available"],
-    ["timeline", "Timeline"],
     ["monthly", "$/mo"],
     ["notes", "Notes"],
     ["updated", "Updated"],
@@ -595,7 +562,6 @@ const AdminReservations = () => {
     install: r.install_date || "",
     committed: r.minimum_term_ends || "",
     available: r.available_date || "",
-    timeline: timelineFor(r),
     monthly: r.monthly_price == null ? "" : String(r.monthly_price),
     notes: r.admin_notes || "",
     updated: r.updated_at,
@@ -915,9 +881,6 @@ const AdminReservations = () => {
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.available} onChange={(e) => setColFilter("available", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
-                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.timeline} onChange={(e) => setColFilter("timeline", e.target.value)} />
-                        </th>
-                        <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.monthly} onChange={(e) => setColFilter("monthly", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
@@ -1086,7 +1049,6 @@ const AdminReservations = () => {
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />
                           </td>
-                          <td className="px-2 py-1 border-r border-border text-muted-foreground whitespace-nowrap">{timelineFor(r)}</td>
                           <td className="px-2 py-1 border-r border-border tabular-nums whitespace-nowrap">{r.monthly_price == null ? "—" : r.monthly_price.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}</td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.admin_notes || ""} onSave={(v) => updateCell(r.id, "admin_notes", v || null)} />
