@@ -881,9 +881,6 @@ const AdminReservations = () => {
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.available} onChange={(e) => setColFilter("available", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
-                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.timeline} onChange={(e) => setColFilter("timeline", e.target.value)} />
-                        </th>
-                        <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.monthly} onChange={(e) => setColFilter("monthly", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
@@ -1052,7 +1049,6 @@ const AdminReservations = () => {
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />
                           </td>
-                          <td className="px-2 py-1 border-r border-border text-muted-foreground whitespace-nowrap">{timelineFor(r)}</td>
                           <td className="px-2 py-1 border-r border-border tabular-nums whitespace-nowrap">{r.monthly_price == null ? "—" : r.monthly_price.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}</td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <TextCell value={r.admin_notes || ""} onSave={(v) => updateCell(r.id, "admin_notes", v || null)} />
