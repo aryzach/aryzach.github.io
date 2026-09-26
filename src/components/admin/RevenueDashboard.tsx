@@ -99,7 +99,7 @@ export function RevenueDashboard({ inventory }: { inventory: RevenueUnit[] }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">Each month includes a signed contract if its scheduled rental period overlaps that month. Future transfers require an available date.</p>
+      <p className="mt-3 text-xs text-muted-foreground">Each month includes a signed contract if its rental period overlaps that month. The inventory "Committed until" date overrides the contract term when set. Future transfers require an available date.</p>
     </section>
   );
 }
