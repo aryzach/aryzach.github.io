@@ -635,6 +635,7 @@ const AdminReservations = () => {
     }));
     try {
       await callAdmin({ action: "update_inventory", id, patch: { [key]: value } });
+      if (key === "current_customer_id" || key === "future_customer_id") await loadAll();
     } catch (e) {
       toast.error((e as Error).message || "Save failed");
       await loadAll();
@@ -730,7 +731,7 @@ const AdminReservations = () => {
             </div>
           </div>
 
-          <div className="mb-4 inline-flex rounded-md border border-border bg-card p-0.5">
+          <div className="mb-4 flex w-fit max-w-full overflow-x-auto rounded-md border border-border bg-card p-0.5">
             <Button variant={tab === "dashboard" ? "default" : "ghost"} size="sm" onClick={() => setTab("dashboard")}>Dashboard</Button>
             <button
               type="button"
