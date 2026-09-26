@@ -519,6 +519,7 @@ export type Database = {
           consult_status: string
           contract_status: string
           created_at: string
+          crm_monthly_price: number | null
           custom_commitment_months: number | null
           custom_contract_terms: Json | null
           custom_delivery_fee: number | null
@@ -577,6 +578,7 @@ export type Database = {
           consult_status?: string
           contract_status?: string
           created_at?: string
+          crm_monthly_price?: number | null
           custom_commitment_months?: number | null
           custom_contract_terms?: Json | null
           custom_delivery_fee?: number | null
@@ -635,6 +637,7 @@ export type Database = {
           consult_status?: string
           contract_status?: string
           created_at?: string
+          crm_monthly_price?: number | null
           custom_commitment_months?: number | null
           custom_contract_terms?: Json | null
           custom_delivery_fee?: number | null
