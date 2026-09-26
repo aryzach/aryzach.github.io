@@ -1,0 +1,2 @@
+- Keep financial projections behind the password-verified admin API; contract amounts and customer records must not be exposed by public client queries.
+- Treat only signed rental contract payments within their committed term as guaranteed revenue; speculative renewals and unsold inventory are excluded.

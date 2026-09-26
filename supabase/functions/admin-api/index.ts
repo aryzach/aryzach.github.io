@@ -264,7 +264,45 @@ Deno.serve(async (req) => {
           .order("sauna_type_id", { ascending: true })
           .order("created_at", { ascending: true });
         if (error) throw error;
-        return json({ inventory: data });
+        const assignedIds = [...new Set((data ?? []).flatMap((u: any) =>
+          [u.current_customer_id, u.future_customer_id].filter((id: unknown): id is string => typeof id === "string")
+        ))];
+        let contractRows: any[] = [];
+        if (assignedIds.length) {
+          const { data: contracts, error: contractError } = await supabase
+            .from("contracts")
+            .select("reservation_id, status, monthly_price, commitment_months, signed_at, created_at")
+            .in("reservation_id", assignedIds)
+            .neq("status", "Voided")
+            .order("created_at", { ascending: false });
+          if (contractError) throw contractError;
+          contractRows = contracts ?? [];
+        }
+        const byCustomer = new Map<string, any>();
+        for (const contract of contractRows) {
+          const existing = byCustomer.get(contract.reservation_id);
+          if (!existing || (existing.status !== "Signed" && contract.status === "Signed")) {
+            byCustomer.set(contract.reservation_id, contract);
+          }
+        }
+        return json({ inventory: (data ?? []).map((unit: any) => {
+          const current = unit.current_customer_id ? byCustomer.get(unit.current_customer_id) : null;
+          const future = unit.future_customer_id ? byCustomer.get(unit.future_customer_id) : null;
+          return {
+            ...unit,
+            monthly_price: current?.monthly_price ?? null,
+            current_contract: current ? {
+              monthly_price: current.monthly_price,
+              commitment_months: current.commitment_months,
+              signed_at: current.status === "Signed" ? current.signed_at : null,
+            } : null,
+            future_contract: future ? {
+              monthly_price: future.monthly_price,
+              commitment_months: future.commitment_months,
+              signed_at: future.status === "Signed" ? future.signed_at : null,
+            } : null,
+          };
+        }) });
       }
 
       case "create_inventory": {
