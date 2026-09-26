@@ -1,0 +1,2 @@
+ALTER TABLE public.reservations ADD COLUMN IF NOT EXISTS crm_monthly_price integer;
+COMMENT ON COLUMN public.reservations.crm_monthly_price IS 'Historical rental rate imported from the Rental CRM worksheet; used for inventory display only when no active contract rate exists.';
