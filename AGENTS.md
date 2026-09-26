@@ -1,2 +1,3 @@
 - Keep financial projections behind the password-verified admin API; contract amounts and customer records must not be exposed by public client queries.
 - Treat only signed rental contract payments within their committed term as guaranteed revenue; speculative renewals and unsold inventory are excluded.
+- Store matched historical CRM rent on the reservation for admin inventory display only; use a non-voided contract amount first and never treat CRM-only rates as guaranteed revenue.

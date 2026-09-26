@@ -1,3 +1,3 @@
 - [x] Keep headings visible while scrolling every admin table.
-- [ ] Show inventory $/mo from contracts, then older CRM amounts when available (blocked: workbook not currently mounted).
+- [x] Show inventory $/mo from contracts, then older CRM amounts when available.
 - [x] Add an admin dashboard showing guaranteed monthly rental revenue with range and sauna-type controls.

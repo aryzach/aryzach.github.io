@@ -268,16 +268,24 @@ Deno.serve(async (req) => {
           [u.current_customer_id, u.future_customer_id].filter((id: unknown): id is string => typeof id === "string")
         ))];
         let contractRows: any[] = [];
+        let reservationRows: any[] = [];
         if (assignedIds.length) {
-          const { data: contracts, error: contractError } = await supabase
-            .from("contracts")
-            .select("reservation_id, status, monthly_price, commitment_months, signed_at, created_at")
-            .in("reservation_id", assignedIds)
-            .neq("status", "Voided")
-            .order("created_at", { ascending: false });
+          const [{ data: contracts, error: contractError }, { data: reservations, error: reservationError }] = await Promise.all([
+            supabase.from("contracts")
+              .select("reservation_id, status, monthly_price, commitment_months, signed_at, created_at")
+              .in("reservation_id", assignedIds)
+              .neq("status", "Voided")
+              .order("created_at", { ascending: false }),
+            supabase.from("reservations")
+              .select("id, crm_monthly_price")
+              .in("id", assignedIds),
+          ]);
           if (contractError) throw contractError;
+          if (reservationError) throw reservationError;
           contractRows = contracts ?? [];
+          reservationRows = reservations ?? [];
         }
+        const crmRates = new Map(reservationRows.map((r: any) => [r.id, r.crm_monthly_price]));
         const byCustomer = new Map<string, any>();
         for (const contract of contractRows) {
           const existing = byCustomer.get(contract.reservation_id);
@@ -290,7 +298,7 @@ Deno.serve(async (req) => {
           const future = unit.future_customer_id ? byCustomer.get(unit.future_customer_id) : null;
           return {
             ...unit,
-            monthly_price: current?.monthly_price ?? null,
+            monthly_price: current?.monthly_price ?? (unit.current_customer_id ? crmRates.get(unit.current_customer_id) : null) ?? null,
             current_contract: current ? {
               monthly_price: current.monthly_price,
               commitment_months: current.commitment_months,
