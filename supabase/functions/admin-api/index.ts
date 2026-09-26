@@ -266,7 +266,7 @@ Deno.serve(async (req) => {
         if (error) throw error;
         const assignedIds = [...new Set((data ?? []).flatMap((u: any) =>
           [u.current_customer_id, u.future_customer_id].filter((id: unknown): id is string => typeof id === "string")
-        )];
+        ))];
         let contractRows: any[] = [];
         if (assignedIds.length) {
           const { data: contracts, error: contractError } = await supabase
