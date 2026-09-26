@@ -10,6 +10,7 @@ export interface RevenueUnit {
   model_key: string;
   install_date: string | null;
   available_date: string | null;
+  minimum_term_ends: string | null;
   current_contract: { monthly_price: number; commitment_months: number; signed_at: string | null } | null;
   future_contract: { monthly_price: number; commitment_months: number; signed_at: string | null } | null;
 }
@@ -41,14 +42,16 @@ export function RevenueDashboard({ inventory }: { inventory: RevenueUnit[] }) {
         const category = unit.model_key === "original" ? "original" : unit.style === "infrared" ? "infrared" : "traditional";
         if (type !== "all" && type !== category) continue;
         const periods = [
-          { contract: unit.current_contract, begins: unit.install_date },
-          { contract: unit.future_contract, begins: unit.available_date },
+          { contract: unit.current_contract, begins: unit.install_date, committedUntil: unit.minimum_term_ends },
+          { contract: unit.future_contract, begins: unit.available_date, committedUntil: null },
         ];
-        for (const { contract, begins } of periods) {
+        for (const { contract, begins, committedUntil } of periods) {
           if (!contract?.signed_at || !begins || !Number.isFinite(contract.monthly_price) || contract.commitment_months <= 0) continue;
           const beginning = parseDay(begins);
           if (!beginning) continue;
-          const end = addMonths(beginning, contract.commitment_months);
+          // Prefer the hand-set "Committed until" date on inventory; fall back to contract math.
+          const override = committedUntil ? parseDay(committedUntil) : null;
+          const end = override ?? addMonths(beginning, contract.commitment_months);
           if (beginning < next && end > first) revenue += contract.monthly_price;
         }
       }
@@ -96,7 +99,7 @@ export function RevenueDashboard({ inventory }: { inventory: RevenueUnit[] }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="mt-3 text-xs text-muted-foreground">Each month includes a signed contract if its scheduled rental period overlaps that month. Future transfers require an available date.</p>
+      <p className="mt-3 text-xs text-muted-foreground">Each month includes a signed contract if its rental period overlaps that month. The inventory "Committed until" date overrides the contract term when set. Future transfers require an available date.</p>
     </section>
   );
 }
