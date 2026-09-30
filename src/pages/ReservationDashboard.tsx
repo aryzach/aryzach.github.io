@@ -507,6 +507,7 @@ const ReservationDashboard = () => {
                         </Button>
                       )
                     }
+                    sublabel="Payment applies to your balance."
                   />
                   <StepRow
                     done={contractStatus === "Signed"}
