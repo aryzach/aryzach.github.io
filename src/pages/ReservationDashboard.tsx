@@ -498,7 +498,6 @@ const ReservationDashboard = () => {
                         ? `$${RESERVATION_DEPOSIT_USD} reservation deposit paid`
                         : `Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`
                     }
-                    sublabel="Lock in your sauna now with the deposit, or choose to wait until after your Video Consultation. Payment applies to your balance."
                     action={
                       !paid && (
                         <Button asChild size="sm" disabled={!stripeBaseLink}>
