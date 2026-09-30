@@ -484,49 +484,31 @@ const ReservationDashboard = () => {
                 </CardContent>
               </Card>
 
-              {/* Reservation deposit callout */}
-              <Card className="mb-4">
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    {paid ? (
-                      <span
-                        aria-label="Complete"
-                        className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-green-500 text-white shrink-0 mt-0.5"
-                      >
-                        <Check size={16} strokeWidth={3} />
-                      </span>
-                    ) : (
-                      <Circle className="text-muted-foreground shrink-0 mt-0.5" size={22} strokeWidth={1.5} />
-                    )}
-                    <div className="flex-grow min-w-0">
-                      <div className="text-foreground font-medium">
-                        {paid
-                          ? `$${RESERVATION_DEPOSIT_USD} reservation deposit paid`
-                          : `Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1 leading-snug">
-                        Lock in your sauna now with the deposit, or choose to wait until after
-                        your Video Consultation. Payment applies to your balance.
-                      </p>
-                    </div>
-                    {!paid && (
-                      <Button asChild size="sm" disabled={!stripeBaseLink}>
-                        <a href={stripeHref} target="_blank" rel="noopener noreferrer">
-                          Pay <ExternalLink className="ml-1.5" size={14} />
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card className="mb-4">
                 <CardHeader>
                   <CardTitle className="text-base font-medium text-muted-foreground">
-                    Your next steps
+                    Complete Your Sauna Reservation
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
+                  <StepRow
+                    done={paid}
+                    label={
+                      paid
+                        ? `$${RESERVATION_DEPOSIT_USD} reservation deposit paid`
+                        : `Pay $${RESERVATION_DEPOSIT_USD} reservation deposit`
+                    }
+                    sublabel="Lock in your sauna now with the deposit, or choose to wait until after your Video Consultation. Payment applies to your balance."
+                    action={
+                      !paid && (
+                        <Button asChild size="sm" disabled={!stripeBaseLink}>
+                          <a href={stripeHref} target="_blank" rel="noopener noreferrer">
+                            Pay <ExternalLink className="ml-1.5" size={14} />
+                          </a>
+                        </Button>
+                      )
+                    }
+                  />
                   <StepRow
                     done={contractStatus === "Signed"}
                     label="Complete Rental Agreement"
