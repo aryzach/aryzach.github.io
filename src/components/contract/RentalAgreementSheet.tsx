@@ -425,7 +425,11 @@ const ConfigureStep = ({
     if (customOptions?.length) {
       return Array.from(new Set(customOptions.map((o) => o.months))).sort((a, b) => a - b);
     }
-    const base = [...COMMITMENT_MONTHS].filter((m) => (minMonths ? m >= minMonths : true));
+    const base = [...COMMITMENT_MONTHS].filter(
+      (m) =>
+        (minMonths ? m >= minMonths : true) &&
+        (!form.sauna_type || getMonthlyPrice(form.sauna_type, m) != null),
+    );
     const all = customTerm ? [...base, customTerm.months] : base;
     const unique = Array.from(new Set(all)).sort((a, b) => a - b);
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;

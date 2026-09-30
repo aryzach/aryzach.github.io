@@ -34,7 +34,7 @@ export const SAUNA_TYPES: SaunaTypeInfo[] = [
   { id: "outdoor_traditional_original", label: "Original Collection Outdoor Traditional Sauna", placement: "outdoor", family: "traditional", allowsSecondHeater: true },
 ];
 
-export const COMMITMENT_MONTHS = [1, 3, 6, 12] as const;
+export const COMMITMENT_MONTHS = [1, 3, 6, 12, 24] as const;
 export const INSURANCE_MONTHLY = GEN_INSURANCE_MONTHLY;
 export const SECOND_HEATER_MONTHLY = GEN_SECOND_HEATER_MONTHLY;
 
