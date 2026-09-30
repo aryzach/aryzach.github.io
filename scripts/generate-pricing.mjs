@@ -127,7 +127,7 @@ export type SaunaTypeId =
   | "indoor_traditional_original"
   | "outdoor_traditional_original";
 
-export type CommitmentMonths = 1 | 3 | 6 | 12;
+export type CommitmentMonths = 1 | 3 | 6 | 12 | 24;
 
 export interface PricingTierRow {
   monthly: number;
@@ -135,7 +135,7 @@ export interface PricingTierRow {
   badge?: "Most Popular" | "Best Value";
 }
 
-export const PRICING_TIERS: Record<SaunaTypeId, Record<CommitmentMonths, PricingTierRow>> = {
+export const PRICING_TIERS: Record<SaunaTypeId, Partial<Record<CommitmentMonths, PricingTierRow>>> = {
 ${SAUNA_TYPE_IDS.map(tierBlock).join("\n")}
 };
 
