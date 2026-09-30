@@ -29,6 +29,13 @@
       "when": 1790409913161,
       "tag": "0003_add_reservation_crm_monthly_rate",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790755734616,
+      "tag": "0004_auto_committed_until",
+      "breakpoints": true
     }
   ]
 }
