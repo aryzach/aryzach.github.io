@@ -43,6 +43,13 @@
       "when": 1790758612911,
       "tag": "0005_allow_24_month_pricing_tier",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790805658356,
+      "tag": "0006_add_v1_v2_sauna_models",
+      "breakpoints": true
     }
   ]
 }
