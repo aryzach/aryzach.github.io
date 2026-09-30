@@ -1,0 +1,2 @@
+ALTER TABLE public.pricing_tiers DROP CONSTRAINT pricing_tiers_commitment_months_check;
+ALTER TABLE public.pricing_tiers ADD CONSTRAINT pricing_tiers_commitment_months_check CHECK (commitment_months IN (1, 3, 6, 12, 24));
