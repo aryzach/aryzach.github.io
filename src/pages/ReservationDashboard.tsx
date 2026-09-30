@@ -508,6 +508,9 @@ const ReservationDashboard = () => {
                       )
                     }
                     sublabel="Payment applies to your balance."
+                  />
+                  <StepRow
+                    done={contractStatus === "Signed"}
                     label="Complete Rental Agreement"
                     action={
                       <div className="flex items-center gap-2">
