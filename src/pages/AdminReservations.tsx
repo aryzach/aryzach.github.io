@@ -70,7 +70,7 @@ const STATUS_STYLES: Record<SaunaStatus, string> = {
 };
 
 const ELIGIBILITY = ["indoor", "outdoor", "either"] as const;
-const MODELS = ["Standard", "Original Collection"] as const;
+const MODELS = ["Standard", "Original Collection", "v1 — Fir/Cedar", "v2 — Cedar"] as const;
 type ModelValue = typeof MODELS[number];
 const STYLES = ["Traditional", "Infrared"] as const;
 type StyleValue = typeof STYLES[number];
@@ -89,7 +89,14 @@ function styleFor(row: { style?: string | null; sauna_type_id: string }): StyleV
 const locationsFor = (elig: "indoor" | "outdoor" | "either"): string[] =>
   elig === "either" ? ["indoor", "outdoor"] : [elig];
 
-const modelKeyFor = (model?: string | null): "standard" | "original" =>
+type ModelKey = "standard" | "original" | "v1_fir_cedar" | "v2_cedar";
+const modelKeyFor = (model?: string | null): ModelKey =>
+  model === "Original Collection" ? "original"
+  : model === "v1 — Fir/Cedar" ? "v1_fir_cedar"
+  : model === "v2 — Cedar" ? "v2_cedar"
+  : "standard";
+// v1/v2 units rent under the standard sauna types.
+const typeModelKeyFor = (model?: string | null): "standard" | "original" =>
   model === "Original Collection" ? "original" : "standard";
 
 // A sauna type is exactly one (location, style, model) combination.
@@ -100,7 +107,7 @@ function saunaTypeIdFor(
   model?: string | null,
 ): string {
   const loc = elig === "outdoor" ? "outdoor" : "indoor";
-  return `${loc}_${style.toLowerCase()}_${modelKeyFor(model)}`;
+  return `${loc}_${style.toLowerCase()}_${typeModelKeyFor(model)}`;
 }
 
 // Map CSV "Style" + "Location" to a sauna_type_id in the DB.
@@ -166,7 +173,7 @@ interface InventoryRow {
   unit_code: string | null;
   sauna_type_id: string;
   model: string | null;
-  model_key: "standard" | "original";
+  model_key: ModelKey;
   style: "traditional" | "infrared";
   locations: string[];
   indoor_outdoor_eligibility: "indoor" | "outdoor" | "either";
@@ -379,7 +386,7 @@ const AdminReservations = () => {
           const model = modelRaw
             ? (MODELS.find((m) => m.toLowerCase() === modelRaw.toLowerCase()) || null)
             : "";
-          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard or Original Collection)`);
+          if (modelRaw && !model) throw new Error(`Invalid Model "${modelRaw}" (must be Standard, Original Collection, v1 — Fir/Cedar, or v2 — Cedar)`);
 
           void sauna_type_id;
           const styleValue: StyleValue = styleRaw === "infrared" ? "Infrared" : "Traditional";
