@@ -571,6 +571,16 @@ const ReservationDashboard = () => {
                       </div>
                     }
                   />
+                </CardContent>
+              </Card>
+
+              <Card className="mb-4">
+                <CardHeader>
+                  <CardTitle className="text-base font-medium text-muted-foreground">
+                    Once you reserve your sauna, complete these steps
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
                   <StepRow
                     done={consultScheduled}
                     label="Schedule Video Consultation"
