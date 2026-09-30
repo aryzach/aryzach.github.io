@@ -87,6 +87,8 @@ async function main() {
     };
   }
 
+  // 24-month tiers are optional (currently only traditional standard offers one).
+  const MONTHS = [1, 3, 6, 12, 24];
   for (const id of SAUNA_TYPE_IDS) {
     if (!grouped[id]) throw new Error(`Missing pricing for sauna type: ${id}`);
     for (const m of [1, 3, 6, 12]) {
@@ -105,10 +107,11 @@ async function main() {
     const months = grouped[id];
     const line = (m) => {
       const t = months[m];
+      if (!t) return null;
       const badge = t.badge ? `, badge: ${JSON.stringify(t.badge)}` : "";
       return `    ${m}: { monthly: ${t.monthly}, installFee: ${t.installFee}${badge} },`;
     };
-    return `  ${id}: {\n${[1, 3, 6, 12].map(line).join("\n")}\n  },`;
+    return `  ${id}: {\n${MONTHS.map(line).filter(Boolean).join("\n")}\n  },`;
   };
 
   const out = `// AUTO-GENERATED — DO NOT EDIT BY HAND.
