@@ -41,11 +41,16 @@ export async function assignSoonestSauna(
     .maybeSingle();
   if (!type) return { sauna: null, reason: "unknown_type" };
 
+  // v1 (Fir/Cedar) and v2 (Cedar) units are physical builds of the standard model.
+  const modelKeys = type.model_key === "standard"
+    ? ["standard", "v1_fir_cedar", "v2_cedar"]
+    : [type.model_key];
+
   const { data: candidates } = await supabase
     .from("sauna_inventory")
     .select("*")
     .eq("style", type.style)
-    .eq("model_key", type.model_key)
+    .in("model_key", modelKeys)
     .contains("locations", [type.location])
     .is("future_customer_id", null);
 
