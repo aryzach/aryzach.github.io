@@ -149,6 +149,69 @@ Deno.serve(async (req) => {
         return json({ rows });
       }
 
+      case "list_current_customers": {
+        const [invRes, resRes, conRes] = await Promise.all([
+          supabase
+            .from("sauna_inventory")
+            .select("unit_code, style, model, install_date, admin_notes, current_customer_id")
+            .not("current_customer_id", "is", null)
+            .order("unit_code", { ascending: true }),
+          supabase
+            .from("reservations")
+            .select("id, first_name, last_name, crm_monthly_price"),
+          supabase
+            .from("contracts")
+            .select("reservation_id, monthly_price")
+            .eq("status", "Signed")
+            .is("voided_at", null),
+        ]);
+        if (invRes.error) throw invRes.error;
+        if (resRes.error) throw resRes.error;
+        if (conRes.error) throw conRes.error;
+
+        // Contract rate wins; CRM fallback only.
+        const contractRate = new Map<string, number>();
+        for (const c of conRes.data ?? []) {
+          if (!contractRate.has(c.reservation_id)) {
+            contractRate.set(c.reservation_id, c.monthly_price);
+          }
+        }
+        const crmRate = new Map<string, number | null>();
+        for (const r of resRes.data ?? []) {
+          crmRate.set(r.id, r.crm_monthly_price ?? null);
+        }
+        const names = new Map<string, string>();
+        for (const r of resRes.data ?? []) {
+          names.set(
+            r.id,
+            `${(r.first_name ?? "").trim()} ${(r.last_name ?? "").trim()}`.trim() || "—",
+          );
+        }
+
+        const seen = new Set<string>();
+        const current = (invRes.data ?? [])
+          .filter((u: any) => {
+            if (!u.current_customer_id || seen.has(u.current_customer_id)) return false;
+            seen.add(u.current_customer_id);
+            return true;
+          })
+          .map((u: any) => {
+            const rid = u.current_customer_id as string;
+            return {
+              reservation_id: rid,
+              name: names.get(rid) ?? "—",
+              unit_code: u.unit_code ?? null,
+              style: u.style ?? null,
+              model: u.model ?? null,
+              install_date: u.install_date ?? null,
+              monthly_price: contractRate.get(rid) ?? crmRate.get(rid) ?? null,
+              admin_notes: u.admin_notes ?? null,
+            };
+          });
+
+        return json({ rows: current });
+      }
+
       case "contract_download_url": {
         const { contract_id } = payload;
         if (!contract_id) return json({ error: "contract_id is required" }, 400);
