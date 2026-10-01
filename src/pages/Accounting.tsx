@@ -179,7 +179,7 @@ const Accounting = () => {
             <div className="text-sm text-muted-foreground">
               {tab === "billing"
                 ? `${rows.length} customers · ${money(totals.monthly)}/mo recurring`
-                : `${currentRows.length} current customers · ${money(currentTotal)}/mo`}
+                : `${currentRows.length} saunas · ${money(currentTotal)}/mo`}
             </div>
           </div>
 
@@ -251,6 +251,7 @@ const Accounting = () => {
                   <tr className="text-left">
                     <th className="px-3 py-2 font-medium">Customer</th>
                     <th className="px-3 py-2 font-medium">Sauna #</th>
+                    <th className="px-3 py-2 font-medium">Status</th>
                     <th className="px-3 py-2 font-medium">Style</th>
                     <th className="px-3 py-2 font-medium">Model</th>
                     <th className="px-3 py-2 font-medium">Install date</th>
@@ -260,9 +261,10 @@ const Accounting = () => {
                 </thead>
                 <tbody>
                   {currentRows.map((r) => (
-                    <tr key={r.reservation_id} className="border-t border-border align-top">
-                      <td className="px-3 py-2 font-medium text-foreground">{r.name}</td>
+                    <tr key={r.unit_code ?? r.reservation_id ?? "unknown"} className="border-t border-border align-top">
+                      <td className="px-3 py-2 font-medium text-foreground">{r.name || "—"}</td>
                       <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
+                      <td className="px-3 py-2">{r.status ?? "—"}</td>
                       <td className="px-3 py-2">{prettyStyle(r.style)}</td>
                       <td className="px-3 py-2">{r.model ?? "—"}</td>
                       <td className="px-3 py-2">{prettyDate(r.install_date)}</td>
@@ -274,8 +276,8 @@ const Accounting = () => {
                   ))}
                   {currentRows.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-3 py-8 text-center text-muted-foreground">
-                        No current customers yet.
+                      <td colSpan={8} className="px-3 py-8 text-center text-muted-foreground">
+                        No saunas yet.
                       </td>
                     </tr>
                   )}
