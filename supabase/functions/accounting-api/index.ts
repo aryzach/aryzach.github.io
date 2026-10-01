@@ -153,8 +153,7 @@ Deno.serve(async (req) => {
         const [invRes, resRes, conRes] = await Promise.all([
           supabase
             .from("sauna_inventory")
-            .select("unit_code, style, model, install_date, admin_notes, current_customer_id")
-            .not("current_customer_id", "is", null)
+            .select("unit_code, status, style, model, install_date, admin_notes, current_customer_id")
             .order("unit_code", { ascending: true }),
           supabase
             .from("reservations")
@@ -188,26 +187,20 @@ Deno.serve(async (req) => {
           );
         }
 
-        const seen = new Set<string>();
-        const current = (invRes.data ?? [])
-          .filter((u: any) => {
-            if (!u.current_customer_id || seen.has(u.current_customer_id)) return false;
-            seen.add(u.current_customer_id);
-            return true;
-          })
-          .map((u: any) => {
-            const rid = u.current_customer_id as string;
-            return {
-              reservation_id: rid,
-              name: names.get(rid) ?? "—",
-              unit_code: u.unit_code ?? null,
-              style: u.style ?? null,
-              model: u.model ?? null,
-              install_date: u.install_date ?? null,
-              monthly_price: contractRate.get(rid) ?? crmRate.get(rid) ?? null,
-              admin_notes: u.admin_notes ?? null,
-            };
-          });
+        const current = (invRes.data ?? []).map((u: any) => {
+          const rid = u.current_customer_id as string | null;
+          return {
+            reservation_id: rid,
+            name: rid ? names.get(rid) ?? "—" : null,
+            unit_code: u.unit_code ?? null,
+            status: u.status ?? null,
+            style: u.style ?? null,
+            model: u.model ?? null,
+            install_date: u.install_date ?? null,
+            monthly_price: rid ? contractRate.get(rid) ?? crmRate.get(rid) ?? null : null,
+            admin_notes: u.admin_notes ?? null,
+          };
+        });
 
         return json({ rows: current });
       }
