@@ -29,9 +29,10 @@ interface AccountingRow {
 }
 
 interface CurrentCustomerRow {
-  reservation_id: string;
-  name: string;
+  reservation_id: string | null;
+  name: string | null;
   unit_code: string | null;
+  status: string | null;
   style: string | null;
   model: string | null;
   install_date: string | null;
