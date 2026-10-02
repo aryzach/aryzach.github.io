@@ -89,11 +89,11 @@ Deno.serve(async (req) => {
   if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
-      .select("id, unit_code, status, available_date, reservation_id, current_customer_id, future_customer_id")
+      .select("id, unit_code, status, available_date, sauna_type_id, reservation_id, current_customer_id, future_customer_id")
       .eq("id", assignedInventoryId)
       .maybeSingle();
     if (inv) {
-      const isReserved =
+      const isReserved = inv.sauna_type_id === reservation.sauna_type_id &&
         (inv.future_customer_id === reservation.id ||
           inv.current_customer_id === reservation.id ||
           inv.reservation_id === reservation.id) &&
@@ -107,6 +107,16 @@ Deno.serve(async (req) => {
       };
     }
   }
+
+  // Only active waitlist entries count; converted/closed entries are historical.
+  const { data: waitlistEntry, error: waitlistError } = await supabase
+    .from("waitlist_entries")
+    .select("id")
+    .eq("reservation_id", reservation.id)
+    .in("status", ["Open", "Contacted"])
+    .limit(1)
+    .maybeSingle();
+  if (waitlistError) console.error("waitlist status lookup failed:", waitlistError);
 
   // Return the most recent uploaded photo ID (if any) as a short-lived signed URL.
   let id_photo: { url: string; name: string } | null = null;
@@ -127,5 +137,5 @@ Deno.serve(async (req) => {
     console.error("id_photo lookup failed:", e);
   }
 
-  return json({ reservation, id_photo, sauna_hold, assigned_sauna });
+  return json({ reservation, id_photo, sauna_hold, assigned_sauna, is_waitlisted: !!waitlistEntry });
 });

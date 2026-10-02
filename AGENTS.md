@@ -1,3 +1,4 @@
 - Keep financial projections behind the password-verified admin API; contract amounts and customer records must not be exposed by public client queries.
 - Dashboard revenue counts signed contracts plus CRM renters (inventory $/mo) through their "Committed until" date — user decision; speculative renewals and unsold inventory excluded.
 - Store matched historical CRM rent on the reservation for admin display; use a non-voided contract amount first, CRM rate only as fallback.
+- Derive magic-link hold status from verified reservation completion, matched inventory, and active waitlist membership on the token-validated API; this prevents deposit-only reservations from appearing fully reserved.

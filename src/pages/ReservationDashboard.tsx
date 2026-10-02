@@ -101,6 +101,7 @@ const ReservationDashboard = () => {
   const [saving, setSaving] = useState(false);
   const [saunaHold, setSaunaHold] = useState<SaunaHold | null>(null);
   const [assignedSauna, setAssignedSauna] = useState<AssignedSauna | null>(null);
+  const [isWaitlisted, setIsWaitlisted] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const [infoForm, setInfoForm] = useState({
     first_name: "", last_name: "", email: "", phone: "", install_address: "", city: "",
@@ -126,6 +127,7 @@ const ReservationDashboard = () => {
       setIdPhoto((data.id_photo as { url: string; name: string } | null) ?? null);
       setSaunaHold((data.sauna_hold as SaunaHold | null) ?? null);
       setAssignedSauna((data.assigned_sauna as AssignedSauna | null) ?? null);
+      setIsWaitlisted(data.is_waitlisted === true);
       setError(null);
     }
     setLoading(false);
@@ -330,7 +332,21 @@ const ReservationDashboard = () => {
   const allPrereqsComplete =
     consultScheduled && consultComplete && paid && contractSigned && idComplete;
   const canScheduleInstall = allPrereqsComplete;
-  const isReserved = paid || saunaHold?.is_reserved === true;
+  const holdComplete = paid && contractSigned && idComplete && saunaHold?.is_reserved === true;
+  const holdPartiallyComplete = paid || contractSigned || idComplete;
+  const holdState = holdComplete ? "reserved" : isWaitlisted ? "waitlisted" : holdPartiallyComplete ? "incomplete" : "unreserved";
+  const holdStyles = {
+    reserved: "bg-hold-success/15 text-hold-success",
+    waitlisted: "bg-hold-info/15 text-hold-info",
+    incomplete: "bg-hold-warning/15 text-hold-warning",
+    unreserved: "bg-destructive/15 text-destructive",
+  };
+  const holdDotStyles = {
+    reserved: "bg-hold-success",
+    waitlisted: "bg-hold-info",
+    incomplete: "bg-hold-warning",
+    unreserved: "bg-destructive",
+  };
   const editableInfo = !contractSigned;
   const stripeHref = useMemo(() => {
     if (!reservation || !stripeBaseLink) return "#";
@@ -467,18 +483,16 @@ const ReservationDashboard = () => {
                     <span
                       className={
                         "inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium " +
-                        (isReserved
-                          ? "bg-green-500/15 text-green-700 dark:text-green-400"
-                          : "bg-red-500/15 text-red-700 dark:text-red-400")
+                        holdStyles[holdState]
                       }
                     >
                       <span
                         className={
                           "h-2 w-2 rounded-full " +
-                          (isReserved ? "bg-green-500" : "bg-red-500")
+                          holdDotStyles[holdState]
                         }
                       />
-                      {isReserved ? "Reserved for you" : "Not yet reserved"}
+                      {holdState === "reserved" ? "Reserved for you" : holdState === "waitlisted" ? "Added to waitlist" : holdState === "incomplete" ? "Continue all steps to reserve" : "Not yet reserved"}
                     </span>
                   </div>
                 </CardContent>
