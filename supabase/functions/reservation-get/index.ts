@@ -89,11 +89,11 @@ Deno.serve(async (req) => {
   if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
-      .select("id, unit_code, status, available_date, reservation_id, current_customer_id, future_customer_id")
+      .select("id, unit_code, status, available_date, sauna_type_id, reservation_id, current_customer_id, future_customer_id")
       .eq("id", assignedInventoryId)
       .maybeSingle();
     if (inv) {
-      const isReserved =
+      const isReserved = inv.sauna_type_id === reservation.sauna_type_id &&
         (inv.future_customer_id === reservation.id ||
           inv.current_customer_id === reservation.id ||
           inv.reservation_id === reservation.id) &&
