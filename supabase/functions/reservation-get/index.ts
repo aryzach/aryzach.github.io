@@ -86,6 +86,26 @@ Deno.serve(async (req) => {
   let assigned_sauna:
     | { id: string; unit_code: string | null; status: string; available_date: string | null }
     | null = null;
+
+  // Fall back to the inventory's own customer columns when the reservation
+  // hasn't been linked back to the unit yet.
+  if (!assignedInventoryId) {
+    const { data: heldUnit } = await supabase
+      .from("sauna_inventory")
+      .select("id")
+      .or(`future_customer_id.eq.${reservation.id},current_customer_id.eq.${reservation.id},reservation_id.eq.${reservation.id}`)
+      .limit(1)
+      .maybeSingle();
+    if (heldUnit) {
+      assignedInventoryId = heldUnit.id as string;
+      await supabase
+        .from("reservations")
+        .update({ sauna_inventory_id: heldUnit.id })
+        .eq("id", reservation.id)
+        .is("sauna_inventory_id", null);
+    }
+  }
+
   if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
