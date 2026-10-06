@@ -86,6 +86,26 @@ Deno.serve(async (req) => {
   let assigned_sauna:
     | { id: string; unit_code: string | null; status: string; available_date: string | null }
     | null = null;
+
+  // Fall back to the inventory's own customer columns when the reservation
+  // hasn't been linked back to the unit yet.
+  if (!assignedInventoryId) {
+    const { data: heldUnit } = await supabase
+      .from("sauna_inventory")
+      .select("id")
+      .or(`future_customer_id.eq.${reservation.id},current_customer_id.eq.${reservation.id},reservation_id.eq.${reservation.id}`)
+      .limit(1)
+      .maybeSingle();
+    if (heldUnit) {
+      assignedInventoryId = heldUnit.id as string;
+      await supabase
+        .from("reservations")
+        .update({ sauna_inventory_id: heldUnit.id })
+        .eq("id", reservation.id)
+        .is("sauna_inventory_id", null);
+    }
+  }
+
   if (assignedInventoryId) {
     const { data: inv } = await supabase
       .from("sauna_inventory")
@@ -106,7 +126,7 @@ Deno.serve(async (req) => {
         (inv.future_customer_id === reservation.id ||
           inv.current_customer_id === reservation.id ||
           inv.reservation_id === reservation.id) &&
-        ["Reservation Hold", "Reserved", "Reservation Confirmed", "Transfer Planned", "Installed"].includes(inv.status);
+        ["Reservation Hold", "Reserved", "Reservation Confirmed", "Transfer Planned", "Installed", "Returning", "Maintenance", "Incoming"].includes(inv.status);
       sauna_hold = { status: inv.status, is_reserved: isReserved };
       assigned_sauna = {
         id: inv.id as string,
