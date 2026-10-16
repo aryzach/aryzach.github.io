@@ -1,5 +1,7 @@
 # Historical import and customer reconciliation — prepared, not activated
 
+**Design hold:** review [the full customer and sauna model](../../docs/customer-and-sauna-data-model.md) before finalizing or applying this directory's SQL. The earlier customer-profile DDL is a sketch, not the approved domain schema.
+
 No production reads/imports, schema changes, customer creation or backend deployments were performed for this proposal. Pure matching/import cores are executable and tested; storage SQL is review-only. The production UI only shows the empty review explanation. There is no working approval/import endpoint yet. Existing Xero OAuth remains unchanged.
 
 ## What the current repository confirms
