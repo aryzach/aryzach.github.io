@@ -45,6 +45,8 @@ try {
         await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Customer insights').click());
         await page.waitForSelector('[aria-label="Customer insights"]');
         const section = '[aria-label="Customer insights"]';
+        assert.equal(await page.$$eval('[aria-label="Xero connection"] button', buttons => buttons.every(button => button.disabled)), true);
+        assert.ok(await page.$eval('[aria-label="Xero connection"]', el => el.textContent.includes('Backend setup required')));
         assert.ok(await page.$eval(section, el => el.textContent.includes('Waiting for data')));
         assert.equal(await page.$eval(section, el => /\$[\d,]+|Avery|Riley|Synthetic data/.test(el.textContent)), false);
         assert.equal(await page.$eval('input[aria-label="Search customer histories"]', el => el.disabled), true);

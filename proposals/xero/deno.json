@@ -1,0 +1,7 @@
+{
+  "compilerOptions": { "strict": true },
+  "tasks": {
+    "check": "deno check functions/xero-admin/index.ts functions/xero-callback/index.ts",
+    "test": "deno test --allow-env=ADMIN_PASSWORD,PUBLIC_APP_URL functions/security_test.ts"
+  }
+}

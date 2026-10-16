@@ -22,3 +22,7 @@ Financial calculation inputs used by unit tests live under `tests/fixtures` only
 The user authorizes tested frontend updates to main so Lovable can sync changes. Main pushes trigger existing production workflows. No database, credential or infrastructure changes are authorized by this workflow.
 
 Next: connect verified read-only operational histories and financial sources through authorized server APIs, agree identity/reconciliation rules, and render each metric only after its required inputs are complete.
+
+## Xero connection preparation
+
+The admin panel includes readiness/authorization controls. The backend implementation and exact redirect URI are documented in [the review-only Xero proposal](../proposals/xero/README.md). It remains undeployed; metrics still wait for verified data. Storing client credentials in Lovable alone does not authorize a Xero organization.

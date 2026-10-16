@@ -207,7 +207,7 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">("inventory");
+  const [tab, setTab] = useState<"insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -742,7 +742,7 @@ const AdminReservations = () => {
 
           {tab !== "insights" && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
-          {tab === "insights" && <CustomerInsights />}
+          {tab === "insights" && <CustomerInsights password={password} />}
 
           {tab === "dashboard" && (previewEnabled ? <p role="status">Waiting for data</p> : <RevenueDashboard inventory={inventory} />)}
 

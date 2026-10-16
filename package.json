@@ -16,7 +16,7 @@
     "build:preview": "vite build --mode preview",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:browser": "node scripts/test-preview.mjs",
-    "lint:safety": "eslint src/dev src/lib/runtime.ts src/lib/runtimePolicy.ts tests/runtime-policy.test.ts src/lib/customerMetrics.ts tests/fixtures/customerHistory.ts src/components/admin/CustomerInsights.tsx tests/customer-metrics.test.ts"
+    "lint:safety": "eslint src/dev src/lib/runtime.ts src/lib/runtimePolicy.ts tests/runtime-policy.test.ts src/lib/customerMetrics.ts tests/fixtures/customerHistory.ts src/components/admin/CustomerInsights.tsx tests/customer-metrics.test.ts src/components/admin/XeroConnection.tsx tests/xero-oauth.test.ts proposals/xero/functions/_shared/xero.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

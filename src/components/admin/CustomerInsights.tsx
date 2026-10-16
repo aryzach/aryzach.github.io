@@ -1,3 +1,4 @@
+import { XeroConnection } from "./XeroConnection";
 import { useState } from "react";
 import { Search, Users, Receipt, TrendingUp, ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ function Waiting({ title, detail }: { title: string; detail: string }) {
   );
 }
 
-export function CustomerInsights() {
+export function CustomerInsights({ password }: { password: string }) {
   const [view, setView] = useState<"customers" | "cohorts" | "definitions">(
     "customers",
   );
@@ -57,6 +58,7 @@ export function CustomerInsights() {
           has not yet been loaded into this dashboard.
         </p>
       </div>
+      <XeroConnection password={password} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(({ title, detail, icon: Icon }) => (
           <div

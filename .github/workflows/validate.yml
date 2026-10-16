@@ -19,6 +19,14 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint:safety
       - run: npm test
+      - name: Check proposed Xero backend (no deployment)
+        run: npm exec --yes --package=deno@2.2.12 -- deno task --config proposals/xero/deno.json check
+        env:
+          DENO_DIR: ${{ runner.temp }}/deno-cache
+      - name: Test Xero endpoint authorization without external access
+        run: npm exec --yes --package=deno@2.2.12 -- deno task --config proposals/xero/deno.json test
+        env:
+          DENO_DIR: ${{ runner.temp }}/deno-cache
       - run: npm run build:preview
       - run: npm run test:browser
       - name: Build production artifact without live pricing generation
