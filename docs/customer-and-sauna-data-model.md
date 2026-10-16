@@ -21,7 +21,23 @@ This supports both customer lifetime history and each sauna's history without tr
 | `supabase/functions/accounting-api/index.ts`, `src/components/admin/RevenueDashboard.tsx`, `AGENTS.md` | Existing projections use signed terms and CRM commitments. Preserve their rules and distinguish projections from historical actuals. |
 | `supabase/functions/xero-admin/index.ts`, `_shared/xero.ts` | Read-only Xero access and first-page inspection exist. No full historical importer, reviewed identity directory or asset-level revenue allocation is active. |
 
-These are repository facts plus the user's successful connection screenshot, not a live database audit. No evidence establishes that historical assignment or monthly payment data is complete. Existing current/future pointers must not be used to infer every prior rental. Xero contacts alone cannot tell us which physical sauna was installed.
+These are repository facts plus the user's successful connection screenshot, not a live database audit. No evidence establishes that historical assignment or monthly payment data is complete. Existing current/future pointers must not be used to infer every prior rental. Xero contacts alone cannot tell us which physical sauna was installed; the owner-confirmed tracking tags provide the intended asset link, pending live coverage verification.
+
+## Confirmed owner workflow: Xero tracking identifies saunas
+
+The owner confirmed that Xero tracking options contain the same sauna numbers used in inventory. This is the preferred financial-to-asset link, replacing manual per-invoice asset selection when a reviewed tracking mapping is available. This is owner-provided information; live option IDs, label formats, historical coverage and uniqueness have not yet been inspected from Codex.
+
+Keep the existing inventory identity and existing status vocabulary. Add dated history for those same statuses rather than requiring replacement status names or parallel operational state entry. The more detailed custody/serviceability dimensions below describe reporting distinctions; do not build them as a separate required workflow initially. A single status timeline is sufficient where statuses unambiguously express actual state. Record exceptional overlaps (such as maintenance while still installed) explicitly if needed, rather than infer them from accounting.
+
+Add a small **reviewed tracking-to-asset mapping**: provider/tenant, tracking category ID, option ID, observed category/option labels, asset UUID, review state and validity/provenance. Namespace option IDs by tenant/category, never match any option from any category solely by label. Preserve stable IDs where returned; if a line only contains labels, retain the labels and resolve through the reviewed mapping, flagging collisions. Allow reviewed historical aliases mapping to the same asset. Renaming an option must not silently change the asset identity. Sauna-number reuse across distinct physical units requires dated resolution or an ambiguous flag; never assign old transactions to a new physical unit automatically.
+
+For each source invoice/credit line, preserve all returned tracking entries and source line identity before resolving the selected sauna category. Matching order: approved source option ID mapping; otherwise propose an exact inventory unit-code match for owner confirmation. Preserve leading zeros and meaningful punctuation; do not guess that differently formatted codes identify the same unit. Missing category, unknown option, duplicate inventory code, conflicting mapping and unresolvable historical alias remain review exceptions. Customer match and asset match are independent approvals.
+
+A reviewed tag identifies the asset associated with a billed line; it does not itself prove a service interval, installation date, payment allocation or revenue classification. A tagged deposit or sale remains a deposit or sale. Payment records follow their invoice/application links to the tagged lines. Mixed-unit invoices still need an explicit cash attribution rule where the payment does not identify which lines were settled. Missing tags on credits/refunds need explicit linkage/review rather than attribution to today's customer assignment.
+
+Physical status history supplies known idle/maintenance/installed periods. Tracking supplies financial attribution. Missing invoice/payment activity alone is never evidence of idle time. Historical customer placements can be proposed from dated accounting evidence, but invoice issue dates and tag presence do not establish actual install/return boundaries.
+
+The read-only inspection specification and Lovable handoff are in [xero-tracking-inspection.md](xero-tracking-inspection.md). Do not finalize schema or assert complete history until its findings are reviewed.
 
 ## Relationship overview
 
