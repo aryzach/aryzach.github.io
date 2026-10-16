@@ -31,12 +31,11 @@ try {
     if (/supabase|preview\.invalid|leadconnector|stripe|cal\.com|posthog|googletagmanager|facebook|elfsight/.test(url.hostname)) unsafeRequests.push(request.url());
     void request.abort();
   });
-  for (const route of ['/', '/pricing', '/how-it-works', '/careers/customer-operations-lead', '/reservation/00000000-0000-4000-8000-000000000001?token=preview', '/admin', '/accounting']) {
+  for (const route of ['/', '/pricing', '/how-it-works', '/careers/customer-operations-lead', '/admin', '/accounting']) {
     await page.goto(origin + route, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('[data-preview-banner]');
     await page.waitForFunction(() => document.querySelector('#root')?.textContent.length > 150);
-    if (route === '/pricing') await page.waitForFunction(() => document.body.textContent.includes('Available'));
-    if (route.startsWith('/reservation/')) await page.waitForFunction(() => document.body.textContent.includes('Demo'));
+    if (route === '/pricing') await page.waitForFunction(() => document.body.textContent.includes('Waiting for data'));
     if (route === '/admin' || route === '/accounting') {
       await page.type('input[type="password"]', 'preview');
       await page.click('button[type="submit"]');
@@ -45,19 +44,18 @@ try {
         await page.setViewport({ width: 1440, height: 1050 });
         await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Customer insights').click());
         await page.waitForSelector('[aria-label="Customer insights"]');
-        await page.waitForFunction(() => document.body.textContent.includes('$2,506'));
-        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$('[aria-label="Customer insights"]')).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH });
-        await page.type('input[aria-label="Search customer histories"]', 'refund');
-        await page.$$eval('button', buttons => buttons.find(b => b.textContent.includes('Riley Morgan')).click());
-        await page.waitForFunction(() => document.querySelector('[aria-label="Selected customer history"]').textContent.includes('Service refund linked to credit note'));
+        const section = '[aria-label="Customer insights"]';
+        assert.ok(await page.$eval(section, el => el.textContent.includes('Waiting for data')));
+        assert.equal(await page.$eval(section, el => /\$[\d,]+|Avery|Riley|Synthetic data/.test(el.textContent)), false);
+        assert.equal(await page.$eval('input[aria-label="Search customer histories"]', el => el.disabled), true);
+        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH });
         await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Retention & payback').click());
-        await page.waitForFunction(() => document.body.textContent.includes('Month 4') && document.body.textContent.includes('LTV and CAC over time'));
-        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$('[aria-label="Customer insights"]')).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH.replace('.png', '-cohorts.png') });
-        await page.select('select[aria-label="Reporting period"]', '3');
-        await page.waitForFunction(() => document.body.textContent.includes('0 first installations'));
+        await page.waitForFunction(() => document.body.textContent.includes('Acquisition payback'));
+        assert.equal(await page.$eval(section, el => el.querySelectorAll('.recharts-wrapper').length), 0);
+        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH.replace('.png', '-cohorts.png') });
         await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Metric definitions').click());
-        await page.waitForFunction(() => document.body.textContent.includes('Missing before live metrics'));
-        console.log('PASS customer insights: search, history, cohorts, period filter and definitions');
+        await page.waitForFunction(() => document.body.textContent.includes('Missing costs will not be replaced by assumptions.'));
+        console.log('PASS customer insights: waiting states, no sample values or charts, definitions');
       }
     }
     console.log(`PASS rendered ${route}`);

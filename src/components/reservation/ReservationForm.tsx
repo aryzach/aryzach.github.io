@@ -288,7 +288,7 @@ const ReservationForm = ({
                 ? "Available now"
                 : optAvail.status === "future" && optAvail.nextAvailableDate
                 ? `Next available ${formatDatePretty(optAvail.nextAvailableDate)}`
-                : "Currently unavailable";
+                : optAvail.status === "waiting" ? "Waiting for data" : "Currently unavailable";
             return (
               <div
                 key={o.id}

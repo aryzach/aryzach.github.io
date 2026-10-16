@@ -30,7 +30,7 @@ const AvailabilityLine = ({ status, size = "sm", label }: Props) => {
   }
   return (
     <div className={`${textSize} text-muted-foreground`}>
-      {labelNode}Currently unavailable
+      {labelNode}{status.status === "waiting" ? "Waiting for data" : "Currently unavailable"}
     </div>
   );
 };

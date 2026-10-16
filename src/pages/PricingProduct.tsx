@@ -24,7 +24,7 @@ const PricingProduct = () => {
   const status = getStatus(product.saunaTypeId);
   const { open: openReservation } = useReservationModal();
 
-  const canReserve = !!product.saunaTypeId && status.status !== "unavailable";
+  const canReserve = !!product.saunaTypeId && ["available", "future"].includes(status.status);
 
   const handleReserve = () => {
     if (canReserve && product.saunaTypeId) {
@@ -68,7 +68,7 @@ const PricingProduct = () => {
 
               <div className="mt-1">
                 <Button size="lg" onClick={handleReserve} disabled={!canReserve} className="w-full md:w-auto">
-                  {canReserve ? "Reserve Now" : "Currently unavailable"}
+                  {canReserve ? "Reserve Now" : status.status === "waiting" ? "Waiting for data" : "Currently unavailable"}
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-4 leading-relaxed">

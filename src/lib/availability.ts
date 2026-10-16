@@ -1,7 +1,7 @@
 export interface AvailabilityStatus {
   availableToday: number;
   nextAvailableDate: string | null;
-  status: "available" | "future" | "unavailable";
+  status: "available" | "future" | "unavailable" | "waiting";
 }
 
 export interface PublicAvailabilityRow {
@@ -19,7 +19,7 @@ function todayISO(): string {
 }
 
 export function rowToStatus(row: PublicAvailabilityRow | undefined | null): AvailabilityStatus {
-  if (!row) return { availableToday: 0, nextAvailableDate: null, status: "unavailable" };
+  if (!row) return { availableToday: 0, nextAvailableDate: null, status: "waiting" };
   if (row.available_now > 0) {
     return { availableToday: row.available_now, nextAvailableDate: null, status: "available" };
   }

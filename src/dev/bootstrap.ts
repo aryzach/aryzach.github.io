@@ -1,7 +1,7 @@
 // Imported before App and Supabase so auth initialization cannot escape the guard.
 import { productionEnabled, staticRenderEnabled, previewMessage, services } from '../lib/runtime';
 import { isExternalAction, isPublicPrerenderRead } from '../lib/runtimePolicy';
-import { fixtureResponse } from './fixtures';
+import { emptyPreviewResponse } from './emptyResponses';
 
 if (!productionEnabled) {
   const nativeFetch = window.fetch.bind(window);
@@ -9,7 +9,7 @@ if (!productionEnabled) {
     const request = new Request(input instanceof Request ? input : new URL(String(input), location.href), init);
     const url = new URL(request.url);
     if (services.supabaseUrl && url.origin === new URL(services.supabaseUrl).origin) {
-      if (!staticRenderEnabled) return fixtureResponse(request);
+      if (!staticRenderEnabled) return emptyPreviewResponse(request);
       if (isPublicPrerenderRead(request.method, url.pathname)) return nativeFetch(input, init);
       throw new Error(previewMessage);
     }

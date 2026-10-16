@@ -91,6 +91,7 @@ const ReservationSystem = () => {
                             Next available: <span className="font-medium">{formatDatePretty(avail.nextAvailableDate)}</span>
                           </span>
                         )}
+                        {avail.status === "waiting" && <span className="text-muted-foreground">Waiting for data</span>}
                         {avail.status === "unavailable" && (
                           <span className="text-muted-foreground">Currently unavailable</span>
                         )}
@@ -109,7 +110,7 @@ const ReservationSystem = () => {
                       <Button
                         className="mt-auto"
                         onClick={() => openReservation({ saunaTypeId: t.id, source: "Pricing Page" })}
-                        disabled={avail.status === "unavailable"}
+                        disabled={avail.status === "unavailable" || avail.status === "waiting"}
                       >
                         Reserve
                       </Button>

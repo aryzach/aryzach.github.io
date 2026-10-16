@@ -709,7 +709,7 @@ const AdminReservations = () => {
           </div>
 
           <div className="mb-4 flex w-fit max-w-full overflow-x-auto rounded-md border border-border bg-card p-0.5">
-            {previewEnabled && <Button variant={tab === "insights" ? "default" : "ghost"} size="sm" onClick={() => setTab("insights")}>Customer insights</Button>}
+            {<Button variant={tab === "insights" ? "default" : "ghost"} size="sm" onClick={() => setTab("insights")}>Customer insights</Button>}
             <Button variant={tab === "dashboard" ? "default" : "ghost"} size="sm" onClick={() => setTab("dashboard")}>Dashboard</Button>
             <button
               type="button"
@@ -740,11 +740,11 @@ const AdminReservations = () => {
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
-          {tab !== "insights" && <StripeStatusCard callAdmin={callAdmin} />}
+          {tab !== "insights" && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
-          {previewEnabled && tab === "insights" && <CustomerInsights />}
+          {tab === "insights" && <CustomerInsights />}
 
-          {tab === "dashboard" && <RevenueDashboard inventory={inventory} />}
+          {tab === "dashboard" && (previewEnabled ? <p role="status">Waiting for data</p> : <RevenueDashboard inventory={inventory} />)}
 
           {tab === "reservations" && (
             <ReservationsListPanel callAdmin={callAdmin} />

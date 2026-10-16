@@ -19,6 +19,7 @@ export function useAvailability() {
 
   const getStatusForIds = (ids: (string | null)[]): AvailabilityStatus => {
     const relevant = rows.filter((r) => ids.includes(r.sauna_type_id));
+    if (!relevant.length) return rowToStatus(null);
     const totalNow = relevant.reduce((sum, r) => sum + (r.available_now || 0), 0);
     if (totalNow > 0) {
       return { availableToday: totalNow, nextAvailableDate: null, status: "available" };

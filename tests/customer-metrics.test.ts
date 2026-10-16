@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { customerHistory as data } from "../src/dev/customerHistory.ts";
+import { customerHistory as data } from "./fixtures/customerHistory.ts";
 import {
   customerValue,
   monthlyActivity,

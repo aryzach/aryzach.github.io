@@ -123,7 +123,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        {previewEnabled && <aside data-preview-banner role="status" className="bg-amber-100 p-3 text-center text-sm text-black">Preview with demo data. Submissions, uploads, bookings and payments are disabled.</aside>}
+        {previewEnabled && <aside data-preview-banner role="status" className="bg-amber-100 p-3 text-center text-sm text-black">Preview: waiting for data. Submissions, uploads, bookings and payments are disabled.</aside>}
         <ScrollToTop />
         <ScrollToHash />
         <WebMCPRegistrar />

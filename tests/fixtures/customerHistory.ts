@@ -1,8 +1,8 @@
 import type {
   CustomerHistory,
   HistoryCustomer,
-} from "../lib/customerMetrics.ts";
-import { addMonth } from "../lib/customerMetrics.ts";
+} from "../../src/lib/customerMetrics.ts";
+import { addMonth } from "../../src/lib/customerMetrics.ts";
 
 const customer = (
   id: string,
