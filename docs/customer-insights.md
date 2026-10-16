@@ -26,3 +26,7 @@ Next: connect verified read-only operational histories and financial sources thr
 ## Xero connection preparation
 
 The admin panel includes readiness/authorization controls. The backend implementation and exact redirect URI are documented in [the review-only Xero proposal](../proposals/xero/README.md). It remains undeployed; metrics still wait for verified data. Storing client credentials in Lovable alone does not authorize a Xero organization.
+
+## Historical import and identity review
+
+See [the prepared reconciliation plan](../proposals/xero-history/README.md). Every match requires review, and Xero-only customers can become customer profiles without fabricated reservations. The import and approval endpoints are not activated.

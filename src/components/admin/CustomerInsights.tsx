@@ -1,3 +1,4 @@
+import { CustomerMatchReview } from "./CustomerMatchReview";
 import { XeroConnection } from "./XeroConnection";
 import { useState } from "react";
 import { Search, Users, Receipt, TrendingUp, ArrowUpRight } from "lucide-react";
@@ -59,6 +60,7 @@ export function CustomerInsights({ password }: { password: string }) {
         </p>
       </div>
       <XeroConnection password={password} />
+      <CustomerMatchReview />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(({ title, detail, icon: Icon }) => (
           <div
