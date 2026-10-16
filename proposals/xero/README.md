@@ -2,6 +2,10 @@
 
 ## Deployment verified October 16, 2026
 
+### Granular scope repair verified October 16, 2026
+
+Both `xero-admin` and `xero-callback` were redeployed with the corrected shared scope allowlist. Production password-verified `status` (Check connection) and `start` both return **HTTP 200**, and the live authorization URL contains exactly `offline_access accounting.contacts.read accounting.invoices.read accounting.payments.read`. Xero previously returned `invalid_scope`; the corrected URL now reaches Xero's sign-in form with no `invalid_scope`, confirming this client can request the scope set. No developer-portal permission change is indicated by that live result. Keep the existing Web app/callback and click Connect Xero again to sign in and consent. Owner consent, accounting endpoint reads and token refresh remain unverified; `authorized` is still false. No credentials, encryption settings, existing records, or accounting data were changed. The normal short-lived OAuth state metadata was created by the authorization-start checks. All 29 project unit tests and four active-function security tests pass, including exact scope matching, missing-scope rejection, obsolete/write-scope rejection, GET-only resources and encryption compatibility.
+
 The reviewed storage proposal was applied as `drizzle/migrations/0007_provision_private_xero_oauth_storage.sql`, with grants before RLS and no business-data changes. Active copies are in `supabase/functions/xero-admin`, `supabase/functions/xero-callback` and `_shared`; both entrypoints have `verify_jwt = false` and retain the existing admin password/state validation. The original proposal below is retained for reference, not as current deployment status.
 
 Production Check connection was exercised through the actual production admin UI and returned HTTP 200. A subsequent authenticated readiness check confirmed `configured: true`, `storageReady: true`, `authorized: false`. Canonical `www` production-origin CORS works even when the configured callback-return origin uses the bare production domain. Unauthorized admin requests return 401, attacker-origin requests return 403, and callbacks without valid state return 400. Four deployed-function security tests and 18 existing unit tests pass. Storage tables and helper functions deny anon/authenticated access and permit service-role access only.
@@ -20,15 +24,28 @@ https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/xero-callback
 
 Suggested application/company URL: `https://www.sfsaunarental.com`. The redirect endpoint will not exist until the backend deployment below. Do not use a Lovable editor URL, `/admin`, or the frontend domain as the OAuth callback.
 
-Requested scopes are `offline_access accounting.contacts.read accounting.transactions.read`. The accounting permissions are read-only. No write scopes, identity/profile/email scopes or reports scopes are requested. The broader read-only transactions scope is the documented scope for the required invoice/credit/payment endpoints in Xero's official API specification. Confirm consent shows these read permissions for the existing Xero app; unsupported scopes must fail, not be replaced with write scopes.
+Requested scopes are exactly `offline_access accounting.contacts.read accounting.invoices.read accounting.payments.read`. Authorization and token-scope validation use this same allowlist in both active and prepared helpers. Missing required permissions, extra permissions, obsolete `accounting.transactions.read`, and all write scopes are rejected. No identity/profile/email or report scopes are requested.
+
+| Resource | Supported GET permission |
+| --- | --- |
+| Contacts | `accounting.contacts.read` |
+| Invoices | `accounting.invoices.read` |
+| CreditNotes | `accounting.invoices.read` |
+| Payments | `accounting.payments.read` |
+
+`offline_access` enables refresh tokens. There is no separate `accounting.creditnotes.read` scope. Xero's current scope reference marks `accounting.transactions.read` deprecated and maps it to granular invoice/payment/bank-transaction/manual-journal read permissions; only the first two are needed here. The deployed authorization request previously contained the deprecated broad scope and Xero returned `invalid_scope` before sign-in.
+
+Xero's Granular Scopes FAQ says apps created on/after **2 March 2026** use granular scopes; older apps can request granular scopes from April 2026 and must migrate by September 2027. Keep this app a Web app and keep its existing registered callback and credentials. If its portal has configurable scope permissions, confirm Contacts read, Invoices read (including CreditNotes), Payments read and offline access are available/enabled; never enable write permissions as a substitute. Existing authorizations must grant the new scope set by reconnecting; a refresh cannot add permissions. Whether this app needs a portal toggle must be verified from its authenticated developer-portal settings, which were not accessible during this repair.
 
 Authoritative references inspected during preparation:
 - https://github.com/XeroAPI/Xero-OpenAPI/blob/master/xero_accounting.yaml (authorization/token URLs and read scopes)
 - https://github.com/XeroAPI/xero-node (authorization-code flow and rotating refresh tokens)
 - https://developer.xero.com/documentation/guides/oauth2/auth-flow/
 - https://developer.xero.com/documentation/guides/oauth2/scopes/
+- https://developer.xero.com/faq/granular-scopes
+- https://devblog.xero.com/upcoming-changes-to-xero-accounting-api-scopes-705c5a9621a0
 
-The documentation website was blocked by the workspace proxy; the official GitHub sources were accessible. Recheck current app-specific scope availability during deployment/consent. There has been no live Xero authorization or integration test yet.
+The current official scope table and Granular Scopes FAQ were accessible and reviewed on October 16, 2026. The old GitHub broad-scope example is not the current permission mapping for this app. App-specific availability is tested through Xero's live authorization endpoint without signing in or displaying credentials/tokens; completion of consent and refresh still require the owner's authorization.
 
 ## Backend secrets
 

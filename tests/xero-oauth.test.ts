@@ -11,7 +11,45 @@ import {
   validateTokenSet,
   allowedAccountingRead,
   summarizeRecords,
-} from "../proposals/xero/functions/_shared/xero.ts";
+} from "../supabase/functions/_shared/xero.ts";
+import * as proposal from "../proposals/xero/functions/_shared/xero.ts";
+
+const expectedScopes = [
+  "offline_access",
+  "accounting.contacts.read",
+  "accounting.invoices.read",
+  "accounting.payments.read",
+];
+
+test("active and prepared authorization use the exact supported granular read permissions", () => {
+  for (const helpers of [{ XERO_SCOPES, authorizationUrl }, proposal]) {
+    assert.deepEqual(helpers.XERO_SCOPES, expectedScopes);
+    const url = new URL(helpers.authorizationUrl("test-client", "https://backend.invalid/callback", "test-state", "test-challenge"));
+    assert.equal(url.searchParams.get("scope"), expectedScopes.join(" "));
+  }
+});
+
+for (const required of expectedScopes) {
+  test(`token validation requires ${required}`, () => {
+    for (const validate of [validateTokenSet, proposal.validateTokenSet]) {
+      assert.throws(() => validate({
+        access_token: "test-access", refresh_token: "test-refresh", expires_in: 1800,
+        scope: expectedScopes.filter((scope) => scope !== required).join(" "),
+      }), /read-only consent required/);
+    }
+  });
+}
+
+for (const forbidden of ["accounting.transactions.read", "accounting.transactions", "accounting.contacts", "accounting.invoices", "accounting.payments", "accounting.creditnotes.read"]) {
+  test(`token validation rejects unsupported or excessive permission ${forbidden}`, () => {
+    for (const validate of [validateTokenSet, proposal.validateTokenSet]) {
+      assert.throws(() => validate({
+        access_token: "test-access", refresh_token: "test-refresh", expires_in: 1800,
+        scope: [...expectedScopes, forbidden].join(" "),
+      }), /read-only consent required/);
+    }
+  });
+}
 
 test("authorization requests only read scopes and offline access with PKCE and single-use state", async () => {
   const state = randomSecret();
@@ -66,6 +104,7 @@ test("token responses cannot silently grant write permissions or omit required s
     scope: XERO_SCOPES.join(" "),
   };
   assert.equal(validateTokenSet(token).expires_in, 1800);
+  assert.equal(validateTokenSet({ ...token, scope: `  ${expectedScopes.slice().reverse().join("  ")}  ` }).expires_in, 1800);
   assert.throws(() =>
     validateTokenSet({
       ...token,

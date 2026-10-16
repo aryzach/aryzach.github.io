@@ -2,7 +2,8 @@
 export const XERO_SCOPES = [
   "offline_access",
   "accounting.contacts.read",
-  "accounting.transactions.read",
+  "accounting.invoices.read",
+  "accounting.payments.read",
 ];
 export const XERO_AUTHORIZE =
   "https://login.xero.com/identity/connect/authorize";
@@ -34,7 +35,7 @@ export function validateTokenSet(value: unknown): TokenSet {
     typeof token.scope !== "string"
   )
     throw new Error("Invalid token response");
-  const granted = token.scope.split(/\s+/);
+  const granted = token.scope.trim().split(/\s+/);
   if (
     granted.some((scope) => !XERO_SCOPES.includes(scope)) ||
     XERO_SCOPES.some((scope) => !granted.includes(scope))
