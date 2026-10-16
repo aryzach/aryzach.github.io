@@ -3,3 +3,5 @@
 - [x] Add an admin dashboard showing guaranteed monthly rental revenue with range and sauna-type controls.
 - [x] Provision private Xero OAuth storage and deploy the prepared read-only functions.
 - [x] Verify production-origin connection checks and report remaining configuration requirements.
+- [ ] Verify current Xero read-only scopes against official documentation and deployed authorization.
+- [ ] Update authorization, token validation, tests and documentation; redeploy and verify production.
