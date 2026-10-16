@@ -1,3 +1,4 @@
+import { productionEnabled } from "@/lib/runtime";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useReservationModal } from "@/contexts/ReservationModal";
@@ -33,6 +34,7 @@ const SaunaRentalSanFrancisco = () => {
   useSEO(seoData.saunaRentalSanFrancisco);
   const { open: openReservation } = useReservationModal();
   useEffect(() => {
+    if (!productionEnabled) return;
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";
     script.async = true;

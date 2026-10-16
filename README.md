@@ -1,3 +1,7 @@
+# Development
+
+For safe Lovable/Codex development, installation and PR checks, read [docs/development.md](docs/development.md). Schema and release ownership are tracked in [docs/ownership.md](docs/ownership.md). Use `npm run dev` or `npm run build:preview` for routine work; do not use the production build as a preview command.
+
 # Welcome to your Lovable project
 
 ## Project info
@@ -18,7 +22,7 @@ Changes made via Lovable will be committed automatically to this repo.
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Use the Node version in `.nvmrc` and npm 10.9.4; see [development setup](docs/development.md). [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating) if needed.
 
 Follow these steps:
 
@@ -30,7 +34,7 @@ git clone <YOUR_GIT_URL>
 cd <YOUR_PROJECT_NAME>
 
 # Step 3: Install the necessary dependencies.
-npm i
+npm ci
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev

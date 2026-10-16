@@ -1,10 +1,11 @@
+import { previewEnabled, safeActionUrl } from "./runtime";
 // External URLs for the reservation flow.
 import { supabase } from "@/integrations/supabase/client";
 
 export const CALCOM_VIDEO_CONSULT_LINK =
-  "https://cal.com/sf-sauna/sauna-compatibility-consultation?overlayCalendar=true";
+  safeActionUrl("https://cal.com/sf-sauna/sauna-compatibility-consultation?overlayCalendar=true");
 export const CALCOM_INSTALLATION_LINK =
-  "https://cal.com/sf-sauna/sf-sauna-delivery-installation?overlayCalendar=true";
+  safeActionUrl("https://cal.com/sf-sauna/sf-sauna-delivery-installation?overlayCalendar=true");
 
 // The reservation deposit is standardized at $200 for every sauna type.
 export const RESERVATION_DEPOSIT_USD = 200;
@@ -57,6 +58,7 @@ export interface StripeReservationConfig {
 
 /** Load the active Stripe reservation payment link + mode from app_config. */
 export async function getStripeReservationConfig(): Promise<StripeReservationConfig> {
+  if (previewEnabled) return { mode: "test", baseLink: safeActionUrl(FALLBACK_TEST_LINK) };
   if (cachedLink && cachedMode) return { mode: cachedMode, baseLink: cachedLink };
   const { data } = await supabase
     .from("app_config" as any)
@@ -100,7 +102,7 @@ export function reservationDepositForSaunaType(_id: string | null | undefined): 
 }
 
 // Legacy exports kept so any stray imports resolve.
-export const RESERVATION_STRIPE_PAYMENT_LINK = FALLBACK_TEST_LINK;
+export const RESERVATION_STRIPE_PAYMENT_LINK = safeActionUrl(FALLBACK_TEST_LINK);
 export function resolveStripeLink(_url: string): string {
-  return FALLBACK_TEST_LINK;
+  return safeActionUrl(FALLBACK_TEST_LINK);
 }

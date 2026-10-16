@@ -1,13 +1,8 @@
 // Centralized GoHighLevel inbound webhook client for all lead-capture forms.
 // See docs and per-form usage below.
 
-// GoHighLevel inbound webhook. Publicly callable from the browser — safe to ship.
-// Override at build time by setting VITE_GHL_INBOUND_WEBHOOK_URL.
-const DEFAULT_WEBHOOK_URL =
-  "https://services.leadconnectorhq.com/hooks/zyM3BNze9gmgtLAoCCQ0/webhook-trigger/021d1bd1-97d6-41ee-b5e6-8683de1a2a07";
-const WEBHOOK_URL =
-  (import.meta.env.VITE_GHL_INBOUND_WEBHOOK_URL as string | undefined) ??
-  DEFAULT_WEBHOOK_URL;
+import { services, previewEnabled, previewMessage } from "./runtime";
+const WEBHOOK_URL = services.leadWebhook;
 
 const UTM_KEYS = [
   "utm_source",
@@ -169,6 +164,7 @@ export async function submitLeadToGHL({
   fields,
   timeoutMs = 15000,
 }: SubmitLeadArgs): Promise<SubmitLeadResult> {
+  if (previewEnabled) return { ok: false, error: previewMessage };
   if (!WEBHOOK_URL) {
     return { ok: false, error: "Lead webhook is not configured." };
   }
@@ -238,6 +234,7 @@ export async function uploadLeadPhotos(
   files: File[],
   folder: string,
 ): Promise<{ urls: string[]; failed: number }> {
+  if (previewEnabled) return { urls: [], failed: files.length };
   if (!files.length) return { urls: [], failed: 0 };
   const { supabase } = await import("@/integrations/supabase/client");
   const urls: string[] = [];

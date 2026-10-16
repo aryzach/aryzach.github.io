@@ -1,3 +1,4 @@
+import { productionEnabled } from "@/lib/runtime";
 import { useEffect } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -17,6 +18,7 @@ import { seoData } from "@/lib/seoData";
 const Index = () => {
   useSEO(seoData.home);
   useEffect(() => {
+    if (!productionEnabled) return;
     const styleId = "lc-widget-hidden-style";
     if (!document.getElementById(styleId)) {
       const style = document.createElement("style");

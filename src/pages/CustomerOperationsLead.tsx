@@ -1,3 +1,4 @@
+import { productionEnabled } from "@/lib/runtime";
 import { useRef, useState } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { submitApplicationToGHL } from "@/lib/submitApplicationToGHL";
@@ -16,7 +17,7 @@ declare global {
 
 /** Load the Meta Pixel base code only if it isn't already present (e.g. via GTM). */
 function ensureMetaPixel() {
-  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (!productionEnabled || typeof window === "undefined" || typeof document === "undefined") return;
   if (window.fbq) return;
   const w = window as unknown as { fbq: any; _fbq: any };
   const n: any = (w.fbq = function (...args: unknown[]) {

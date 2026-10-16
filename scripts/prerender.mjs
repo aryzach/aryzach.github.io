@@ -112,6 +112,9 @@ async function prerender() {
       console.log(`Pre-rendering: ${route} (${url})`);
 
       const page = await browser.newPage();
+      // A production static render reads only public catalog endpoints. The
+      // runtime still blocks all mutations and keeps analytics/widgets disabled.
+      await page.evaluateOnNewDocument(() => { window.__SF_STATIC_RENDER = true; });
       await page.setViewport({ width: 1280, height: 800 });
       page.setDefaultNavigationTimeout(12000); // 12s cap per route
 

@@ -1,0 +1,32 @@
+name: Validate pull request
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm install --global npm@10.9.4
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:safety
+      - run: npm test
+      - run: npm run build:preview
+      - run: npm run test:browser
+      - name: Build production artifact without live pricing generation
+        run: node node_modules/vite/bin/vite.js build --outDir "$RUNNER_TEMP/production-check"
+      - name: Verify production artifact stays safe on preview hosts and during static rendering
+        run: npm run test:browser
+        env:
+          PREVIEW_DIST_DIR: ${{ runner.temp }}/production-check
+          TEST_STATIC_RENDER: '1'
+      # Existing repository-wide lint failures are tracked in docs/development.md.
+      # Do not hide them behind a passing lint command or weaken their rules.

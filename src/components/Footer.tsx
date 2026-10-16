@@ -1,3 +1,4 @@
+import { previewEnabled, previewMessage } from "@/lib/runtime";
 import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ const Footer = () => {
       setJoined(true);
       setEmail("");
     } else {
-      setErrorMsg("Please try again.");
+      setErrorMsg(previewEnabled ? previewMessage : "Please try again.");
     }
   };
 

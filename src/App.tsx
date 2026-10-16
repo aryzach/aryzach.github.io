@@ -1,3 +1,4 @@
+import { previewEnabled } from "./lib/runtime";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -122,12 +123,14 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {previewEnabled && <aside data-preview-banner role="status" className="bg-amber-100 p-3 text-center text-sm text-black">Preview with demo data. Submissions, uploads, bookings and payments are disabled.</aside>}
         <ScrollToTop />
         <ScrollToHash />
         <WebMCPRegistrar />
         <UtmCapture />
         <ReservationModalProvider>
         <Routes>
+          <Route path="/preview-disabled" element={<main className="p-10"><h1>Preview only</h1><p>Bookings, payments and submissions are disabled. No data has been sent.</p></main>} />
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/pricing/:category" element={<PricingCategory />} />

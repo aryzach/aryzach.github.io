@@ -1,9 +1,11 @@
+import { productionEnabled } from "@/lib/runtime";
 import { useEffect } from "react";
 import sfStandardLogo from "@/assets/sf-standard-logo.png";
 import vitalityDigestLogo from "@/assets/vitality-digest-logo.png";
 
 const SocialProof = ({ className = "" }: { className?: string }) => {
   useEffect(() => {
+    if (!productionEnabled) return;
     // Load Elfsight script
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";

@@ -1,3 +1,4 @@
+import { services, previewEnabled, previewMessage } from "./runtime";
 // WebMCP provider — exposes site actions to AI agents via navigator.modelContext.
 // Spec: https://webmachinelearning.github.io/webmcp/
 
@@ -13,7 +14,7 @@ type ModelContext = {
 };
 
 const RESERVATION_ENDPOINT =
-  "https://vwpeuejdgyjcwcymzjxt.supabase.co/functions/v1/reservation-create";
+  `${services.supabaseUrl}/functions/v1/reservation-create`;
 
 const tools: WebMCPTool[] = [
   {
@@ -88,6 +89,7 @@ const tools: WebMCPTool[] = [
       required: ["name", "email", "phone", "sauna_type", "term_months"],
     },
     execute: async (input: Record<string, unknown>) => {
+      if (previewEnabled) throw new Error(previewMessage);
       const res = await fetch(RESERVATION_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

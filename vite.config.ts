@@ -52,6 +52,14 @@ export default defineConfig(({ mode }) => ({
   // no subpath — this tells Vite to build asset URLs from "/"
   base: "/",
 
+  // Development and preview artifacts never contain production backend credentials.
+  define: mode === "production" ? {} : {
+    "import.meta.env.VITE_SUPABASE_URL": JSON.stringify("https://preview.invalid"),
+    "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify("preview-public-placeholder"),
+    "import.meta.env.VITE_GHL_INBOUND_WEBHOOK_URL": JSON.stringify(""),
+    "import.meta.env.VITE_GHL_HIRING_WEBHOOK_URL": JSON.stringify(""),
+  },
+
   server: {
     host: "::",
     port: 8080,

@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local environment overrides (the legacy tracked .env remains public configuration).
+.env.*
+!.env.example

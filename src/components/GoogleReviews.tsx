@@ -1,7 +1,9 @@
+import { productionEnabled } from "@/lib/runtime";
 import { useEffect } from "react";
 
 const GoogleReviews = () => {
   useEffect(() => {
+    if (!productionEnabled) return;
     const script = document.createElement("script");
     script.src = "https://elfsightcdn.com/platform.js";
     script.async = true;
