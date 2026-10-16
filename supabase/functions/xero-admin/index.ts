@@ -25,17 +25,19 @@ Deno.serve(async (req) => {
   } catch {
     return new Response("Integration configuration required", { status: 503 });
   }
+  const requestOrigin = req.headers.get("origin");
+  const allowedOrigins = new Set([origin, "https://www.sfsaunarental.com"]);
   const headers = {
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
-    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Origin": requestOrigin && allowedOrigins.has(requestOrigin) ? requestOrigin : origin,
     "Access-Control-Allow-Headers": "content-type, apikey, x-admin-password",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     Vary: "Origin",
   };
   const json = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), { status, headers });
-  if (req.headers.get("origin") && req.headers.get("origin") !== origin)
+  if (requestOrigin && !allowedOrigins.has(requestOrigin))
     return json({ error: "Origin not allowed" }, 403);
   if (req.method === "OPTIONS") return new Response(null, { headers });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);

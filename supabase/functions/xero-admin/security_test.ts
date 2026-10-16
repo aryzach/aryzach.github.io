@@ -122,6 +122,12 @@ Deno.test("canonical production origin is permitted and alternate origins are re
         method: "OPTIONS", headers: { Origin: origin },
       }))).status, 403);
     }
+    Deno.env.set("PUBLIC_APP_URL", "https://sfsaunarental.com");
+    const canonical = await admin(new Request("https://backend.invalid", {
+      method: "OPTIONS", headers: { Origin: "https://www.sfsaunarental.com" },
+    }));
+    assertEquals(canonical.status, 200);
+    assertEquals(canonical.headers.get("Access-Control-Allow-Origin"), "https://www.sfsaunarental.com");
   } finally {
     if (previous === undefined) Deno.env.delete("PUBLIC_APP_URL");
     else Deno.env.set("PUBLIC_APP_URL", previous);
