@@ -1,4 +1,12 @@
-# Xero OAuth: prepared for review, NOT deployed
+# Xero OAuth: deployed read-only setup
+
+## Deployment verified October 16, 2026
+
+The reviewed storage proposal was applied as `drizzle/migrations/0007_provision_private_xero_oauth_storage.sql`, with grants before RLS and no business-data changes. Active copies are in `supabase/functions/xero-admin`, `supabase/functions/xero-callback` and `_shared`; both entrypoints have `verify_jwt = false` and retain the existing admin password/state validation. The original proposal below is retained for reference, not as current deployment status.
+
+Production Check connection was exercised through the actual production admin UI and returned HTTP 200. A subsequent authenticated readiness check confirmed `configured: true`, `storageReady: true`, `authorized: false`. Canonical `www` production-origin CORS works even when the configured callback-return origin uses the bare production domain. Unauthorized admin requests return 401, attacker-origin requests return 403, and callbacks without valid state return 400. Four deployed-function security tests and 18 existing unit tests pass. Storage tables and helper functions deny anon/authenticated access and permit service-role access only.
+
+Required secrets are present, including the unchanged admin password and a usable encryption binding; values were not displayed. No Xero authorization, accounting read/import, or accounting write was performed. Next: register/confirm the documented callback in the Xero Web app, then use production Admin → Customer insights → Connect Xero and authorize the intended organization. Select an organization explicitly if multiple are granted. Live provider credential validity and token refresh remain unverified until authorization.
 
 This directory is deliberately outside `supabase/functions`, `supabase/migrations` and `drizzle/migrations`. Nothing here runs automatically. The frontend can check a deployed endpoint, but connection controls remain disabled until that endpoint reports ready. No Xero credentials are included here.
 
@@ -26,7 +34,7 @@ The documentation website was blocked by the workspace proxy; the official GitHu
 
 The user has already added `XERO_CLIENT_ID` and `XERO_CLIENT_SECRET` in Lovable. Their values are not visible in Codex and have not been verified. Functions also need:
 
-- `XERO_TOKEN_ENCRYPTION_KEY`: a fresh base64 encoding of 32 cryptographically random bytes. Generate privately (for example, run `openssl rand -base64 32` locally) and put the result directly in Lovable's backend secret settings. Do not paste it in chat, source code or a `VITE_*` variable. Loss/rotation requires reconnection or an explicit key migration.
+- `XERO_TOKEN_ENCRYPTION_KEY`: already saved securely. Do not regenerate or replace during deployment. Loss/rotation requires reconnection or an explicit key migration; never paste it in chat, source code or a `VITE_*` variable.
 - `ADMIN_PASSWORD`: reuse the existing admin API's secret; do not invent a second shared password.
 - `PUBLIC_APP_URL`: use the canonical production origin, `https://www.sfsaunarental.com` or `https://sfsaunarental.com`. The UI must be opened on that same origin. Defaults to `https://www.sfsaunarental.com` if absent.
 - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`: existing platform-injected backend bindings.

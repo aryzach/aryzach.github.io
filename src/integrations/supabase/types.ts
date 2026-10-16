@@ -954,6 +954,66 @@ export type Database = {
           },
         ]
       }
+      xero_oauth_connection: {
+        Row: {
+          access_expires_at: string
+          granted_scopes: string[]
+          id: string
+          refresh_locked_until: string | null
+          refresh_nonce: string | null
+          selected_tenant_id: string | null
+          tenants: Json
+          token_ciphertext: string
+          updated_at: string
+        }
+        Insert: {
+          access_expires_at: string
+          granted_scopes: string[]
+          id: string
+          refresh_locked_until?: string | null
+          refresh_nonce?: string | null
+          selected_tenant_id?: string | null
+          tenants?: Json
+          token_ciphertext: string
+          updated_at?: string
+        }
+        Update: {
+          access_expires_at?: string
+          granted_scopes?: string[]
+          id?: string
+          refresh_locked_until?: string | null
+          refresh_nonce?: string | null
+          selected_tenant_id?: string | null
+          tenants?: Json
+          token_ciphertext?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      xero_oauth_sessions: {
+        Row: {
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          state_hash: string
+          verifier_ciphertext: string
+        }
+        Insert: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          state_hash: string
+          verifier_ciphertext: string
+        }
+        Update: {
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          state_hash?: string
+          verifier_ciphertext?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       public_sauna_availability: {
@@ -966,6 +1026,22 @@ export type Database = {
       }
     }
     Functions: {
+      claim_xero_oauth_session: {
+        Args: { p_hash: string }
+        Returns: {
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          state_hash: string
+          verifier_ciphertext: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "xero_oauth_sessions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       create_reservation_with_hold: {
         Args: {
           p_access_notes: string
@@ -980,6 +1056,26 @@ export type Database = {
           p_sauna_type_id: string
         }
         Returns: string
+      }
+      lock_xero_refresh: {
+        Args: { p_nonce: string }
+        Returns: {
+          access_expires_at: string
+          granted_scopes: string[]
+          id: string
+          refresh_locked_until: string | null
+          refresh_nonce: string | null
+          selected_tenant_id: string | null
+          tenants: Json
+          token_ciphertext: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "xero_oauth_connection"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
     }
     Enums: {

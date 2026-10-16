@@ -50,6 +50,13 @@
       "when": 1790805658356,
       "tag": "0006_add_v1_v2_sauna_models",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792193234312,
+      "tag": "0007_provision_private_xero_oauth_storage",
+      "breakpoints": true
     }
   ]
 }

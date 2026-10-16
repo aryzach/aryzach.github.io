@@ -2,3 +2,4 @@
 - Dashboard revenue counts signed contracts plus CRM renters (inventory $/mo) through their "Committed until" date — user decision; speculative renewals and unsold inventory excluded.
 - Store matched historical CRM rent on the reservation for admin display; use a non-voided contract amount first, CRM rate only as fallback.
 - Derive magic-link hold status from verified reservation completion, matched inventory, and active waitlist membership on the token-validated API; this prevents deposit-only reservations from appearing fully reserved.
+- Keep Xero OAuth in password-verified xero-admin and single-use-state xero-callback functions with service-role-only encrypted integration storage; this isolates accounting access from public clients and existing business records.
