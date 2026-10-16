@@ -31,3 +31,9 @@ verify_jwt = false
 verify_jwt = false
 [functions.accounting-api]
 verify_jwt = false
+
+[functions.xero-admin]
+verify_jwt = false
+
+[functions.xero-callback]
+verify_jwt = false
