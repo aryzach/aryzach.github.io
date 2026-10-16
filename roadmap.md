@@ -1,3 +1,5 @@
 - [x] Keep headings visible while scrolling every admin table.
 - [x] Show inventory $/mo from contracts, then older CRM amounts when available.
 - [x] Add an admin dashboard showing guaranteed monthly rental revenue with range and sauna-type controls.
+- [ ] Provision private Xero OAuth storage and deploy the prepared read-only functions.
+- [ ] Verify production-origin connection checks and report remaining configuration requirements.
