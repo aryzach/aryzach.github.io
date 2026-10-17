@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
       return json({ error: "Invalid request" }, 400);
     body = parsed;
-    if (!["status", "start", "select_tenant", "inspect"].includes(body.action ?? ""))
+    if (!["status", "start", "select_tenant", "inspect", "tracking_sample"].includes(body.action ?? ""))
       return json({ error: "Unknown action" }, 400);
     if (body.tenantId !== undefined && typeof body.tenantId !== "string")
       return json({ error: "Invalid organization" }, 400);
