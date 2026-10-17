@@ -22,7 +22,7 @@ Each Codex cloud task is already isolated. Use its existing checkout; do not cre
 - `npm run dev`: visual development with empty data states, including Lovable's development preview.
 - `npm run build:preview`: offline preview artifact; avoids the production `prebuild` pricing sync and sitemap writes.
 - `npm run preview`: serve the existing artifact; build with `build:preview` first.
-- `/admin` and `/accounting`: preview password `preview`; private production data is never loaded. Admin/accounting preview lists are empty until verified data is connected. Mutations remain disabled.
+- `/admin` and `/accounting`: preview password `preview`; private production data is never loaded. Admin/accounting preview lists are empty by default. An explicitly authorized private local snapshot may populate the admin core records and original inventory grid through the loopback-only development loader; copied records stay read only and outside public/build files. Local draft edits remain tab-local. Live backend mutations remain disabled in preview.
 
 A visible banner identifies preview mode. No sample records or assumed metrics are displayed. Preview submissions, uploads, bookings, payments, external fetch/XHR and beacons are blocked. Checkout/Cal links lead to an explanatory local page. Marketing images/videos/fonts and map embeds can still load from external hosts; this is not an offline asset mirror or a general-purpose browser sandbox.
 

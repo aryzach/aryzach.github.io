@@ -1,3 +1,4 @@
+import { readCoreRecords } from "../_shared/coreRecords.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
@@ -63,6 +64,16 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
+
+      case "core_workspace":
+        return json({ workspace: await readCoreRecords(supabase) });
+
+      case "core_command": {
+        if (!["save_customer", "archive_customer", "add_rental"].includes(payload.command)) return json({ error: "Unsupported core operation" }, 400);
+        const { error } = await supabase.rpc("core_record_command", { command: payload.command, payload: payload.record || {} });
+        if (error) return json({ error: error.code === "40001" ? "This customer changed. Refresh before saving." : error.code === "23505" ? "This record already exists. Refresh to view it." : error.message }, ["40001","23505"].includes(error.code) ? 409 : 400);
+        return json({ workspace: await readCoreRecords(supabase) });
+      }
 
       case "list_reservations": {
         const { data, error } = await supabase

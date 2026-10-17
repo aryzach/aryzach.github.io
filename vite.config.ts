@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
+import { localRecordsPlugin } from "./scripts/dev/localRecordsPlugin";
 
 // All routes to pre-render as static HTML files
 export const routes = [
@@ -60,11 +61,11 @@ export default defineConfig(({ mode }) => ({
   },
 
   server: {
-    host: "::",
+    host: "127.0.0.1",
     port: 8080,
   },
 
-  plugins: [react()],
+  plugins: [react(), localRecordsPlugin()],
 
   resolve: {
     alias: {
