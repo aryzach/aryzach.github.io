@@ -20,7 +20,7 @@ const neverSend = (() => { throw new Error('Unexpected provider call'); }) as Em
 Deno.test('Email claim delayed past its provider retry deadline never calls provider', async () => {
   const { store, calls } = storeFor('send', true, new Date(Date.now() - 1).toISOString());
   const result = await dispatchReservationEmail(store, input, neverSend);
-  assert(!result.ok && calls[1].args.p_outcome === 'review');
+  assert(!result.ok && result.review && calls[1].args.p_outcome === 'review');
 });
 
 Deno.test('Email sends the durable original payload and key, then commits provider receipt', async () => {
@@ -45,6 +45,7 @@ Deno.test('Email historical success, active lease, review and failed claim never
     const result = await dispatchReservationEmail(store, input, neverSend);
     assert(result.ok === ['sent', 'busy'].includes(decision));
     if (decision === 'busy') assert(result.pending);
+    if (decision === 'review') assert(result.review);
   }
   const store: EmailDispatchStore = { rpc() { return Promise.resolve({ data: null, error: { message: 'database unavailable' } }); } };
   assert(!(await dispatchReservationEmail(store, input, neverSend)).ok);
@@ -67,7 +68,8 @@ Deno.test('Email provider failures distinguish retryable concurrency from review
   ] as const) {
     const { store, calls } = storeFor('send');
     const send = (() => Promise.resolve(new Response(JSON.stringify({ name, message: 'private submitted recipient' }), { status }))) as EmailTransport;
-    assert(!(await dispatchReservationEmail(store, input, send)).ok);
+    const result = await dispatchReservationEmail(store, input, send);
+    assert(!result.ok && result.review === (outcome === 'review'));
     assert(calls[1].args.p_outcome === outcome);
     assert(!String(calls[1].args.p_error).includes('private submitted recipient'));
   }

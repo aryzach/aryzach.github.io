@@ -1,6 +1,6 @@
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { sendReservationEmail } from "../_shared/reservationEmails.ts";
+import { sendReservationEmail, recoverReservationNotifications } from "../_shared/reservationEmails.ts";
 import { assignSoonestSauna } from "../_shared/assignSauna.ts";
 import {
   setAchAsCustomerDefault,
@@ -63,6 +63,9 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
+
+      case "recover_reservation_notifications":
+        return json({ outcomes: await recoverReservationNotifications(supabase) });
 
       case "list_reservations": {
         const { data, error } = await supabase

@@ -9,6 +9,7 @@ export interface EmailDispatchResult {
   ok: boolean;
   skipped?: boolean;
   pending?: boolean;
+  review?: boolean;
   error?: string;
   resend_id?: string;
 }
@@ -46,7 +47,7 @@ export async function dispatchReservationEmail(
   }
   if (claim.decision === 'sent') return { ok: true, skipped: true, resend_id: claim.provider_email_id ?? undefined };
   if (claim.decision === 'busy') return { ok: true, pending: true };
-  if (claim.decision === 'review') return { ok: false, error: 'Email delivery requires provider reconciliation before another send' };
+  if (claim.decision === 'review') return { ok: false, review: true, error: 'Email delivery requires provider reconciliation before another send' };
   if (claim.decision !== 'send' || !claim.dispatch_id || !claim.lease_token ||
       !claim.payload_json || !claim.idempotency_key || !claim.retry_before ||
       !Number.isFinite(Date.parse(claim.retry_before))) {
@@ -95,5 +96,6 @@ export async function dispatchReservationEmail(
   } catch {
     return { ok: false, error: 'Email receipt not committed; durable operation retained for reconciliation' };
   }
-  return outcome === 'sent' ? { ok: true, resend_id: providerId! } : { ok: false, error: failure! };
+  return outcome === 'sent' ? { ok: true, resend_id: providerId! }
+    : { ok: false, review: outcome === 'review', error: failure! };
 }
