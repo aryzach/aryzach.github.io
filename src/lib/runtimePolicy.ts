@@ -1,7 +1,7 @@
 /** Production access requires both a production build and a recognized host. */
 export const productionHosts = [
   'sfsaunarental.com', 'www.sfsaunarental.com',
-  'aryzach.github.io', 'cedar-home-sanctuary.lovable.app',
+  'aryzach.github.io',
 ];
 
 export function isProductionRuntime(mode: string, hostname: string): boolean {

@@ -1,4 +1,5 @@
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
+import { verifyStripeSignature } from "../_shared/stripeWebhookSecurity.ts";
 // Handles Stripe checkout.session.completed for reservation payments.
 // Supports separate test and live signing secrets and de-duplicates events
 // via the stripe_webhook_events table.
@@ -18,26 +19,6 @@ const corsHeaders = {
 const text = (body: string, status = 200) =>
   new Response(body, { status, headers: { ...corsHeaders, "Content-Type": "text/plain" } });
 
-async function verifySignature(payload: string, signatureHeader: string, secret: string): Promise<boolean> {
-  const parts = Object.fromEntries(
-    signatureHeader.split(",").map((p) => p.trim().split("=") as [string, string]),
-  );
-  const t = parts["t"];
-  const v1 = parts["v1"];
-  if (!t || !v1) return false;
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(`${t}.${payload}`));
-  const hex = Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
-  return hex === v1;
-}
-
 // Try test first, then live. Return the mode of the matching secret, or null.
 async function verifyAny(
   payload: string,
@@ -47,10 +28,10 @@ async function verifyAny(
   const liveSecret = Deno.env.get("STRIPE_LIVE_WEBHOOK_SECRET");
   // Legacy fallback so an already-configured STRIPE_WEBHOOK_SECRET keeps working.
   const legacy = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-  if (testSecret && (await verifySignature(payload, signatureHeader, testSecret))) return "test";
-  if (liveSecret && (await verifySignature(payload, signatureHeader, liveSecret))) return "live";
+  if (testSecret && (await verifyStripeSignature(payload, signatureHeader, testSecret))) return "test";
+  if (liveSecret && (await verifyStripeSignature(payload, signatureHeader, liveSecret))) return "live";
   if (legacy && legacy !== "STRIPE_WEBHOOK_SECRET" &&
-      (await verifySignature(payload, signatureHeader, legacy))) return "test";
+      (await verifyStripeSignature(payload, signatureHeader, legacy))) return "test";
   return null;
 }
 
@@ -186,13 +167,10 @@ serveWithMigrationPolicy(async (req) => {
     !!Deno.env.get("STRIPE_LIVE_WEBHOOK_SECRET") ||
     !!Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
-  if (hasAnySecret) {
-    if (!signature) return text("Missing signature", 400);
-    const mode = await verifyAny(rawBody, signature);
-    if (!mode) return text("Invalid signature", 400);
-  } else {
-    console.warn("No STRIPE_*_WEBHOOK_SECRET configured — accepting without verification (dev only).");
-  }
+  if (!hasAnySecret) return text("Webhook not configured", 503);
+  if (!signature) return text("Missing signature", 400);
+  const mode = await verifyAny(rawBody, signature);
+  if (!mode) return text("Invalid signature", 400);
 
   let event: any;
   try { event = JSON.parse(rawBody); } catch { return text("Invalid JSON", 400); }
