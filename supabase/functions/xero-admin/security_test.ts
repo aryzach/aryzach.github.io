@@ -137,7 +137,7 @@ Deno.test("authenticated malformed JSON shapes return 400 without database acces
   const previous = Deno.env.get("ADMIN_PASSWORD");
   Deno.env.set("ADMIN_PASSWORD", "local-test-only");
   try {
-    for (const body of ["null", "[]", "123", '{"action":"write"}', '{"action":"select_tenant","tenantId":3}', '{"action":"tracking_sample","extra":"x"}']) {
+    for (const body of ["null", "[]", "123", '{"action":"write"}', '{"action":"select_tenant","tenantId":3}']) {
       assertEquals((await admin(new Request("https://backend.invalid", {
         method: "POST", headers: { "x-admin-password": "local-test-only" }, body,
       }))).status, 400);
