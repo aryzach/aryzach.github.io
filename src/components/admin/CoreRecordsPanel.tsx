@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { addAsset, addAssignment, addRental, customerName, possibleDuplicates, recordReturn, rentalStatus, saveCustomer, type CustomerProfile, type RentalWorkspace } from '@/lib/rentalModel';
+import { addAsset, addAssignment, addRental, customerName, recordReturn, rentalStatus, saveCustomer, type CustomerProfile, type RentalWorkspace } from '@/lib/rentalModel';
 
 export type CoreTab = 'customers' | 'rentals' | 'inventory';
 type Editor = { kind: 'customer'; customer?: CustomerProfile } | { kind: 'rental'; customerId?: string } | { kind: 'asset' } | { kind: 'install'; rentalId: string } | { kind: 'return'; assignmentId: string };
+import CustomerDirectory from './CustomerDirectory';
 import { storageKey } from '@/dev/coreWorkspace';
 
 const fieldClass = 'h-10 w-full rounded-md border border-input bg-background px-3 text-sm';
@@ -26,9 +27,7 @@ export default function CoreRecordsPanel({ tab, state, onChange, onTab, onComman
   const [loadingCopy, setLoadingCopy] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [error, setError] = useState('');
-  const [search, setSearch] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
-  const [showArchived, setShowArchived] = useState(false);
   const close = () => { setEditor(null); setError(''); };
   const open = (next: Editor) => { setError(''); setDraftId(crypto.randomUUID()); setEditor(next); };
   const commit = (next: RentalWorkspace) => {
@@ -78,7 +77,6 @@ export default function CoreRecordsPanel({ tab, state, onChange, onTab, onComman
     try { if (onCommand) { await onCommand('archive_customer', { id: customer.id, version: customer.version, archived: !customer.archived }); setError(''); return; } commit(saveCustomer(state, { ...customer, archived: !customer.archived })); setError(''); }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not update this customer.'); }
   };
-  const customers = state.customers.filter(c => (showArchived || !c.archived) && `${c.name} ${c.email} ${c.phone}`.toLowerCase().includes(search.toLowerCase()));
   const visibleRentals = state.rentals.filter(r => !selectedCustomer || r.customerId === selectedCustomer);
   const selected = state.customers.find(c => c.id === selectedCustomer);
   return <section aria-label="Core rental records" className="space-y-3">
@@ -88,9 +86,8 @@ export default function CoreRecordsPanel({ tab, state, onChange, onTab, onComman
 
     {error && !editor && <p role="alert" className="text-sm text-destructive">{error}</p>}
     {tab === 'customers' && <>
-      <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Customers</h2><p className="mt-1 text-sm text-muted-foreground">Reservations stay separate. Shared emails are flagged, never merged automatically.</p></div><Button disabled={readOnly} onClick={() => open({ kind: 'customer' })}>Add customer</Button></div>
-      <div className="flex flex-wrap items-center gap-4"><Input className="max-w-sm" aria-label="Search customers" placeholder="Search name, email or phone…" value={search} onChange={e => setSearch(e.target.value)} /><Label className="flex items-center gap-2"><input type="checkbox" checked={showArchived} onChange={e => setShowArchived(e.target.checked)} />Show archived</Label></div>
-      {!state.customers.length ? <Empty title="A home for each customer" text="Add a local customer to try the flow. Existing reservations will keep their original records when profiles are linked during the reviewed data migration." action="Add first customer" onClick={() => open({ kind: 'customer' })} /> : !customers.length ? <p role="status">No matching customers.</p> : <RecordsTable headers={['Customer', 'Contact', 'Reservations', 'Rentals', ...(!readOnly ? ['Actions'] : [])]}>{customers.map(c => <tr key={c.id} className="border-t border-border"><td className={cell}><strong>{customerName(c)}</strong><span className="mt-1 block text-xs text-muted-foreground">{c.kind === 'unknown' ? 'Type unconfirmed' : c.kind === 'business' ? 'Business' : 'Person'}{c.archived ? ' · Archived' : ''}</span>{possibleDuplicates(state.customers, c).length > 0 && <span className="mt-2 block text-xs text-amber-800">Shared email · review separately</span>}</td><td className={`${cell} max-w-[220px] break-all`}>{c.email || 'Email unknown'}<span className="block text-muted-foreground">{c.phone || 'Phone unknown'}</span></td><td className={cell}>{c.legacyReservationIds.length ? <details><summary className="cursor-pointer">{c.legacyReservationIds.length} linked reservation</summary>{c.legacyReservationIds.map(id => <code className="mt-2 block break-all text-xs" key={id}>{id}</code>)}</details> : 'None linked'}</td><td className={cell}><Button variant="link" className="h-auto p-0" onClick={() => { setSelectedCustomer(c.id); onTab('rentals'); }}>View rentals ({state.rentals.filter(r => r.customerId === c.id).length})</Button></td>{!readOnly && <td className={cell}><div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" disabled={readOnly} onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" disabled={readOnly || c.archived} onClick={() => open({ kind: 'rental', customerId: c.id })}>New rental</Button><Button variant="ghost" size="sm" disabled={readOnly} onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div></td>}</tr>)}</RecordsTable>}
+      <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Customers</h2><p className="mt-1 text-sm text-muted-foreground">Customer contact details, reservations and current saunas.</p></div><Button disabled={readOnly} onClick={() => open({ kind: 'customer' })}>Add customer</Button></div>
+      <CustomerDirectory state={state} actions={readOnly ? undefined : c => <div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" className="h-6 px-2 text-xs" disabled={c.archived} onClick={() => open({ kind: 'rental', customerId: c.id })}>New rental</Button><Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div>} />
     </>}
     {tab === 'rentals' && <>
       <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-semibold">Rentals</h2><Button disabled={readOnly || !state.customers.some(c => !c.archived)} onClick={() => open({ kind: 'rental', customerId: selectedCustomer || undefined })}>New rental</Button></div>

@@ -1,6 +1,7 @@
+import { stripeCustomerUrl } from './customerDirectory.ts';
 import { emptyRentalWorkspace, type RentalWorkspace } from './rentalModel.ts';
 
-type SourceReservation = { id: string; first_name?: string; last_name?: string; email?: string; phone?: string; install_address?: string; crm_monthly_price?: number };
+type SourceReservation = { id: string; first_name?: string; last_name?: string; email?: string; phone?: string; install_address?: string; crm_monthly_price?: number; created_at?: string; reservation_status?: string; sauna_type_id?: string; stripe_customer_id?: string };
 type SourceAsset = { id: string; unit_code?: string; model?: string; status?: string; current_customer_id?: string; future_customer_id?: string; install_date?: string; sauna_type_id?: string; model_key?: string; style?: string; locations?: string[]; indoor_outdoor_eligibility?: string; current_customer?: string; future_customer?: string; minimum_term_ends?: string; available_date?: string; admin_notes?: string; reservation_id?: string; updated_at?: string; created_at?: string };
 /** Explicit allowlist. Access tokens, documents and provider credentials never enter the preview. */
 export function importRentalSnapshot(snapshot: { exported_at: string; tables: { reservations: SourceReservation[]; sauna_inventory: SourceAsset[]; sauna_types?: { id: string; name: string; sort_order: number }[]; contracts?: { reservation_id: string; status: string; monthly_price: number; commitment_months: number; signed_at: string; created_at: string }[] } }): RentalWorkspace {
@@ -9,7 +10,9 @@ export function importRentalSnapshot(snapshot: { exported_at: string; tables: { 
   state.legacyLinks = [];
   const reservations = new Map(snapshot.tables.reservations.map(r => [r.id, r]));
   state.customers = snapshot.tables.reservations.map(r => ({ id: `local-customer:${r.id}`, kind: 'unknown', name: [r.first_name, r.last_name].filter(Boolean).join(' ').trim(), email: r.email || '', phone: r.phone || '', archived: false, legacyReservationIds: [r.id] }));
-  state.assets = snapshot.tables.sauna_inventory.map(a => ({ id: a.id, code: a.unit_code || '', model: a.model || '', sourceStatus: a.status || 'Unknown' }));
+  const typeName = (id?: string) => snapshot.tables.sauna_types?.find(t => t.id === id)?.name || id || '';
+  state.reservations = snapshot.tables.reservations.map(r => ({ id: r.id, createdAt: r.created_at || '', status: r.reservation_status || '', address: r.install_address || '', saunaType: typeName(r.sauna_type_id), stripeCustomerId: r.stripe_customer_id && stripeCustomerUrl(r.stripe_customer_id) ? r.stripe_customer_id : null }));
+  state.assets = snapshot.tables.sauna_inventory.map(a => ({ id: a.id, code: a.unit_code || '', model: a.model || '', sourceStatus: a.status || 'Unknown', typeName: typeName(a.sauna_type_id) }));
   const linkedReservationIds = new Set<string>();
   for (const asset of snapshot.tables.sauna_inventory) {
     for (const [kind, reservationId] of [['current', asset.current_customer_id], ['future', asset.future_customer_id]] as const) {

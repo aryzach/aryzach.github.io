@@ -22,6 +22,7 @@ export interface SaunaAsset {
   code: string;
   model: string;
   sourceStatus?: string;
+  typeName?: string;
 }
 export interface SaunaAssignment {
   id: string;
@@ -32,6 +33,7 @@ export interface SaunaAssignment {
   address: string;
 }
 export interface RentalWorkspace {
+  reservations?: { id: string; createdAt: string; status: string; address: string; saunaType: string; stripeCustomerId: string | null }[];
   customers: CustomerProfile[];
   rentals: Rental[];
   assets: SaunaAsset[];

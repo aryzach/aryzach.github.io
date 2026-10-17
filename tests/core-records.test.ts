@@ -6,6 +6,8 @@ function client(fail = '') {
     customer_profiles: [{ id:'c1', kind:'unknown', display_name:'Local', email:'local@example.invalid', phone:null, archived_at:null, version:2, secret:'excluded' }],
     reservation_customer_links: [{ reservation_id:'r1',customer_id:'c1' }],
     rentals: [{ id:'rental1',customer_id:'c1',originating_reservation_id:'r1',service_address:'Local',notes:null,origin:'legacy_inventory_link' }, { id:'standalone',customer_id:'c1',originating_reservation_id:null,service_address:'Other local address',notes:null,origin:'admin' }],
+    reservations: [{ id:'r1',created_at:'2026-01-01',reservation_status:'Installed',stripe_customer_id:'cus_example',secure_token:'excluded' }],
+    sauna_types: [{ id:'type1',name:'Infrared' }],
     sauna_inventory: [{ id:'asset1',unit_code:'001',model:'Original',status:'Maintenance',current_customer_id:'r1',future_customer_id:null,install_date:'2026-01-01',secret:'excluded' }],
   };
   return { from(name: string) {
