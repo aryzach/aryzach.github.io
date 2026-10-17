@@ -142,6 +142,23 @@ Deno.test("authenticated malformed JSON shapes return 400 without database acces
         method: "POST", headers: { "x-admin-password": "local-test-only" }, body,
       }))).status, 400);
     }
+    // tracking_sample is a recognized action: it passes input validation and fails
+    // safely (no credentials configured / no database) without external requests.
+    const nativeFetch = globalThis.fetch;
+    let outbound = 0;
+    globalThis.fetch = () => { outbound++; return Promise.reject(new Error("External requests forbidden")); };
+    try {
+      const response = await admin(new Request("https://backend.invalid", {
+        method: "POST",
+        headers: { "x-admin-password": "local-test-only" },
+        body: '{"action":"tracking_sample"}',
+      }));
+      if (response.status === 400 || response.status === 401)
+        throw new Error(`tracking_sample rejected at validation/auth: ${response.status}`);
+      assertEquals(outbound, 0);
+    } finally {
+      globalThis.fetch = nativeFetch;
+    }
   } finally {
     if (previous === undefined) Deno.env.delete("ADMIN_PASSWORD");
     else Deno.env.set("ADMIN_PASSWORD", previous);
