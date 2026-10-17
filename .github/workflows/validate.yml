@@ -27,6 +27,16 @@ jobs:
         run: npm exec --yes --package=deno@2.2.12 -- deno task --config proposals/xero/deno.json test
         env:
           DENO_DIR: ${{ runner.temp }}/deno-cache
+      - name: Check proposed restricted Codex access (no deployment)
+        run: npm exec --yes --package=deno@2.2.12 -- deno task --config proposals/codex-read/deno.json check
+        env:
+          DENO_DIR: ${{ runner.temp }}/deno-cache
+      - name: Test restricted access with no network or credentials
+        run: npm exec --yes --package=deno@2.2.12 -- deno task --config proposals/codex-read/deno.json test
+        env:
+          DENO_DIR: ${{ runner.temp }}/deno-cache
+      - name: Test read client offline
+        run: PYTHONDONTWRITEBYTECODE=1 python3 proposals/codex-read/client_test.py
       - run: npm run build:preview
       - run: npm run test:browser
       - name: Build production artifact without live pricing generation
