@@ -24,6 +24,10 @@ ALTER TABLE public.rentals ADD COLUMN lifecycle_state text NOT NULL DEFAULT 'unc
  CHECK(lifecycle_state IN ('unconfirmed','planned','active','ended','canceled'));
 ALTER TABLE public.rentals ADD COLUMN actual_start date;
 ALTER TABLE public.rentals ADD COLUMN actual_end date;
+ALTER TABLE public.rentals ADD COLUMN removal_window_start date;
+ALTER TABLE public.rentals ADD COLUMN removal_window_end date;
+ALTER TABLE public.rentals ADD COLUMN removal_evidence jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE public.rentals ADD CONSTRAINT rental_removal_window CHECK((removal_window_start IS NULL AND removal_window_end IS NULL) OR (removal_window_start IS NOT NULL AND removal_window_end IS NOT NULL AND removal_window_end>=removal_window_start AND lifecycle_state='ended'));
 ALTER TABLE public.rentals ADD COLUMN actual_start_source text;
 ALTER TABLE public.rentals ADD COLUMN actual_start_evidence jsonb NOT NULL DEFAULT '{}';
 ALTER TABLE public.rentals ADD COLUMN history_gaps jsonb NOT NULL DEFAULT '[]' CHECK(jsonb_typeof(history_gaps)='array');
@@ -255,7 +259,9 @@ BEGIN
   IF EXISTS(SELECT 1 FROM rental_placements WHERE rental_id=r.id) AND nullif(payload->>'start','') IS NULL THEN RAISE EXCEPTION 'A rental with confirmed placements must retain its installation date'; END IF;
   IF payload->>'state'='ended' AND (EXISTS(SELECT 1 FROM rental_placements WHERE rental_id=r.id AND removed_on IS NULL) OR EXISTS(SELECT 1 FROM sauna_inventory WHERE current_customer_id=r.originating_reservation_id)) THEN RAISE EXCEPTION 'Record all returns or sales before marking the rental ended'; END IF;
   IF nullif(payload->>'start','')::date>(now() AT TIME ZONE 'America/Los_Angeles')::date OR nullif(payload->>'end','')::date>(now() AT TIME ZONE 'America/Los_Angeles')::date THEN RAISE EXCEPTION 'Historical actual dates cannot be future dates'; END IF;
-  UPDATE rentals SET actual_start=nullif(payload->>'start','')::date,actual_end=nullif(payload->>'end','')::date,
+  IF nullif(payload->>'removalWindowEnd','')::date>(now() AT TIME ZONE 'America/Los_Angeles')::date THEN RAISE EXCEPTION 'Estimated removal cannot be later than today for an ended rental'; END IF;
+  IF nullif(payload->>'removalWindowStart','')::date<nullif(payload->>'start','')::date THEN RAISE EXCEPTION 'Removal estimate cannot precede installation'; END IF;
+  UPDATE rentals SET removal_window_start=nullif(payload->>'removalWindowStart','')::date,removal_window_end=nullif(payload->>'removalWindowEnd','')::date,removal_evidence=coalesce(payload->'removalEvidence',removal_evidence),actual_start=nullif(payload->>'start','')::date,actual_end=nullif(payload->>'end','')::date,
     actual_start_source=payload->>'dateSource',actual_start_evidence=CASE WHEN payload ? 'dateEvidence' THEN payload->'dateEvidence' WHEN r.actual_start IS NOT DISTINCT FROM nullif(payload->>'start','')::date THEN r.actual_start_evidence ELSE jsonb_build_object('reason',payload->>'reason') END,lifecycle_state=coalesce(payload->>'state','unconfirmed'),history_gaps=coalesce(payload->'gaps','[]'),
     service_address=coalesce(nullif(payload->>'address',''),service_address),version=version+1 WHERE id=r.id;
   day:=nullif(payload->>'start','')::date;

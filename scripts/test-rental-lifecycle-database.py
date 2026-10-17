@@ -100,6 +100,12 @@ b4=book(c2,'fixture:fourth');r4=b4['rentalId']
 call('cancel_rental',{'rentalId':r4,'version':version(r4),'date':'2025-01-01','reason':'Owner canceled before delivery'})
 assert sql("SELECT lifecycle_state FROM rentals WHERE id='"+r4+"'")=='canceled'
 fails('backfill_history',{'rentalId':r4,'version':version(r4),'state':'planned'},'cannot be reopened')
+# Owner-approved historical removal is a window, never an invented exact date.
+call('backfill_history',{'rentalId':r4,'version':version(r4),'state':'planned'},ok=False)
+b5=book(c2,'fixture:old-ended');r5=b5['rentalId']
+call('backfill_history',{'rentalId':r5,'version':version(r5),'state':'ended','start':'2025-01-01','dateSource':'Xero receipt','removalWindowStart':'2025-04-30','removalWindowEnd':'2025-05-30','removalEvidence':{'estimated':True,'sourcePaymentId':'fixture:last'}})
+assert sql("SELECT actual_end IS NULL AND removal_window_end='2025-05-30'::date FROM rentals WHERE id='"+r5+"'")=='t'
+fails('backfill_history',{'rentalId':r5,'version':version(r5),'state':'ended','start':'2025-01-01','dateSource':'Xero receipt','removalWindowStart':'2025-04-30'},'rental_removal_window')
 # Allocate actual cached cash with caps, ownership checks and auditable corrections.
 for migration in ['20261017190000_xero_customer_identity_links.sql','20261017200000_xero_customer_cash_history.sql']:
  sql((R/'supabase/migrations'/migration).read_text())
@@ -125,7 +131,7 @@ sql("INSERT INTO reservations(id,first_name,last_name,email,sauna_type_id,prefer
 assert count('customer_profiles')==3 and count('reservation_notification_intents')==1
 web_customer=sql("SELECT customer_id FROM reservation_customer_links WHERE reservation_id='"+web+"'")
 call('manual_reservation',{'customerId':web_customer,'existingReservationId':web,'sourceKey':'fixture:existing-booking'})
-assert count('reservations')==5 and count('customer_profiles')==3
+assert count('reservations')==6 and count('customer_profiles')==3
 sql("INSERT INTO contracts(id,reservation_id,agreement_version_id,customer_legal_name,email,sauna_type,placement,commitment_months,monthly_price,delivery_fee,security_deposit) VALUES('"+contract+"','"+web+"',gen_random_uuid(),'Synthetic website','test@example.invalid','Infrared','indoor',3,300,0,0)")
 sql("UPDATE contracts SET status='Signed',signed_at='2025-01-01',signed_pdf_storage_path='synthetic.pdf',signed_pdf_hash='"+'f'*64+"' WHERE id='"+contract+"'")
 assert sql("SELECT sauna_type FROM rental_terms t JOIN rental_agreements a ON a.id=t.agreement_id WHERE a.contract_id='"+contract+"'")=='Indoor Infrared'
