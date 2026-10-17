@@ -147,3 +147,29 @@ Deno.test("authenticated malformed JSON shapes return 400 without database acces
     else Deno.env.set("ADMIN_PASSWORD", previous);
   }
 });
+
+// tracking_sample is a recognized action: it passes input validation and fails
+// safely (503 without credentials, 502 when the backend/token read is unavailable).
+// External requests are mocked out so the test can never reach Xero or the database.
+// Sanitizers off: the database client starts long-lived internals on the failure path.
+Deno.test({ name: "tracking_sample passes validation and fails safely without external access", sanitizeOps: false, sanitizeResources: false, fn: async () => {
+  const previous = Deno.env.get("ADMIN_PASSWORD");
+  Deno.env.set("ADMIN_PASSWORD", "local-test-only");
+  const nativeFetch = globalThis.fetch;
+  globalThis.fetch = () => Promise.reject(new Error("External requests forbidden"));
+  try {
+    const response = await admin(new Request("https://backend.invalid", {
+      method: "POST",
+      headers: { "x-admin-password": "local-test-only" },
+      body: '{"action":"tracking_sample"}',
+    }));
+    if (![502, 503].includes(response.status))
+      throw new Error(`tracking_sample did not fail safely: ${response.status}`);
+    const body = await response.json();
+    if (typeof body?.error !== "string") throw new Error("Expected a safe error body");
+  } finally {
+    globalThis.fetch = nativeFetch;
+    if (previous === undefined) Deno.env.delete("ADMIN_PASSWORD");
+    else Deno.env.set("ADMIN_PASSWORD", previous);
+  }
+} });
