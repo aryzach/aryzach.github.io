@@ -20,8 +20,10 @@ export async function readCoreRecords(client: any) {
     // Existing inventory stays the operational authority in this phase. No dated history is inferred.
     // deno-lint-ignore no-explicit-any
     legacyLinks: assets.flatMap((a: any) => ['current','future'].flatMap(kind => {
+      const reservationId = a[`${kind}_customer_id`];
+      if (!reservationId) return [];
       // deno-lint-ignore no-explicit-any
-      const rental = rentals.find((r: any) => r.originating_reservation_id === a[`${kind}_customer_id`]);
+      const rental = rentals.find((r: any) => r.originating_reservation_id === reservationId);
       return rental ? [{ assetId: a.id, rentalId: rental.id, kind, recordedInstallDate: kind === 'current' ? a.install_date : null }] : [];
     })),
   };

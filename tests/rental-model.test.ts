@@ -54,3 +54,8 @@ test('reservation link must belong to that customer; editing cannot replace lega
   assert.deepEqual(edited.customers[0].legacyReservationIds, ['legacy-id']);
   assert.throws(() => addRental(state, { ...state.rentals[0], id: 'other', reservationId: 'wrong-id' }), /linked to this customer/);
 });
+
+test('a removed legacy link does not assert the sauna was never installed', () => {
+  const state = workspace(); state.rentals[0].source = 'inventory_link';
+  assert.match(rentalStatus(state, 'rental-1'), /history unconfirmed/);
+});

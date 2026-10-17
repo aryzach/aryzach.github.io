@@ -100,5 +100,6 @@ export function rentalStatus(state: RentalWorkspace, rentalId: string): string {
   const assignments = state.assignments.filter(a => a.rentalId === rentalId);
   if (assignments.length) return assignments.some(a => !a.removedOn) ? 'Installed' : 'Returned';
   const links = state.legacyLinks?.filter(link => link.rentalId === rentalId) || [];
+  if (!links.length && state.rentals.find(r => r.id === rentalId)?.source === 'inventory_link') return 'No current inventory link · history unconfirmed';
   return links.some(link => link.kind === 'current') ? 'Existing current link · history unconfirmed' : links.length ? 'Existing future link · not an installation' : 'Not installed';
 }
