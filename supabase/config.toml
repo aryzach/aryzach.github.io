@@ -37,3 +37,6 @@ verify_jwt = false
 
 [functions.xero-callback]
 verify_jwt = false
+
+[functions.codex-read]
+verify_jwt = false
