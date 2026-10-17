@@ -285,7 +285,7 @@ Deno.serve(async (req) => {
       coverage.paymentsWithInvoiceLink = payments.filter((p: { Invoice?: { InvoiceID?: string } }) => p?.Invoice?.InvoiceID).length;
 
       return json({
-        coverage,
+        coverage: { ...coverage, excludedSalesInvoices },
         categories: [...categories.entries()].map(([name, c]) => ({
           name,
           categoryId: c.categoryId,
