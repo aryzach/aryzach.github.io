@@ -26,3 +26,6 @@ dist-ssr
 # Local environment overrides (the legacy tracked .env remains public configuration).
 .env.*
 !.env.example
+
+# Local Supabase CLI cache.
+supabase/.temp/

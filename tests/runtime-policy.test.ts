@@ -19,6 +19,7 @@ test("production access requires a production build on an exact trusted host", (
     "127.0.0.1",
     "branch.pages.dev",
     "preview.lovable.app",
+    "cedar-home-sanctuary.lovable.app",
     "sfsaunarental.com.attacker.invalid",
   ]) {
     assert.equal(isProductionRuntime("production", host), false);
