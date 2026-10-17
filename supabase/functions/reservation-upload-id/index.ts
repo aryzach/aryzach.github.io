@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
@@ -15,7 +16,7 @@ const json = (body: unknown, status = 200) =>
 // Accepts a JSON body: { id, token, file_name, content_type, file_base64 }
 // Verifies the reservation using its secure_token, uploads to the private
 // `reservation-ids` bucket, and marks id_status = 'Complete'.
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 

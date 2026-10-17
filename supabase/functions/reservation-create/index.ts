@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 
@@ -17,7 +18,7 @@ const ALLOWED_SOURCES = new Set([
   "Pricing Page", "Product Page", "Direct Link", "Admin", "Unknown",
 ]);
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 

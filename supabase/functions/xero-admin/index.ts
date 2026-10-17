@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import {
   database,
   callbackUri,
@@ -18,7 +19,7 @@ import {
   summarizeRecords,
 } from "../_shared/xero.ts";
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   let origin: string;
   try {
     origin = appOrigin();

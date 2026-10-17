@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import {
   COMMITMENT_MONTHS,
@@ -55,8 +56,15 @@ interface AuthedReservation {
   contract_status: string;
 }
 
+function createBackendClient() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+}
+
 async function authReservation(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createBackendClient>,
   id: unknown,
   token: unknown,
 ): Promise<AuthedReservation | null> {
@@ -72,17 +80,14 @@ async function authReservation(
   return (data as AuthedReservation | null) ?? null;
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   let body: any = {};
   try { body = await req.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
 
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
+  const supabase = createBackendClient();
 
   const { action, id, token } = body ?? {};
   const reservation = await authReservation(supabase, id, token);

@@ -1,3 +1,5 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
+import { verifyCalSignature } from "../_shared/calWebhookSecurity.ts";
 // Cal.com webhook receiver for SF Sauna reservations.
 //
 // Subscribes to BOOKING_CREATED, BOOKING_RESCHEDULED, and BOOKING_CANCELLED
@@ -28,27 +30,6 @@ const json = (body: unknown, status = 200) =>
 
 const VIDEO_SLUG = (Deno.env.get("CAL_VIDEO_CONSULT_SLUG") || "sf-sauna-video-consultation").toLowerCase();
 const INSTALL_SLUG = (Deno.env.get("CAL_INSTALLATION_SLUG") || "sf-sauna-delivery-installation").toLowerCase();
-
-async function verifySignature(rawBody: string, header: string | null): Promise<boolean> {
-  const secret = Deno.env.get("CAL_WEBHOOK_SECRET");
-  if (!secret) return true; // If no secret is configured yet, accept (dev/setup mode).
-  if (!header) return false;
-  const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    enc.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(rawBody));
-  const hex = Array.from(new Uint8Array(sig))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  // Header may be raw hex or "sha256=<hex>"
-  const provided = header.trim().replace(/^sha256=/i, "").toLowerCase();
-  return provided === hex;
-}
 
 function extractReservationId(payload: any): string | null {
   // 1. metadata.reservation_id (preferred — passed via ?metadata[reservation_id]=)
@@ -88,13 +69,13 @@ function extractBookingKind(payload: any): "video" | "install" | null {
   return null;
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   const raw = await req.text();
   const sigHeader = req.headers.get("x-cal-signature-256");
-  if (!(await verifySignature(raw, sigHeader))) {
+  if (!(await verifyCalSignature(raw, sigHeader, Deno.env.get("CAL_WEBHOOK_SECRET")))) {
     console.error("cal-webhook: bad signature");
     return json({ error: "Invalid signature" }, 401);
   }

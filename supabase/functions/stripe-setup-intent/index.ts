@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 // Creates a Stripe SetupIntent for us_bank_account (ACH) on the reservation's
 // existing Stripe Customer. Returns the SetupIntent client_secret and the
 // publishable key for Stripe.js to complete the bank-connect flow.
@@ -20,7 +21,7 @@ function formEncode(obj: Record<string, string>): string {
   return p.toString();
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 

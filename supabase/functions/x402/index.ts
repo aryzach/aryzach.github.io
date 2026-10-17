@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 // x402 payment-protected endpoint (https://x402.org)
 // Returns HTTP 402 Payment Required with payment requirements agents can fulfill.
 
@@ -36,7 +37,7 @@ function paymentRequirements(resource: string) {
   };
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const url = new URL(req.url);

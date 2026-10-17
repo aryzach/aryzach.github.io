@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { assignSoonestSauna } from "../_shared/assignSauna.ts";
@@ -37,7 +38,7 @@ async function lookupReservationName(
   return full || data.email || null;
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const adminPassword = Deno.env.get("ADMIN_PASSWORD");

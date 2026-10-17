@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { PRICING_TIERS } from "../_shared/generatedPricing.ts";
 
@@ -23,7 +24,7 @@ function standardInstallFee(saunaTypeId: string | null, months: number | null): 
   return row ? row.installFee : null;
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   const expected = Deno.env.get("ACCOUNTING_PASSWORD");

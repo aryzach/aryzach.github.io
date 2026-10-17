@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import {
   database,
   callbackUri,
@@ -7,7 +8,7 @@ import {
 } from "../_shared/server.ts";
 import { XERO_CONNECTIONS, sha256, seal, unseal } from "../_shared/xero.ts";
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   const headers = {
     "Cache-Control": "no-store",
     "Referrer-Policy": "no-referrer",

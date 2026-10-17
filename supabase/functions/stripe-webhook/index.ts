@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 // Handles Stripe checkout.session.completed for reservation payments.
 // Supports separate test and live signing secrets and de-duplicates events
 // via the stripe_webhook_events table.
@@ -173,7 +174,7 @@ async function sendMetaPurchaseForSession(
     .eq("event_id", sessionId);
 }
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") return text("Method not allowed", 405);
 

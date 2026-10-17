@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 /** INACTIVE proposal: do not copy/deploy until reviewed and authorized. */
 // At deployment only, change this import to ../_shared/server.ts after copying this directory.
 import {
@@ -97,7 +98,7 @@ async function xeroSample(resource: Resource, page: number, tenantId: string) {
       "One provider page; first 25 records only. No completeness, rental-only or date-range claim. Missing LineItems means unavailable detail, not zero lines.",
   };
 }
-Deno.serve(createHandler({
+serveWithMigrationPolicy(createHandler({
   config: () => ({
     keyHash: Deno.env.get("CODEX_READ_KEY_SHA256"),
     expiresAt: Deno.env.get("CODEX_READ_EXPIRES_AT"),

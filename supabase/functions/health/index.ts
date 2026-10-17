@@ -1,3 +1,4 @@
+import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 // Simple health endpoint for API catalog status links.
 
 const corsHeaders = {
@@ -12,7 +13,7 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-Deno.serve(async (req) => {
+serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   return json({ status: "ok", service: "sf-sauna-rental" });
-});
+}, { health: true });
