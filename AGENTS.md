@@ -4,3 +4,4 @@
 - Derive magic-link hold status from verified reservation completion, matched inventory, and active waitlist membership on the token-validated API; this prevents deposit-only reservations from appearing fully reserved.
 - Keep Xero OAuth in password-verified xero-admin and single-use-state xero-callback functions with service-role-only encrypted integration storage; this isolates accounting access from public clients and existing business records.
 - Use the same explicit granular read-only Xero scope allowlist for authorization and token acceptance in active and prepared helpers, with tests against active code; this prevents obsolete broad scopes or write permissions from entering the integration.
+- Keep codex-read server-to-server with its own expiring hashed bearer credential, a pinned Xero tenant, fixed read-only resources and bounded responses; this permits controlled inspection without sharing privileged credentials or changing business records.
