@@ -243,6 +243,13 @@ Deno.serve(async (req) => {
       };
 
       // Invoices: sales (ACCREC) only; drafts/voided/deleted excluded via Statuses filter.
+      // Aggregate type/status shape of page 1 (no customer details or amounts).
+      const firstPage = await get("Invoices?page=1");
+      const invoiceShape: Record<string, number> = {};
+      for (const i of Array.isArray(firstPage?.Invoices) ? firstPage.Invoices : []) {
+        const key = `${i?.Type ?? "?"}/${i?.Status ?? "?"}`;
+        invoiceShape[key] = (invoiceShape[key] ?? 0) + 1;
+      }
       // Report excluded draft/voided/deleted sales invoices separately, never silently.
       const allSales = await get(`Invoices?where=${encodeURIComponent('Type=="ACCREC"')}`);
       const salesInvoicesTotal = Array.isArray(allSales?.Invoices) ? allSales.Invoices.length : -1;
@@ -286,7 +293,7 @@ Deno.serve(async (req) => {
       coverage.paymentsWithInvoiceLink = payments.filter((p: { Invoice?: { InvoiceID?: string } }) => p?.Invoice?.InvoiceID).length;
 
       return json({
-        coverage: { ...coverage, salesInvoicesTotal, excludedSalesInvoices },
+        coverage: { ...coverage, salesInvoicesTotal, excludedSalesInvoices, invoiceShape },
         categories: [...categories.entries()].map(([name, c]) => ({
           name,
           categoryId: c.categoryId,
