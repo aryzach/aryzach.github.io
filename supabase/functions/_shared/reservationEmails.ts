@@ -3,7 +3,6 @@
 
 import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { saunaTypeLabel } from "./saunaLabels.ts";
-import { dispatchReservationEmail, type EmailDispatchResult } from "./emailDispatch.ts";
 
 export type ReservationEmailType = "reservation_created" | "payment_received";
 
@@ -193,8 +192,8 @@ export async function sendReservationEmail(
   supabase: SupabaseClient,
   reservationId: string,
   emailType: ReservationEmailType,
-  opts: { force?: boolean; operationId?: string } = {},
-): Promise<EmailDispatchResult> {
+  opts: { force?: boolean } = {},
+): Promise<{ ok: boolean; skipped?: boolean; error?: string; resend_id?: string }> {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   const from = Deno.env.get("RESERVATION_EMAIL_FROM") || "SF Sauna <info@sfsaunarental.com>";
   const replyTo = Deno.env.get("RESERVATION_EMAIL_REPLY_TO") || undefined;
@@ -207,6 +206,18 @@ export async function sendReservationEmail(
     .maybeSingle();
   if (!r) return { ok: false, error: "Reservation not found" };
   const reservation = r as Reservation;
+
+  // De-dupe unless forced
+  if (!opts.force) {
+    const { data: existing } = await supabase
+      .from("reservation_email_events")
+      .select("id")
+      .eq("reservation_id", reservationId)
+      .eq("email_type", emailType)
+      .eq("delivery_status", "sent")
+      .limit(1);
+    if (existing && existing.length > 0) return { ok: true, skipped: true };
+  }
 
   const rendered = emailType === "reservation_created"
     ? renderInitialEmail(reservation)
@@ -221,53 +232,47 @@ export async function sendReservationEmail(
   };
   if (replyTo) body.reply_to = replyTo;
 
-  const result = await dispatchReservationEmail(supabase, {
-    reservationId, emailType, payload: body, apiKey,
-    force: opts.force, operationId: opts.operationId,
-  });
-  // A confirmed delivery (including a historical receipt) completes the
-  // business intent. If this update fails, the next recovery pass reads the
-  // receipt and completes it without another provider delivery.
-  if (result.ok && !result.pending) {
-    await supabase.from("reservation_notification_intents")
-      .update({ completed_at: new Date().toISOString(), last_error: null })
-      .eq("reservation_id", reservationId).eq("email_type", emailType).is("completed_at", null);
-  } else {
-    await supabase.from("reservation_notification_intents")
-      .update({ next_attempt_at: new Date(Date.now() + 60000).toISOString(),
-        requires_review: !!result.review, last_error: result.error ?? null })
-      .eq("reservation_id", reservationId).eq("email_type", emailType).is("completed_at", null);
+  try {
+    const resp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(body),
+    });
+    const text = await resp.text();
+    if (!resp.ok) {
+      await supabase.from("reservation_email_events").insert({
+        reservation_id: reservationId,
+        email_type: emailType,
+        recipient_email: reservation.email,
+        delivery_status: "failed",
+        error_message: `[${resp.status}] ${text.slice(0, 500)}`,
+      });
+      return { ok: false, error: `Resend ${resp.status}: ${text.slice(0, 200)}` };
+    }
+    let resendId: string | null = null;
+    try { resendId = JSON.parse(text)?.id ?? null; } catch { /* ignore */ }
+    await supabase.from("reservation_email_events").insert({
+      reservation_id: reservationId,
+      email_type: emailType,
+      recipient_email: reservation.email,
+      resend_email_id: resendId,
+      delivery_status: "sent",
+      sent_at: new Date().toISOString(),
+    });
+    return { ok: true, resend_id: resendId ?? undefined };
+  } catch (e) {
+    await supabase.from("reservation_email_events").insert({
+      reservation_id: reservationId,
+      email_type: emailType,
+      recipient_email: reservation.email,
+      delivery_status: "failed",
+      error_message: (e as Error).message?.slice(0, 500) ?? "unknown",
+    });
+    return { ok: false, error: (e as Error).message };
   }
-  return result;
-}
-
-export async function sendReservationNotificationIntent(
-  supabase: SupabaseClient, reservationId: string, emailType: ReservationEmailType,
-): Promise<EmailDispatchResult> {
-  const { data, error } = await supabase.from("reservation_notification_intents")
-    .select("reservation_id").eq("reservation_id", reservationId)
-    .eq("email_type", emailType).is("completed_at", null).maybeSingle();
-  if (error) return { ok: false, error: "Could not load notification intent" };
-  // Do not invent a fresh notification for an imported historical payment.
-  if (!data) return { ok: true, skipped: true };
-  return await sendReservationEmail(supabase, reservationId, emailType);
-}
-
-export async function recoverReservationNotifications(supabase: SupabaseClient) {
-  // Bound the request to five provider calls (each has a 20-second timeout).
-  const { data, error } = await supabase.from("reservation_notification_intents")
-    .select("reservation_id,email_type").is("completed_at", null)
-    .eq("requires_review", false).lte("next_attempt_at", new Date().toISOString())
-    .order("next_attempt_at", { ascending: true }).limit(5);
-  if (error) throw new Error("Could not load notification recovery queue");
-  const outcomes = [];
-  for (const intent of data ?? []) {
-    const result = await sendReservationNotificationIntent(supabase, intent.reservation_id,
-      intent.email_type as ReservationEmailType);
-    outcomes.push({ reservation_id: intent.reservation_id, email_type: intent.email_type,
-      completed: result.ok && !result.pending, pending: !!result.pending, error: result.error });
-  }
-  return outcomes;
 }
 
 export function makeSupabase(): SupabaseClient {

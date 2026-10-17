@@ -1,6 +1,6 @@
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { sendReservationEmail, recoverReservationNotifications } from "../_shared/reservationEmails.ts";
+import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { assignSoonestSauna } from "../_shared/assignSauna.ts";
 import {
   setAchAsCustomerDefault,
@@ -63,9 +63,6 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
-
-      case "recover_reservation_notifications":
-        return json({ outcomes: await recoverReservationNotifications(supabase) });
 
       case "list_reservations": {
         const { data, error } = await supabase
@@ -607,32 +604,15 @@ serveWithMigrationPolicy(async (req) => {
         return json({ emails: data });
       }
 
-      case "list_reservation_email_dispatches": {
-        // Exclude immutable message bodies and private reservation links.
-        let query = supabase.from("reservation_email_dispatches")
-          .select("id,reservation_id,email_type,status,first_attempt_at,lease_expires_at,attempt_count,provider_email_id,last_error,created_at,updated_at")
-          .order("created_at", { ascending: false }).limit(100);
-        if (payload.reservation_id) query = query.eq("reservation_id", payload.reservation_id);
-        const { data, error } = await query;
-        if (error) throw error;
-        return json({ dispatches: data });
-      }
-
       case "resend_reservation_email": {
-        const { reservation_id, email_type, operation_id } = payload;
+        const { reservation_id, email_type } = payload;
         if (!reservation_id || !email_type) return json({ error: "reservation_id and email_type required" }, 400);
         if (email_type !== "reservation_created" && email_type !== "payment_received") {
           return json({ error: "invalid email_type" }, 400);
         }
-        if (operation_id !== undefined && (typeof operation_id !== "string" ||
-          !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(operation_id))) {
-          return json({ error: "invalid operation_id" }, 400);
-        }
-        const result = await sendReservationEmail(supabase, reservation_id, email_type, {
-          force: true, operationId: operation_id,
-        });
+        const result = await sendReservationEmail(supabase, reservation_id, email_type, { force: true });
         if (!result.ok) return json({ error: result.error || "send failed" }, 500);
-        return json({ ok: true, pending: result.pending ?? false, resend_id: result.resend_id });
+        return json({ ok: true, resend_id: result.resend_id });
       }
 
       case "backfill_stripe_customers": {
