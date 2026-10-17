@@ -210,7 +210,7 @@ const AdminReservations = () => {
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [coreWorkspace, setCoreWorkspace] = useState(() => previewEnabled ? readWorkspace() : null);
-  const [tab, setTab] = useState<"customers" | "rentals" | "insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
+  const [tab, setTab] = useState<"customers" | "rentals" | "insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("customerReservation") ? "customers" : new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -517,13 +517,14 @@ const AdminReservations = () => {
       setInventory(coreWorkspace.legacyInventory as unknown as InventoryRow[]);
       setTypes(coreWorkspace.legacyTypes || []);
       setCustomers(coreWorkspace.customers.flatMap(c => c.legacyReservationIds.map(id => ({ id, name: c.name || c.email, email: c.email }))));
-    } else if (import.meta.env.DEV && location.hostname === '127.0.0.1') {
+    }
+    if (!coreWorkspace.reservations && import.meta.env.DEV && location.hostname === '127.0.0.1') {
       // Upgrade the existing read-only copy without replacing customer/rental drafts.
       fetch('/__local-records', { headers: { 'x-sf-local-records': '1' }, cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(copy => {
         if (!copy?.legacyInventory) return;
         setCoreWorkspace(previous => {
           if (!previous?.source || previous.source.exportedAt !== copy.source?.exportedAt) return previous;
-          const next = { ...previous, legacyInventory: copy.legacyInventory, legacyTypes: copy.legacyTypes };
+          const next = { ...previous, legacyInventory: copy.legacyInventory, legacyTypes: copy.legacyTypes, reservations: copy.reservations, assets: copy.assets };
           sessionStorage.setItem('sf-sauna-core-records-preview-v1', JSON.stringify(next));
           return next;
         });
