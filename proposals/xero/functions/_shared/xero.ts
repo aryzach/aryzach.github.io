@@ -4,7 +4,10 @@ export const XERO_SCOPES = [
   "accounting.contacts.read",
   "accounting.invoices.read",
   "accounting.payments.read",
+  "accounting.banktransactions.read",
 ];
+// Existing four-scope connections can refresh until bank-read consent is granted.
+const REQUIRED_XERO_SCOPES = XERO_SCOPES.filter(scope => scope !== "accounting.banktransactions.read");
 export const XERO_AUTHORIZE =
   "https://login.xero.com/identity/connect/authorize";
 export const XERO_TOKEN = "https://identity.xero.com/connect/token";
@@ -38,7 +41,7 @@ export function validateTokenSet(value: unknown): TokenSet {
   const granted = token.scope.trim().split(/\s+/);
   if (
     granted.some((scope) => !XERO_SCOPES.includes(scope)) ||
-    XERO_SCOPES.some((scope) => !granted.includes(scope))
+    REQUIRED_XERO_SCOPES.some((scope) => !granted.includes(scope))
   )
     throw new Error("Unexpected Xero permissions; read-only consent required");
   return token as TokenSet;

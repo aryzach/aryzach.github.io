@@ -1,9 +1,14 @@
 import { customerName, type RentalWorkspace } from './rentalModel.ts';
 
-export type DirectoryColumn = 'name' | 'phone' | 'reservations' | 'saunas' | 'stripe';
+export type DirectoryColumn = 'name' | 'phone' | 'reservations' | 'saunas' | 'stripe' | 'xero';
 export type DirectoryFilters = Partial<Record<DirectoryColumn, string>>;
 export function stripeCustomerUrl(id: string): string | null {
   return /^cus_[A-Za-z0-9]+$/.test(id) ? `https://dashboard.stripe.com/customers/${id}` : null;
+}
+export function xeroContactUrl(id: string, shortCode?: string): string | null {
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
+  if(shortCode && /^![A-Za-z0-9_-]+$/.test(shortCode)) { const url=new URL('https://go.xero.com/organisationlogin/default.aspx');url.searchParams.set('shortcode',shortCode);url.searchParams.set('redirecturl',`/Contacts/View/${id}`);return url.toString(); }
+  return `https://go.xero.com/Contacts/View/${id}`;
 }
 export function customerDirectory(state: RentalWorkspace) {
   return state.customers.map(customer => {
@@ -15,10 +20,11 @@ export function customerDirectory(state: RentalWorkspace) {
     ]);
     const saunas = state.assets.filter(a => currentIds.has(a.id));
     const stripeIds = [...new Set(reservations.flatMap(r => r.stripeCustomerId && stripeCustomerUrl(r.stripeCustomerId) ? [r.stripeCustomerId] : []))];
-    return { customer, reservations, saunas, stripeIds, text: {
+    const xeroLinks = (state.xeroLinks || []).filter(l => l.customerId === customer.id);
+    return { customer, reservations, saunas, stripeIds, xeroLinks, text: {
       name: customerName(customer), phone: customer.phone,
       reservations: reservations.map(r => `${r.id} ${r.createdAt.slice(0, 10)} ${r.status}`).join(' '),
-      saunas: saunas.map(a => `${a.code} ${a.typeName || a.model}`).join(' '), stripe: stripeIds.join(' '),
+      saunas: saunas.map(a => `${a.code} ${a.typeName || a.model}`).join(' '), stripe: stripeIds.join(' '), xero: xeroLinks.map(l => `${l.name} ${l.contactId}`).join(' '),
     } };
   });
 }

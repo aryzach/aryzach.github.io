@@ -771,7 +771,7 @@ const AdminReservations = () => {
 
           {!["insights", "customers", "rentals"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
-          {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onCommand={previewEnabled ? undefined : async (command, record) => {
+          {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onReadHistory={previewEnabled ? undefined : async selection => callAdmin({action:"xero_customer_history",...selection})} onCommand={previewEnabled ? undefined : async (command, record) => {
             const result = await callAdmin({ action: "core_command", command, record });
             setCoreWorkspace(result.workspace);
           }} />}

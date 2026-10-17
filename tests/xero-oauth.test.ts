@@ -19,6 +19,7 @@ const expectedScopes = [
   "accounting.contacts.read",
   "accounting.invoices.read",
   "accounting.payments.read",
+  "accounting.banktransactions.read",
 ];
 
 test("active and prepared authorization use the exact supported granular read permissions", () => {
@@ -29,7 +30,7 @@ test("active and prepared authorization use the exact supported granular read pe
   }
 });
 
-for (const required of expectedScopes) {
+for (const required of expectedScopes.filter(scope => scope !== "accounting.banktransactions.read")) {
   test(`token validation requires ${required}`, () => {
     for (const validate of [validateTokenSet, proposal.validateTokenSet]) {
       assert.throws(() => validate({
@@ -40,7 +41,7 @@ for (const required of expectedScopes) {
   });
 }
 
-for (const forbidden of ["accounting.transactions.read", "accounting.transactions", "accounting.contacts", "accounting.invoices", "accounting.payments", "accounting.creditnotes.read"]) {
+for (const forbidden of ["accounting.transactions.read", "accounting.transactions", "accounting.contacts", "accounting.invoices", "accounting.payments", "accounting.creditnotes.read", "accounting.banktransactions", "accounting.settings.read"]) {
   test(`token validation rejects unsupported or excessive permission ${forbidden}`, () => {
     for (const validate of [validateTokenSet, proposal.validateTokenSet]) {
       assert.throws(() => validate({
@@ -145,4 +146,12 @@ test("inspection returns actual structural counts without customer or financial 
     sampledRecords: 0,
     fieldsPresent: [],
   });
+});
+
+// Refreshing a legacy connection must not break before the owner completes added consent.
+test("legacy four-scope connections remain valid without silently claiming bank access", () => {
+  for (const validate of [validateTokenSet, proposal.validateTokenSet]) {
+    const scope=expectedScopes.filter(s=>s!=="accounting.banktransactions.read").join(" ");
+    assert.equal(validate({access_token:"test",refresh_token:"test",expires_in:1800,scope}).scope,scope);
+  }
 });

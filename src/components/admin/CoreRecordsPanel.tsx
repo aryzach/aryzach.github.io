@@ -7,6 +7,7 @@ import { addAsset, addAssignment, addRental, customerName, recordReturn, rentalS
 
 export type CoreTab = 'customers' | 'rentals' | 'inventory';
 type Editor = { kind: 'customer'; customer?: CustomerProfile } | { kind: 'rental'; customerId?: string } | { kind: 'asset' } | { kind: 'install'; rentalId: string } | { kind: 'return'; assignmentId: string };
+import type {ReadXeroHistory} from './XeroCustomerHistory';
 import CustomerDirectory from './CustomerDirectory';
 import { storageKey } from '@/dev/coreWorkspace';
 
@@ -19,7 +20,7 @@ function RecordsTable({ headers, children }: { headers: string[]; children: Reac
   return <div className="max-h-[calc(100vh-12rem)] overflow-auto rounded-md border border-border bg-card"><table className="w-full min-w-[720px] border-collapse text-left text-xs"><thead className="sticky top-0 z-10 bg-muted text-[10px] uppercase tracking-wide text-muted-foreground shadow-[0_1px_0_0_hsl(var(--border))]"><tr>{headers.map(h => <th key={h} className="px-2 py-1.5 border-r border-border font-medium">{h}</th>)}</tr></thead><tbody>{children}</tbody></table></div>;
 }
 const cell = 'px-2 py-1 border-r border-border align-top';
-export default function CoreRecordsPanel({ tab, state, onChange, onTab, onCommand }: { tab: CoreTab; state: RentalWorkspace; onChange: (state: RentalWorkspace) => void; onTab: (tab: CoreTab) => void; onCommand?: (command: string, record: Record<string, unknown>) => Promise<void> }) {
+export default function CoreRecordsPanel({ tab, state, onChange, onTab, onCommand, onReadHistory }: { tab: CoreTab; state: RentalWorkspace; onChange: (state: RentalWorkspace) => void; onTab: (tab: CoreTab) => void; onReadHistory?:ReadXeroHistory; onCommand?: (command: string, record: Record<string, unknown>) => Promise<void> }) {
   const live = Boolean(onCommand);
   const [saving, setSaving] = useState(false);
   const [draftId, setDraftId] = useState('');
@@ -87,7 +88,7 @@ export default function CoreRecordsPanel({ tab, state, onChange, onTab, onComman
     {error && !editor && <p role="alert" className="text-sm text-destructive">{error}</p>}
     {tab === 'customers' && <>
       <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Customers</h2><p className="mt-1 text-sm text-muted-foreground">Customer contact details, reservations and current saunas.</p></div><Button disabled={readOnly} onClick={() => open({ kind: 'customer' })}>Add customer</Button></div>
-      <CustomerDirectory state={state} actions={readOnly ? undefined : c => <div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" className="h-6 px-2 text-xs" disabled={c.archived} onClick={() => open({ kind: 'rental', customerId: c.id })}>New rental</Button><Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div>} />
+      <CustomerDirectory state={state} onReadHistory={onReadHistory} actions={readOnly ? undefined : c => <div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" className="h-6 px-2 text-xs" disabled={c.archived} onClick={() => open({ kind: 'rental', customerId: c.id })}>New rental</Button><Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div>} />
     </>}
     {tab === 'rentals' && <>
       <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-semibold">Rentals</h2><Button disabled={readOnly || !state.customers.some(c => !c.archived)} onClick={() => open({ kind: 'rental', customerId: selectedCustomer || undefined })}>New rental</Button></div>
