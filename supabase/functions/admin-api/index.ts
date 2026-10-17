@@ -1,3 +1,4 @@
+import { readXeroCustomerHistory } from "../_shared/xeroCustomerHistory.ts";
 import { readCoreRecords } from "../_shared/coreRecords.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -64,6 +65,9 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
+
+      case "xero_customer_history":
+        return json(await readXeroCustomerHistory(supabase, { customerId: payload.customerId, contactId: payload.contactId }));
 
       case "core_workspace":
         return json({ workspace: await readCoreRecords(supabase) });

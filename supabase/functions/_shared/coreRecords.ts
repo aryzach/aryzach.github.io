@@ -8,11 +8,14 @@ export async function readCoreRecords(client: any) {
     client.from('sauna_inventory').select('id,unit_code,model,status,current_customer_id,future_customer_id,install_date,sauna_type_id'),
     client.from('reservations').select('id,created_at,reservation_status,install_address,sauna_type_id,stripe_customer_id'),
     client.from('sauna_types').select('id,name'),
+    client.from('xero_customer_links').select('tenant_id,contact_id,customer_id,contact_name,organisation_short_code,origin'),
   ]);
   for (const result of queries) if (result.error) throw result.error;
-  const [profiles, links, rentals, assets, reservations, types] = queries.map(result => result.data || []);
+  const [profiles, links, rentals, assets, reservations, types, xeroLinks] = queries.map(result => result.data || []);
   const typeName = (id: string) => types.find((t: { id: string; name: string }) => t.id === id)?.name || id || '';
   return {
+    // deno-lint-ignore no-explicit-any
+    xeroLinks: xeroLinks.map((l: any) => ({ tenantId: l.tenant_id, contactId: l.contact_id, customerId: l.customer_id, name: l.contact_name, ...(l.organisation_short_code ? {shortCode:l.organisation_short_code}:{}), ...(l.origin ? {origin:l.origin}:{}) })),
     // deno-lint-ignore no-explicit-any
     reservations: reservations.map((r: any) => ({ id: r.id, createdAt: r.created_at || '', status: r.reservation_status || '', address: r.install_address || '', saunaType: typeName(r.sauna_type_id), stripeCustomerId: r.stripe_customer_id || null })),
     // deno-lint-ignore no-explicit-any

@@ -1,3 +1,4 @@
+import type { XeroHistoryResult } from './xeroCustomerHistory.ts';
 /** Core records. Reservations, contracts and inventory retain their existing IDs. */
 export interface CustomerProfile {
   id: string;
@@ -32,7 +33,10 @@ export interface SaunaAssignment {
   removedOn: string | null;
   address: string;
 }
+export interface XeroCustomerLink { customerId: string; tenantId: string; contactId: string; name: string; shortCode?: string; origin?: string; }
 export interface RentalWorkspace {
+  xeroLinks?: XeroCustomerLink[];
+  xeroHistory?: XeroHistoryResult;
   reservations?: { id: string; createdAt: string; status: string; address: string; saunaType: string; stripeCustomerId: string | null }[];
   customers: CustomerProfile[];
   rentals: Rental[];

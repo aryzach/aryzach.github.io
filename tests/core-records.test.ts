@@ -3,6 +3,7 @@ import test from 'node:test';
 import { readCoreRecords } from '../supabase/functions/_shared/coreRecords.ts';
 function client(fail = '') {
   const rows: Record<string, object[]> = {
+    xero_customer_links: [{tenant_id:'org1',contact_id:'source-contact',customer_id:'c1',contact_name:'Source name',token_ciphertext:'excluded'}],
     customer_profiles: [{ id:'c1', kind:'unknown', display_name:'Local', email:'local@example.invalid', phone:null, archived_at:null, version:2, secret:'excluded' }],
     reservation_customer_links: [{ reservation_id:'r1',customer_id:'c1' }],
     rentals: [{ id:'rental1',customer_id:'c1',originating_reservation_id:'r1',service_address:'Local',notes:null,origin:'legacy_inventory_link' }, { id:'standalone',customer_id:'c1',originating_reservation_id:null,service_address:'Other local address',notes:null,origin:'admin' }],
@@ -19,6 +20,7 @@ function client(fail = '') {
 test('admin model retains identities, independent records and unconfirmed inventory links',async()=>{
   const result=await readCoreRecords(client());
   assert.equal(result.customers[0].id,'c1');
+  assert.deepEqual(result.xeroLinks,[{tenantId:'org1',contactId:'source-contact',customerId:'c1',name:'Source name'}]);
   assert.equal(result.customers[0].version,2);
   assert.deepEqual(result.customers[0].legacyReservationIds,['r1']);
   assert.equal(result.rentals[0].id,'rental1');
