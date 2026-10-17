@@ -250,7 +250,7 @@ Deno.serve(async (req) => {
         ? allSales.Invoices.filter((i: { Status?: string }) => i?.Status && !["AUTHORISED", "PAID"].includes(i.Status)).length
         : 0;
       for (let page = 1; page <= 3; page++) {
-        const payload = await get(`Invoices?page=${page}&where=Type=="ACCREC"&Statuses=AUTHORISED,PAID`);
+        const payload = await get(`Invoices?page=${page}&where=${encodeURIComponent('Type=="ACCREC"')}&Statuses=AUTHORISED,PAID`);
         const invoices = Array.isArray(payload?.Invoices) ? payload.Invoices : [];
         coverage.pages.invoices = page;
         if (invoices.length === 0) break;
@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
       coverage.paymentsWithInvoiceLink = payments.filter((p: { Invoice?: { InvoiceID?: string } }) => p?.Invoice?.InvoiceID).length;
 
       return json({
-        coverage: { ...coverage, excludedSalesInvoices },
+        coverage: { ...coverage, salesInvoicesTotal, excludedSalesInvoices },
         categories: [...categories.entries()].map(([name, c]) => ({
           name,
           categoryId: c.categoryId,
