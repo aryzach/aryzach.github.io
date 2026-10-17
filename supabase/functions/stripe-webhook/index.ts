@@ -5,9 +5,10 @@ import { verifyStripeSignature } from "../_shared/stripeWebhookSecurity.ts";
 // via the stripe_webhook_events table.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { sendReservationNotificationIntent } from "../_shared/reservationEmails.ts";
+import { sendReservationEmail } from "../_shared/reservationEmails.ts";
 import { setAchAsCustomerDefault } from "../_shared/stripeAch.ts";
 import { buildHashedUserData, fetchSessionLineItems, sendMetaPurchase } from "../_shared/metaCapi.ts";
+import { addReservationToWaitlist, assignSoonestSauna } from "../_shared/assignSauna.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -401,26 +402,132 @@ serveWithMigrationPolicy(async (req) => {
     return text("ok", 200);
   }
 
-  const sessionCustomerId = typeof session.customer === "string"
-    ? session.customer : session.customer?.id ?? null;
-  const { error: paymentError } = await supabase.rpc("apply_reservation_payment", {
-    p_reservation_id: reservationId,
-    p_session_id: checkoutSessionId ?? null,
-    p_payment_intent_id: paymentIntentId ?? null,
-    p_customer_id: sessionCustomerId,
-  });
-  if (paymentError) {
-    await markProcessed("error", "Atomic payment application failed");
-    return text("Payment processing must be retried", 503);
+  // Extract Stripe Customer ID (may be null if Payment Link doesn't create one).
+  const sessionCustomerId: string | null =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id ?? null;
+
+  // Load reservation
+  const { data: reservation, error: rErr } = await supabase
+    .from("reservations")
+    .select("*")
+    .eq("id", reservationId)
+    .maybeSingle();
+  if (rErr || !reservation) {
+    console.error("Reservation not found:", reservationId, rErr);
+    await markProcessed("error", "reservation not found");
+    return text("ok", 200);
   }
 
-  // The transaction already committed a notification intent. A crash here
-  // leaves it recoverable; historical Paid rows do not create new intents.
-  try {
-    await sendReservationNotificationIntent(supabase, reservationId, "payment_received");
-  } catch {
-    console.error("Payment notification remains queued for recovery");
+  // Idempotency
+  if (reservation.payment_status === "Paid") {
+    await markProcessed("success");
+    return text("already paid", 200);
   }
+
+  // Determine stripe_customer_id handling:
+  //  - if reservation already has one and it differs, don't overwrite; flag mismatch.
+  //  - if session.customer is missing, mark linkage_missing for admin review.
+  const customerFlag: {
+    stripe_customer_id?: string | null;
+    stripe_customer_linkage_missing?: boolean;
+  } = {};
+  if (sessionCustomerId) {
+    if (reservation.stripe_customer_id && reservation.stripe_customer_id !== sessionCustomerId) {
+      // Do not overwrite; flag for admin review.
+      await supabase.from("reservation_events").insert({
+        reservation_id: reservation.id,
+        event_type: "Stripe Customer Mismatch",
+        message: "Checkout Session Customer differs from existing reservation Customer. Not overwritten.",
+        metadata: {
+          existing: reservation.stripe_customer_id,
+          incoming: sessionCustomerId,
+          checkout_session_id: checkoutSessionId,
+        },
+      });
+    } else {
+      customerFlag.stripe_customer_id = sessionCustomerId;
+      customerFlag.stripe_customer_linkage_missing = false;
+    }
+  } else {
+    // No customer on the session — flag it. Admin can backfill or link manually.
+    customerFlag.stripe_customer_linkage_missing = true;
+    await supabase.from("reservation_events").insert({
+      reservation_id: reservation.id,
+      event_type: "Stripe Customer Missing",
+      message: "Checkout Session had no Customer. ACH connection is blocked until admin links a Customer.",
+      metadata: { checkout_session_id: checkoutSessionId },
+    });
+  }
+
+  const nowIso = new Date().toISOString();
+  const holdDeadlineIso = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString();
+
+  // Assign the sauna of this type that becomes available the soonest.
+  // The customer always goes into the FUTURE customer columns.
+  const { sauna: chosen } = await assignSoonestSauna(supabase, reservation, {
+    holdStatus: "Reservation Hold",
+  });
+
+  if (!chosen) {
+    // Mark for manual review, still mark paid.
+    await supabase
+      .from("reservations")
+      .update({
+        payment_status: "Paid",
+        reservation_status: "Needs Manual Review",
+        stripe_payment_id: paymentIntentId ?? checkoutSessionId ?? null,
+        stripe_checkout_session_id: checkoutSessionId ?? null,
+        stripe_payment_intent_id: paymentIntentId ?? null,
+        payment_completed_at: nowIso,
+        hold_created_at: nowIso,
+        ...customerFlag,
+      })
+      .eq("id", reservationId);
+
+    await supabase.from("reservation_events").insert([
+      { reservation_id: reservationId, event_type: "Payment Received", message: "Reservation payment received." },
+      { reservation_id: reservationId, event_type: "Needs Manual Review", message: "No eligible sauna available for auto-assignment." },
+    ]);
+    await addReservationToWaitlist(supabase, reservation, "Deposit paid, no matching sauna");
+    try {
+      await sendReservationEmail(supabase, reservationId, "payment_received");
+    } catch (e) { console.error("payment_received email threw:", e); }
+    await markProcessed("success");
+    return text("ok", 200);
+  }
+
+  await supabase
+    .from("reservations")
+    .update({
+      payment_status: "Paid",
+      reservation_status: "Reservation Hold",
+      sauna_inventory_id: chosen.id,
+      stripe_payment_id: paymentIntentId ?? checkoutSessionId ?? null,
+      stripe_checkout_session_id: checkoutSessionId ?? null,
+      stripe_payment_intent_id: paymentIntentId ?? null,
+      payment_completed_at: nowIso,
+      hold_created_at: nowIso,
+      hold_deadline: holdDeadlineIso,
+      ...customerFlag,
+    })
+    .eq("id", reservationId);
+
+  await supabase.from("reservation_events").insert([
+    { reservation_id: reservationId, event_type: "Payment Received", message: "Reservation payment received." },
+    {
+      reservation_id: reservationId,
+      event_type: "Reservation Hold Created",
+      message: "Sauna held (5-day informational deadline).",
+      metadata: { sauna_inventory_id: chosen.id, hold_deadline: holdDeadlineIso },
+    },
+  ]);
+
+  try {
+    await sendReservationEmail(supabase, reservationId, "payment_received");
+  } catch (e) { console.error("payment_received email threw:", e); }
+
   await markProcessed("success");
   return text("ok", 200);
 });
