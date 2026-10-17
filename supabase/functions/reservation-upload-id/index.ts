@@ -47,6 +47,7 @@ serveWithMigrationPolicy(async (req) => {
     .select("id, secure_token")
     .eq("id", id)
     .eq("secure_token", token)
+    .neq("booking_kind", "manual_historical")
     .maybeSingle();
   if (rErr) return json({ error: "Server error" }, 500);
   if (!reservation) return json({ error: "Not found" }, 404);

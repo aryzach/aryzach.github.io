@@ -38,6 +38,7 @@ serveWithMigrationPolicy(async (req) => {
     )
     .eq("id", id)
     .eq("secure_token", token)
+    .neq("booking_kind", "manual_historical")
     .maybeSingle();
 
   if (error) {

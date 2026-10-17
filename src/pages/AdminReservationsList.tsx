@@ -33,6 +33,8 @@ interface Reservation {
   hold_created_at: string | null;
   hold_deadline: string | null;
   reservation_source: string;
+  booking_kind?: string;
+  booked_on?: string | null;
   admin_notes: string | null;
   secure_token: string;
   created_at: string;
@@ -551,10 +553,11 @@ export const ReservationsListPanel = ({
                 <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.consult_status)}</td>
                 <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.id_status)}</td>
                 <td className="px-2 py-1.5 border-r border-border">{stepIndicator(r.contract_status)}</td>
-                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.created_at)}</td>
+                <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{r.booking_kind==='manual_historical'?(r.booked_on||'Manual — historical; date unknown'):fmt(r.created_at)}</td>
                 <td className="px-2 py-1.5 border-r border-border text-muted-foreground whitespace-nowrap">{fmt(r.magic_link_opened_at)}</td>
                 <td className="px-2 py-1.5 whitespace-nowrap">
                   <div className="flex gap-1">
+                    {r.booking_kind==='manual_historical'?<span className="text-muted-foreground">Manual history · manage in Rentals</span>:<>
                      <Button
                        size="sm"
                        variant="outline"
@@ -583,7 +586,7 @@ export const ReservationsListPanel = ({
                     )}
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_scheduled")}>Install Scheduled</Button>
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_complete")}>Install Complete</Button>
-                    <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button>
+                    <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button></>}
                     {r.stripe_ach_payment_method_id && (
                       <Button
                         size="sm"

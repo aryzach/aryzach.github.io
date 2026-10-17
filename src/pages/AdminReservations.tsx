@@ -518,13 +518,13 @@ const AdminReservations = () => {
       setTypes(coreWorkspace.legacyTypes || []);
       setCustomers(coreWorkspace.customers.flatMap(c => c.legacyReservationIds.map(id => ({ id, name: c.name || c.email, email: c.email }))));
     }
-    if (!coreWorkspace.reservations && import.meta.env.DEV && location.hostname === '127.0.0.1') {
+    if ((!coreWorkspace.reservations || !coreWorkspace.lifecycle) && import.meta.env.DEV && location.hostname === '127.0.0.1') {
       // Upgrade the existing read-only copy without replacing customer/rental drafts.
       fetch('/__local-records', { headers: { 'x-sf-local-records': '1' }, cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(copy => {
-        if (!copy?.legacyInventory) return;
+        if (!copy?.legacyInventory || !copy.lifecycle) return;
         setCoreWorkspace(previous => {
-          if (!previous?.source || previous.source.exportedAt !== copy.source?.exportedAt) return previous;
-          const next = { ...previous, legacyInventory: copy.legacyInventory, legacyTypes: copy.legacyTypes, reservations: copy.reservations, assets: copy.assets };
+          if (!previous?.source) return previous;
+          const next = { ...copy,legacyInventory: copy.legacyInventory, legacyTypes: copy.legacyTypes, reservations: copy.reservations, assets: copy.assets };
           sessionStorage.setItem('sf-sauna-core-records-preview-v1', JSON.stringify(next));
           return next;
         });
@@ -543,7 +543,7 @@ const AdminReservations = () => {
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
       if (!previewEnabled) {
         setInventory(invRes.inventory || []);
-        const core = await callAdmin({ action: "core_workspace" }).catch(() => null);
+        const core = await callAdmin({ action: "core_workspace" });
         setCoreWorkspace(core?.workspace || null);
       }
       if (!previewEnabled) setCustomers((custRes.customers || []).map((c: any) => ({ id: c.id, name: c.name, email: c.email })));
@@ -625,6 +625,7 @@ const AdminReservations = () => {
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
+    if (["current_customer_id", "install_date"].includes(key) || key === "status" && ["Installed", "Sold"].includes(value || "")) { toast.info("Use Rentals → Manage to record an installation, return, swap or sale with its history."); setTab("rentals"); return; }
     setInventory((prev) => prev.map((r) => {
       if (r.id !== id) return r;
       const next = { ...r, [key]: value } as InventoryRow;
@@ -771,7 +772,23 @@ const AdminReservations = () => {
 
           {!["insights", "customers", "rentals"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
-          {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onReadHistory={previewEnabled ? undefined : async selection => callAdmin({action:"xero_customer_history",...selection})} onCommand={previewEnabled ? undefined : async (command, record) => {
+          {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onReadHistory={previewEnabled ? undefined : async selection => callAdmin({action:"xero_customer_history",...selection})} onLifecycle={previewEnabled&&!import.meta.env.DEV?undefined:async (operation,record)=>{
+            const {commandId,...fields}=record;
+            const request={action:'lifecycle_command',operation,commandId,record:fields};
+            const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const result=await r.json();if(!r.ok)throw new Error(result.error||'Local database unavailable');return result;}):await callAdmin(request);
+            setCoreWorkspace(result.workspace);
+            if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));
+            else await loadAll();
+          }} onOpenAgreement={async id=>{
+            const agreement=coreWorkspace.lifecycle?.agreements.find(a=>a.id===id);
+            if(previewEnabled){const doc=coreWorkspace.lifecycle?.documents.find(d=>d.id===agreement?.document_id);const url=doc?.local_url||agreement?.local_url;if(!url)throw new Error('No local PDF copy is available for this agreement.');window.open(url,'_blank','noopener,noreferrer');return;}
+            const result=await callAdmin({action:'lifecycle_document_url',agreementId:id});window.open(result.url,'_blank','noopener,noreferrer');
+          }} onRefresh={async()=>{if(!previewEnabled){await loadAll();return;}const r=await fetch('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});if(!r.ok)throw new Error('Could not refresh the local copy');const copy=await r.json();setCoreWorkspace(copy);sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}} onUpload={async(file,commandId,incomplete)=>{
+            if(file.size>20*1024*1024)throw new Error('Choose a PDF up to 20 MB.');
+            const bytes=new Uint8Array(await file.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
+            const request={action:'lifecycle_document_upload',base64:btoa(binary),filename:file.name,commandId,incomplete};
+            const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const body=await r.json();if(!r.ok)throw new Error(body.error||'Upload failed');return body;}):await callAdmin(request);return result.documentId;
+          }} onCommand={previewEnabled ? undefined : async (command, record) => {
             const result = await callAdmin({ action: "core_command", command, record });
             setCoreWorkspace(result.workspace);
           }} />}

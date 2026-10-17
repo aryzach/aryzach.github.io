@@ -1,3 +1,4 @@
+import type {LifecycleCommand} from '@/lib/lifecycleModel';
 import { useState, type ReactNode } from 'react';
 import XeroCustomerHistory, {type ReadXeroHistory} from './XeroCustomerHistory';
 import { Button } from '@/components/ui/button';
@@ -7,11 +8,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { customerName, type CustomerProfile, type RentalWorkspace } from '@/lib/rentalModel';
 import { customerDirectory, filterDirectory, stripeCustomerUrl, xeroContactUrl, type DirectoryColumn, type DirectoryFilters } from '@/lib/customerDirectory';
 import { ColResizeHandle, useResizableColumns } from '@/hooks/useResizableColumns';
+import type {OpenAgreement} from './RentalLifecycle';
 const columns = ['name', 'phone', 'reservations', 'saunas', 'stripe', 'xero'] as const;
 const labels = { name: 'Name', phone: 'Phone', reservations: 'Reservations', saunas: 'Current sauna · number / type', stripe: 'Stripe customer', xero: 'Xero customer' };
 const cell = 'px-2 py-1 border-r border-border align-top break-words';
 const link = 'text-primary underline underline-offset-2 hover:text-primary/80';
-export default function CustomerDirectory({ state, actions, onReadHistory }: { state: RentalWorkspace; actions?: (customer: CustomerProfile) => ReactNode; onReadHistory?:ReadXeroHistory }) {
+export default function CustomerDirectory({ state, actions, onReadHistory,onOpenAgreement,onLifecycle }: { state: RentalWorkspace; actions?: (customer: CustomerProfile) => ReactNode; onReadHistory?:ReadXeroHistory;onOpenAgreement?:OpenAgreement;onLifecycle?:LifecycleCommand }) {
   const [historyCustomer,setHistoryCustomer]=useState<string|null|undefined>();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<DirectoryFilters>({});
@@ -34,14 +36,14 @@ export default function CustomerDirectory({ state, actions, onReadHistory }: { s
       </thead><tbody>{rows.map(row => <tr key={row.customer.id} className="border-t border-border">
         <td className={cell}><button className="font-semibold text-left hover:underline" onClick={()=>setHistoryCustomer(row.customer.id)}>{customerName(row.customer)}</button>{!row.reservations.length&&row.xeroLinks.some(l=>l.origin==='historical_customer_import')&&<span className="block text-[10px] text-muted-foreground">Historical Xero customer</span>}{row.customer.archived && <span className="block text-muted-foreground">Archived</span>}</td>
         <td className={cell}>{row.customer.phone || '—'}</td>
-        <td className={cell}>{row.reservations.length ? row.reservations.map(r => <a key={r.id} className={`${link} block`} href={`?customerReservation=${encodeURIComponent(r.id)}`} onClick={e => { e.preventDefault(); setReservationId(r.id); }} title={r.id}>{r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Reservation'} · {r.id.slice(0, 8)}</a>) : '—'}</td>
+        <td className={cell}>{row.reservations.length ? row.reservations.map(r => <a key={r.id} className={`${link} block`} href={`?customerReservation=${encodeURIComponent(r.id)}`} onClick={e => { e.preventDefault(); setReservationId(r.id); }} title={r.id}>{r.bookingKind==='manual_historical'?(r.bookedOn?`Manual · ${r.bookedOn}`:'Manual — historical · booking date unknown'):r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Reservation'} · {r.id.slice(0, 8)}</a>) : '—'}</td>
         <td className={cell}>{row.saunas.length ? row.saunas.map(a => <div key={a.id}>{a.code || 'Unnumbered'} · {a.typeName || a.model || 'Type unknown'}</div>) : '—'}</td>
         <td className={cell}>{row.stripeIds.length ? row.stripeIds.map(id => <a key={id} className={`${link} block`} href={stripeCustomerUrl(id)!} target="_blank" rel="noopener noreferrer">{id}</a>) : '—'}</td>
         <td className={cell}>{row.xeroLinks.length ? row.xeroLinks.map(l => <a key={`${l.tenantId}:${l.contactId}`} className={`${link} block`} href={xeroContactUrl(l.contactId,l.shortCode)!} target="_blank" rel="noopener noreferrer">{l.name}</a>) : '—'}</td>
         {actions && <td className={cell}>{actions(row.customer)}</td>}
       </tr>)}{!rows.length && <tr><td colSpan={actions ? 7 : 6} className="p-3 text-muted-foreground">No matching customers.</td></tr>}</tbody>
     </table></div>
-    {historyCustomer!==undefined&&<XeroCustomerHistory state={state} customerId={historyCustomer} onRead={onReadHistory} onClose={()=>setHistoryCustomer(undefined)}/>}
-    <Dialog open={!!reservationId} onOpenChange={open => { if (!open) setReservationId(null); }}><DialogContent><DialogHeader><DialogTitle>Reservation</DialogTitle></DialogHeader>{reservation ? <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm"><dt>Customer</dt><dd>{owner ? customerName(owner) : '—'}</dd><dt>Reservation ID</dt><dd className="break-all">{reservation.id}</dd><dt>Created</dt><dd>{reservation.createdAt ? new Date(reservation.createdAt).toLocaleString() : '—'}</dd><dt>Status</dt><dd>{reservation.status || '—'}</dd><dt>Sauna type</dt><dd>{reservation.saunaType || '—'}</dd><dt>Service address</dt><dd>{reservation.address || '—'}</dd></dl> : <p className="text-sm">Reservation details are unavailable. Refresh the customer records to try again.</p>}</DialogContent></Dialog>
+    {historyCustomer!==undefined&&<XeroCustomerHistory state={state} customerId={historyCustomer} onRead={onReadHistory} onOpenAgreement={onOpenAgreement} onLifecycle={onLifecycle} onClose={()=>setHistoryCustomer(undefined)}/>}
+    <Dialog open={!!reservationId} onOpenChange={open => { if (!open) setReservationId(null); }}><DialogContent><DialogHeader><DialogTitle>Reservation</DialogTitle></DialogHeader>{reservation ? <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm"><dt>Customer</dt><dd>{owner ? customerName(owner) : '—'}</dd><dt>Reservation ID</dt><dd className="break-all">{reservation.id}</dd><dt>Booking date</dt><dd>{reservation.bookingKind==='manual_historical'?(reservation.bookedOn||'Unknown · manual historical booking'):reservation.createdAt?new Date(reservation.createdAt).toLocaleDateString():'Unknown'}</dd><dt>Recorded in app</dt><dd>{reservation.createdAt ? new Date(reservation.createdAt).toLocaleString() : '—'}</dd><dt>Status</dt><dd>{reservation.status || '—'}</dd><dt>Sauna type</dt><dd>{reservation.saunaType || '—'}</dd><dt>Service address</dt><dd>{reservation.address || '—'}</dd></dl> : <p className="text-sm">Reservation details are unavailable. Refresh the customer records to try again.</p>}</DialogContent></Dialog>
   </>;
 }

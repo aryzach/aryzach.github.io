@@ -45,6 +45,7 @@ serveWithMigrationPolicy(async (req) => {
     .select("id, sauna_type_id, preferred_install_at, payment_status, sauna_inventory_id, first_name, last_name, email, phone, install_address, city")
     .eq("id", id)
     .eq("secure_token", token)
+    .neq("booking_kind", "manual_historical")
     .maybeSingle();
   if (rErr || !reservation) return json({ error: "Not found" }, 404);
 

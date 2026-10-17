@@ -76,6 +76,7 @@ async function authReservation(
     )
     .eq("id", id)
     .eq("secure_token", token)
+    .neq("booking_kind", "manual_historical")
     .maybeSingle();
   return (data as AuthedReservation | null) ?? null;
 }

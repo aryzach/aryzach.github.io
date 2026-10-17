@@ -46,6 +46,7 @@ serveWithMigrationPolicy(async (req) => {
     .select("id, email, first_name, last_name, stripe_customer_id, ach_status, ach_bank_name, ach_bank_last4, stripe_customer_linkage_missing, payment_status")
     .eq("id", id)
     .eq("secure_token", token)
+    .neq("booking_kind", "manual_historical")
     .maybeSingle();
   if (error || !reservation) return json({ error: "Not found" }, 404);
 

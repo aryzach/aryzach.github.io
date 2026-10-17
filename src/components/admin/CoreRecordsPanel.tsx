@@ -10,6 +10,8 @@ type Editor = { kind: 'customer'; customer?: CustomerProfile } | { kind: 'rental
 import type {ReadXeroHistory} from './XeroCustomerHistory';
 import CustomerDirectory from './CustomerDirectory';
 import { storageKey } from '@/dev/coreWorkspace';
+import RentalLifecycle,{type OpenAgreement} from './RentalLifecycle';
+import type {LifecycleCommand} from '@/lib/lifecycleModel';
 
 const fieldClass = 'h-10 w-full rounded-md border border-input bg-background px-3 text-sm';
 function Field({ label, children }: { label: string; children: ReactNode }) { return <Label className="grid gap-2 font-normal">{label}{children}</Label>; }
@@ -20,7 +22,7 @@ function RecordsTable({ headers, children }: { headers: string[]; children: Reac
   return <div className="max-h-[calc(100vh-12rem)] overflow-auto rounded-md border border-border bg-card"><table className="w-full min-w-[720px] border-collapse text-left text-xs"><thead className="sticky top-0 z-10 bg-muted text-[10px] uppercase tracking-wide text-muted-foreground shadow-[0_1px_0_0_hsl(var(--border))]"><tr>{headers.map(h => <th key={h} className="px-2 py-1.5 border-r border-border font-medium">{h}</th>)}</tr></thead><tbody>{children}</tbody></table></div>;
 }
 const cell = 'px-2 py-1 border-r border-border align-top';
-export default function CoreRecordsPanel({ tab, state, onChange, onTab, onCommand, onReadHistory }: { tab: CoreTab; state: RentalWorkspace; onChange: (state: RentalWorkspace) => void; onTab: (tab: CoreTab) => void; onReadHistory?:ReadXeroHistory; onCommand?: (command: string, record: Record<string, unknown>) => Promise<void> }) {
+export default function CoreRecordsPanel({ tab, state, onChange, onTab, onCommand, onReadHistory,onLifecycle,onOpenAgreement,onUpload,onRefresh }: { tab: CoreTab; state: RentalWorkspace; onChange: (state: RentalWorkspace) => void; onTab: (tab: CoreTab) => void; onReadHistory?:ReadXeroHistory; onCommand?: (command: string, record: Record<string, unknown>) => Promise<void>;onLifecycle?:LifecycleCommand;onOpenAgreement?:OpenAgreement;onRefresh?:()=>Promise<void>;onUpload?:(file:File,commandId:string,incomplete:boolean)=>Promise<string> }) {
   const live = Boolean(onCommand);
   const [saving, setSaving] = useState(false);
   const [draftId, setDraftId] = useState('');
@@ -82,15 +84,16 @@ export default function CoreRecordsPanel({ tab, state, onChange, onTab, onComman
   const selected = state.customers.find(c => c.id === selectedCustomer);
   return <section aria-label="Core rental records" className="space-y-3">
     {!live && <div className="rounded-lg border border-primary/25 bg-primary/5 px-4 py-3 text-sm">
-      {state.source ? <><strong>Private local copy · read only.</strong> Snapshot from {new Date(state.source.exportedAt).toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })} Pacific. {state.customers.length} separate customer profiles · {state.assets.length} saunas. Existing inventory links are shown for review; installation history is unconfirmed. Nothing connects to the live backend.</> : <><strong>Local draft workspace.</strong> Drafts stay in this browser tab. {import.meta.env.DEV && location.hostname === '127.0.0.1' && <Button variant="link" className="h-auto px-2" disabled={loadingCopy} onClick={loadCopy}>{loadingCopy ? 'Loading copy…' : 'Load private business copy'}</Button>}</>}
+      {state.source ? <><strong>Private local copy.</strong> Snapshot from {new Date(state.source.exportedAt).toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })} Pacific. {state.customers.length} separate customer profiles · {state.assets.length} saunas. History actions use an isolated local database. Existing inventory fields are read only. Nothing connects to the live backend.</> : <><strong>Local draft workspace.</strong> Drafts stay in this browser tab. {import.meta.env.DEV && location.hostname === '127.0.0.1' && <Button variant="link" className="h-auto px-2" disabled={loadingCopy} onClick={loadCopy}>{loadingCopy ? 'Loading copy…' : 'Load private business copy'}</Button>}</>}
     </div>}
 
     {error && !editor && <p role="alert" className="text-sm text-destructive">{error}</p>}
     {tab === 'customers' && <>
       <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-lg font-semibold">Customers</h2><p className="mt-1 text-sm text-muted-foreground">Customer contact details, reservations and current saunas.</p></div><Button disabled={readOnly} onClick={() => open({ kind: 'customer' })}>Add customer</Button></div>
-      <CustomerDirectory state={state} onReadHistory={onReadHistory} actions={readOnly ? undefined : c => <div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" className="h-6 px-2 text-xs" disabled={c.archived} onClick={() => open({ kind: 'rental', customerId: c.id })}>New rental</Button><Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div>} />
+      <CustomerDirectory state={state} onLifecycle={onLifecycle} onReadHistory={onReadHistory} onOpenAgreement={onOpenAgreement} actions={readOnly ? undefined : c => <div className="flex flex-wrap gap-2"><Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => open({ kind: 'customer', customer: c })}>Edit</Button><Button variant="outline" size="sm" className="h-6 px-2 text-xs" disabled={c.archived} onClick={() => onTab('rentals')}>Rentals / bookings</Button><Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => archive(c)}>{c.archived ? 'Restore' : 'Archive'}</Button></div>} />
     </>}
-    {tab === 'rentals' && <>
+    {tab==='rentals'&&state.lifecycle&&<RentalLifecycle state={state} onCommand={onLifecycle} onOpenAgreement={onOpenAgreement} onUpload={onUpload} onRefresh={onRefresh}/>}
+    {tab === 'rentals' && !state.lifecycle && <>
       <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg font-semibold">Rentals</h2><Button disabled={readOnly || !state.customers.some(c => !c.archived)} onClick={() => open({ kind: 'rental', customerId: selectedCustomer || undefined })}>New rental</Button></div>
       {selected && <div className="flex items-center gap-3 text-xs">Rentals for {customerName(selected)}<Button variant="link" size="sm" onClick={() => setSelectedCustomer(null)}>Show all customers</Button></div>}
       {!visibleRentals.length ? <p className="p-3 text-xs text-muted-foreground">No rentals linked to this customer.{!readOnly && <Button variant="link" onClick={() => state.customers.some(c => !c.archived) ? open({ kind: 'rental' }) : onTab('customers')}>Create a local rental</Button>}</p> : <RecordsTable headers={['Customer', 'Service address', 'Status', 'Reservation', 'Saunas / history', 'Notes', 'Actions']}>

@@ -1,4 +1,5 @@
 import type { XeroHistoryResult } from './xeroCustomerHistory.ts';
+import type { LifecycleWorkspace } from './lifecycleModel.ts';
 /** Core records. Reservations, contracts and inventory retain their existing IDs. */
 export interface CustomerProfile {
   id: string;
@@ -35,9 +36,10 @@ export interface SaunaAssignment {
 }
 export interface XeroCustomerLink { customerId: string; tenantId: string; contactId: string; name: string; shortCode?: string; origin?: string; }
 export interface RentalWorkspace {
+  lifecycle?: LifecycleWorkspace;
   xeroLinks?: XeroCustomerLink[];
   xeroHistory?: XeroHistoryResult;
-  reservations?: { id: string; createdAt: string; status: string; address: string; saunaType: string; stripeCustomerId: string | null }[];
+  reservations?: { id: string; createdAt: string; status: string; address: string; saunaType: string; stripeCustomerId: string | null; bookingKind?:string; bookedOn?:string|null }[];
   customers: CustomerProfile[];
   rentals: Rental[];
   assets: SaunaAsset[];

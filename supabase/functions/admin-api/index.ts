@@ -1,5 +1,6 @@
 import { readXeroCustomerHistory } from "../_shared/xeroCustomerHistory.ts";
 import { readCoreRecords } from "../_shared/coreRecords.ts";
+import { readLifecycleRecords } from "../_shared/lifecycleRecords.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { sendReservationEmail } from "../_shared/reservationEmails.ts";
@@ -52,6 +53,10 @@ serveWithMigrationPolicy(async (req) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceKey);
+  const workspace = async () => {
+    const [core,lifecycle] = await Promise.all([readCoreRecords(supabase),readLifecycleRecords(supabase)]);
+    return {...core,lifecycle,assignments:lifecycle.placements.map((p:any)=>({id:p.id,rentalId:p.rental_id,assetId:p.asset_id,installedOn:p.installed_on,removedOn:p.removed_on,address:p.address||''}))};
+  };
 
   let payload: any = {};
   try {
@@ -70,13 +75,49 @@ serveWithMigrationPolicy(async (req) => {
         return json(await readXeroCustomerHistory(supabase, { customerId: payload.customerId, contactId: payload.contactId }));
 
       case "core_workspace":
-        return json({ workspace: await readCoreRecords(supabase) });
+        return json({ workspace: await workspace() });
+
+      case "lifecycle_command": {
+        const allowed=['manual_reservation','install','return','swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
+        if(!allowed.includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a supported history operation and request ID'},400);
+        const {error}=await supabase.rpc('rental_lifecycle_command',{command_id:payload.commandId,operation:payload.operation,payload:payload.record||{}});
+        if(error)return json({error:error.message},error.code==='40001'?409:400);
+        return json({workspace:await workspace()});
+      }
+      case "lifecycle_document_upload": {
+        const encoded=payload.base64;
+        if(typeof encoded!=='string'||encoded.length>28*1024*1024||typeof payload.filename!=='string'||!payload.filename.toLowerCase().endsWith('.pdf'))return json({error:'Choose a PDF up to 20 MB'},400);
+        let bytes:Uint8Array;
+        try{bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));}catch{return json({error:'Invalid PDF upload'},400);}
+        if(bytes.length>20*1024*1024)return json({error:'Choose a PDF up to 20 MB'},400);
+        if(bytes.length<5||new TextDecoder().decode(bytes.slice(0,5))!=='%PDF-')return json({error:'File is not a PDF'},400);
+        const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new Uint8Array(bytes).buffer))).map(b=>b.toString(16).padStart(2,'0')).join('');
+        const path=`historical-contracts/${hash}.pdf`;
+        const existing=await supabase.from('rental_documents').select('id').eq('sha256',hash).maybeSingle();
+        if(existing.error)throw existing.error;
+        if(existing.data)return json({documentId:existing.data.id,sha256:hash});
+        const upload=await supabase.storage.from('signed-contracts').upload(path,bytes,{contentType:'application/pdf',upsert:false});
+        if(upload.error&& !['Duplicate','409'].includes(String((upload.error as {statusCode?:string}).statusCode))&&!upload.error.message.toLowerCase().includes('already exists'))throw upload.error;
+        const {data,error}=await supabase.rpc('rental_lifecycle_command',{command_id:payload.commandId,operation:'document',payload:{sha256:hash,filename:payload.filename,storagePath:path,byteSize:bytes.length,incomplete:payload.incomplete===true,sourcePaths:[payload.filename]}});
+        if(error)throw error;
+        return json({documentId:data.recordId,sha256:hash});
+      }
+      case "lifecycle_document_url": {
+        const {data:agreement,error}=await supabase.from('rental_agreements').select('document_id,contract_id').eq('id',payload.agreementId).maybeSingle();
+        if(error)throw error;if(!agreement)return json({error:'Agreement not found'},404);
+        let path:string|null=null;
+        if(agreement.document_id){const doc=await supabase.from('rental_documents').select('storage_path').eq('id',agreement.document_id).single();if(doc.error)throw doc.error;path=doc.data.storage_path;}
+        else if(agreement.contract_id){const doc=await supabase.from('contracts').select('signed_pdf_storage_path').eq('id',agreement.contract_id).single();if(doc.error)throw doc.error;path=doc.data.signed_pdf_storage_path;}
+        if(!path)return json({error:'The signed PDF is not available'},404);
+        const signed=await supabase.storage.from('signed-contracts').createSignedUrl(path,300);
+        if(signed.error)throw signed.error;return json({url:signed.data.signedUrl});
+      }
 
       case "core_command": {
-        if (!["save_customer", "archive_customer", "add_rental"].includes(payload.command)) return json({ error: "Unsupported core operation" }, 400);
+        if (!["save_customer", "archive_customer"].includes(payload.command)) return json({ error: "Unsupported core operation" }, 400);
         const { error } = await supabase.rpc("core_record_command", { command: payload.command, payload: payload.record || {} });
         if (error) return json({ error: error.code === "40001" ? "This customer changed. Refresh before saving." : error.code === "23505" ? "This record already exists. Refresh to view it." : error.message }, ["40001","23505"].includes(error.code) ? 409 : 400);
-        return json({ workspace: await readCoreRecords(supabase) });
+        return json({ workspace: await workspace() });
       }
 
       case "list_reservations": {
@@ -113,6 +154,7 @@ serveWithMigrationPolicy(async (req) => {
         const { data: reservation, error: rErr } = await supabase
           .from("reservations").select("*").eq("id", id).maybeSingle();
         if (rErr) throw rErr;
+        if(reservation?.booking_kind==='manual_historical')return json({error:'Historical reservations are managed in rental history; booking automation is disabled.'},400);
         if (!reservation) return json({ error: "Not found" }, 404);
 
         const evtInserts: any[] = [];
@@ -155,9 +197,7 @@ serveWithMigrationPolicy(async (req) => {
             push("Installation Scheduled", "Admin marked installation scheduled.");
             break;
           case "mark_install_complete":
-            update = { installation_status: "Complete", reservation_status: "Reservation Confirmed" };
-            push("Installation Completed", "Admin marked installation complete.");
-            break;
+            return json({ error: "Confirm the installation date and sauna in Rentals → Manage." }, 400);
           case "mark_contract":
             update = { contract_status: "Complete" };
             push("Contract Completed", "Admin marked rental agreement complete.");
@@ -407,19 +447,7 @@ serveWithMigrationPolicy(async (req) => {
 
       case "delete_reservation": {
         const { id } = payload;
-        const { data: r } = await supabase
-          .from("reservations").select("sauna_inventory_id").eq("id", id).maybeSingle();
-        if (r?.sauna_inventory_id) {
-          await supabase.from("sauna_inventory").update({
-            status: "Available", current_customer: null, current_customer_id: null, reservation_id: null,
-          }).eq("id", r.sauna_inventory_id);
-        }
-        // Also clear any future-customer references that point to this reservation.
-        await supabase.from("sauna_inventory").update({
-          future_customer: null, future_customer_id: null,
-        }).eq("future_customer_id", id);
-        await supabase.from("reservation_events").delete().eq("reservation_id", id);
-        const { error } = await supabase.from("reservations").delete().eq("id", id);
+        const { error } = await supabase.rpc('delete_unstarted_reservation',{p_id:id});
         if (error) throw error;
         return json({ ok: true });
       }
