@@ -244,7 +244,8 @@ Deno.serve(async (req) => {
 
       // Invoices: sales (ACCREC) only; drafts/voided/deleted excluded via Statuses filter.
       // Report excluded draft/voided/deleted sales invoices separately, never silently.
-      const allSales = await get(`Invoices?where=Type=="ACCREC"`);
+      const allSales = await get(`Invoices?where=${encodeURIComponent('Type=="ACCREC"')}`);
+      const salesInvoicesTotal = Array.isArray(allSales?.Invoices) ? allSales.Invoices.length : -1;
       const excludedSalesInvoices = Array.isArray(allSales?.Invoices)
         ? allSales.Invoices.filter((i: { Status?: string }) => i?.Status && !["AUTHORISED", "PAID"].includes(i.Status)).length
         : 0;
