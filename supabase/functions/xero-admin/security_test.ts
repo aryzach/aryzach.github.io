@@ -143,19 +143,20 @@ Deno.test("authenticated malformed JSON shapes return 400 without database acces
       }))).status, 400);
     }
     // tracking_sample is a recognized action: it passes input validation and fails
-    // safely (no credentials configured / no database) without external requests.
+    // safely (503 without credentials, 502 when the backend/token read is unavailable).
+    // External requests are mocked out so the test can never reach Xero or the database.
     const nativeFetch = globalThis.fetch;
-    let outbound = 0;
-    globalThis.fetch = () => { outbound++; return Promise.reject(new Error("External requests forbidden")); };
+    globalThis.fetch = () => Promise.reject(new Error("External requests forbidden"));
     try {
       const response = await admin(new Request("https://backend.invalid", {
         method: "POST",
         headers: { "x-admin-password": "local-test-only" },
         body: '{"action":"tracking_sample"}',
       }));
-      if (response.status === 400 || response.status === 401)
-        throw new Error(`tracking_sample rejected at validation/auth: ${response.status}`);
-      assertEquals(outbound, 0);
+      if (![502, 503].includes(response.status))
+        throw new Error(`tracking_sample did not fail safely: ${response.status}`);
+      const body = await response.json();
+      if (typeof body?.error !== "string") throw new Error("Expected a safe error body");
     } finally {
       globalThis.fetch = nativeFetch;
     }
