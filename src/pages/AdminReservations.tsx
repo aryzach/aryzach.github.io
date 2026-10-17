@@ -1,3 +1,5 @@
+import CoreRecordsPanel from "@/components/admin/CoreRecordsPanel";
+import { readWorkspace } from "@/dev/coreWorkspace";
 import { CustomerInsights } from "@/components/admin/CustomerInsights";
 import { previewEnabled } from "@/lib/runtime";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
@@ -207,7 +209,8 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
+  const [coreWorkspace, setCoreWorkspace] = useState(() => previewEnabled ? readWorkspace() : null);
+  const [tab, setTab] = useState<"customers" | "rentals" | "insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -508,6 +511,26 @@ const AdminReservations = () => {
     [password],
   );
 
+  useEffect(() => {
+    if (!previewEnabled || !coreWorkspace?.source) return;
+    if (coreWorkspace.legacyInventory) {
+      setInventory(coreWorkspace.legacyInventory as unknown as InventoryRow[]);
+      setTypes(coreWorkspace.legacyTypes || []);
+      setCustomers(coreWorkspace.customers.flatMap(c => c.legacyReservationIds.map(id => ({ id, name: c.name || c.email, email: c.email }))));
+    } else if (import.meta.env.DEV && location.hostname === '127.0.0.1') {
+      // Upgrade the existing read-only copy without replacing customer/rental drafts.
+      fetch('/__local-records', { headers: { 'x-sf-local-records': '1' }, cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(copy => {
+        if (!copy?.legacyInventory) return;
+        setCoreWorkspace(previous => {
+          if (!previous?.source || previous.source.exportedAt !== copy.source?.exportedAt) return previous;
+          const next = { ...previous, legacyInventory: copy.legacyInventory, legacyTypes: copy.legacyTypes };
+          sessionStorage.setItem('sf-sauna-core-records-preview-v1', JSON.stringify(next));
+          return next;
+        });
+      }).catch(() => toast.error('Could not load the local inventory copy.'));
+    }
+  }, [coreWorkspace]);
+
   const loadAll = useCallback(async () => {
     setLoading(true);
     try {
@@ -517,8 +540,12 @@ const AdminReservations = () => {
         callAdmin({ action: "list_customers" }),
       ]);
       if (typesRes.data) setTypes(typesRes.data as SaunaType[]);
-      setInventory(invRes.inventory || []);
-      setCustomers((custRes.customers || []).map((c: any) => ({ id: c.id, name: c.name, email: c.email })));
+      if (!previewEnabled) {
+        setInventory(invRes.inventory || []);
+        const core = await callAdmin({ action: "core_workspace" }).catch(() => null);
+        setCoreWorkspace(core?.workspace || null);
+      }
+      if (!previewEnabled) setCustomers((custRes.customers || []).map((c: any) => ({ id: c.id, name: c.name, email: c.email })));
     } catch (e) {
       console.error(e);
       toast.error("Failed to load admin data.");
@@ -690,9 +717,9 @@ const AdminReservations = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-foreground">Admin</h1>
             <div className="flex gap-2">
-              {tab !== "insights" && <>
-              <Button onClick={startDraft} disabled={!!draft}>Add sauna</Button>
-              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+              {tab !== "insights" && !["customers", "rentals"].includes(tab) && <>
+              <Button onClick={startDraft} disabled={previewEnabled || !!draft}>Add sauna</Button>
+              <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={previewEnabled || importing}>
                 {importing ? "Importing…" : "Import CSV"}
               </Button>
               <Button variant="outline" onClick={downloadTemplate}>Template</Button>
@@ -709,6 +736,7 @@ const AdminReservations = () => {
           </div>
 
           <div className="mb-4 flex w-fit max-w-full overflow-x-auto rounded-md border border-border bg-card p-0.5">
+            {(previewEnabled || coreWorkspace) && <><Button variant={tab === "customers" ? "default" : "ghost"} size="sm" onClick={() => setTab("customers")}>Customers</Button><Button variant={tab === "rentals" ? "default" : "ghost"} size="sm" onClick={() => setTab("rentals")}>Rentals</Button></>}
             {<Button variant={tab === "insights" ? "default" : "ghost"} size="sm" onClick={() => setTab("insights")}>Customer insights</Button>}
             <Button variant={tab === "dashboard" ? "default" : "ghost"} size="sm" onClick={() => setTab("dashboard")}>Dashboard</Button>
             <button
@@ -740,7 +768,12 @@ const AdminReservations = () => {
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
-          {tab !== "insights" && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
+          {!["insights", "customers", "rentals"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
+
+          {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onCommand={previewEnabled ? undefined : async (command, record) => {
+            const result = await callAdmin({ action: "core_command", command, record });
+            setCoreWorkspace(result.workspace);
+          }} />}
 
           {tab === "insights" && <CustomerInsights password={password} />}
 
@@ -820,6 +853,7 @@ const AdminReservations = () => {
                         <th className="px-2 py-1.5 border-r border-border w-8">
                           <input
                             type="checkbox"
+                            disabled={previewEnabled}
                             aria-label="Select all"
                             checked={filtered.length > 0 && filtered.every((r) => selectedIds.has(r.id))}
                             onChange={(e) => {
@@ -948,6 +982,7 @@ const AdminReservations = () => {
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
+                                readOnly={previewEnabled}
                                 value={draft.current_customer_id}
                                 customers={customers}
                                 disabledIds={currentAssignedIds}
@@ -957,6 +992,7 @@ const AdminReservations = () => {
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
+                                readOnly={previewEnabled}
                                 value={draft.future_customer_id}
                                 customers={customers}
                                 disabledIds={futureAssignedIds}
@@ -1001,6 +1037,7 @@ const AdminReservations = () => {
                           <td className="px-2 py-0.5 border-r border-border">
                             <input
                               type="checkbox"
+                              disabled={previewEnabled}
                               aria-label={`Select ${r.unit_code || r.id}`}
                               checked={selectedIds.has(r.id)}
                               onChange={() => toggleSelect(r.id)}
@@ -1040,6 +1077,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
+                                readOnly={previewEnabled}
                               value={r.current_customer_id}
                               customers={customers}
                               disabledIds={new Set([...currentAssignedIds].filter((id) => id !== r.current_customer_id))}
@@ -1048,6 +1086,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
+                                readOnly={previewEnabled}
                               value={r.future_customer_id}
                               customers={customers}
                               disabledIds={new Set([...futureAssignedIds].filter((id) => id !== r.future_customer_id))}
@@ -1072,6 +1111,7 @@ const AdminReservations = () => {
                             <Button
                               size="sm"
                               variant="ghost"
+                              disabled={previewEnabled}
                               className="h-6 text-xs px-2"
                               onClick={async () => {
                                 if (!confirm("Delete this sauna?")) return;
@@ -1111,6 +1151,7 @@ const TextCell = ({ value, onSave, mono }: { value: string; onSave: (v: string) 
     <input
       className={`w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none ${mono ? "font-mono" : ""}`}
       value={local}
+      readOnly={previewEnabled}
       onChange={(e) => setLocal(e.target.value)}
       onBlur={() => { if (local !== ref.current) onSave(local); }}
       onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); if (e.key === "Escape") { setLocal(ref.current); (e.target as HTMLInputElement).blur(); } }}
@@ -1129,7 +1170,7 @@ const DateCell = ({ value, onSave }: { value: string | null; onSave: (v: string 
       type={showAsDate ? "date" : "text"}
       className="w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none"
       value={local}
-      readOnly={!showAsDate}
+      readOnly={previewEnabled || !showAsDate}
       onChange={(e) => setLocal(e.target.value)}
       onFocus={() => setFocused(true)}
       onBlur={() => { setFocused(false); if (local !== ref.current) onSave(local || null); }}
@@ -1152,6 +1193,7 @@ const SelectCell = ({
 }) => {
   return (
     <select
+      disabled={previewEnabled}
       className={`w-full h-7 px-1.5 text-xs border border-transparent hover:border-border focus:border-primary rounded-sm outline-none ${capitalize ? "capitalize" : ""} ${badgeClass ? `font-medium ${badgeClass}` : "bg-transparent focus:bg-background"}`}
       value={value}
       onChange={(e) => onSave(e.target.value)}

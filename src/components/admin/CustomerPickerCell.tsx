@@ -18,10 +18,11 @@ interface Props {
   // hide them from the dropdown so a customer can't be picked twice.
   disabledIds?: Set<string>;
   placeholder?: string;
+  readOnly?: boolean;
   onChange: (customerId: string | null) => void | Promise<void>;
 }
 
-export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "", onChange }: Props) {
+export function CustomerPickerCell({ value, customers, disabledIds, placeholder = "", readOnly = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -38,6 +39,7 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
         <PopoverTrigger asChild>
           <button
             type="button"
+            disabled={readOnly}
             className="flex-1 min-w-0 text-left h-7 px-2 text-xs border border-transparent hover:border-border rounded-sm truncate"
           >
             {label || <span className="text-muted-foreground">{placeholder}</span>}
@@ -89,6 +91,7 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
       {value && !open && (
         <button
           type="button"
+          disabled={readOnly}
           aria-label="Clear"
           className="text-muted-foreground hover:text-foreground p-0.5"
           onClick={async (e) => { e.stopPropagation(); await onChange(null); }}
