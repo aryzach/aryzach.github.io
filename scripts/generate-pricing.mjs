@@ -1,4 +1,4 @@
-// Sync pricing from Lovable Cloud (Supabase) into src/lib/generatedPricing.ts.
+// Sync pricing from the configured Supabase project into src/lib/generatedPricing.ts.
 // Runs automatically before `npm run build` (see the "prebuild" script) and
 // can be run manually with `npm run pricing:sync`.
 //
