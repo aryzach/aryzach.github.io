@@ -38,8 +38,9 @@ export async function runXeroSync(db:DB,lease:string,begin:XeroRecord) {
    cache[resource]=mergeSource(resource,cacheResult.data.find(r=>r.resource===resource)?.records||[],rows,full);
   }
   const payload=await makeSyncProjection({cache,oldHistory,links,allocations,paymentReviews,previousReviews,cursor:started,full,initial:!begin.cursor});
+  payload.cache=payload.cache.filter(r=>JSON.stringify(r.records)!==JSON.stringify(cacheResult.data.find(c=>c.resource===r.resource)?.records));
   const published=await db.rpc('xero_sync_publish',{p_tenant:SYNC_TENANT,p_lease:lease,p_payload:payload});
-  if(published.error)throw Error('Could not publish the complete Xero refresh. Previous import is unchanged; retry Sync now.');
+  if(published.error){console.error('Xero cache publish rejected',JSON.stringify({code:published.error.code,message:published.error.message}));throw Error('Could not publish the complete Xero refresh. Previous import is unchanged; retry Sync now.');}
  } catch(error) {
   const message=error instanceof Error&&/^(Xero |Could not publish)/.test(error.message)?error.message:'Xero sync failed. Previous import is unchanged. Retry or reconnect Xero.';
   await db.rpc('xero_sync_fail',{p_tenant:SYNC_TENANT,p_lease:lease,p_error:message});

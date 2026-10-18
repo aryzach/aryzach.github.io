@@ -51,16 +51,18 @@ $$;
 
 CREATE FUNCTION public.xero_sync_publish(p_tenant uuid,p_lease uuid,p_payload jsonb) RETURNS void
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
-DECLARE item jsonb; old_ack boolean; old_fingerprint text;
+DECLARE item jsonb; old_ack boolean; old_fingerprint text; cache_rows jsonb;
 BEGIN
  PERFORM 1 FROM xero_sync_state WHERE tenant_id=p_tenant AND lease_id=p_lease AND status='running' AND lease_until>now() FOR UPDATE;
  IF NOT FOUND THEN RAISE EXCEPTION 'Sync lease expired'; END IF;
- IF p_payload->>'complete' IS DISTINCT FROM 'true' OR jsonb_array_length(p_payload->'cache')<>5 THEN RAISE EXCEPTION 'Incomplete source read'; END IF;
+ cache_rows:=p_payload->'cache';
+ p_payload:=p_payload-'cache';
+ IF p_payload->>'complete' IS DISTINCT FROM 'true' OR p_payload->'sourceResources' IS DISTINCT FROM '["Contacts","BankTransactions","Invoices","Payments","CreditNotes"]'::jsonb OR coalesce(jsonb_typeof(cache_rows),'null')<>'array' THEN RAISE EXCEPTION 'Incomplete source read'; END IF;
  LOCK TABLE xero_customer_links IN SHARE MODE;
  IF p_payload->'links' IS DISTINCT FROM (SELECT coalesce(jsonb_agg(jsonb_build_object('contact_id',contact_id,'customer_id',customer_id) ORDER BY contact_id),'[]') FROM xero_customer_links WHERE tenant_id=p_tenant) THEN RAISE EXCEPTION 'Customer mappings changed; retry sync'; END IF;
- FOR item IN SELECT value FROM jsonb_array_elements(p_payload->'cache') LOOP
+ FOR item IN SELECT value FROM jsonb_array_elements(cache_rows) LOOP
  INSERT INTO xero_sync_cache(tenant_id,resource,records) VALUES(p_tenant,item->>'resource',item->'records')
- ON CONFLICT(tenant_id,resource) DO UPDATE SET records=excluded.records;
+ ON CONFLICT(tenant_id,resource) DO UPDATE SET records=excluded.records WHERE xero_sync_cache.records IS DISTINCT FROM excluded.records;
  END LOOP;
  FOR item IN SELECT value FROM jsonb_array_elements(p_payload->'histories') LOOP
  INSERT INTO xero_customer_history(tenant_id,contact_id,contact_name,contact_source,transactions,pending_matches,review_state,source_version,snapshot_at,coverage)

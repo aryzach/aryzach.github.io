@@ -8,7 +8,7 @@ const input=(extra:Partial<SyncInput>={}):SyncInput=>({cache:{Contacts:[{Contact
 test('old Xero amount and classification corrections replace the current projection, without operational writes or old source versions',async()=>{
  const i=input();i.cache.BankTransactions=[bank({Total:218,LineItems:[{AccountCode:'372',LineAmount:200,TaxAmount:18}]})];
  const p=await makeSyncProjection(i);assert.equal(p.replacements.length,1);assert.equal(p.replacements[0].allocations.find(a=>a.category==='sale').amount_cents,20000);assert.equal(p.reviews[0].kind,'classification');
- assert.deepEqual(Object.keys(p).sort(),['cache','complete','counts','coverage','cursor','full','histories','links','replacements','reviews'].sort());assert.equal(p.histories[0].transactions.length,1);assert.equal(p.histories[0].transactions[0].amount,'218');
+ assert.deepEqual(Object.keys(p).sort(),['cache','complete','counts','coverage','cursor','full','histories','links','replacements','reviews','sourceResources'].sort());assert.equal(p.histories[0].transactions.length,1);assert.equal(p.histories[0].transactions[0].amount,'218');
 });
 test('a date correction preserves existing classifications and requests review without changing installation, pickup or terms',async()=>{
  const i=input();i.cache.BankTransactions=[bank({DateString:'2025-02-01'})];const p=await makeSyncProjection(i);assert.equal(p.replacements.length,0);assert.equal(p.reviews[0].kind,'conflict');assert.match(p.reviews[0].message,/preserved/);
@@ -51,4 +51,7 @@ test('documented Xero pagination metadata ends the full read without an extra re
 test('a cash credit-note refund subtracts net rent and does not count the credit document as another payment',async()=>{
  const i=input({oldHistory:[],allocations:[]});i.cache.BankTransactions=[];i.cache.CreditNotes=[{CreditNoteID:'credit',Type:'ACCRECCREDIT',Contact:{ContactID:contact},Total:109,CurrencyCode:'USD',LineItems:[{AccountCode:'102',LineAmount:100,TaxAmount:9}]}];i.cache.Payments=[{PaymentID:payment,CreditNote:{CreditNoteID:'credit'},Amount:109,Date:'2025-01-01',Status:'AUTHORISED'}];
  const p=await makeSyncProjection(i);assert.equal(p.counts.payments,1);const r=p.replacements[0].allocations.find(a=>a.category==='rental');assert.equal(r.source_kind,'payment_out');assert.equal(r.amount_cents,10000);
+});
+test('the stored cache excludes supplier ledger entries while preserving all customer receipts',async()=>{
+ const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000099',Contact:{ContactID:'vendor'},Type:'SPEND',LineItems:[{AccountCode:'5000',LineAmount:109,TaxAmount:0}]}));const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,1);assert.deepEqual(p.sourceResources,[...SYNC_RESOURCES]);assert.equal(p.histories[0].transactions.length,1);
 });

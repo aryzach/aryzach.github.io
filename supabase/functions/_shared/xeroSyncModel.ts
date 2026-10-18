@@ -116,6 +116,12 @@ export async function makeSyncProjection(input:SyncInput) {
     replacements.push({sourceId:id,allocations:[]});
     await review('classification',`missing:${id}`,t.contactId,id,'This payment is no longer in Xero’s current cash records. It has been removed from actual LTV.',[id,'missing']);
   }
+  // Keep only customer cash/documents, rather than copying the supplier/expense ledger.
+  // Contacts stay cached so an existing contact can become a customer between nightly reads.
+  const customerInvoices=cache.Invoices.filter(r=>r.Type==='ACCREC');
+  const customerCredits=cache.CreditNotes.filter(r=>r.Type==='ACCRECCREDIT');
+  const invoiceIds=new Set(customerInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
+  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>eligible.has(r.Contact?.ContactID)&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
   const histories=[];
   for(const id of eligible) {
     const contact=contactMap.get(id)||oldHistory.find(h=>h.contact_id===id)?.contact_source;
@@ -125,5 +131,5 @@ export async function makeSyncProjection(input:SyncInput) {
   }
   for(const r of replacements)r.expectedActiveIds=allocations.filter(a=>a.source_id===r.sourceId&&!a.voided_at).map(a=>a.id).filter(Boolean).sort();
   const uniqueReviews=[...new Map(reviews.map(r=>[r.key,r])).values()];
-  return {complete:true,full,cursor,links:[...links].sort((a,b)=>a.contact_id.localeCompare(b.contact_id)).map(l=>({contact_id:l.contact_id,customer_id:l.customer_id})),cache:SYNC_RESOURCES.map(resource=>({resource,records:cache[resource]})),histories,replacements,reviews:uniqueReviews,counts:{contacts:histories.length,payments:current.size,updatedPayments:replacements.length,needsReview:uniqueReviews.length},coverage:{terminalPageReached:true,note:'Current Xero cash and contacts. Nightly full reconciliation; incremental manual refresh. Invoice payments needing a split are excluded from LTV until reviewed. No prior source versions are stored.'}};
+  return {complete:true,full,cursor,sourceResources:[...SYNC_RESOURCES],links:[...links].sort((a,b)=>a.contact_id.localeCompare(b.contact_id)).map(l=>({contact_id:l.contact_id,customer_id:l.customer_id})),cache:SYNC_RESOURCES.map(resource=>({resource,records:currentCache[resource]})),histories,replacements,reviews:uniqueReviews,counts:{contacts:histories.length,payments:current.size,updatedPayments:replacements.length,needsReview:uniqueReviews.length},coverage:{terminalPageReached:true,note:'Current Xero cash and contacts. Nightly full reconciliation; incremental manual refresh. Invoice payments needing a split are excluded from LTV until reviewed. No prior source versions are stored.'}};
 }
