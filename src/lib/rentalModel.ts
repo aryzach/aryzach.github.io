@@ -7,6 +7,7 @@ export interface CustomerProfile {
   name: string;
   email: string;
   phone: string;
+  primaryContact?: string;
   archived: boolean;
   legacyReservationIds: string[];
   version?: number;

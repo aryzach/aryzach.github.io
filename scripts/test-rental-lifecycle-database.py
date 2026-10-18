@@ -24,6 +24,7 @@ notifications=(R/'supabase/migrations/20261017060000_atomic_payment_and_notifica
 sql(notifications[:notifications.index('-- Lock the reservation')])
 sql((R/'drizzle/migrations/0004_auto_committed_until.sql').read_text())
 sql((R/'supabase/migrations/20261017220000_rental_lifecycle.sql').read_text())
+sql((R/'supabase/migrations/20261018020000_reviewed_historical_corrections.sql').read_text())
 if '--schema-only' in sys.argv:
  print(DB);sys.exit(0)
 def call(op,payload,command=None,ok=True):
@@ -139,6 +140,27 @@ assert sql("UPDATE contracts SET monthly_price=1 WHERE id='"+contract+"'",ok=Fal
 sql("UPDATE contracts SET status='Voided',voided_at='2025-01-02',void_reason='Synthetic replacement' WHERE id='"+contract+"'")
 assert sql("SELECT t.state FROM rental_terms t JOIN rental_agreements a ON a.id=t.agreement_id WHERE a.contract_id='"+contract+"'")=='superseded'
 assert sql("SELECT monthly_price FROM contracts WHERE id='"+contract+"'")=='300'
-result={'database':DB,'passed':True,'checks':['manual backfill without invented dates or duplicate customers','no historical email intents','command idempotency','racing installation serialized','invalid operations roll back atomically','swap history and inventory agree','effective rates retain prior values','case-specific settlement','sale preserves and closes rental history','sold and historical saunas protected','private tables and commands inaccessible to public roles','swaps preserve original commitment end','history corrections respect placement bounds','cancellation retains booking history','cash allocations capped and tied to original customer; corrections retain audit history','normal website booking and signing preserved; signed contents immutable; voided terms cannot activate']}
+# Owner-reviewed history preserves uncertainty, raw cash and stable identities.
+review_id=str(uuid.uuid4())
+review={'reason':'Synthetic owner review','rentals':[{'id':r5,'version':version(r5),'review':{'paymentStatus':'unknown'}}],
+ 'customers':[{'id':c1,'version':1,'primaryContact':'Synthetic primary'}],
+ 'events':[{'id':str(uuid.uuid4()),'rentalId':r5,'assetId':units[0],'type':'Historical sauna assignment','detail':{'typeAtInstall':'Indoor Infrared','conversionDate':None,'note':'Conversion day unknown'}}]}
+assert call('owner_review_batch',review,review_id)==call('owner_review_batch',review,review_id)
+assert sql("SELECT actual_end IS NULL AND owner_review->>'paymentStatus'='unknown' FROM rentals WHERE id='"+r5+"'")=='t'
+assert sql("SELECT primary_contact_name FROM customer_profiles WHERE id='"+c1+"'")=='Synthetic primary'
+old_review=sql("SELECT owner_review FROM rentals WHERE id='"+r5+"'")
+fails('owner_review_batch',{'reason':'Stale review','rentals':[{'id':r5,'version':0,'review':{'paymentStatus':'paid'}}]},'changed')
+assert sql("SELECT owner_review FROM rentals WHERE id='"+r5+"'")==old_review
+fails('owner_review_batch',{'reason':'Invalid early cancellation','rentals':[{'id':r3,'version':version(r3),'state':'canceled'}]},'dated placements')
+transactions2=json.dumps([{'id':'duplicate-fixture','status':'AUTHORISED','type':'RECEIVE','amount':'100.00','currency':'USD'},{'id':'retained-fixture','status':'AUTHORISED','type':'RECEIVE','amount':'100.00','currency':'USD'}])
+sql("UPDATE xero_customer_history SET transactions=transactions||'"+transactions2+"'::jsonb")
+raw_cash=sql('SELECT transactions FROM xero_customer_history')
+call('owner_review_batch',{'reason':'Owner confirmed duplicate','paymentReviews':[{'tenantId':tenant,'customerId':c1,'sourceId':'duplicate-fixture','retainedSourceId':'retained-fixture','reason':'Count only one'}]})
+fails('allocate_payment',{**allocation,'sourceId':'duplicate-fixture','amountCents':1000},'reviewed duplicate')
+assert sql('SELECT transactions FROM xero_customer_history')==raw_cash
+assert sql('SET ROLE anon; SELECT * FROM customer_payment_reviews',ok=False).returncode
+assert sql("SET ROLE service_role; SELECT rental_lifecycle_command_before_owner_review(gen_random_uuid(),'allocate_payment','{}')",ok=False).returncode
+assert count('reservation_notification_intents')==1
+result={'database':DB,'passed':True,'checks':['manual backfill without invented dates or duplicate customers','no historical email intents','command idempotency','racing installation serialized','invalid operations roll back atomically','swap history and inventory agree','effective rates retain prior values','case-specific settlement','sale preserves and closes rental history','sold and historical saunas protected','private tables and commands inaccessible to public roles','swaps preserve original commitment end','history corrections respect placement bounds','cancellation retains booking history','cash allocations capped and tied to original customer; corrections retain audit history','normal website booking and signing preserved; signed contents immutable; voided terms cannot activate','owner review idempotency, stale version rejection, uncertain dates retained, primary contact preserved, duplicate cash excluded without changing source, wrapper cannot be bypassed']}
 if os.environ.get('SF_LIFECYCLE_TEST_REPORT'):Path(os.environ['SF_LIFECYCLE_TEST_REPORT']).write_text(json.dumps(result,indent=2))
 print(json.dumps(result,indent=2))
