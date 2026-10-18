@@ -228,6 +228,7 @@ const AdminReservations = () => {
     | "fleet"
     | "custody"
     | "condition"
+    | "booking_availability"
     | "customer"
     | "future_customer"
     | "install"
@@ -237,7 +238,7 @@ const AdminReservations = () => {
     | "notes"
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
-    id: "", location: "", style: "", model: "", fleet: "", custody: "", condition: "",
+    id: "", location: "", style: "", model: "", fleet: "", custody: "", condition: "", booking_availability: "",
     customer: "", future_customer: "", install: "", committed: "", available: "", monthly: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
@@ -249,6 +250,7 @@ const AdminReservations = () => {
     ["fleet", "Fleet"],
     ["custody", "Location"],
     ["condition", "Condition"],
+    ["booking_availability", "Booking availability"],
     ["customer", "Current Customer"],
     ["future_customer", "Future Customer"],
     ["install", "Install"],
@@ -608,6 +610,7 @@ const AdminReservations = () => {
     fleet: inventoryLife(r).fleet,
     custody: inventoryLife(r).custody,
     condition: conditionLabel(inventoryLife(r).condition),
+    booking_availability: r.future_customer_id ? "Reserved" : "Unreserved",
     customer: r.current_customer || "",
     future_customer: r.future_customer || "",
     install: r.install_date || "",
@@ -623,7 +626,7 @@ const AdminReservations = () => {
     const rows = inventory.filter((r) => {
       if (!active.length) return true;
       const vals = rowValues(r);
-      return active.every(([k, v]) => ['fleet','custody','condition'].includes(k)?vals[k]===v:vals[k].toLowerCase().includes(v.toLowerCase()));
+      return active.every(([k, v]) => ['fleet','custody','condition','booking_availability'].includes(k)?vals[k]===v:vals[k].toLowerCase().includes(v.toLowerCase()));
     });
     if (sortCol) {
       rows.sort((a, b) => {
@@ -938,10 +941,10 @@ const AdminReservations = () => {
                             {MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
                           </select>
                         </th>
-                        {(['fleet','custody','condition'] as const).map(key=><th key={key} className="px-1 py-1 border-r border-border">
-                          <select aria-label={`Filter ${key==='custody'?'location':key}`} className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters[key]} onChange={e=>setColFilter(key,e.target.value)}>
+                        {(['fleet','custody','condition','booking_availability'] as const).map(key=><th key={key} className="px-1 py-1 border-r border-border">
+                          <select aria-label={`Filter ${key==='custody'?'location':key==='booking_availability'?'booking availability':key}`} className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters[key]} onChange={e=>setColFilter(key,e.target.value)}>
                             <option value="">All</option>
-                            {[...new Set(inventory.map(r=>rowValues(r)[key]))].sort().map(value=><option key={value} value={value}>{value}</option>)}
+                            {(key==='booking_availability'?['Reserved','Unreserved']:[...new Set(inventory.map(r=>rowValues(r)[key]))].sort()).map(value=><option key={value} value={value}>{value}</option>)}
                           </select>
                         </th>)}
                         <th className="px-1 py-1 border-r border-border">
@@ -1013,6 +1016,7 @@ const AdminReservations = () => {
                             </td>
                             <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={saunaLifecycle({sourceStatus:draft.status}).custody}/></td>
                             <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value="Not recorded"/></td>
+                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={draft.future_customer_id?'Reserved':'Unreserved'}/></td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
                                 readOnly
@@ -1100,7 +1104,7 @@ const AdminReservations = () => {
                               onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
-                          {(['fleet','custody','condition'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><SaunaStateBadge value={rowValues(r)[key]}/></td>)}
+                          {(['fleet','custody','condition','booking_availability'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><span title={key==='booking_availability'?'Based on the future-customer assignment. Unreserved does not mean ready or available for installation.':undefined}><SaunaStateBadge value={rowValues(r)[key]}/></span></td>)}
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
                                 readOnly

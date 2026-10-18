@@ -1,4 +1,5 @@
 const colors:Record<string,string>={
+ 'Reserved':'border-blue-200 bg-blue-50 text-blue-800',
  'In fleet':'border-emerald-200 bg-emerald-50 text-emerald-800',
  'Ready':'border-emerald-200 bg-emerald-50 text-emerald-800',
  'With customer':'border-blue-200 bg-blue-50 text-blue-800',
