@@ -25,8 +25,15 @@ BEGIN
  UPDATE sauna_inventory SET future_customer_id=(b->>'reservationId')::uuid,status='Reservation Hold' WHERE id=aid;
  UPDATE reservations SET booking_state='confirmed',booking_install_on=day+20 WHERE id=(b->>'reservationId')::uuid;
  rejected:=false;
- BEGIN PERFORM rental_lifecycle_command(gen_random_uuid(),'asset_status',p||jsonb_build_object('incomingEta',day+30));EXCEPTION WHEN OTHERS THEN IF SQLERRM NOT LIKE 'Expected arrival must%' THEN RAISE;END IF;rejected:=true;END;
- IF NOT rejected OR (SELECT incoming_eta FROM sauna_inventory WHERE id=aid)<>day+10 THEN RAISE EXCEPTION 'Late arrival was not rejected atomically';END IF;
+ BEGIN PERFORM rental_lifecycle_command(gen_random_uuid(),'asset_status',p||jsonb_build_object('incomingEta',day+30));EXCEPTION WHEN OTHERS THEN IF SQLERRM NOT LIKE 'Arrival conflicts with a confirmed booking%' THEN RAISE;END IF;rejected:=true;END;
+ IF NOT rejected OR (SELECT incoming_eta FROM sauna_inventory WHERE id=aid)<>day+10 THEN RAISE EXCEPTION 'Unacknowledged conflict was not rejected atomically';END IF;
+ out1:=rental_lifecycle_command(gen_random_uuid(),'asset_status',p||jsonb_build_object('incomingEta',day+30,'acknowledgeScheduleConflict',true));
+ IF (SELECT incoming_eta FROM sauna_inventory WHERE id=aid)<>day+30 OR jsonb_array_length(out1->'schedulingConflicts')<>1 OR (SELECT future_customer_id FROM sauna_inventory WHERE id=aid)<>(b->>'reservationId')::uuid OR NOT EXISTS(SELECT 1 FROM reservations WHERE id=(b->>'reservationId')::uuid AND booking_state='confirmed' AND booking_install_on=day+20) THEN RAISE EXCEPTION 'Acknowledged shipment correction changed booking facts';END IF;
+ IF (booking_readiness((b->>'reservationId')::uuid)->>'date')::boolean THEN RAISE EXCEPTION 'Impossible promise still ready for confirmation';END IF;
+ rejected:=false;
+ BEGIN PERFORM booking_command_before_completion(gen_random_uuid(),'confirm',jsonb_build_object('id',b->>'reservationId','version',(SELECT booking_version FROM reservations WHERE id=(b->>'reservationId')::uuid),'assetId',aid,'installOn',day+20,'reason','Must not reconfirm before arrival'));EXCEPTION WHEN OTHERS THEN rejected:=true;END;
+ IF NOT rejected THEN RAISE EXCEPTION 'Impossible booking could be reconfirmed';END IF;
+ PERFORM rental_lifecycle_command(gen_random_uuid(),'asset_status',p);
  rejected:=false;
  BEGIN PERFORM rental_lifecycle_command(gen_random_uuid(),'asset_status',p||jsonb_build_object('date',day+1));EXCEPTION WHEN OTHERS THEN IF SQLERRM NOT LIKE 'Status effective date%' THEN RAISE;END IF;rejected:=true;END;
  IF NOT rejected THEN RAISE EXCEPTION 'Future actual status date accepted';END IF;

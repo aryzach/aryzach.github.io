@@ -1,3 +1,5 @@
+import {Dialog,DialogContent,DialogHeader,DialogTitle} from '@/components/ui/dialog';
+import {fleetEditable,incomingBookingConflicts} from '@/lib/incomingFleet';
 import SaunaStateBadge from '@/components/admin/SaunaStateBadge';
 import {fetchAdminJson} from '@/lib/adminRequest';
 import XeroSyncPanel from '@/components/admin/XeroSyncPanel';
@@ -295,6 +297,7 @@ const AdminReservations = () => {
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [fleetEditor,setFleetEditor]=useState<string|null>(null);
   const toggleSelect = (id: string) =>
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -847,6 +850,7 @@ const AdminReservations = () => {
             />
           )}
 
+          {tab === 'inventory' && coreWorkspace && <Dialog open={!!fleetEditor} onOpenChange={open=>{if(!open&&!bulkBusy)setFleetEditor(null);}}><DialogContent className="max-w-3xl max-h-[90vh] overflow-auto" onInteractOutside={e=>{if(bulkBusy)e.preventDefault();}} onEscapeKeyDown={e=>{if(bulkBusy)e.preventDefault();}}><DialogHeader><DialogTitle>Edit sauna fleet status</DialogTitle></DialogHeader>{fleetEditor&&<SaunaConditionPanel key={fleetEditor} inline onClose={()=>setFleetEditor(null)} initialTargets={[fleetEditor]} initialAction="incoming" state={coreWorkspace} onBusyChange={setBulkBusy} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}</DialogContent></Dialog>}
           {tab === "inventory" && coreWorkspace && <SaunaConditionPanel state={coreWorkspace} selectedIds={[...selectedIds]} onBusyChange={setBulkBusy} onSelectionChange={ids=>setSelectedIds(new Set(ids))} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}
 
           {tab === "inventory" && (
@@ -1104,7 +1108,7 @@ const AdminReservations = () => {
                               onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
-                          {(['fleet','custody','condition','booking_availability'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><span title={key==='booking_availability'?'Based on the future-customer assignment. Unreserved does not mean ready or available for installation.':undefined}><SaunaStateBadge value={rowValues(r)[key]}/></span></td>)}
+                          {(['fleet','custody','condition','booking_availability'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><span title={key==='booking_availability'?'Based on the future-customer assignment. Unreserved does not mean ready or available for installation.':undefined}>{key==='fleet'?<div><button type="button" aria-label={`Edit fleet for sauna ${r.unit_code}`} title="Edit fleet status" className="rounded-md text-left hover:ring-2 hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default" disabled={bulkBusy||!coreWorkspace||!fleetEditable({...coreWorkspace?.assets.find(a=>a.id===r.id),sourceStatus:r.status},!!r.current_customer_id)} onClick={()=>setFleetEditor(r.id)}><SaunaStateBadge value={rowValues(r)[key]}/><span className="ml-1 text-primary" aria-hidden="true">✎</span></button>{r.status==='Incoming'&&incomingBookingConflicts(coreWorkspace?.bookings||[],[r.id],String(coreWorkspace?.legacyInventory?.find(a=>a.id===r.id)?.incoming_eta||'')).length>0&&<button type="button" className="mt-1 block text-left text-[10px] font-medium text-amber-800 underline" onClick={()=>setTab('reservations')}>Install date needs review</button>}</div>:<SaunaStateBadge value={rowValues(r)[key]}/>}</span></td>)}
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
                                 readOnly
