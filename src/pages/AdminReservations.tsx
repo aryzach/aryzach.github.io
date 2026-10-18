@@ -302,7 +302,7 @@ const AdminReservations = () => {
   const clearSelection = () => setSelectedIds(new Set());
 
   const bulkDelete = async () => {
-    if (!selectedIds.size) return;
+    if (previewEnabled || !selectedIds.size) return;
     if (!confirm(`Delete ${selectedIds.size} sauna${selectedIds.size === 1 ? "" : "s"}?`)) return;
     setBulkBusy(true);
     let ok = 0; let fail = 0;
@@ -481,7 +481,7 @@ const AdminReservations = () => {
   };
 
   const callAdmin = useCallback(
-    async (body: Record<string, unknown>) => {
+    async (body: Record<string, unknown>, bounded = false) => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const url = `${supabaseUrl}/functions/v1/admin-api`;
       const init = {
@@ -493,7 +493,7 @@ const AdminReservations = () => {
         },
         body: JSON.stringify(body),
       };
-      if (['lifecycle_command','core_workspace'].includes(String(body.action))) return fetchAdminJson(url, init);
+      if (bounded || ['lifecycle_command','core_workspace'].includes(String(body.action))) return fetchAdminJson(url, init);
       const res = await fetch(url, init);
       if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
       return res.json();
@@ -546,6 +546,18 @@ const AdminReservations = () => {
       setLoading(false);
     }
   }, [callAdmin]);
+
+  const inventoryStateCommand=async(action:'booking_command'|'lifecycle_command',operation:string,record:Record<string,unknown>)=>{
+    const {commandId,...fields}=record;const request={action,operation,commandId,record:fields};
+    const result=previewEnabled?await fetchAdminJson('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}):await callAdmin(request,true);
+    setCoreWorkspace(result.workspace);
+    if(previewEnabled){try{sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));}catch{toast.warning('Saved in the local database, but this tab could not cache the updated inventory.',{id:'inventory-cache-warning'});}}
+  };
+  const refreshInventoryWorkspace=async()=>{
+    if(previewEnabled){const copy=await fetchAdminJson('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});setCoreWorkspace(copy);try{sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}catch{toast.warning('Inventory refreshed, but this tab could not cache it.',{id:'inventory-cache-warning'});}return;}
+    const [core,rows]=await Promise.all([callAdmin({action:'core_workspace'},true),callAdmin({action:'list_inventory'},true)]);
+    setCoreWorkspace(core.workspace);setInventory(rows.inventory||[]);
+  };
 
   const refreshAfterSync=useCallback(async()=>{
     if(!previewEnabled){await loadAll();return;}
@@ -832,7 +844,8 @@ const AdminReservations = () => {
             />
           )}
 
-          {tab === "inventory" && coreWorkspace && <SaunaConditionPanel state={coreWorkspace} onAssetState={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'lifecycle_command',operation,commandId,record:fields};const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const b=await r.json();if(!r.ok)throw Error(b.error||'Fleet update failed');return b;}):await callAdmin(request);setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();}} onCommand={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'booking_command',operation,commandId,record:fields};const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const b=await r.json();if(!r.ok)throw Error(b.error||'Condition update failed');return b;}):await callAdmin(request);setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();}}/>}
+          {tab === "inventory" && coreWorkspace && <SaunaConditionPanel state={coreWorkspace} selectedIds={[...selectedIds]} onBusyChange={setBulkBusy} onSelectionChange={ids=>setSelectedIds(new Set(ids))} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}
+
           {tab === "inventory" && (
             <>
           {importResult && (
@@ -853,8 +866,8 @@ const AdminReservations = () => {
             <div className="mb-3 p-2 rounded-md border border-primary bg-primary/5 flex flex-wrap items-center gap-2 text-sm">
               <span className="font-medium">{selectedIds.size} selected</span>
               <span className="text-xs text-muted-foreground">Use Bookings for reservations and Rentals for physical movements.</span>
-              <Button size="sm" variant="destructive" className="h-7 text-xs px-2" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
-              <Button size="sm" variant="ghost" className="h-7 text-xs px-2 ml-auto" onClick={clearSelection}>Clear</Button>
+              <Button size="sm" variant="destructive" className="h-7 text-xs px-2" disabled={bulkBusy||previewEnabled} onClick={bulkDelete}>Delete</Button>
+              <Button size="sm" variant="ghost" className="h-7 text-xs px-2 ml-auto" disabled={bulkBusy} onClick={clearSelection}>Clear</Button>
             </div>
           )}
 
@@ -874,7 +887,7 @@ const AdminReservations = () => {
                         <th className="px-2 py-1.5 border-r border-border w-8">
                           <input
                             type="checkbox"
-                            disabled={previewEnabled}
+                            disabled={bulkBusy||(previewEnabled&&!import.meta.env.DEV)}
                             aria-label="Select all"
                             checked={filtered.length > 0 && filtered.every((r) => selectedIds.has(r.id))}
                             onChange={(e) => {
@@ -1057,7 +1070,7 @@ const AdminReservations = () => {
                           <td className="px-2 py-0.5 border-r border-border">
                             <input
                               type="checkbox"
-                              disabled={previewEnabled}
+                              disabled={bulkBusy||(previewEnabled&&!import.meta.env.DEV)}
                               aria-label={`Select ${r.unit_code || r.id}`}
                               checked={selectedIds.has(r.id)}
                               onChange={() => toggleSelect(r.id)}
