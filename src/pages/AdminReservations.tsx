@@ -1,3 +1,4 @@
+import {fetchAdminJson} from '@/lib/adminRequest';
 import XeroSyncPanel from '@/components/admin/XeroSyncPanel';
 import XeroCustomerHistory from '@/components/admin/XeroCustomerHistory';
 import BookingsPanel from '@/components/admin/BookingsPanel';
@@ -479,7 +480,8 @@ const AdminReservations = () => {
   const callAdmin = useCallback(
     async (body: Record<string, unknown>) => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const res = await fetch(`${supabaseUrl}/functions/v1/admin-api`, {
+      const url = `${supabaseUrl}/functions/v1/admin-api`;
+      const init = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -487,11 +489,10 @@ const AdminReservations = () => {
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || `HTTP ${res.status}`);
-      }
+      };
+      if (['lifecycle_command','core_workspace'].includes(String(body.action))) return fetchAdminJson(url, init);
+      const res = await fetch(url, init);
+      if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
       return res.json();
     },
     [password],
@@ -774,15 +775,15 @@ const AdminReservations = () => {
           {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onReadHistory={previewEnabled ? undefined : async selection => callAdmin({action:"xero_customer_history",...selection})} onLifecycle={previewEnabled&&!import.meta.env.DEV?undefined:async (operation,record)=>{
             const {commandId,...fields}=record;
             const request={action:'lifecycle_command',operation,commandId,record:fields};
-            const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const result=await r.json();if(!r.ok)throw new Error(result.error||'Local database unavailable');return result;}):await callAdmin(request);
+            const result=previewEnabled?await fetchAdminJson('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}):await callAdmin(request);
             setCoreWorkspace(result.workspace);
             if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));
-            else await loadAll();
+            else void loadAll();
           }} onOpenAgreement={async id=>{
             const agreement=coreWorkspace.lifecycle?.agreements.find(a=>a.id===id);
             if(previewEnabled){const doc=coreWorkspace.lifecycle?.documents.find(d=>d.id===agreement?.document_id);const url=doc?.local_url||agreement?.local_url;if(!url)throw new Error('No local PDF copy is available for this agreement.');window.open(url,'_blank','noopener,noreferrer');return;}
             const result=await callAdmin({action:'lifecycle_document_url',agreementId:id});window.open(result.url,'_blank','noopener,noreferrer');
-          }} onRefresh={async()=>{if(!previewEnabled){await loadAll();return;}const r=await fetch('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});if(!r.ok)throw new Error('Could not refresh the local copy');const copy=await r.json();setCoreWorkspace(copy);sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}} onUpload={async(file,commandId,incomplete)=>{
+          }} onRefresh={async()=>{const copy=previewEnabled?await fetchAdminJson('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'}):(await callAdmin({action:'core_workspace'})).workspace;setCoreWorkspace(copy);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}} onUpload={async(file,commandId,incomplete)=>{
             if(file.size>20*1024*1024)throw new Error('Choose a PDF up to 20 MB.');
             const bytes=new Uint8Array(await file.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
             const request={action:'lifecycle_document_upload',base64:btoa(binary),filename:file.name,commandId,incomplete};
