@@ -1,6 +1,7 @@
+import { customerLtv } from './customerLtv.ts';
 import { customerName, type RentalWorkspace } from './rentalModel.ts';
 
-export type DirectoryColumn = 'name' | 'phone' | 'reservations' | 'saunas' | 'stripe' | 'xero';
+export type DirectoryColumn = 'name' | 'phone' | 'reservations' | 'saunas' | 'stripe' | 'xero' | 'committed' | 'actual';
 export type DirectoryFilters = Partial<Record<DirectoryColumn, string>>;
 export function stripeCustomerUrl(id: string): string | null {
   return /^cus_[A-Za-z0-9]+$/.test(id) ? `https://dashboard.stripe.com/customers/${id}` : null;
@@ -21,7 +22,10 @@ export function customerDirectory(state: RentalWorkspace) {
     const saunas = state.assets.filter(a => currentIds.has(a.id));
     const stripeIds = [...new Set(reservations.flatMap(r => r.stripeCustomerId && stripeCustomerUrl(r.stripeCustomerId) ? [r.stripeCustomerId] : []))];
     const xeroLinks = (state.xeroLinks || []).filter(l => l.customerId === customer.id);
-    return { customer, reservations, saunas, stripeIds, xeroLinks, text: {
+    const ltv = customerLtv(state, customer.id);
+    const amountText = (amount: number | null) => amount === null ? 'Unknown' : `${(amount / 100).toFixed(2)} ${new Intl.NumberFormat('en-US', {style:'currency',currency:'USD'}).format(amount / 100)}`;
+    return { customer, reservations, saunas, stripeIds, xeroLinks, ltv, text: {
+      committed: amountText(ltv.committed), actual: amountText(ltv.actual),
       name: customerName(customer), phone: customer.phone,
       reservations: reservations.map(r => `${r.id} ${r.createdAt.slice(0, 10)} ${r.status}`).join(' '),
       saunas: saunas.map(a => `${a.code} ${a.typeName || a.model}`).join(' '), stripe: stripeIds.join(' '), xero: xeroLinks.map(l => `${l.name} ${l.contactId}`).join(' '),
@@ -39,5 +43,13 @@ export function filterDirectory(rows: DirectoryRow[], search: string, filters: D
   return rows.filter(row => (showArchived || !row.customer.archived)
     && (!search.trim() || Object.entries(row.text).some(([key, value]) => matches(value, search, key === 'phone')))
     && Object.entries(filters).every(([key, value]) => !value?.trim() || matches(row.text[key as DirectoryColumn], value, key === 'phone')))
-    .sort((a, b) => (descending ? -1 : 1) * compare.compare(a.text[sort], b.text[sort]) || compare.compare(a.customer.id, b.customer.id));
+    .sort((a, b) => {
+      if (sort === 'committed' || sort === 'actual') {
+        const left = a.ltv[sort], right = b.ltv[sort];
+        if (left === null && right !== null) return 1;
+        if (right === null && left !== null) return -1;
+        return (descending ? -1 : 1) * ((left ?? 0) - (right ?? 0)) || compare.compare(a.text.name, b.text.name);
+      }
+      return (descending ? -1 : 1) * compare.compare(a.text[sort], b.text[sort]) || compare.compare(a.customer.id, b.customer.id);
+    });
 }

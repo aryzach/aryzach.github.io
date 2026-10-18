@@ -137,6 +137,14 @@ A customer page joins reviewed identities, all reservations, actual rentals/assi
 
 Keep billed revenue, realized/earned revenue, collected cash, contribution and predictions separate. CAC requires verified acquisition spending and first-customer attribution; contribution requires verified variable costs. Current signed/CRM committed-revenue projections remain unchanged until a separately reviewed replacement preserves their rules. Historical reporting must not convert planned renewals, holds or unsold inventory into actual revenue.
 
+### Customer table LTV (owner-approved rental-only scope)
+
+The customer table displays recorded committed LTV as the sum of each non-superseded rental term's minimum months multiplied by base monthly rent plus monthly add-ons. Purchase bookings, canceled rentals, and voided agreements are excluded. Signature-unconfirmed historical terms are labeled for review. Missing terms and unquantified early-exit waivers/settlements display Unknown; do not invent a proration or treat the original contract minimum as still collectible after a waiver. This metric is the recorded minimum, not an outstanding balance or speculative renewal forecast.
+
+Actual LTV is classified rental/add-on cash receipts less classified rental/add-on outgoing payments, from the latest imported Xero history. Exclude voided allocations, owner-reviewed duplicate receipts, deposits, taxes, sales, delivery, and unclassified cash. No usable classified history means Unknown, not zero. Figures are in USD; unsupported rental currencies remain Unknown. Historical/source payments are never modified by these display calculations.
+
+Current sauna details and Stripe/Xero contact links are in the customer Overview rather than table columns. Both LTV columns support numeric sorting, search, and column filtering; unknown values sort last in either direction.
+
 ## Review workflow and exceptions
 
 1. Review identities for all Xero and app customers: approve link, choose another customer, explicitly create profile, exclude or defer. Flag Xero contacts without app matches and app records without Xero links. Supplier-only contacts require customer classification before creation. Profiles require only real known fields, no fake reservations.

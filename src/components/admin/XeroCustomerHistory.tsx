@@ -8,6 +8,8 @@ import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs';
 import {historyDate} from './historyDisplay';
 import PaymentAllocationReview from './PaymentAllocationReview';
 import type {LifecycleCommand} from '@/lib/lifecycleModel';
+import {customerDirectory,stripeCustomerUrl,xeroContactUrl} from '@/lib/customerDirectory';
+import {displayMoney} from '@/lib/lifecycleModel';
 import {RentalCustomerHistory,type OpenAgreement} from './RentalLifecycle';
 
 export type ReadXeroHistory = (selection: HistorySelection) => Promise<XeroHistoryResult>;
@@ -21,6 +23,7 @@ export default function XeroCustomerHistory({state,customerId,onRead,onClose,onO
  const [contactId,setContactId]=useState<string|undefined>();const [result,setResult]=useState<XeroHistoryResult|null>(null);const [error,setError]=useState('');const [loading,setLoading]=useState(true);const [search,setSearch]=useState('');const [showDeleted,setShowDeleted]=useState(false);
  useEffect(()=>{let active=true;setLoading(true);setError('');const selection=contactId?{contactId}:customerId?{customerId}:{};const request=onRead?onRead(selection):Promise.resolve(localHistory(state,selection));request.then(data=>{if(active)setResult(data);}).catch(()=>{if(active){setResult(null);setError('Could not load Xero history. Try again after checking the connection.');}}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[customerId,contactId,onRead,state]);
  const customer=state.customers.find(c=>c.id===customerId);const directory=!customerId&&!contactId;
+ const customerRow=customerId?customerDirectory(state).find(row=>row.customer.id===customerId):undefined;
  const contactEmail=customer?.email&&!customer.email.toLowerCase().endsWith('.invalid')?customer.email:'';
  const contacts=(result?.contacts||[]).filter(c=>`${c.name} ${c.pendingMatches.join(' ')}`.toLowerCase().includes(search.toLowerCase()));
  const records=(result?.transactions||[]).filter(r=>showDeleted||r.status==='AUTHORISED').sort((a,b)=>b.date.localeCompare(a.date)||a.id.localeCompare(b.id));
@@ -36,7 +39,19 @@ export default function XeroCustomerHistory({state,customerId,onRead,onClose,onO
      <TabsTrigger value="overview">Overview</TabsTrigger><TabsTrigger value="payments">Payments{!loading&&` (${records.length})`}</TabsTrigger>
     </TabsList>}
     <div className="min-h-0 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
-     {customerId&&<TabsContent value="overview" className="m-0"><RentalCustomerHistory state={state} customerId={customerId} onOpenAgreement={onOpenAgreement}/></TabsContent>}
+     {customerId&&<TabsContent value="overview" className="m-0 space-y-6">
+      {customerRow&&<>
+       <section aria-label="Customer lifetime value" className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border bg-card p-4"><h3 className="text-xs font-medium text-muted-foreground">Committed LTV</h3><div className="mt-1 text-xl font-semibold tabular-nums">{displayMoney(customerRow.ltv.committed)}</div><p className="mt-2 text-xs text-muted-foreground">Recorded minimum months × monthly rent and rental add-ons. Excludes speculative renewals; this is not a balance due.</p>{customerRow.ltv.commitmentNotes.map(note=><p key={note} className="mt-2 text-xs text-amber-800 dark:text-amber-300">{note}</p>)}</div>
+        <div className="rounded-lg border bg-card p-4"><h3 className="text-xs font-medium text-muted-foreground">Actual LTV</h3><div className="mt-1 text-xl font-semibold tabular-nums">{displayMoney(customerRow.ltv.actual)}</div><p className="mt-2 text-xs text-muted-foreground">{customerRow.ltv.actualNote}</p></div>
+       </section>
+       <section aria-label="Sauna and customer accounts" className="grid gap-4 rounded-lg border bg-card p-4 sm:grid-cols-3">
+        <div><h3 className="mb-2 text-xs font-medium text-muted-foreground">Current sauna · number / type</h3>{customerRow.saunas.length?customerRow.saunas.map(a=><div key={a.id} className="text-sm">#{a.code||'Unnumbered'} · {a.typeName||a.model||'Type unknown'}</div>):<span className="text-sm text-muted-foreground">None currently assigned</span>}</div>
+        <div><h3 className="mb-2 text-xs font-medium text-muted-foreground">Stripe customer</h3>{customerRow.stripeIds.length?customerRow.stripeIds.map(id=><a key={id} className="block break-all text-xs text-primary underline underline-offset-2" href={stripeCustomerUrl(id)!} target="_blank" rel="noopener noreferrer">{id}</a>):<span className="text-sm text-muted-foreground">Not linked</span>}</div>
+        <div><h3 className="mb-2 text-xs font-medium text-muted-foreground">Xero customer</h3>{customerRow.xeroLinks.length?customerRow.xeroLinks.map(l=><a key={`${l.tenantId}:${l.contactId}`} className="block break-words text-xs text-primary underline underline-offset-2" href={xeroContactUrl(l.contactId,l.shortCode)!} target="_blank" rel="noopener noreferrer">{l.name}</a>):<span className="text-sm text-muted-foreground">Not linked</span>}</div>
+       </section>
+      </>}
+      <RentalCustomerHistory state={state} customerId={customerId} onOpenAgreement={onOpenAgreement}/></TabsContent>}
      <TabsContent value="payments" className="m-0 space-y-4">
       {contactId&&!customerId&&<Button variant="outline" size="sm" onClick={()=>setContactId(undefined)}>Back to Xero contacts</Button>}
       {loading?<p role="status" className="py-6 text-muted-foreground">Loading payments…</p>:error?<p role="alert" className="text-destructive">{error}</p>:<>
