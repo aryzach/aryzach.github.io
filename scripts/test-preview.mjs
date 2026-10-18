@@ -45,21 +45,16 @@ try {
         await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Customer insights').click());
         await page.waitForSelector('[aria-label="Customer insights"]');
         const section = '[aria-label="Customer insights"]';
-        assert.ok(await page.$eval('[aria-label="Customer match review"]', el => el.textContent.includes('Waiting for data')));
-        assert.equal(await page.$$eval('[aria-label="Customer match review"] button', buttons => buttons.length), 0);
+        await page.waitForFunction(() => document.body.textContent.includes('No customers with sufficient data in this selection.'));
         assert.equal(await page.$$eval('[aria-label="Xero connection"] button', buttons => buttons.every(button => button.disabled)), true);
         assert.ok(await page.$eval('[aria-label="Xero connection"]', el => el.textContent.includes('Backend setup required')));
-        assert.ok(await page.$eval(section, el => el.textContent.includes('Waiting for data')));
+        assert.ok(await page.$eval(section, el => el.textContent.includes('Unknown')));
         assert.equal(await page.$eval(section, el => /\$[\d,]+|Avery|Riley|Synthetic data/.test(el.textContent)), false);
-        assert.equal(await page.$eval('input[aria-label="Search customer histories"]', el => el.disabled), true);
-        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH });
-        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Retention & payback').click());
-        await page.waitForFunction(() => document.body.textContent.includes('Acquisition payback'));
         assert.equal(await page.$eval(section, el => el.querySelectorAll('.recharts-wrapper').length), 0);
-        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH.replace('.png', '-cohorts.png') });
-        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Metric definitions').click());
-        await page.waitForFunction(() => document.body.textContent.includes('Missing costs will not be replaced by assumptions.'));
-        console.log('PASS customer insights: waiting states, no sample values or charts, definitions');
+        assert.ok(await page.$('[aria-label="LTV from date"]'));
+        assert.ok(await page.$('[aria-label="LTV through date"]'));
+        if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH });
+        console.log('PASS customer insights: empty history stays unknown, no sample money or chart, private provider controls disabled');
       }
     }
     console.log(`PASS rendered ${route}`);

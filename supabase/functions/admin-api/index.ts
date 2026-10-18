@@ -1,3 +1,4 @@
+import { readLtvSources } from '../_shared/ltvSources.ts';
 import { readXeroCustomerHistory } from "../_shared/xeroCustomerHistory.ts";
 import { readCoreRecords } from "../_shared/coreRecords.ts";
 import { readLifecycleRecords } from "../_shared/lifecycleRecords.ts";
@@ -71,6 +72,9 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
+
+      case "ltv_sources":
+        return new Response(JSON.stringify(await readLtvSources(supabase)), {headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"}});
 
       case "xero_customer_history":
         return json(await readXeroCustomerHistory(supabase, { customerId: payload.customerId, contactId: payload.contactId }));

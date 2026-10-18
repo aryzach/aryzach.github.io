@@ -497,6 +497,8 @@ const AdminReservations = () => {
     [password],
   );
 
+  const readLtvSources = useCallback(() => callAdmin({ action: "ltv_sources" }), [callAdmin]);
+
   useEffect(() => {
     if (!previewEnabled || !coreWorkspace?.source) return;
     if (coreWorkspace.legacyInventory) {
@@ -790,7 +792,7 @@ const AdminReservations = () => {
             setCoreWorkspace(result.workspace);
           }} />}
 
-          {tab === "insights" && <CustomerInsights password={password} />}
+          {tab === "insights" && <CustomerInsights password={password} state={coreWorkspace} onReadSources={previewEnabled ? undefined : readLtvSources} />}
 
           {tab === "dashboard" && (previewEnabled ? <p role="status">Waiting for data</p> : <RevenueDashboard inventory={inventory} />)}
 
