@@ -6,7 +6,7 @@ export interface CustomerLtv {
   commitmentNotes: string[];
   actualNote: string;
 }
-/** Rental-only contract minima and classified cash; neither is a balance due or a forecast. */
+/** Original rental-only contract minima and classified cash; neither is a balance due or a forecast. */
 export function customerLtv(state: RentalWorkspace, customerId: string): CustomerLtv {
   const data = state.lifecycle;
   const commitmentNotes: string[] = [];
@@ -17,10 +17,8 @@ export function customerLtv(state: RentalWorkspace, customerId: string): Custome
     if (rental.lifecycle_state === 'canceled' || rental.owner_review?.neverInstalled === true) continue;
     const terms = data!.terms.filter(t => t.rental_id === rental.id && !['superseded', 'voided', 'canceled'].includes(t.state) && !data!.agreements.some(a => a.id === t.agreement_id && ['voided', 'superseded'].includes(a.signing_state)));
     if (!terms.length) { committed = null; commitmentNotes.push('A rental has no recorded minimum terms.'); }
-    if (rental.owner_review?.additionalRentWaived === true || rental.owner_review?.extraMonthRequired === true || data!.settlements.some(s => s.rental_id === rental.id)) {
-      committed = null;
-      commitmentNotes.push('The agreed early-exit or settlement amount needs review.');
-    }
+    // Committed LTV retains each agreement's original minimum. Waivers, settlements,
+    // and payments that fulfill that minimum are separate from this contract metric.
     if (rental.owner_review?.heaterChargeStatus === 'unknown') {
       committed = null;
       commitmentNotes.push('The monthly heater add-on needs confirmation.');

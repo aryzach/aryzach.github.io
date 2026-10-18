@@ -14,9 +14,10 @@ test('contract minimum includes monthly add-ons, with no hypothetical renewal',(
  state.lifecycle!.terms.push(term({id:'renewal',minimum_months:6,base_monthly_cents:39900,extras:[]}));
  assert.equal(customerLtv(state,'c').committed,344100);
 });
-test('missing amounts and unquantified early-exit agreements stay unknown; cancellations have no rental minimum',()=>{
+test('missing terms stay unknown; original minima survive early exits and settlements; cancellations have no rental minimum',()=>{
  const state=workspace();state.lifecycle!.terms[0].base_monthly_cents=null;assert.equal(customerLtv(state,'c').committed,null);
- state.lifecycle!.terms[0]=term();state.lifecycle!.rentals[0].owner_review={additionalRentWaived:true};assert.equal(customerLtv(state,'c').committed,null);
+ state.lifecycle!.terms[0]=term();state.lifecycle!.rentals[0].owner_review={additionalRentWaived:true,extraMonthRequired:true};assert.equal(customerLtv(state,'c').committed,104700);
+ state.lifecycle!.settlements.push({id:'settlement',rental_id:'r',settled_on:'2026-02-01',kind:'waived',amount_cents:10000,reason:'Owner waived remaining rent',supersedes_id:null});assert.equal(customerLtv(state,'c').committed,104700);
  state.lifecycle!.rentals[0].lifecycle_state='canceled';assert.equal(customerLtv(state,'c').committed,0);
  assert.equal(customerLtv(emptyRentalWorkspace(),'c').actual,null);
 });
@@ -41,4 +42,9 @@ test('signature uncertainty is visible and customer sorting uses cents, with unk
  assert.deepEqual(filterDirectory(rows,'',{},false,'actual',false).map(r=>r.customer.id),['low','high','unknown']);
  assert.deepEqual(filterDirectory(rows,'',{},false,'actual',true).map(r=>r.customer.id),['high','low','unknown']);
  assert.deepEqual(filterDirectory(rows,'',{actual:'100.00'},false,'name',false).map(r=>r.customer.id),['high']);
+});
+test('original monthly add-ons count once; a later billing reduction or minimum-fulfillment payment creates no new commitment',()=>{
+ const state=workspace();state.lifecycle!.terms=[term({minimum_months:6,base_monthly_cents:34900,extras:[{name:'Second heater',amountCents:3900},{name:'Rental coverage',amountCents:900}]})];
+ state.lifecycle!.rentals[0].owner_review={heaterChargeStatus:'confirmed_in_original_contract',postMinimumBillingReduction:{firstObservedOn:'2026-06-24',monthlyCashExTaxCents:36052},extraMonthWithinOriginalMinimum:true,extraMonthRequired:true,extraMonthPaymentStatus:'unknown'};
+ assert.equal(customerLtv(state,'c').committed,238200);assert.equal(customerLtv(state,'c').actual,30000);
 });

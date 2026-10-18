@@ -46,8 +46,8 @@ test('sauna type follows latest recorded installation, including swaps, rather t
  state.lifecycle!.placements.push({id:'placement',rental_id:'r',asset_id:'unit',installed_on:'2026-01-01',removed_on:null,type_at_install:'Indoor Traditional (Original Collection)',address:null,evidence:'owner'});assert.equal(latestInstalledType(state,'c'),'Indoor Traditional');
  assert.equal(normalizeSaunaType('Indoor steam → Outdoor Traditional'),'Outdoor Traditional');
 });
-test('an early-exit waiver only makes commitments unknown after rental ended',()=>{
- const {state,sources}=fixture();Object.assign(state.lifecycle!.rentals[0],{actual_end:'2026-02-10',lifecycle_state:'ended',owner_review:{additionalRentWaived:true}});const chart=ltvTimeline(state,sources,options);assert.equal(chart.points[0].committed,900);assert.equal(chart.points[1].committed,null);
+test('an early-exit waiver preserves the original commitment before and after return',()=>{
+ const {state,sources}=fixture();Object.assign(state.lifecycle!.rentals[0],{actual_end:'2026-02-10',lifecycle_state:'ended',owner_review:{additionalRentWaived:true}});const chart=ltvTimeline(state,sources,options);assert.equal(chart.points[0].committed,900);assert.equal(chart.points[1].committed,900);
 });
 test('undated agreements use installation visibly; partial endpoint and invalid ranges are explicit',()=>{
  const {state,sources}=fixture();state.lifecycle!.agreements[0].signed_on=null;state.lifecycle!.agreements[0].signing_state='unconfirmed';state.lifecycle!.terms[0].effective_from=null;

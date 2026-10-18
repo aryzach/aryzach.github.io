@@ -12,3 +12,5 @@
 - Expose customer magic links only through the password-verified admin workspace. Historical manual bookings retain their read-only history and never gain live booking/payment links. Purchase acceptance without an agreed handover date is recorded separately from confirmed fulfillment promises.
 
 - Xero sync may change only current accounting caches/classifications and the current review queue. Never propagate payment corrections into customer identity, booking acceptance, sauna assignment, installation/pickup dates or agreed terms. Nightly reconciliation and manual refresh share one lease and an atomic publish.
+
+- Committed rental LTV uses each agreement’s original minimum rent and rental add-ons. Later waivers, settlements, payments fulfilling that minimum, and post-minimum billing reductions do not reduce or add to the original commitment. Actual LTV remains classified Xero rental cash.

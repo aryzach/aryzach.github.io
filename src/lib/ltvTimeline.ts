@@ -44,20 +44,15 @@ export function latestInstalledType(state:RentalWorkspace,customerId:string):str
 
 function commitmentAsOf(state:RentalWorkspace,customerId:string,cutoff:string) {
  const data=state.lifecycle!;
- const rentals=data.rentals.filter(r=>r.customer_id===customerId&&rentalEligible(r)&&r.actual_start!<=cutoff).map(r=>{
-  const owner_review={...r.owner_review};
-  // An end-of-rental waiver must not erase the original commitment in earlier months.
-  if(r.actual_end&&r.actual_end>cutoff){delete owner_review.additionalRentWaived;delete owner_review.extraMonthRequired;}
-  return {...r,owner_review};
- });
- const ids=new Set(rentals.map(r=>r.id));let estimatedDates=0;
+ const rentals=data.rentals.filter(r=>r.customer_id===customerId&&rentalEligible(r)&&r.actual_start!<=cutoff);
+ let estimatedDates=0;
  const terms=data.terms.filter(t=>{
   const rental=rentals.find(r=>r.id===t.rental_id);if(!rental)return false;
   const starts=termDate(state,t,rental);if(!day(starts)||starts>cutoff)return false;
   if(!t.effective_from&&!data.agreements.find(a=>a.id===t.agreement_id)?.signed_on&&!data.agreements.find(a=>a.id===t.agreement_id)?.agreement_date)estimatedDates++;
   return true;
  });
- const result=customerLtv({...state,lifecycle:{...data,rentals,terms,settlements:data.settlements.filter(s=>ids.has(s.rental_id)&&s.settled_on<=cutoff)}},customerId);
+ const result=customerLtv({...state,lifecycle:{...data,rentals,terms}},customerId);
  return {value:result.committed,reasons:result.commitmentNotes.filter(n=>!n.includes('signature confirmation')),unverified:result.commitmentNotes.some(n=>n.includes('signature confirmation')),estimated:estimatedDates>0};
 }
 function actualAsOf(state:RentalWorkspace,sources:LtvSources,customerId:string,cutoff:string) {
