@@ -1,4 +1,5 @@
 import {useState,type FormEvent} from 'react';
+import {historyDate} from './historyDisplay';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
@@ -11,26 +12,84 @@ const selectClass='h-9 rounded-md border border-input bg-background px-2 text-sm
 const td='px-2 py-1.5 border-r align-top';
 function Field({name,label,type='text',required=false,defaultValue}:{name:string;label:string;type?:string;required?:boolean;defaultValue?:string}){return <Label className="grid gap-1 font-normal">{label}<Input name={name} type={type} required={required} defaultValue={defaultValue}/></Label>;}
 export function RentalCustomerHistory({state,customerId,onOpenAgreement}:{state:RentalWorkspace;customerId:string;onOpenAgreement?:OpenAgreement}) {
- const data=state.lifecycle;const rentals=data?.rentals.filter(r=>r.customer_id===customerId)||[];
+ const data=state.lifecycle;
+ const rentals=data?.rentals.filter(r=>r.customer_id===customerId)||[];
  const [error,setError]=useState('');
- if(!data)return <p className="text-xs text-muted-foreground">Rental history is not available in this workspace.</p>;
- return <section aria-label="Customer rental history" className="min-w-0 w-full space-y-3"><h3 className="font-semibold">Rental history</h3>{error&&<p role="alert" className="text-destructive text-sm">{error}</p>}
- {!rentals.length?<p className="text-xs text-muted-foreground">No rental history recorded. This does not mean the customer never rented.</p>:rentals.map(r=><div key={r.id} className="min-w-0 rounded border p-3 space-y-2 text-xs break-words">
- <p className="font-semibold">{r.purpose==='purchase'?'Purchase booking':r.lifecycle_state} · {r.service_address||'Address unknown'}</p>
- {r.purpose!=='purchase'&&<p>Installed {r.actual_start||'date unknown'} → {r.actual_end|| (r.removal_window_start?`estimated removal ${r.removal_window_start}–${r.removal_window_end}`:r.lifecycle_state==='ended'?'return date unknown':'no return recorded')}</p>}
- {r.planned_end&&<p>Planned final service day: {r.planned_end} · return not yet confirmed</p>}
- {typeof r.owner_review?.summary==='string'&&<p className="rounded border bg-muted/30 p-2">{r.owner_review.summary}</p>}
- {r.actual_start_source&&<p className="text-muted-foreground">Installation date source: {r.actual_start_source}</p>}{typeof r.actual_start_evidence?.sourcePaymentId==='string'&&<details><summary className="cursor-pointer text-primary">Source payment reference</summary><p className="break-all">Xero transaction: {r.actual_start_evidence.sourcePaymentId}</p></details>}
- {r.removal_window_start&&<p className="text-muted-foreground">Removal window estimated from the last Xero Subscription Revenue receipt; exact day unconfirmed.</p>}{r.history_gaps?.length>0&&<details><summary className="cursor-pointer text-primary">Missing information ({r.history_gaps.length})</summary><ul className="list-disc pl-4">{r.history_gaps.map(g=><li key={g}>{g}</li>)}</ul></details>}
- <div className="overflow-auto"><table className="w-full text-left border-collapse"><thead className="bg-muted"><tr>{['Agreement / terms','Minimum term','Base monthly rate','Applies from'].map(h=><th className={td} key={h}>{h}</th>)}</tr></thead><tbody>{data.terms.filter(t=>t.rental_id===r.id).map(t=>{const a=data.agreements.find(a=>a.id===t.agreement_id);const doc=data.documents.find(d=>d.id===a?.document_id);return <tr key={t.id} className="border-t"><td className={td}>{t.sauna_type||'Type unknown'}<span className="block text-muted-foreground">{a?.label||t.source} · {a?.signing_state||(t.effective_from?t.state:'Rate-effective dates unconfirmed')}</span>{a&&onOpenAgreement&&<button className="text-primary underline" onClick={()=>{setError('');onOpenAgreement(a.id).catch(e=>setError(e instanceof Error?e.message:'Could not open document'));}}>Open agreement{doc?.incomplete?' (incomplete source)':''}</button>}{t.extras?.map((x,i)=><span className="block" key={i}>{x.name}: {displayMoney(x.amountCents,t.currency)}/month</span>)}{a&&<details><summary className="cursor-pointer text-primary">Source and corrections</summary><pre className="whitespace-pre-wrap break-words">{JSON.stringify({original:a.source_terms,confirmed:a.owner_corrections},null,2)}</pre></details>}</td><td className={td}>{t.minimum_months===null?'Unknown':`${t.minimum_months} months`}</td><td className={td}>{displayMoney(t.base_monthly_cents,t.currency)}<span className="block text-muted-foreground">{a?'Agreed rent from agreement':'Rate from owner/source records'}</span></td><td className={td}>{t.effective_from||'Effective date unconfirmed'}{t.effective_until&&` → ${t.effective_until}`}</td></tr>;})}</tbody></table></div>
- <details><summary className="cursor-pointer text-primary">Sauna placements and changes</summary>
- {data.placements.filter(p=>p.rental_id===r.id).map(p=><p key={p.id}>#{state.assets.find(a=>a.id===p.asset_id)?.code||'Unknown'} · {p.type_at_install} · {p.installed_on} → {p.removed_on||'Still installed'}<span className="block text-muted-foreground">{p.evidence}</span></p>)}
- {data.events.filter(e=>e.rental_id===r.id).sort((a,b)=>(a.occurred_on||'').localeCompare(b.occurred_on||'')).map(e=><p key={e.id}>{e.occurred_on||'Date unknown'} · {e.event_type}{e.asset_id&&` · #${state.assets.find(a=>a.id===e.asset_id)?.code||'Unknown'}`}<span className="block text-muted-foreground">{typeof e.detail.note==='string'?e.detail.note:''}</span></p>)}
- {(state.legacyLinks||[]).filter(l=>l.rentalId===r.id&&!data.placements.some(p=>p.rental_id===r.id&&p.asset_id===l.assetId)).map(l=><p key={l.assetId}>#{state.assets.find(a=>a.id===l.assetId)?.code} · existing {l.kind} inventory link; placement dates unconfirmed</p>)}
- </details>
- {data.settlements.some(s=>s.rental_id===r.id)&&<details><summary className="cursor-pointer text-primary">Early departure settlements</summary>{data.settlements.filter(s=>s.rental_id===r.id).map(s=><p key={s.id}>{s.settled_on} · {s.kind.replace(/_/g,' ')} · {displayMoney(s.amount_cents)} · {s.reason}{data.settlements.some(n=>n.supersedes_id===s.id)&&' (replaced; retained for history)'}</p>)}</details>}
- </div>)}
- {data.sales.filter(s=>s.customer_id===customerId).map(s=><p key={s.id} className="text-xs">Purchased sauna #{state.assets.find(a=>a.id===s.asset_id)?.code} on {s.sold_on} · agreed sale price {displayMoney(s.agreed_cents,s.currency)}. Payment remains a separate Xero record.{s.note&&<span className="block text-muted-foreground">{s.note}</span>}</p>)}
+ if(!data)return <p className="text-sm text-muted-foreground">Rental history is not available in this workspace.</p>;
+ const sales=data.sales.filter(s=>s.customer_id===customerId);
+ return <section aria-label="Customer rental history" className="customer-history-view min-w-0 space-y-5">
+  <div className="flex items-center justify-between gap-3">
+   <h3 className="font-semibold">Reservations & rentals</h3>
+   <span className="text-xs text-muted-foreground">{rentals.length} {rentals.length===1?'record':'records'}</span>
+  </div>
+  {error&&<p role="alert" className="text-destructive">{error}</p>}
+  {!rentals.length&&<p className="rounded-lg border border-dashed p-4 text-muted-foreground">No rental history recorded. This does not mean the customer never rented.</p>}
+  {rentals.map(r=>{
+   const terms=data.terms.filter(t=>t.rental_id===r.id);
+   const reviewNote=typeof r.owner_review?.summary==='string'?r.owner_review.summary:null;
+   const noteRepeatedInSale=sales.some(s=>s.rental_id===r.id&&s.note===reviewNote);
+   return <article key={r.id} className="min-w-0 overflow-hidden rounded-lg border bg-card">
+    <div className="space-y-4 p-4 sm:p-5">
+     <div className="flex flex-wrap items-start justify-between gap-2">
+      <div className="min-w-0">
+       <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{r.purpose==='purchase'?'Purchase booking':'Rental'}</div>
+       <div className="text-sm font-semibold break-words">{r.service_address||'Address not recorded'}</div>
+      </div>
+      <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${r.lifecycle_state==='active'?'bg-emerald-50 text-emerald-800':'bg-muted/40 text-muted-foreground'}`}>
+       {r.purpose==='purchase'?'Purchase pending':r.lifecycle_state.charAt(0).toUpperCase()+r.lifecycle_state.slice(1)}
+      </span>
+     </div>
+     {r.purpose!=='purchase'&&r.lifecycle_state!=='canceled'&&<dl className="grid grid-cols-2 gap-4 border-t pt-3 sm:grid-cols-3">
+      <div><dt className="text-xs text-muted-foreground">Installed</dt><dd className="mt-1 font-medium tabular-nums">{historyDate(r.actual_start)}</dd></div>
+      <div><dt className="text-xs text-muted-foreground">{r.actual_end?'Rental ended':r.removal_window_start?'Estimated removal':r.lifecycle_state==='ended'?'Removal date':'Return'}</dt><dd className="mt-1 font-medium tabular-nums">{r.actual_end?historyDate(r.actual_end):r.removal_window_start?`${historyDate(r.removal_window_start)} – ${historyDate(r.removal_window_end)}`:r.lifecycle_state==='ended'?'Unknown':'Not recorded'}</dd></div>
+      {r.planned_end&&<div><dt className="text-xs text-muted-foreground">Planned final service day</dt><dd className="mt-1 font-medium tabular-nums">{historyDate(r.planned_end)}</dd></div>}
+     </dl>}
+     {r.lifecycle_state==='canceled'&&<p className="text-xs text-muted-foreground">Canceled before installation.</p>}
+     {!!terms.length&&<div className="overflow-x-auto rounded-md border">
+      <table aria-label="Rental agreement terms" className="w-full border-collapse text-left text-xs sm:min-w-[560px]">
+       <thead className="hidden bg-muted/30 text-muted-foreground sm:table-header-group"><tr>{['Sauna / agreement','Minimum term','Monthly rate','Effective dates'].map(h=><th key={h} className="px-3 py-2 font-medium">{h}</th>)}</tr></thead>
+       <tbody>{terms.map(t=>{
+        const agreement=data.agreements.find(a=>a.id===t.agreement_id);
+        const doc=data.documents.find(d=>d.id===agreement?.document_id);
+        return <tr key={t.id} className="grid grid-cols-2 border-t align-top sm:table-row">
+         <td className="col-span-2 px-3 py-3 sm:max-w-[280px]">
+          <div className="font-medium">{t.sauna_type||'Type unknown'}</div>
+          <div className="mt-1 text-muted-foreground">{agreement?agreement.signing_state==='signed'?'Signed agreement':agreement.signing_state==='voided'?'Voided agreement':'Signature unconfirmed':t.source}</div>
+          {agreement&&onOpenAgreement&&<button className="mt-1 text-primary underline-offset-2 hover:underline" onClick={()=>{setError('');onOpenAgreement(agreement.id).catch(e=>setError(e instanceof Error?e.message:'Could not open document'));}}>View contract{doc?.incomplete?' · incomplete source':''}</button>}
+          {t.extras?.map((x,i)=><div className="mt-1 text-muted-foreground" key={i}>{x.name} · {displayMoney(x.amountCents,t.currency)}/mo</div>)}
+          {agreement&&<details className="history-disclosure mt-1"><summary>Agreement source & corrections</summary><div className="mb-2 break-words text-muted-foreground">{agreement.label}</div><pre className="max-h-56 overflow-auto whitespace-pre-wrap break-words rounded bg-muted/30 p-2 text-[11px]">{JSON.stringify({original:agreement.source_terms,confirmed:agreement.owner_corrections},null,2)}</pre></details>}
+         </td>
+         <td className="border-t px-3 py-3 sm:whitespace-nowrap sm:border-0"><div className="mb-1 text-[11px] text-muted-foreground sm:hidden">Minimum term</div>{t.minimum_months===null?'Unknown':`${t.minimum_months} months`}</td>
+         <td className="border-t px-3 py-3 font-medium tabular-nums sm:whitespace-nowrap sm:border-0"><div className="mb-1 text-[11px] font-normal text-muted-foreground sm:hidden">Monthly rate</div>{displayMoney(t.base_monthly_cents,t.currency)}<span className="mt-1 block text-[11px] font-normal text-muted-foreground">{agreement?'Agreed rate':'Source-recorded rate'}</span></td>
+         <td className="col-span-2 border-t px-3 py-3 text-muted-foreground sm:border-0"><span className="mr-2 text-[11px] sm:hidden">Effective dates:</span>{t.effective_from?historyDate(t.effective_from):'Not confirmed'}{t.effective_until&&<span className="block">to {historyDate(t.effective_until)}</span>}</td>
+        </tr>;
+       })}</tbody>
+      </table>
+     </div>}
+    </div>
+    <div className="space-y-1 border-t bg-muted/10 px-4 py-3 sm:px-5">
+     {r.history_gaps?.length>0&&<details className="history-disclosure"><summary><span className="text-amber-800">{r.history_gaps.length} {r.history_gaps.length===1?'detail':'details'} to confirm</span></summary><ul className="list-disc space-y-1 pl-4 text-xs text-muted-foreground">{r.history_gaps.map(g=><li key={g}>{g}</li>)}</ul></details>}
+     <details className="history-disclosure"><summary>Notes & date sources</summary><div className="space-y-2 text-xs text-muted-foreground">
+      {reviewNote&&!noteRepeatedInSale&&<p>{reviewNote}</p>}
+      {r.actual_start_source&&<p><span className="font-medium text-foreground">Installation source: </span>{r.actual_start_source}</p>}
+      {typeof r.actual_start_evidence?.sourcePaymentId==='string'&&<p className="break-all">Xero transaction: {r.actual_start_evidence.sourcePaymentId}</p>}
+      {r.removal_window_start&&<p>Removal estimated from the last subscription receipt. The exact day is unconfirmed.</p>}
+      {r.planned_end&&<p>The planned final service day does not confirm a completed return.</p>}
+      {!reviewNote&&!r.actual_start_source&&!r.removal_window_start&&!r.planned_end&&<p>No additional source notes recorded.</p>}
+     </div></details>
+     <details className="history-disclosure"><summary>Sauna history & changes</summary><div className="space-y-3 border-l-2 pl-3 text-xs">
+      {data.placements.filter(p=>p.rental_id===r.id).map(p=><div key={p.id}><div className="font-medium">Sauna #{state.assets.find(a=>a.id===p.asset_id)?.code||'Unknown'} · {p.type_at_install}</div><div className="text-muted-foreground">{historyDate(p.installed_on)} – {p.removed_on?historyDate(p.removed_on):'Still installed'}</div><p className="text-muted-foreground">{p.evidence}</p></div>)}
+      {data.events.filter(e=>e.rental_id===r.id).sort((a,b)=>(a.occurred_on||'').localeCompare(b.occurred_on||'')).map(e=><div key={e.id}><div className="font-medium">{e.event_type.replace(/_/g,' ')}{e.asset_id&&` · #${state.assets.find(a=>a.id===e.asset_id)?.code||'Unknown'}`}</div><div className="text-muted-foreground">{e.occurred_on?historyDate(e.occurred_on):'Date not recorded'}</div>{typeof e.detail.note==='string'&&<p className="text-muted-foreground">{e.detail.note}</p>}</div>)}
+      {(state.legacyLinks||[]).filter(l=>l.rentalId===r.id&&!data.placements.some(p=>p.rental_id===r.id&&p.asset_id===l.assetId)).map(l=><p key={l.assetId}>Sauna #{state.assets.find(a=>a.id===l.assetId)?.code} · {l.kind==='current'?'Current assignment':'Future assignment'}; exact placement dates unconfirmed.</p>)}
+     </div></details>
+     {data.settlements.some(s=>s.rental_id===r.id)&&<details className="history-disclosure"><summary>Early departure settlements</summary><div className="space-y-2 text-xs">{data.settlements.filter(s=>s.rental_id===r.id).map(s=><p key={s.id}>{historyDate(s.settled_on)} · {s.kind.replace(/_/g,' ')} · {displayMoney(s.amount_cents)} · {s.reason}{data.settlements.some(n=>n.supersedes_id===s.id)&&' (replaced; retained for history)'}</p>)}</div></details>}
+    </div>
+   </article>;
+  })}
+  {!!sales.length&&<section className="space-y-3" aria-label="Sauna purchases"><h3 className="font-semibold">Purchases</h3>{sales.map(s=><div key={s.id} className="rounded-lg border bg-card p-4 sm:p-5">
+   <div className="flex flex-wrap items-center justify-between gap-3"><div><div className="font-semibold">Sauna #{state.assets.find(a=>a.id===s.asset_id)?.code}</div><div className="mt-1 text-xs text-muted-foreground">Purchased {historyDate(s.sold_on)}</div></div><div className="text-right"><div className="font-semibold tabular-nums">{s.agreed_cents===null?'Price unconfirmed':displayMoney(s.agreed_cents,s.currency)}</div><div className="mt-1 text-xs text-muted-foreground">Agreed sale price</div></div></div>
+   {s.note&&<details className="history-disclosure mt-3 border-t pt-2"><summary>Sale notes</summary><p className="text-xs text-muted-foreground">{s.note}</p></details>}
+  </div>)}</section>}
  </section>;
 }
 

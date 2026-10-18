@@ -1,4 +1,5 @@
 import {useState,type FormEvent} from 'react';
+import {historyDate} from './historyDisplay';
 import {Button} from '@/components/ui/button';
 import {Dialog,DialogContent,DialogHeader,DialogTitle} from '@/components/ui/dialog';
 import {Input} from '@/components/ui/input';
@@ -31,11 +32,20 @@ export default function PaymentAllocationReview({state,customerId,payment,onComm
   }catch(e){setError(e instanceof Error?e.message:'Could not save classification.');}finally{setSaving(false);}
  }
  if(!state.lifecycle||!link)return null;
- return <div className="space-y-1 mt-1 text-xs">
- {review&&<p className="text-muted-foreground">Excluded duplicate receipt · original Xero record preserved. {review.reason}</p>}
- {allocations.map(a=><p key={a.id} className="text-muted-foreground">{displayMoney(a.amount_cents,a.currency)} · {a.category} · {a.rental_id?label(a.rental_id):a.sale_id?'Sauna sale':'Customer-level'}{a.service_from?` · ${a.service_from} → ${a.service_until||'end unspecified'}`:''}{a.voided_at?` · corrected: ${a.void_reason}`:onCommand&&<button className="text-primary underline ml-2" onClick={()=>{setError('');setRequest({id:crypto.randomUUID(),voidId:a.id});}}>Correct</button>}</p>)}
- {!review&&payment.status==='AUTHORISED'&&remaining>0&&onCommand&&<button className="text-primary underline" onClick={()=>{setError('');setRequest({id:crypto.randomUUID()});}}>Classify {displayMoney(remaining,payment.currency)} remaining</button>}
- <Dialog open={!!request} onOpenChange={open=>{if(!open&&!saving)setRequest(null);}}><DialogContent><DialogHeader><DialogTitle>{request?.voidId?'Correct payment classification':'Classify existing Xero payment'}</DialogTitle></DialogHeader><form key={request?.id} onSubmit={save} className="space-y-3">
+ return <div className="customer-history-view space-y-2 !text-xs">
+ {review&&<details className="history-disclosure"><summary><span className="rounded bg-amber-50 px-2 py-1 text-[11px] font-medium text-amber-900">Excluded duplicate receipt</span></summary><p className="text-muted-foreground">{review.reason} The original Xero record is preserved.</p></details>}
+ {!!allocations.length&&<div className="space-y-1.5">{allocations.map(a=><div key={a.id} className={a.voided_at?'text-muted-foreground opacity-70':''}>
+  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+   <span className="min-w-[48px] font-medium capitalize">{a.category==='addon'?'Add-on':a.category}</span>
+   <span className="font-medium tabular-nums">{displayMoney(a.amount_cents,a.currency)}</span>
+   <span className="text-[11px] text-muted-foreground">{a.rental_id?`Rental · ${historyDate(rentals.find(r=>r.id===a.rental_id)?.actual_start)}`:a.sale_id?`Sale #${state.assets.find(asset=>asset.id===sales.find(s=>s.id===a.sale_id)?.asset_id)?.code||'—'}`:'Customer-level'}</span>
+   {!a.voided_at&&onCommand&&<button className="ml-auto text-[11px] text-primary underline-offset-2 hover:underline" onClick={()=>{setError('');setRequest({id:crypto.randomUUID(),voidId:a.id});}}>Correct</button>}
+  </div>
+  {a.service_from&&<div className="mt-1 text-[11px] text-muted-foreground">{historyDate(a.service_from)} – {a.service_until?historyDate(a.service_until):'End unspecified'}</div>}
+  {a.voided_at&&<div className="mt-1 text-[11px] text-muted-foreground">Replaced: {a.void_reason}</div>}
+ </div>)}</div>}
+ {!review&&payment.status==='AUTHORISED'&&remaining>0&&onCommand&&<button className="text-xs text-primary underline-offset-2 hover:underline" onClick={()=>{setError('');setRequest({id:crypto.randomUUID()});}}>Classify {displayMoney(remaining,payment.currency)} remaining</button>}
+ <Dialog open={!!request} onOpenChange={open=>{if(!open&&!saving)setRequest(null);}}><DialogContent className="customer-history-view max-h-[85dvh] overflow-y-auto"><DialogHeader><DialogTitle>{request?.voidId?'Correct payment classification':'Classify existing Xero payment'}</DialogTitle></DialogHeader><form key={request?.id} onSubmit={save} className="space-y-3">
  <p className="text-xs text-muted-foreground">{payment.date} · {payment.type==='RECEIVE'?'Received':'Paid out'} · {payment.reference||'No reference'}. This records what an existing payment covered; it does not charge, refund or change Xero.</p>
  {request?.voidId?<Label className="grid gap-1">Correction reason<Input name="reason" required/><span className="text-xs font-normal text-muted-foreground">The old classification remains in history. Its amount becomes available to classify again.</span></Label>:<>
  <Label className="grid gap-1">Applies to<select name="target" className="rounded-md border bg-background p-2" required defaultValue=""><option value="" disabled>Choose rental, sale or customer-level</option>{rentals.map(r=><option key={r.id} value={`rental:${r.id}`}>{label(r.id)}</option>)}{sales.map(s=><option key={s.id} value={`sale:${s.id}`}>Sauna sale · {s.sold_on}</option>)}<option value="customer">Customer-level; rental not yet confirmed</option></select></Label>

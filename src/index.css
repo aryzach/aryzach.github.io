@@ -273,3 +273,38 @@ All colors MUST be HSL.
     color: hsl(var(--input-overlay-label-focus));
   }
 }
+
+@layer components {
+  .customer-history-view {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Marketing paragraph sizes must not override compact admin records. */
+  .customer-history-view :where(p) {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .customer-history-view :where(h3, h4) {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: normal;
+  }
+
+  .history-disclosure > summary {
+    cursor: pointer;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 0.25rem 0;
+  }
+
+  .history-disclosure > summary:hover {
+    color: hsl(var(--foreground));
+  }
+
+  .history-disclosure[open] > summary {
+    margin-bottom: 0.5rem;
+  }
+}
