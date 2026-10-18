@@ -1,3 +1,4 @@
+import SaunaStateBadge from '@/components/admin/SaunaStateBadge';
 import {fetchAdminJson} from '@/lib/adminRequest';
 import XeroSyncPanel from '@/components/admin/XeroSyncPanel';
 import XeroCustomerHistory from '@/components/admin/XeroCustomerHistory';
@@ -25,10 +26,10 @@ import { AgreementVersionsPanel } from "./AdminAgreementVersions";
 import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
-import { MultiSelectFilter } from "@/components/admin/MultiSelectFilter";
 import { RevenueDashboard, type RevenueUnit } from "@/components/admin/RevenueDashboard";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
+const conditionLabel=(value:string)=>({ready:'Ready',inspection:'Needs inspection',maintenance:'Maintenance',unknown:'Not recorded'}[value]||'Not recorded');
 
 interface SaunaType {
   id: string;
@@ -224,7 +225,9 @@ const AdminReservations = () => {
     | "location"
     | "style"
     | "model"
-    | "status"
+    | "fleet"
+    | "custody"
+    | "condition"
     | "customer"
     | "future_customer"
     | "install"
@@ -234,18 +237,18 @@ const AdminReservations = () => {
     | "notes"
     | "updated";
   const [colFilters, setColFilters] = useState<Record<ColKey, string>>({
-    id: "", location: "", style: "", model: "", status: "",
+    id: "", location: "", style: "", model: "", fleet: "", custody: "", condition: "",
     customer: "", future_customer: "", install: "", committed: "", available: "", monthly: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const inventoryFilters=['Available','With customer','Reserved','Incoming','Needs attention','Sold','Retired'];
-  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const INVENTORY_COLS: [ColKey, string][] = [
     ["id", "ID"],
-    ["location", "Location"],
+    ["location", "Suitable for"],
     ["style", "Style"],
     ["model", "Model"],
-    ["status", "Fleet / location / condition"],
+    ["fleet", "Fleet"],
+    ["custody", "Location"],
+    ["condition", "Condition"],
     ["customer", "Current Customer"],
     ["future_customer", "Future Customer"],
     ["install", "Install"],
@@ -584,12 +587,15 @@ const AdminReservations = () => {
   const currentAssignedIds = useMemo(() => new Set(inventory.map((r) => r.current_customer_id).filter(Boolean) as string[]), [inventory]);
   const futureAssignedIds = useMemo(() => new Set(inventory.map((r) => r.future_customer_id).filter(Boolean) as string[]), [inventory]);
 
+  const inventoryLife = (r: InventoryRow) => saunaLifecycle({...coreWorkspace?.assets.find(a=>a.id===r.id),sourceStatus:r.status});
   const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
     id: r.unit_code || "",
     location: ELIG_LABEL[r.indoor_outdoor_eligibility],
     style: styleFor(r),
     model: r.model || "",
-    status: r.status,
+    fleet: inventoryLife(r).fleet,
+    custody: inventoryLife(r).custody,
+    condition: conditionLabel(inventoryLife(r).condition),
     customer: r.current_customer || "",
     future_customer: r.future_customer || "",
     install: r.install_date || "",
@@ -603,12 +609,9 @@ const AdminReservations = () => {
   const filtered = useMemo(() => {
     const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
     const rows = inventory.filter((r) => {
-      const asset=coreWorkspace?.assets.find(a=>a.id===r.id);const life=saunaLifecycle(asset||{sourceStatus:r.status});
-      const tags=[life.fleet,life.custody,...(r.future_customer_id?['Reserved']:[]),...(r.status==='Available'&&!r.current_customer_id&&!r.future_customer_id?['Available']:[]),...(['inspection','maintenance','unknown'].includes(life.condition)?['Needs attention']:[])];
-      if (statusFilter.length && !statusFilter.some(f=>tags.includes(f))) return false;
       if (!active.length) return true;
       const vals = rowValues(r);
-      return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
+      return active.every(([k, v]) => ['fleet','custody','condition'].includes(k)?vals[k]===v:vals[k].toLowerCase().includes(v.toLowerCase()));
     });
     if (sortCol) {
       rows.sort((a, b) => {
@@ -619,7 +622,7 @@ const AdminReservations = () => {
       });
     }
     return rows;
-  }, [inventory, colFilters, sortCol, sortDir, statusFilter,coreWorkspace]);
+  }, [inventory, colFilters, sortCol, sortDir,coreWorkspace]);
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
@@ -858,7 +861,7 @@ const AdminReservations = () => {
           <section className="mb-10">
             <div className="space-y-3">
                 <div className="max-h-[calc(100vh-12rem)] overflow-auto border border-border rounded-md bg-card">
-                  <table className="text-xs border-collapse" style={{ tableLayout: "fixed", width: invTotalWidth + 32, minWidth: "100%" }}>
+                  <table aria-label="Sauna inventory" className="text-xs border-collapse" style={{ tableLayout: "fixed", width: invTotalWidth + 32, minWidth: "100%" }}>
                     <colgroup>
                       <col style={{ width: 32 }} />
                       {INVENTORY_COLS.map(([k]) => (
@@ -881,7 +884,7 @@ const AdminReservations = () => {
                           />
                         </th>
                         {INVENTORY_COLS.map(([k, label]) => (
-                          <th key={k} className="relative text-left px-2 py-1.5 border-r border-border select-none">
+                          <th key={k} aria-sort={sortCol===k?(sortDir==='asc'?'ascending':'descending'):'none'} className="relative text-left px-2 py-1.5 border-r border-border select-none">
                             <button
                               type="button"
                               className="inline-flex items-center gap-1 uppercase hover:text-foreground"
@@ -922,15 +925,12 @@ const AdminReservations = () => {
                             {MODELS.map((m) => <option key={m} value={m}>{m}</option>)}
                           </select>
                         </th>
-                        <th className="px-1 py-1 border-r border-border">
-                          <MultiSelectFilter
-                            options={inventoryFilters}
-                            value={statusFilter}
-                            onChange={setStatusFilter}
-                            preset={['Available','Reserved','Incoming','Needs attention']}
-                            presetLabel="Available & upcoming"
-                          />
-                        </th>
+                        {(['fleet','custody','condition'] as const).map(key=><th key={key} className="px-1 py-1 border-r border-border">
+                          <select aria-label={`Filter ${key==='custody'?'location':key}`} className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters[key]} onChange={e=>setColFilter(key,e.target.value)}>
+                            <option value="">All</option>
+                            {[...new Set(inventory.map(r=>rowValues(r)[key]))].sort().map(value=><option key={value} value={value}>{value}</option>)}
+                          </select>
+                        </th>)}
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.customer} onChange={(e) => setColFilter("customer", e.target.value)} />
                         </th>
@@ -998,6 +998,8 @@ const AdminReservations = () => {
                                 <SelectContent>{["Available","Maintenance","Incoming"].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
+                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={saunaLifecycle({sourceStatus:draft.status}).custody}/></td>
+                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value="Not recorded"/></td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
                                 readOnly
@@ -1085,9 +1087,7 @@ const AdminReservations = () => {
                               onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
-                          <td className="px-1 py-0.5 border-r border-border">
-                            <div className="px-1 text-xs" title="Booking, fleet and physical state are separate"><span className="block font-medium">{saunaLifecycle({sourceStatus:r.status}).fleet}</span><span className="block text-muted-foreground">{saunaLifecycle(coreWorkspace?.assets.find(a=>a.id===r.id)||{sourceStatus:r.status}).custody}</span><span className="block text-muted-foreground">Condition: {coreWorkspace?.assets.find(a=>a.id===r.id)?.conditionState||'unknown'}</span>{r.future_customer_id&&<span className="block text-primary">Next booking assigned</span>}</div>
-                          </td>
+                          {(['fleet','custody','condition'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><SaunaStateBadge value={rowValues(r)[key]}/></td>)}
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
                                 readOnly
