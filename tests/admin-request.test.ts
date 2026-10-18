@@ -11,6 +11,10 @@ test('admin requests distinguish rejections from uncertain writes and bound resp
   await assert.rejects(fetchAdminJson('https://example.invalid',{}),{message:'Rental changed. Refresh before saving.'});
   globalThis.fetch=async()=>new Response(JSON.stringify({error:'upstream request timeout'}),{status:400});
   await assert.rejects(fetchAdminJson('https://example.invalid',{}),AdminRequestUncertain);
+  for(const status of [500,502,503,504]) {
+   globalThis.fetch=async()=>new Response(JSON.stringify({error:'Server response unavailable'}),{status});
+   await assert.rejects(fetchAdminJson('https://example.invalid',{}),AdminRequestUncertain);
+  }
   globalThis.fetch=async()=>{throw new TypeError('Network unavailable');};
   await assert.rejects(fetchAdminJson('https://example.invalid',{}),AdminRequestUncertain);
   for(const bodyStarted of [false,true]) {

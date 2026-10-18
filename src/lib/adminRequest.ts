@@ -11,7 +11,7 @@ export async function fetchAdminJson(url:string, init:RequestInit, timeoutMs=300
   let body;
   try { body=JSON.parse(text); } catch { body={}; }
   if(!response.ok) {
-   if(response.status===504||/upstream request timeout/i.test(text))throw new AdminRequestUncertain();
+   if(response.status>=500||/upstream request timeout/i.test(text))throw new AdminRequestUncertain();
    throw new Error(typeof body.error==='string'?body.error:`Request failed (${response.status}). Please refresh and try again.`);
   }
   return body;
