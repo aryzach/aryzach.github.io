@@ -33,6 +33,12 @@ export async function assignSoonestSauna(
   opts: { holdStatus?: string } = {},
 ): Promise<AssignResult> {
   const holdStatus = opts.holdStatus ?? "Reservation Hold";
+  // Existing inventory links are authoritative, including owner-selected units.
+  const {data:assigned,error:assignmentError}=await supabase.from('sauna_inventory').select('*').or(`current_customer_id.eq.${reservation.id},future_customer_id.eq.${reservation.id}`);
+  if(assignmentError)return {sauna:null,reason:'assignment_lookup_failed'};
+  const linked=(assigned||[]).sort((a:any,b:any)=>Number(b.current_customer_id===reservation.id)-Number(a.current_customer_id===reservation.id));
+  if(linked.length)return {sauna:linked[0],reason:'existing_authoritative_assignment'};
+
 
   const { data: type } = await supabase
     .from("sauna_types")
@@ -56,7 +62,7 @@ export async function assignSoonestSauna(
 
   const eligible = (candidates ?? [])
     // Sold / cancelled-out units can never be handed to a new customer.
-    .filter((c: any) => !["Sold", "Cancelled", "Refunded"].includes(c.status))
+    .filter((c: any) => !c.retired_on && !["Sold", "Pre-sold", "Maintenance", "Cancelled", "Refunded"].includes(c.status) && !["inspection","maintenance"].includes(c.condition_state))
     // Must either be available now or have a known availability date.
     .filter((c: any) => c.status === "Available" || c.available_date)
     // Don't double-book the same reservation onto two units.
@@ -165,18 +171,11 @@ export async function syncSaunaAfterContract(
     .select("*").eq("future_customer_id", reservationId).maybeSingle();
 
   if (futureUnit) {
-    if (futureUnit.sauna_type_id === reservation.sauna_type_id) {
-      await convertWaitlistEntry(supabase, reservationId);
-      return;
-    }
-    // Wrong type — release it.
-    await supabase.from("sauna_inventory").update({
-      future_customer_id: null,
-      future_customer: null,
-      status: futureUnit.current_customer_id ? "Installed" : "Available",
-    }).eq("id", futureUnit.id);
-    await supabase.from("reservations")
-      .update({ sauna_inventory_id: null }).eq("id", reservationId);
+    // A new signature cannot replace a unit chosen in admin. Readiness will flag
+    // an incompatible signed type for owner review while preserving the link.
+    await supabase.from('reservations').update({sauna_inventory_id:futureUnit.id}).eq('id',reservationId);
+    await convertWaitlistEntry(supabase,reservationId);
+    return;
   }
 
   const { sauna } = await assignSoonestSauna(supabase, reservation, {

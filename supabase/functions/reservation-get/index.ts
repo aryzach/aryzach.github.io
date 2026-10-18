@@ -55,6 +55,11 @@ serveWithMigrationPolicy(async (req) => {
 
   // ---- Auto-assign a sauna once the rental agreement is signed and the photo ID is uploaded ----
   let assignedInventoryId: string | null = reservation.sauna_inventory_id ?? null;
+  const {data:authoritativeUnits,error:assignmentLookupError}=await supabase.from('sauna_inventory').select('id,current_customer_id').or(`current_customer_id.eq.${reservation.id},future_customer_id.eq.${reservation.id}`);
+  if(assignmentLookupError)return json({error:'Could not verify the assigned sauna'},500);
+  const authoritative=(authoritativeUnits||[]).sort((a:any,b:any)=>Number(b.current_customer_id===reservation.id)-Number(a.current_customer_id===reservation.id))[0];
+  if(authoritative){assignedInventoryId=authoritative.id;reservation.sauna_inventory_id=authoritative.id;}
+
   const readyForAssignment =
     reservation.contract_status === "Complete" && reservation.id_status === "Complete";
 

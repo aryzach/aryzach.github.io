@@ -23,7 +23,7 @@ export async function localWorkspace(config:Config):Promise<RentalWorkspace>{
  const result=localQuery(config,`SELECT jsonb_build_object(
  'bookings',booking_workspace(),
  'lifecycle',jsonb_build_object(${['rentals','rental_agreements','rental_terms','rental_placements','sauna_sales','rental_settlements','rental_history_events','rental_documents','rental_payment_allocations','customer_payment_reviews'].map((table,i)=>`'${['rentals','agreements','terms','placements','sales','settlements','events','documents','allocations','paymentReviews'][i]}',coalesce((SELECT jsonb_agg(to_jsonb(t)${table==='rental_documents'?"-'storage_path'":''}) FROM ${table} t),'[]'::jsonb)`).join(',')}),
- 'reservations',coalesce((SELECT jsonb_agg(jsonb_build_object('id',r.id,'createdAt',r.created_at,'status',r.reservation_status,'address',coalesce(r.install_address,''),'saunaType',coalesce(st.name,''),'stripeCustomerId',r.stripe_customer_id,'bookingKind',r.booking_kind,'bookedOn',r.booked_on)) FROM reservations r LEFT JOIN sauna_types st ON st.id=r.sauna_type_id),'[]'::jsonb),
+ 'reservations',coalesce((SELECT jsonb_agg(jsonb_build_object('id',r.id,'createdAt',r.created_at,'status',r.reservation_status,'address',coalesce(r.install_address,(SELECT n.service_address FROM rentals n WHERE n.originating_reservation_id=r.id),''),'saunaType',coalesce(st.name,''),'stripeCustomerId',r.stripe_customer_id,'bookingKind',r.booking_kind,'bookedOn',r.booked_on)) FROM reservations r LEFT JOIN sauna_types st ON st.id=r.sauna_type_id),'[]'::jsonb),
  'inventory',coalesce((SELECT jsonb_agg(to_jsonb(i)||jsonb_build_object('monthly_price',coalesce((SELECT c.monthly_price FROM contracts c WHERE c.reservation_id=coalesce(i.current_customer_id,i.future_customer_id) AND c.voided_at IS NULL ORDER BY (c.signed_at IS NOT NULL) DESC,c.created_at DESC LIMIT 1),(SELECT r.crm_monthly_price FROM reservations r WHERE r.id=coalesce(i.current_customer_id,i.future_customer_id))))) FROM sauna_inventory i),'[]'::jsonb),
  'profiles',coalesce((SELECT jsonb_agg(jsonb_build_object('id',id,'primaryContact',primary_contact_name,'archived',archived_at IS NOT NULL,'version',version)) FROM customer_profiles),'[]'::jsonb),
  'links',coalesce((SELECT jsonb_agg(to_jsonb(l)) FROM reservation_customer_links l),'[]'::jsonb));`) as {profiles:{id:string;primaryContact:string;archived:boolean;version:number}[];lifecycle:NonNullable<RentalWorkspace['lifecycle']>;reservations:RentalWorkspace['reservations'];inventory:Record<string,unknown>[];links:{reservation_id:string;customer_id:string}[]};
@@ -50,7 +50,7 @@ export async function localLifecycleRequest(body:Record<string,unknown>){
  }
  const allowed=['manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
  if(body.action==='booking_command'){
-  if(!['allocate','confirm','cancel','condition','complete_purchase'].includes(String(body.operation)))throw new Error('Unsupported booking operation.');
+  if(!['allocate','confirm','cancel','condition','complete_purchase','accept_purchase'].includes(String(body.operation)))throw new Error('Unsupported booking operation.');
   localQuery(config,`SELECT booking_command(${uuid(body.commandId)},'${body.operation}',${literal(body.record||{})});`);
   return {workspace:await localWorkspace(config)};
  }

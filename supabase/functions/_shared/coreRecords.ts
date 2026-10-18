@@ -18,7 +18,7 @@ export async function readCoreRecords(client: any) {
     // deno-lint-ignore no-explicit-any
     xeroLinks: xeroLinks.map((l: any) => ({ tenantId: l.tenant_id, contactId: l.contact_id, customerId: l.customer_id, name: l.contact_name, ...(l.organisation_short_code ? {shortCode:l.organisation_short_code}:{}), ...(l.origin ? {origin:l.origin}:{}) })),
     // deno-lint-ignore no-explicit-any
-    reservations: reservations.map((r: any) => ({ id: r.id, createdAt: r.created_at || '', status: r.reservation_status || '', address: r.install_address || '', saunaType: typeName(r.sauna_type_id), stripeCustomerId: r.stripe_customer_id || null,bookingKind:r.booking_kind||'website',bookedOn:r.booked_on||null })),
+    reservations: reservations.map((r: any) => ({ id: r.id, createdAt: r.created_at || '', status: r.reservation_status || '', address: r.install_address || rentals.find((n:any)=>n.originating_reservation_id===r.id)?.service_address || '', saunaType: typeName(r.sauna_type_id), stripeCustomerId: r.stripe_customer_id || null,bookingKind:r.booking_kind||'website',bookedOn:r.booked_on||null })),
     // deno-lint-ignore no-explicit-any
     customers: profiles.map((p: any) => ({ id: p.id, kind: p.kind, name: p.display_name || '', email: p.email || '', phone: p.phone || '', primaryContact:p.primary_contact_name||'', archived: !!p.archived_at, version: p.version, legacyReservationIds: links.filter((l: any) => l.customer_id === p.id).map((l: any) => l.reservation_id) })),
     // deno-lint-ignore no-explicit-any

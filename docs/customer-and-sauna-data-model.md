@@ -77,6 +77,8 @@ The Bookings tab owns current requests and confirmation; Rentals owns physical s
 
 Purchase handover fulfills a manually confirmed purchase and records its sale without creating a payment or rental revenue. Legacy current assignments with unknown installation boundaries can be returned or swapped using an actual event date and evidence; the old placement start remains unknown. Returns require inspection before the unit is ready again.
 
+Inventory current/future links are authoritative; booking pointers synchronize transactionally and retain previous values in events. Automatic signing/payment paths reuse existing allocations. A purchase can be owner-accepted before its handover date is known; it remains Requested with an acceptance note until a date can be promised. Customer magic links appear only in the private admin workspace; historical manual bookings keep history links without enabling live automation.
+
 ## Entity definitions and minimum fields
 
 ### Customer and identity
