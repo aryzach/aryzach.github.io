@@ -18,9 +18,9 @@ function localHistory(state:RentalWorkspace,selection:HistorySelection):XeroHist
  const ids=selection.contactId?[selection.contactId]:selection.customerId?(state.xeroLinks||[]).filter(l=>l.customerId===selection.customerId).map(l=>l.contactId):null;
  return {...history,contacts:history.contacts.filter(c=>!ids||ids.includes(c.contactId)),transactions:ids?(history.transactions||[]).filter(t=>ids.includes(t.contactId)):undefined};
 }
-export default function XeroCustomerHistory({state,customerId,onRead,onClose,onOpenAgreement,onLifecycle}:{state:RentalWorkspace;customerId:string|null;onRead?:ReadXeroHistory;onClose:()=>void;onOpenAgreement?:OpenAgreement;onLifecycle?:LifecycleCommand}) {
- const [view,setView]=useState(customerId?'overview':'payments');
- const [contactId,setContactId]=useState<string|undefined>();const [result,setResult]=useState<XeroHistoryResult|null>(null);const [error,setError]=useState('');const [loading,setLoading]=useState(true);const [search,setSearch]=useState('');const [showDeleted,setShowDeleted]=useState(false);
+export default function XeroCustomerHistory({state,customerId,initialContactId,initialView,onRead,onClose,onOpenAgreement,onLifecycle}:{state:RentalWorkspace;customerId:string|null;initialContactId?:string;initialView?:'overview'|'payments';onRead?:ReadXeroHistory;onClose:()=>void;onOpenAgreement?:OpenAgreement;onLifecycle?:LifecycleCommand}) {
+ const [view,setView]=useState<string>(initialView||(customerId?'overview':'payments'));
+ const [contactId,setContactId]=useState<string|undefined>(initialContactId);const [result,setResult]=useState<XeroHistoryResult|null>(null);const [error,setError]=useState('');const [loading,setLoading]=useState(true);const [search,setSearch]=useState('');const [showDeleted,setShowDeleted]=useState(false);
  useEffect(()=>{let active=true;setLoading(true);setError('');const selection=contactId?{contactId}:customerId?{customerId}:{};const request=onRead?onRead(selection):Promise.resolve(localHistory(state,selection));request.then(data=>{if(active)setResult(data);}).catch(()=>{if(active){setResult(null);setError('Could not load Xero history. Try again after checking the connection.');}}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[customerId,contactId,onRead,state]);
  const customer=state.customers.find(c=>c.id===customerId);const directory=!customerId&&!contactId;
  const customerRow=customerId?customerDirectory(state).find(row=>row.customer.id===customerId):undefined;

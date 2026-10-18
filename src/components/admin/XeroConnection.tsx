@@ -126,8 +126,7 @@ export function XeroConnection({ password }: { password: string }) {
         <div>
           <h3 className="font-semibold">Xero · read-only connection</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Authorize accounting reads. Connecting does not calculate metrics or
-            import customer history.
+            Read-only accounting access. Use Sync now on the Customers tab to refresh payments.
           </p>
         </div>
         <div className="flex gap-2">
@@ -155,7 +154,7 @@ export function XeroConnection({ password }: { password: string }) {
                   ? "Waiting for Xero authorization."
                   : !status.selectedTenantId
                     ? "Select an authorized organization."
-                    : "Organization authorized. History is waiting for data import.")}
+                    : "Organization authorized. Payment imports are managed on the Customers tab.")}
       </p>
       {status && (
         <p className="mt-2 break-all text-xs text-muted-foreground">

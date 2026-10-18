@@ -173,3 +173,8 @@ Deno.test({ name: "tracking_sample passes validation and fails safely without ex
     else Deno.env.set("ADMIN_PASSWORD", previous);
   }
 } });
+Deno.test('scheduler credentials cannot invoke connection or review actions',async()=>{
+ for(const action of ['status','start','select_tenant','sync_status','sync_acknowledge']){
+  const response=await admin(new Request('https://backend.invalid',{method:'POST',headers:{'x-xero-dispatch':'fake-one-time-trigger'},body:JSON.stringify({action})}));assertEquals(response.status,401);
+ }
+});

@@ -1,3 +1,6 @@
+import { syncStatus, runXeroSync } from '../_shared/xeroSync.ts';
+import { SYNC_TENANT } from '../_shared/xeroSyncModel.ts';
+declare const EdgeRuntime: { waitUntil(promise: Promise<unknown>): void };
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import {
   database,
@@ -43,11 +46,12 @@ serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers });
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
   const password = Deno.env.get("ADMIN_PASSWORD");
-  if (!password || req.headers.get("x-admin-password") !== password)
+  const scheduled = !requestOrigin && req.headers.has("x-xero-dispatch");
+  if (!scheduled && (!password || req.headers.get("x-admin-password") !== password))
     return json({ error: "Unauthorized" }, 401);
   if (Number(req.headers.get("content-length") || 0) > 4096)
     return json({ error: "Request too large" }, 413);
-  let body: { action?: string; tenantId?: string };
+  let body: { action?: string; tenantId?: string; key?: string; fingerprint?: string };
   try {
     const raw = await req.text();
     if (raw.length > 4096) return json({ error: "Request too large" }, 413);
@@ -55,7 +59,7 @@ serveWithMigrationPolicy(async (req) => {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
       return json({ error: "Invalid request" }, 400);
     body = parsed;
-    if (!["status", "start", "select_tenant", "inspect", "tracking_sample"].includes(body.action ?? ""))
+    if (!["status", "start", "select_tenant", "inspect", "tracking_sample", "sync_status", "sync_now", "sync_acknowledge"].includes(body.action ?? ""))
       return json({ error: "Unknown action" }, 400);
     if (body.tenantId !== undefined && typeof body.tenantId !== "string")
       return json({ error: "Invalid organization" }, 400);
@@ -63,7 +67,22 @@ serveWithMigrationPolicy(async (req) => {
     return json({ error: "Invalid request" }, 400);
   }
   try {
+    if (scheduled && body.action !== 'sync_now') return json({error:'Unauthorized'},401);
     const db = database();
+    if(body.action==='sync_status')return json(await syncStatus(db));
+    if(body.action==='sync_acknowledge') {
+      if(typeof body.key!=='string'||typeof body.fingerprint!=='string')return json({error:'Invalid review'},400);
+      const result=await db.rpc('xero_sync_acknowledge',{p_tenant:SYNC_TENANT,p_key:body.key,p_fingerprint:body.fingerprint});
+      if(result.error||!result.data)return json({error:'The review changed; refresh before acknowledging it.'},409);
+      return json(await syncStatus(db));
+    }
+    if(body.action==='sync_now') {
+      const lease=crypto.randomUUID();
+      const started=await db.rpc('xero_sync_begin',{p_tenant:SYNC_TENANT,p_lease:lease,p_dispatch:scheduled?req.headers.get('x-xero-dispatch'):null});
+      if(started.error)return json({error:scheduled?'Unauthorized scheduler request':'Could not start Xero sync. Check the connection.'},scheduled?401:503);
+      if(started.data.started)EdgeRuntime.waitUntil(runXeroSync(db,lease,started.data));
+      return json({started:started.data.started},202);
+    }
     let configured =
       !!Deno.env.get("XERO_CLIENT_ID") &&
       !!Deno.env.get("XERO_CLIENT_SECRET") &&

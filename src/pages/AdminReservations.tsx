@@ -1,3 +1,5 @@
+import XeroSyncPanel from '@/components/admin/XeroSyncPanel';
+import XeroCustomerHistory from '@/components/admin/XeroCustomerHistory';
 import BookingsPanel from '@/components/admin/BookingsPanel';
 import SaunaConditionPanel from '@/components/admin/SaunaConditionPanel';
 import {saunaLifecycle} from '@/lib/bookingModel';
@@ -207,6 +209,7 @@ const AdminReservations = () => {
   const [inventory, setInventory] = useState<InventoryRow[]>([]);
   const [customers, setCustomers] = useState<CustomerOption[]>([]);
   const [loading, setLoading] = useState(false);
+  const [syncReview,setSyncReview]=useState<{customerId?:string;contactId?:string}|null>(null);
   const [coreWorkspace, setCoreWorkspace] = useState(() => previewEnabled ? readWorkspace() : null);
   const [tab, setTab] = useState<"customers" | "rentals" | "insights" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("customerReservation") ? "customers" : new URLSearchParams(location.search).has("xero") ? "insights" : "inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
@@ -538,6 +541,13 @@ const AdminReservations = () => {
     }
   }, [callAdmin]);
 
+  const refreshAfterSync=useCallback(async()=>{
+    if(!previewEnabled){await loadAll();return;}
+    const response=await fetch('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});
+    if(!response.ok)throw Error('Could not refresh the local copy');
+    const copy=await response.json();setCoreWorkspace(copy);sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));
+  },[loadAll]);
+
   useEffect(() => {
     if (!password) return;
     (async () => {
@@ -757,6 +767,8 @@ const AdminReservations = () => {
 
           {!["insights", "customers", "rentals"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
+          {coreWorkspace && tab==='customers' && <XeroSyncPanel password={password} onSynced={refreshAfterSync} onReview={setSyncReview}/>}
+          {coreWorkspace && syncReview && <XeroCustomerHistory state={coreWorkspace} customerId={syncReview.customerId||null} initialContactId={syncReview.contactId} initialView="payments" onClose={()=>setSyncReview(null)} onRead={previewEnabled?undefined:selection=>callAdmin({action:'xero_customer_history',...selection})} onLifecycle={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'lifecycle_command',operation,commandId,record:fields};if(previewEnabled){const r=await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)});if(!r.ok)throw Error('Could not save local classification');}else await callAdmin(request);await refreshAfterSync();}}/>}
           {coreWorkspace && (tab === "customers" || tab === "rentals" || (previewEnabled && tab === "inventory")) && <CoreRecordsPanel tab={tab} state={coreWorkspace} onChange={setCoreWorkspace} onTab={setTab} onReadHistory={previewEnabled ? undefined : async selection => callAdmin({action:"xero_customer_history",...selection})} onLifecycle={previewEnabled&&!import.meta.env.DEV?undefined:async (operation,record)=>{
             const {commandId,...fields}=record;
             const request={action:'lifecycle_command',operation,commandId,record:fields};
