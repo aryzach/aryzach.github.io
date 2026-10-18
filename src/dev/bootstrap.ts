@@ -14,8 +14,8 @@ if (!productionEnabled) {
       throw new Error(previewMessage);
     }
     if (url.origin === location.origin && ['GET', 'HEAD'].includes(request.method)) return nativeFetch(input, init);
-    // Only the pinned, loopback-only PostgreSQL copy accepts preview history writes.
-    if(import.meta.env.DEV && location.hostname==='127.0.0.1' && url.origin===location.origin && url.pathname==='/__local-lifecycle' && request.method==='POST' && request.headers.get('x-sf-local-records')==='1')return nativeFetch(input,init);
+    // Only the pinned loopback copy accepts local history and copied sync-status actions.
+    if(import.meta.env.DEV && location.hostname==='127.0.0.1' && url.origin===location.origin && ['/__local-lifecycle','/__local-xero-sync'].includes(url.pathname) && request.method==='POST' && request.headers.get('x-sf-local-records')==='1')return nativeFetch(input,init);
     throw new Error(previewMessage);
   };
   // SDKs must not bypass fetch using XHR or beacon transports.
