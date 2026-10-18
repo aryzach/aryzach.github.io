@@ -5,10 +5,10 @@ import type { RentalWorkspace } from './rentalModel.ts';
 export interface LtvSourceContact { tenantId:string;contactId:string;complete:boolean;snapshotAt:string }
 export interface LtvSourcePayment { tenantId:string;contactId:string;id:string;date:string;status:string;type:string;currency:string;amountCents:number;hasRentalLines:boolean }
 export interface LtvSources { contacts:LtvSourceContact[];payments:LtvSourcePayment[] }
-export interface LtvPoint { date:string;committed:number|null;actual:number|null;customers:number;eligible:number;excluded:number;partial:boolean;estimatedDates:number;unverifiedTerms:number }
+export interface LtvPoint { date:string;committed:number|null;actual:number|null;customers:number;eligible:number;excluded:number;partial:boolean;estimatedDates:number;unverifiedTerms:number;newInstalledCommitted:number|null;newInstalledCustomers:number;newInstalledEligible:number }
 export interface LtvGap {customerId:string;name:string;reasons:string[]}
 export interface LtvTimeline {points:LtvPoint[];gaps:LtvGap[];types:string[];earliest:string|null;snapshotAt:string|null}
-export interface LtvOptions {from:string;to:string;today:string;types?:string[]}
+export interface LtvOptions {from:string;to:string;today:string;types?:string[];endedOnly?:boolean}
 const day=(value:unknown):value is string=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
 const monthEnd=(year:number,month:number)=>new Date(Date.UTC(year,month+1,0)).toISOString().slice(0,10);
 export function pacificToday(now=new Date()) {
@@ -83,7 +83,14 @@ export function ltvTimeline(state:RentalWorkspace,sources:LtvSources,options:Ltv
  const customerIds=[...new Set(all.map(r=>r.customer_id))];
  const typeByCustomer=new Map(customerIds.map(id=>[id,latestInstalledType(state,id)]));
  const types=[...new Set(typeByCustomer.values())].sort();
- const chosen=customerIds.filter(id=>options.types===undefined||options.types.includes(typeByCustomer.get(id)!));
+ // The ended filter selects a fixed customer group at the chosen endpoint. Past
+ // points still show that group's cash as of each date, not future final receipts.
+ const endedByEndpoint=(id:string)=>{
+  const rentals=(state.lifecycle?.rentals||[]).filter(r=>r.customer_id===id&&r.purpose!=='purchase'&&r.lifecycle_state!=='canceled'&&r.owner_review?.neverInstalled!==true);
+  return rentals.length>0&&rentals.every(r=>r.lifecycle_state==='ended'&&day(r.actual_start)&&day(r.actual_end)&&r.actual_end>=r.actual_start&&r.actual_end<=to);
+ };
+ const chosen=customerIds.filter(id=>(options.types===undefined||options.types.includes(typeByCustomer.get(id)!))&&(!options.endedOnly||endedByEndpoint(id)));
+ const firstInstall=new Map(chosen.map(id=>[id,all.filter(r=>r.customer_id===id).map(r=>r.actual_start!).sort()[0]]));
  const dates:string[]=[];let year=Number(from.slice(0,4)),month=Number(from.slice(5,7))-1;
  while(`${year}-${String(month+1).padStart(2,'0')}-01`<=to){const end=monthEnd(year,month);const date=end>to?to:end;if(date>=from)dates.push(date);month++;if(month===12){month=0;year++;}}
  const gaps:LtvGap[]=[];
@@ -95,7 +102,13 @@ export function ltvTimeline(state:RentalWorkspace,sources:LtvSources,options:Ltv
    if(commitment.value===null||cash.value===null){if(index===dates.length-1)gaps.push({customerId:id,name:state.customers.find(c=>c.id===id)?.name||'Customer',reasons:[...(commitment.value===null?commitment.reasons:[]),...(cash.value===null?[cash.reason]:[])]});continue;}
    committed+=commitment.value;actual+=cash.value;customers++;if(commitment.estimated)estimatedDates++;if(commitment.unverified)unverifiedTerms++;
   }
-  return {date,committed:customers?committed/customers/100:null,actual:customers?actual/customers/100:null,customers,eligible:eligible.length,excluded:eligible.length-customers,partial:date!==monthEnd(Number(date.slice(0,4)),Number(date.slice(5,7))-1),estimatedDates,unverifiedTerms};
+  const newInstalls=eligible.filter(id=>firstInstall.get(id)!.slice(0,7)===date.slice(0,7));
+  let newCommitted=0,newInstalledCustomers=0;
+  for(const id of newInstalls){
+   const commitment=commitmentAsOf(state,id,date);
+   if(commitment.value!==null){newCommitted+=commitment.value;newInstalledCustomers++;}
+  }
+  return {newInstalledCommitted:newInstalledCustomers?newCommitted/newInstalledCustomers/100:null,newInstalledCustomers,newInstalledEligible:newInstalls.length,date,committed:customers?committed/customers/100:null,actual:customers?actual/customers/100:null,customers,eligible:eligible.length,excluded:eligible.length-customers,partial:date!==monthEnd(Number(date.slice(0,4)),Number(date.slice(5,7))-1),estimatedDates,unverifiedTerms};
  });
  return {points,gaps,types,earliest,snapshotAt:sources.contacts.map(c=>c.snapshotAt).filter(Boolean).sort()[0]||null};
 }

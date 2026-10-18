@@ -59,3 +59,31 @@ test('source metadata endpoint remains behind existing admin password check and 
  const api=readFileSync(new URL('../supabase/functions/admin-api/index.ts',import.meta.url),'utf8');assert.ok(api.indexOf('provided !== adminPassword')<api.indexOf('case "ltv_sources"'));
  const helper=readFileSync(new URL('../supabase/functions/_shared/ltvSources.ts',import.meta.url),'utf8');assert.match(helper,/eq\('tenant_id',SYNC_TENANT\)/);assert.doesNotMatch(helper,/\.insert\(|\.update\(|fetch\(/);
 });
+test('ended-only selects customers with all rental records completed by the selected endpoint',()=>{
+ const {state,sources}=fixture();Object.assign(state.lifecycle!.rentals[0],{lifecycle_state:'ended',actual_end:'2026-02-15'});
+ let chart=ltvTimeline(state,sources,{...options,endedOnly:true});assert.deepEqual(chart.points.map(p=>p.customers),[1,1,1]);assert.equal(chart.points[0].actual,300); // Historical cash remains as of that date.
+ assert.equal(ltvTimeline(state,sources,{...options,to:'2026-01-31',endedOnly:true}).points[0].eligible,0);
+ for(const patch of [{lifecycle_state:'active' as const},{actual_end:null},{actual_end:'2026-04-01'}]){
+  const copy=structuredClone(state);Object.assign(copy.lifecycle!.rentals[0],patch);assert.equal(ltvTimeline(copy,sources,{...options,endedOnly:true}).points.at(-1)!.eligible,0);
+ }
+ state.lifecycle!.rentals.push({...state.lifecycle!.rentals[0],id:'pending',actual_start:null,actual_end:null,lifecycle_state:'planned'});assert.equal(ltvTimeline(state,sources,{...options,endedOnly:true}).points.at(-1)!.eligible,0);
+ state.lifecycle!.rentals[1].purpose='purchase';chart=ltvTimeline(state,sources,{...options,endedOnly:true});assert.equal(chart.points.at(-1)!.customers,1);
+ state.lifecycle!.rentals[1].purpose='rental';state.lifecycle!.rentals[1].lifecycle_state='canceled';assert.equal(ltvTimeline(state,sources,{...options,endedOnly:true}).points.at(-1)!.customers,1);
+});
+test('new-installation commitment is an installation-month average, not later lifetime commitments',()=>{
+ const {state,sources}=fixture();state.lifecycle!.agreements.push({...state.lifecycle!.agreements[0],id:'renewal',signed_on:'2026-03-05'});state.lifecycle!.terms.push(term({id:'renewal-term',agreement_id:'renewal',effective_from:'2026-03-05',minimum_months:6,base_monthly_cents:20000}));
+ const chart=ltvTimeline(state,sources,options);assert.deepEqual(chart.points.map(p=>p.newInstalledCommitted),[900,null,null]);assert.equal(chart.points.at(-1)!.committed,2100);
+ assert.deepEqual(chart.points.map(p=>p.newInstalledCustomers),[1,0,0]);
+ state.lifecycle!.rentals.push({...state.lifecycle!.rentals[0],id:'repeat',actual_start:'2026-03-01'});state.lifecycle!.terms.push(term({id:'repeat-term',rental_id:'repeat',agreement_id:null,effective_from:'2026-03-01'}));assert.equal(ltvTimeline(state,sources,options).points.at(-1)!.newInstalledEligible,0);
+});
+test('new-installation line has its own known-commitment coverage and honors sauna-type and completion filters',()=>{
+ const {state,sources}=fixture();sources.contacts[0].complete=false;let chart=ltvTimeline(state,sources,options);assert.equal(chart.points[0].customers,0);assert.equal(chart.points[0].newInstalledCustomers,1);assert.equal(chart.points[0].newInstalledCommitted,900);
+ state.lifecycle!.terms[0].minimum_months=null;chart=ltvTimeline(state,sources,options);assert.equal(chart.points[0].newInstalledCommitted,null);assert.equal(chart.points[0].newInstalledEligible,1);assert.equal(chart.points[0].newInstalledCustomers,0);
+ state.lifecycle!.terms[0].minimum_months=3;assert.equal(ltvTimeline(state,sources,{...options,types:['Outdoor Traditional']}).points[0].newInstalledEligible,0);
+ assert.equal(ltvTimeline(state,sources,{...options,endedOnly:true}).points[0].newInstalledEligible,0);
+});
+test('monthly new-customer average counts distinct first installations, including earlier days in a displayed month',()=>{
+ const {state,sources}=fixture();state.customers.push({...state.customers[0],id:'other'});state.lifecycle!.rentals.push({...state.lifecycle!.rentals[0],id:'other-rental',customer_id:'other',actual_start:'2026-01-12'});state.lifecycle!.terms.push(term({id:'other-term',rental_id:'other-rental',agreement_id:null,effective_from:'2026-01-12',minimum_months:6}));
+ let chart=ltvTimeline(state,sources,{...options,from:'2026-01-20'});assert.equal(chart.points[0].newInstalledCommitted,1350);assert.equal(chart.points[0].newInstalledCustomers,2);
+ chart=ltvTimeline(state,sources,{...options,to:'2026-01-10'});assert.equal(chart.points[0].newInstalledCommitted,900);assert.equal(chart.points[0].newInstalledCustomers,1);assert.equal(chart.points[0].partial,true);
+});
