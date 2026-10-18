@@ -63,6 +63,20 @@ erDiagram
 
 Names are conceptual; retain existing `reservations`, `contracts`, `sauna_inventory`, `sauna_types` and source integration storage wherever practical. New IDs are internal UUIDs; source IDs stay namespaced by provider, tenant and resource. No new database or accounting platform is proposed.
 
+## Booking and operational lifecycles (owner-approved implementation)
+
+Customer is an identity; archived is a visibility setting, not an installed/active lifecycle. Booking states are Draft, Requested, Confirmed, Fulfilled and Cancelled. Rental states remain Planned, Active, Ended and Cancelled, with Unconfirmed retained for incomplete historical evidence. Fulfilled bookings stay fulfilled after service ends. Rental ending reasons, settlement obligations, agreement evidence and payment progress remain separate.
+
+New rental confirmation requires a compatible numbered sauna allocation, a feasible installation date, a non-voided signed agreement, a received deposit and an actual uploaded photo ID. The owner may confirm an exception with a reason; the missing prerequisite is never rewritten as complete. Unit/date requirements cannot be waived. Purchase bookings require manual acceptance. A completed checklist alone cannot promise inventory that is assigned to another booking or unavailable by the agreed date.
+
+Original reservation labels are retained in `booking_legacy_status`. Existing confirmations are marked `legacy`, with evidence gaps shown for review. Historical fulfilled/cancelled records are classified from retained rental evidence without generating messages, changing source documents, or inventing dates. Inventory no longer copies status into reservations. Numbered booking allocation/confirmation/cancellation use private idempotent `booking_command`; installation, swaps, returns and sales continue through the private transactional rental lifecycle command.
+
+Sauna fleet lifecycle and custody are displayed separately from condition (Ready, Needs inspection, Maintenance, Unknown). Existing fleet/custody facts are derived from inventory and placement history, not maintained as competing editable status fields. Existing operational inventory status remains a compatibility cache for availability readers. Condition changes have a recorded reason; confirmed bookings cannot be invalidated by silently moving inventory availability past the promise date. Actual returns require inspection before reavailability.
+
+The Bookings tab owns current requests and confirmation; Rentals owns physical service events and historical backfill; Inventory owns unit details and condition. Inline inventory assignment/status changes and old confirm/release actions cannot bypass those commands. Tax, deposits, payment classification and source integrations retain their existing behavior.
+
+Purchase handover fulfills a manually confirmed purchase and records its sale without creating a payment or rental revenue. Legacy current assignments with unknown installation boundaries can be returned or swapped using an actual event date and evidence; the old placement start remains unknown. Returns require inspection before the unit is ready again.
+
 ## Entity definitions and minimum fields
 
 ### Customer and identity

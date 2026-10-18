@@ -1,3 +1,6 @@
+import BookingsPanel from '@/components/admin/BookingsPanel';
+import SaunaConditionPanel from '@/components/admin/SaunaConditionPanel';
+import {saunaLifecycle} from '@/lib/bookingModel';
 import CoreRecordsPanel from "@/components/admin/CoreRecordsPanel";
 import { readWorkspace } from "@/dev/coreWorkspace";
 import { CustomerInsights } from "@/components/admin/CustomerInsights";
@@ -54,11 +57,6 @@ const STATUSES: SaunaStatus[] = [
   "Sold",
   "Pre-sold",
 ];
-
-// Default status filter preset: everything except Installed, Maintenance, Sold.
-const STATUS_PRESET: SaunaStatus[] = STATUSES.filter(
-  (s) => !["Installed", "Maintenance", "Sold"].includes(s)
-);
 
 const STATUS_STYLES: Record<SaunaStatus, string> = {
   "Available": "bg-green-100 text-green-900 border-green-200",
@@ -236,13 +234,14 @@ const AdminReservations = () => {
     customer: "", future_customer: "", install: "", committed: "", available: "", monthly: "", notes: "", updated: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const [statusFilter, setStatusFilter] = useState<string[]>(STATUS_PRESET as unknown as string[]);
+  const inventoryFilters=['Available','With customer','Reserved','Incoming','Needs attention','Sold','Retired'];
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const INVENTORY_COLS: [ColKey, string][] = [
     ["id", "ID"],
     ["location", "Location"],
     ["style", "Style"],
     ["model", "Model"],
-    ["status", "Status"],
+    ["status", "Fleet / location / condition"],
     ["customer", "Current Customer"],
     ["future_customer", "Future Customer"],
     ["install", "Install"],
@@ -286,7 +285,6 @@ const AdminReservations = () => {
   const [importResult, setImportResult] = useState<null | { ok: number; errors: { row: number; message: string }[] }>(null);
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [bulkStatus, setBulkStatus] = useState<SaunaStatus | "">("");
   const [bulkBusy, setBulkBusy] = useState(false);
   const toggleSelect = (id: string) =>
     setSelectedIds((prev) => {
@@ -309,21 +307,6 @@ const AdminReservations = () => {
     clearSelection();
     if (ok) toast.success(`Deleted ${ok}`);
     if (fail) toast.error(`${fail} failed`);
-    await loadAll();
-  };
-
-  const bulkSetStatus = async () => {
-    if (!selectedIds.size || !bulkStatus) return;
-    setBulkBusy(true);
-    let ok = 0; let fail = 0;
-    for (const id of Array.from(selectedIds)) {
-      try { await callAdmin({ action: "update_inventory", id, patch: { status: bulkStatus } }); ok++; }
-      catch { fail++; }
-    }
-    setBulkBusy(false);
-    if (ok) toast.success(`Updated ${ok}`);
-    if (fail) toast.error(`${fail} failed`);
-    setBulkStatus("");
     await loadAll();
   };
 
@@ -607,7 +590,9 @@ const AdminReservations = () => {
   const filtered = useMemo(() => {
     const active = (Object.entries(colFilters) as [ColKey, string][]).filter(([, v]) => v !== "");
     const rows = inventory.filter((r) => {
-      if (statusFilter.length && !statusFilter.includes(r.status)) return false;
+      const asset=coreWorkspace?.assets.find(a=>a.id===r.id);const life=saunaLifecycle(asset||{sourceStatus:r.status});
+      const tags=[life.fleet,life.custody,...(r.future_customer_id?['Reserved']:[]),...(r.status==='Available'&&!r.current_customer_id&&!r.future_customer_id?['Available']:[]),...(['inspection','maintenance','unknown'].includes(life.condition)?['Needs attention']:[])];
+      if (statusFilter.length && !statusFilter.some(f=>tags.includes(f))) return false;
       if (!active.length) return true;
       const vals = rowValues(r);
       return active.every(([k, v]) => vals[k].toLowerCase().includes(v.toLowerCase()));
@@ -621,7 +606,7 @@ const AdminReservations = () => {
       });
     }
     return rows;
-  }, [inventory, colFilters, sortCol, sortDir, statusFilter]);
+  }, [inventory, colFilters, sortCol, sortDir, statusFilter,coreWorkspace]);
 
   // Inline cell save. Optimistically update local state then send patch.
   const updateCell = async (id: string, key: keyof InventoryRow, value: string | null) => {
@@ -755,7 +740,7 @@ const AdminReservations = () => {
               type="button"
               className={`px-3 py-1.5 text-sm rounded ${tab === "reservations" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("reservations")}
-            >Reservations</button>
+            >Bookings</button>
             <button
               type="button"
               className={`px-3 py-1.5 text-sm rounded ${tab === "waitlist" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
@@ -797,9 +782,18 @@ const AdminReservations = () => {
 
           {tab === "dashboard" && (previewEnabled ? <p role="status">Waiting for data</p> : <RevenueDashboard inventory={inventory} />)}
 
-          {tab === "reservations" && (
-            <ReservationsListPanel callAdmin={callAdmin} />
-          )}
+          {tab === "reservations" && coreWorkspace && <>
+            <BookingsPanel state={coreWorkspace} onRentals={()=>setTab('rentals')} onRefresh={async()=>{if(!previewEnabled){await loadAll();return;}const r=await fetch('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});if(!r.ok)throw Error('Could not refresh local bookings');const copy=await r.json();setCoreWorkspace(copy);sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}} onCommand={async(operation,record)=>{
+              const {commandId,...fields}=record;const request={action:'booking_command',operation,commandId,record:fields};
+              const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const body=await r.json();if(!r.ok)throw Error(body.error||'Local booking operation failed');return body;}):await callAdmin(request);
+              setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();
+            }} onCreate={async(operation,record)=>{
+              const {commandId,...fields}=record;const request={action:'lifecycle_command',operation,commandId,record:fields};
+              const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const body=await r.json();if(!r.ok)throw Error(body.error||'Local booking creation failed');return body;}):await callAdmin(request);
+              setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();
+            }}/>
+            {!previewEnabled&&<details className="mt-5"><summary className="cursor-pointer text-sm text-muted-foreground">Booking links & payment tools</summary><div className="mt-3"><ReservationsListPanel callAdmin={callAdmin}/></div></details>}
+          </>}
 
           {tab === "waitlist" && (
             <WaitlistPanel callAdmin={callAdmin} />
@@ -820,6 +814,7 @@ const AdminReservations = () => {
             />
           )}
 
+          {tab === "inventory" && coreWorkspace && <SaunaConditionPanel state={coreWorkspace} onAssetState={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'lifecycle_command',operation,commandId,record:fields};const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const b=await r.json();if(!r.ok)throw Error(b.error||'Fleet update failed');return b;}):await callAdmin(request);setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();}} onCommand={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'booking_command',operation,commandId,record:fields};const result=previewEnabled?await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)}).then(async r=>{const b=await r.json();if(!r.ok)throw Error(b.error||'Condition update failed');return b;}):await callAdmin(request);setCoreWorkspace(result.workspace);if(previewEnabled)sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(result.workspace));else await loadAll();}}/>}
           {tab === "inventory" && (
             <>
           {importResult && (
@@ -839,17 +834,7 @@ const AdminReservations = () => {
           {selectedIds.size > 0 && (
             <div className="mb-3 p-2 rounded-md border border-primary bg-primary/5 flex flex-wrap items-center gap-2 text-sm">
               <span className="font-medium">{selectedIds.size} selected</span>
-              <div className="flex items-center gap-1">
-                <select
-                  className="h-7 px-1.5 text-xs bg-background border border-border rounded-sm"
-                  value={bulkStatus}
-                  onChange={(e) => setBulkStatus(e.target.value as SaunaStatus | "")}
-                >
-                  <option value="">Set status…</option>
-                  {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <Button size="sm" className="h-7 text-xs px-2" disabled={!bulkStatus || bulkBusy} onClick={bulkSetStatus}>Apply</Button>
-              </div>
+              <span className="text-xs text-muted-foreground">Use Bookings for reservations and Rentals for physical movements.</span>
               <Button size="sm" variant="destructive" className="h-7 text-xs px-2" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
               <Button size="sm" variant="ghost" className="h-7 text-xs px-2 ml-auto" onClick={clearSelection}>Clear</Button>
             </div>
@@ -924,11 +909,11 @@ const AdminReservations = () => {
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <MultiSelectFilter
-                            options={STATUSES as unknown as string[]}
+                            options={inventoryFilters}
                             value={statusFilter}
                             onChange={setStatusFilter}
-                            preset={STATUS_PRESET as unknown as string[]}
-                            presetLabel="Active (preset)"
+                            preset={['Available','Reserved','Incoming','Needs attention']}
+                            presetLabel="Available & upcoming"
                           />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
@@ -995,12 +980,12 @@ const AdminReservations = () => {
                             <td className="px-1 py-1 border-r border-border">
                               <Select value={draft.status} onValueChange={(v) => setD("status", v as SaunaStatus)}>
                                 <SelectTrigger className={`h-7 text-xs ${draftErrorField === "status" ? "border-destructive" : ""}`}><SelectValue /></SelectTrigger>
-                                <SelectContent>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                                <SelectContent>{["Available","Maintenance","Incoming"].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
-                                readOnly={previewEnabled}
+                                readOnly
                                 value={draft.current_customer_id}
                                 customers={customers}
                                 disabledIds={currentAssignedIds}
@@ -1010,7 +995,7 @@ const AdminReservations = () => {
                             </td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
-                                readOnly={previewEnabled}
+                                readOnly
                                 value={draft.future_customer_id}
                                 customers={customers}
                                 disabledIds={futureAssignedIds}
@@ -1086,16 +1071,11 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <SelectCell
-                              value={r.status}
-                              options={STATUSES.map((s) => ({ value: s, label: s, className: STATUS_STYLES[s] }))}
-                              onSave={(v) => updateCell(r.id, "status", v)}
-                              badgeClass={STATUS_STYLES[r.status]}
-                            />
+                            <div className="px-1 text-xs" title="Booking, fleet and physical state are separate"><span className="block font-medium">{saunaLifecycle({sourceStatus:r.status}).fleet}</span><span className="block text-muted-foreground">{saunaLifecycle(coreWorkspace?.assets.find(a=>a.id===r.id)||{sourceStatus:r.status}).custody}</span><span className="block text-muted-foreground">Condition: {coreWorkspace?.assets.find(a=>a.id===r.id)?.conditionState||'unknown'}</span>{r.future_customer_id&&<span className="block text-primary">Next booking assigned</span>}</div>
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
-                                readOnly={previewEnabled}
+                                readOnly
                               value={r.current_customer_id}
                               customers={customers}
                               disabledIds={new Set([...currentAssignedIds].filter((id) => id !== r.current_customer_id))}
@@ -1104,7 +1084,7 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
-                                readOnly={previewEnabled}
+                                readOnly
                               value={r.future_customer_id}
                               customers={customers}
                               disabledIds={new Set([...futureAssignedIds].filter((id) => id !== r.future_customer_id))}
@@ -1112,10 +1092,10 @@ const AdminReservations = () => {
                             />
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <DateCell value={r.install_date} onSave={(v) => updateCell(r.id, "install_date", v)} />
+                            <span className="px-1 text-xs">{r.install_date||"—"}</span>
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
-                            <DateCell value={r.minimum_term_ends} onSave={(v) => updateCell(r.id, "minimum_term_ends", v)} />
+                            <span className="px-1 text-xs">{r.minimum_term_ends||"—"}</span>
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />

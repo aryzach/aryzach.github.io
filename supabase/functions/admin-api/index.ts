@@ -54,8 +54,9 @@ serveWithMigrationPolicy(async (req) => {
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, serviceKey);
   const workspace = async () => {
-    const [core,lifecycle] = await Promise.all([readCoreRecords(supabase),readLifecycleRecords(supabase)]);
-    return {...core,lifecycle,assignments:lifecycle.placements.map((p:any)=>({id:p.id,rentalId:p.rental_id,assetId:p.asset_id,installedOn:p.installed_on,removedOn:p.removed_on,address:p.address||''}))};
+    const [core,lifecycle,bookingResult] = await Promise.all([readCoreRecords(supabase),readLifecycleRecords(supabase),supabase.rpc("booking_workspace")]);
+    if(bookingResult.error)throw bookingResult.error;
+    return {...core,lifecycle,bookings:bookingResult.data,assignments:lifecycle.placements.map((p:any)=>({id:p.id,rentalId:p.rental_id,assetId:p.asset_id,installedOn:p.installed_on,removedOn:p.removed_on,address:p.address||''}))};
   };
 
   let payload: any = {};
@@ -74,11 +75,17 @@ serveWithMigrationPolicy(async (req) => {
       case "xero_customer_history":
         return json(await readXeroCustomerHistory(supabase, { customerId: payload.customerId, contactId: payload.contactId }));
 
+      case "booking_command": {
+        if(!['allocate','confirm','cancel','condition','complete_purchase'].includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a booking action and request ID'},400);
+        const {error}=await supabase.rpc('booking_command',{command_id:payload.commandId,operation:payload.operation,payload:payload.record||{}});
+        if(error)return json({error:error.message},error.code==='40001'?409:400);
+        return json({workspace:await workspace()});
+      }
       case "core_workspace":
         return json({ workspace: await workspace() });
 
       case "lifecycle_command": {
-        const allowed=['manual_reservation','install','return','swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
+        const allowed=['manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
         if(!allowed.includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a supported history operation and request ID'},400);
         const {error}=await supabase.rpc('rental_lifecycle_command',{command_id:payload.commandId,operation:payload.operation,payload:payload.record||{}});
         if(error)return json({error:error.message},error.code==='40001'?409:400);
@@ -164,26 +171,9 @@ serveWithMigrationPolicy(async (req) => {
         let update: Record<string, unknown> = {};
 
         switch (kind) {
-          case "confirm": {
-            update = { reservation_status: "Reservation Confirmed" };
-            if (reservation.sauna_inventory_id) {
-              await supabase.from("sauna_inventory")
-                .update({ status: "Reservation Confirmed" })
-                .eq("id", reservation.sauna_inventory_id);
-            }
-            push("Reservation Confirmed", "Admin confirmed reservation.");
-            break;
-          }
-          case "release": {
-            update = { reservation_status: "Cancelled", sauna_inventory_id: null, hold_deadline: null };
-            if (reservation.sauna_inventory_id) {
-              await supabase.from("sauna_inventory")
-                .update({ status: "Available", current_customer: null, current_customer_id: null, reservation_id: null })
-                .eq("id", reservation.sauna_inventory_id);
-            }
-            push("Hold Released", "Admin released the reservation hold.");
-            break;
-          }
+          case "confirm":
+          case "release":
+            return json({error:'Use Bookings → Manage to confirm an exception or cancel with a reason.'},400);
           case "mark_consult":
             update = { consult_status: "Complete" };
             push("Video Consultation Complete", "Admin marked consultation complete.");
@@ -301,6 +291,7 @@ serveWithMigrationPolicy(async (req) => {
           "consult_status",
           "admin_notes",
         ];
+        if(['status','current_customer_id','future_customer_id','install_date','minimum_term_ends','current_customer','future_customer'].some(k=>k in patch))return json({error:'Use Bookings for numbered reservations and Rentals for installation, return, swap or sauna status.'},400);
         const clean: Record<string, unknown> = {};
         for (const k of allowed) if (k in patch) clean[k] = patch[k];
         const { data, error } = await supabase
@@ -370,6 +361,7 @@ serveWithMigrationPolicy(async (req) => {
       }
 
       case "create_inventory": {
+        if(payload.current_customer_id||payload.future_customer_id||payload.install_date||payload.status&&!['Available','Maintenance','Incoming'].includes(payload.status))return json({error:'Create an unassigned sauna first; use Bookings and Rentals for customer movements.'},400);
         const allowed = [
           "sauna_type_id", "unit_code", "model", "model_key", "style", "locations",
           "indoor_outdoor_eligibility", "status",
@@ -415,6 +407,7 @@ serveWithMigrationPolicy(async (req) => {
           "available_date",
           "admin_notes",
         ];
+        if(['status','current_customer_id','future_customer_id','install_date','minimum_term_ends','current_customer','future_customer'].some(k=>k in patch))return json({error:'Use Bookings for numbered reservations and Rentals for installation, return, swap or sauna status.'},400);
         const clean: Record<string, unknown> = {};
         for (const k of allowed) if (k in patch) clean[k] = patch[k] === "" ? null : patch[k];
         if (Object.keys(clean).length === 0) {

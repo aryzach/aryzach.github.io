@@ -1,3 +1,4 @@
+import type { Booking } from './bookingModel.ts';
 import type { XeroHistoryResult } from './xeroCustomerHistory.ts';
 import type { LifecycleWorkspace } from './lifecycleModel.ts';
 /** Core records. Reservations, contracts and inventory retain their existing IDs. */
@@ -26,6 +27,9 @@ export interface SaunaAsset {
   model: string;
   sourceStatus?: string;
   typeName?: string;
+  conditionState?: string;
+  custody?: string;
+  retired?: boolean;
 }
 export interface SaunaAssignment {
   id: string;
@@ -37,6 +41,7 @@ export interface SaunaAssignment {
 }
 export interface XeroCustomerLink { customerId: string; tenantId: string; contactId: string; name: string; shortCode?: string; origin?: string; }
 export interface RentalWorkspace {
+  bookings?: Booking[];
   lifecycle?: LifecycleWorkspace;
   xeroLinks?: XeroCustomerLink[];
   xeroHistory?: XeroHistoryResult;

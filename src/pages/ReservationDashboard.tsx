@@ -39,6 +39,8 @@ interface Reservation {
   preferred_install_at: string;
   city: string | null;
   reservation_status: string;
+  booking_state?: string;
+  booking_confirmation_mode?: string;
   payment_status: string;
   consult_status: string;
   contract_status: string;
@@ -331,10 +333,10 @@ const ReservationDashboard = () => {
   const consultComplete = reservation?.consult_status === "Complete";
   const allPrereqsComplete =
     consultScheduled && consultComplete && paid && contractSigned && idComplete;
-  const canScheduleInstall = allPrereqsComplete;
-  const holdComplete = paid && contractSigned && idComplete && saunaHold?.is_reserved === true;
+  const canScheduleInstall = reservation?.booking_state==='confirmed'||reservation?.booking_state==='fulfilled'||(!reservation?.booking_state&&allPrereqsComplete);
+  const holdComplete = reservation?.booking_state ? ['confirmed','fulfilled'].includes(reservation.booking_state) : paid && contractSigned && idComplete && saunaHold?.is_reserved === true;
   const holdPartiallyComplete = paid || contractSigned || idComplete;
-  const holdState = holdComplete ? "reserved" : isWaitlisted ? "waitlisted" : holdPartiallyComplete ? "incomplete" : "unreserved";
+  const holdState = reservation?.booking_state==='cancelled'?'unreserved':holdComplete ? "reserved" : isWaitlisted ? "waitlisted" : holdPartiallyComplete ? "incomplete" : "unreserved";
   const holdStyles = {
     reserved: "bg-hold-success/15 text-hold-success",
     waitlisted: "bg-hold-info/15 text-hold-info",
@@ -435,7 +437,7 @@ const ReservationDashboard = () => {
             <>
               <div>
                 <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
-                  {paid ? "Your sauna is temporarily reserved" : "Continue your reservation"}
+                  {holdComplete ? "Your booking is confirmed" : paid ? "Continue your booking" : "Continue your reservation"}
                 </h1>
                 {paid && (
                   <p className="text-muted-foreground mb-8">

@@ -1,3 +1,4 @@
+import {bookingLabels,type BookingState} from '@/lib/bookingModel';
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, X } from "lucide-react";
@@ -26,6 +27,7 @@ interface Reservation {
   sauna_inventory_id: string | null;
   preferred_install_at: string;
   reservation_status: string;
+  booking_state?: BookingState;
   payment_status: string;
   consult_status: string;
   contract_status: string;
@@ -118,14 +120,7 @@ export const ReservationsListPanel = ({
     status: "", payment: "", consult: "", id: "", contract: "", created: "", magic_link_opened: "",
   });
   const setColFilter = (k: ColKey, v: string) => setColFilters((p) => ({ ...p, [k]: v }));
-  const [statusFilter, setStatusFilter] = useState<string[]>([
-    "Pending Payment",
-    "Reservation Hold",
-    "Reservation Confirmed",
-    "Needs Manual Review",
-    "Returning",
-    "Transfer Planned",
-  ]);
+  const [statusFilter, setStatusFilter] = useState<string[]>(['Requested','Confirmed']);
   const [sortCol, setSortCol] = useState<ColKey | null>("created");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -140,7 +135,7 @@ export const ReservationsListPanel = ({
     setLoading(true);
     try {
       const data = await callAdmin({ action: "list_reservations" });
-      setReservations(data.reservations ?? []);
+      setReservations((data.reservations ?? []).map((r:Reservation)=>({...r,reservation_status:r.booking_state?bookingLabels[r.booking_state]:r.reservation_status})));
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -266,11 +261,6 @@ export const ReservationsListPanel = ({
       "Manually mark {n} reservations as paid?",
       );
     };
-  const bulkConfirm = () =>
-    runBulk("Confirm", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "confirm" }));
-  const bulkRelease = () =>
-    runBulk("Release", (r) => callAdmin({ action: "reservation_action", id: r.id, kind: "release" }),
-      "Release {n} holds?");
   const copyToClipboard = async (text: string): Promise<boolean> => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -383,19 +373,7 @@ export const ReservationsListPanel = ({
     140,
   );
 
-  const statusOpts = [
-    "Installed",
-    "Returning",
-    "Reservation Hold",
-    "Reservation Confirmed",
-    "Pending Payment",
-    "Needs Manual Review",
-    "Cancelled",
-    "Refunded",
-    "Transfer Planned",
-    "Sold",
-    "Churned",
-  ];
+  const statusOpts = Object.values(bookingLabels);
   const paymentOpts = ["Pending", "Paid", "Refunded", "Failed"];
   const stepOpts = ["Not Scheduled", "Scheduled", "Complete", "Not Sent", "Not Uploaded"];
   const styleOpts = ["Traditional", "Infrared"];
@@ -404,7 +382,7 @@ export const ReservationsListPanel = ({
     <div>
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-lg font-medium text-foreground">
-          Magic Links{" "}
+          Booking links{" "}
           <span className="text-sm text-muted-foreground font-normal">
             ({filtered.length}{filtered.length !== reservations.length ? ` of ${reservations.length}` : ""})
           </span>
@@ -438,8 +416,8 @@ export const ReservationsListPanel = ({
           <span className="text-xs text-foreground font-medium">{selected.size} selected</span>
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkCopyLinks}>Copy Links</Button>
           <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkMarkPaid}>Mark Paid</Button>
-          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkConfirm}>Confirm Hold</Button>
-          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkRelease}>Release Hold</Button>
+
+
           <Button size="sm" variant="destructive" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={bulkDelete}>Delete</Button>
           <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" disabled={bulkBusy} onClick={() => setSelected(new Set())}>Clear</Button>
         </div>
@@ -572,12 +550,6 @@ export const ReservationsListPanel = ({
                     {r.payment_status !== "Paid" && r.reservation_status !== "Lead" && (
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => markPaid(r.id)}>Mark Paid</Button>
                     )}
-                    {r.reservation_status === "Reservation Hold" && (
-                      <>
-                        <Button size="sm" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "confirm")}>Confirm</Button>
-                        <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "release")}>Release</Button>
-                      </>
-                    )}
                     {r.consult_status !== "Scheduled" && r.consult_status !== "Complete" && (
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_consult_scheduled")}>Consult Scheduled</Button>
                     )}
@@ -585,7 +557,7 @@ export const ReservationsListPanel = ({
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_consult")}>Consult Complete</Button>
                     )}
                     <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_scheduled")}>Install Scheduled</Button>
-                    <Button size="sm" variant="outline" className="h-6 px-2 text-[10px]" onClick={() => doAction(r.id, "mark_install_complete")}>Install Complete</Button>
+
                     <Button size="sm" variant="destructive" className="h-6 px-2 text-[10px]" onClick={() => deleteReservation(r)}>Delete</Button></>}
                     {r.stripe_ach_payment_method_id && (
                       <Button

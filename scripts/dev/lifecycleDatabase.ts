@@ -21,16 +21,17 @@ export async function localWorkspace(config:Config):Promise<RentalWorkspace>{
  const base=JSON.parse(await readFile(config.records,'utf8')) as RentalWorkspace;
  const documentMap=JSON.parse(await readFile(config.documentMap,'utf8')) as Record<string,string>;
  const result=localQuery(config,`SELECT jsonb_build_object(
+ 'bookings',booking_workspace(),
  'lifecycle',jsonb_build_object(${['rentals','rental_agreements','rental_terms','rental_placements','sauna_sales','rental_settlements','rental_history_events','rental_documents','rental_payment_allocations','customer_payment_reviews'].map((table,i)=>`'${['rentals','agreements','terms','placements','sales','settlements','events','documents','allocations','paymentReviews'][i]}',coalesce((SELECT jsonb_agg(to_jsonb(t)${table==='rental_documents'?"-'storage_path'":''}) FROM ${table} t),'[]'::jsonb)`).join(',')}),
  'reservations',coalesce((SELECT jsonb_agg(jsonb_build_object('id',r.id,'createdAt',r.created_at,'status',r.reservation_status,'address',coalesce(r.install_address,''),'saunaType',coalesce(st.name,''),'stripeCustomerId',r.stripe_customer_id,'bookingKind',r.booking_kind,'bookedOn',r.booked_on)) FROM reservations r LEFT JOIN sauna_types st ON st.id=r.sauna_type_id),'[]'::jsonb),
  'inventory',coalesce((SELECT jsonb_agg(to_jsonb(i)||jsonb_build_object('monthly_price',coalesce((SELECT c.monthly_price FROM contracts c WHERE c.reservation_id=coalesce(i.current_customer_id,i.future_customer_id) AND c.voided_at IS NULL ORDER BY (c.signed_at IS NOT NULL) DESC,c.created_at DESC LIMIT 1),(SELECT r.crm_monthly_price FROM reservations r WHERE r.id=coalesce(i.current_customer_id,i.future_customer_id))))) FROM sauna_inventory i),'[]'::jsonb),
  'profiles',coalesce((SELECT jsonb_agg(jsonb_build_object('id',id,'primaryContact',primary_contact_name,'archived',archived_at IS NOT NULL,'version',version)) FROM customer_profiles),'[]'::jsonb),
  'links',coalesce((SELECT jsonb_agg(to_jsonb(l)) FROM reservation_customer_links l),'[]'::jsonb));`) as {profiles:{id:string;primaryContact:string;archived:boolean;version:number}[];lifecycle:NonNullable<RentalWorkspace['lifecycle']>;reservations:RentalWorkspace['reservations'];inventory:Record<string,unknown>[];links:{reservation_id:string;customer_id:string}[]};
- base.lifecycle=result.lifecycle;base.reservations=result.reservations;base.legacyInventory=result.inventory;
+ base.bookings=(result as typeof result & {bookings:RentalWorkspace['bookings']}).bookings;base.lifecycle=result.lifecycle;base.reservations=result.reservations;base.legacyInventory=result.inventory;
  base.customers=base.customers.map(c=>({...c,...result.profiles.find(p=>p.id===c.id),legacyReservationIds:result.links.filter(l=>l.customer_id===c.id).map(l=>l.reservation_id)}));
  base.rentals=result.lifecycle.rentals.map(r=>({id:r.id,customerId:r.customer_id,reservationId:r.originating_reservation_id,address:r.service_address||'',notes:''}));
  base.assignments=result.lifecycle.placements.map(p=>({id:p.id,rentalId:p.rental_id,assetId:p.asset_id,installedOn:p.installed_on,removedOn:p.removed_on,address:p.address||''}));
- base.assets=result.inventory.map(i=>({id:String(i.id),code:String(i.unit_code||''),model:String(i.model||''),sourceStatus:i.retired_on?'Retired':String(i.status),typeName:base.legacyTypes?.find(t=>t.id===i.sauna_type_id)?.name||''}));
+ base.assets=result.inventory.map(i=>({id:String(i.id),code:String(i.unit_code||''),model:String(i.model||''),sourceStatus:i.retired_on?'Retired':String(i.status),retired:!!i.retired_on,conditionState:String(i.condition_state||'unknown'),custody:i.current_customer_id&&['Installed','Returning','Maintenance','Transfer Planned'].includes(String(i.status))?'With customer':undefined,typeName:base.legacyTypes?.find(t=>t.id===i.sauna_type_id)?.name||''}));
  base.legacyLinks=result.inventory.flatMap(i=>['current','future'].flatMap(kind=>{const r=base.rentals.find(r=>r.reservationId===i[`${kind}_customer_id`]);return r?[{assetId:String(i.id),rentalId:r.id,kind:kind as 'current'|'future',recordedInstallDate:kind==='current'?i.install_date as string:null}]:[];}));
  base.lifecycle.documents=base.lifecycle.documents.map(d=>({...d,local_url:documentMap[d.id]?`/__local-documents/${d.id}`:undefined}));
  base.lifecycle.agreements=base.lifecycle.agreements.map(a=>{if(a.contract_id&&documentMap[a.contract_id])documentMap[a.id]=documentMap[a.contract_id];return {...a,local_url:documentMap[a.id]?`/__local-documents/${a.id}`:undefined};});
@@ -47,7 +48,12 @@ export async function localLifecycleRequest(body:Record<string,unknown>){
   const result=localQuery(config,`SELECT rental_lifecycle_command(${uuid(body.commandId)},'document',${literal({sha256:hash,filename:body.filename,storagePath:`historical-contracts/${hash}.pdf`,byteSize:bytes.length,incomplete:body.incomplete===true})});`) as {recordId:string};
   const map=JSON.parse(await readFile(config.documentMap,'utf8'));map[result.recordId]=filename;await writeFile(config.documentMap,JSON.stringify(map),{mode:0o600});return {documentId:result.recordId};
  }
- const allowed=['manual_reservation','install','return','swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
+ const allowed=['manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
+ if(body.action==='booking_command'){
+  if(!['allocate','confirm','cancel','condition','complete_purchase'].includes(String(body.operation)))throw new Error('Unsupported booking operation.');
+  localQuery(config,`SELECT booking_command(${uuid(body.commandId)},'${body.operation}',${literal(body.record||{})});`);
+  return {workspace:await localWorkspace(config)};
+ }
  if(body.action!=='lifecycle_command'||!allowed.includes(String(body.operation)))throw new Error('Unsupported local history operation.');
  localQuery(config,`SELECT rental_lifecycle_command(${uuid(body.commandId)},'${body.operation}',${literal(body.record||{})});`);
  return {workspace:await localWorkspace(config)};
