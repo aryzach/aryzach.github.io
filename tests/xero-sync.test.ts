@@ -59,3 +59,7 @@ test('sauna capital and heater evidence stays in private cache without creating 
  const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000098',Contact:{ContactID:'vendor'},Type:'SPEND',LineItems:[{AccountCode:'540',LineAmount:1000,TaxAmount:0}]}));
  const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,2);assert.equal(p.histories.some(h=>h.contact_id==='vendor'),false);
 });
+test('CAC expense evidence stays cached without treating ad vendors as customers',async()=>{
+ const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000088',Contact:{ContactID:'vendor',Name:'HIGHLEVEL'},Type:'SPEND',LineItems:[{AccountCode:'6155',LineAmount:100,TaxAmount:0}]}));
+ const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,2);assert.equal(p.histories.some(h=>h.contact_id==='vendor'),false);
+});

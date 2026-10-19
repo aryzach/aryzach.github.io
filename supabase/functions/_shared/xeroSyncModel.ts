@@ -1,3 +1,4 @@
+import {acquisitionCategory} from '../../../src/lib/acquisitionRules.ts';
 /** Current-source projections only; this module cannot write operational records or call Xero. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type XeroRecord = Record<string, any>;
@@ -121,7 +122,7 @@ export async function makeSyncProjection(input:SyncInput) {
   const customerInvoices=cache.Invoices.filter(r=>r.Type==='ACCREC');
   const customerCredits=cache.CreditNotes.filter(r=>r.Type==='ACCRECCREDIT');
   const invoiceIds=new Set(customerInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
-  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>['540','SH','102','542','372','788'].includes(String(l.AccountCode))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
+  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>(['540','SH','102','542','372','788'].includes(String(l.AccountCode))||acquisitionCategory(String(l.AccountCode),r.Contact?.Name||''))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
   const histories=[];
   for(const id of eligible) {
     const contact=contactMap.get(id)||oldHistory.find(h=>h.contact_id===id)?.contact_source;

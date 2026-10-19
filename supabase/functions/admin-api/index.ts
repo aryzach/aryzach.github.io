@@ -1,3 +1,4 @@
+import {readAcquisitionSources} from '../_shared/acquisitionSources.ts';
 import { readSaunaRecoverySources } from '../_shared/saunaRecoverySources.ts';
 import { readLtvSources } from '../_shared/ltvSources.ts';
 import { readXeroCustomerHistory } from "../_shared/xeroCustomerHistory.ts";
@@ -73,6 +74,9 @@ serveWithMigrationPolicy(async (req) => {
     switch (action) {
       case "login":
         return json({ ok: true });
+
+      case "acquisition_sources":
+        return new Response(JSON.stringify(await readAcquisitionSources(supabase)), {headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"}});
 
       case "sauna_recovery_sources":
         return new Response(JSON.stringify(await readSaunaRecoverySources(supabase)), {headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"}});

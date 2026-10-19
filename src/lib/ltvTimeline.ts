@@ -43,7 +43,7 @@ export function latestInstalledType(state:RentalWorkspace,customerId:string):str
  return new Set(types).size===1?types[0]:'Multiple latest types';
 }
 
-function commitmentAsOf(state:RentalWorkspace,customerId:string,cutoff:string) {
+export function commitmentAsOf(state:RentalWorkspace,customerId:string,cutoff:string) {
  const data=state.lifecycle!;
  const rentals=data.rentals.filter(r=>r.customer_id===customerId&&rentalEligible(r)&&r.actual_start!<=cutoff);
  let estimatedDates=0;
@@ -56,7 +56,7 @@ function commitmentAsOf(state:RentalWorkspace,customerId:string,cutoff:string) {
  const result=customerLtv({...state,lifecycle:{...data,rentals,terms}},customerId);
  return {value:result.committed,reasons:result.commitmentNotes.filter(n=>!n.includes('signature confirmation')),unverified:result.commitmentNotes.some(n=>n.includes('signature confirmation')),estimated:estimatedDates>0};
 }
-function actualAsOf(state:RentalWorkspace,sources:LtvSources,customerId:string,cutoff:string) {
+export function actualAsOf(state:RentalWorkspace,sources:LtvSources,customerId:string,cutoff:string) {
  const data=state.lifecycle!;const links=(state.xeroLinks||[]).filter(l=>l.customerId===customerId);
  if(!links.length||links.some(l=>!sources.contacts.some(c=>c.tenantId===l.tenantId&&c.contactId===l.contactId&&c.complete)))return {value:null,reason:'Complete Xero payment coverage is missing.'};
  const duplicate=(tenant:string,id:string)=>data.paymentReviews?.some(r=>r.customer_id===customerId&&r.tenant_id===tenant&&r.source_id===id&&r.disposition==='duplicate');

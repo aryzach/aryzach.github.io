@@ -517,6 +517,7 @@ const AdminReservations = () => {
     [password],
   );
 
+  const readAcquisition = useCallback(() => callAdmin({ action: "acquisition_sources" }), [callAdmin]);
   const readSaunaRecovery = useCallback(() => callAdmin({ action: "sauna_recovery_sources" }), [callAdmin]);
   const readLtvSources = useCallback(() => callAdmin({ action: "ltv_sources" }), [callAdmin]);
 
@@ -827,7 +828,7 @@ const AdminReservations = () => {
             setCoreWorkspace(result.workspace);
           }} />}
 
-          {tab === "dashboard" && <CustomerInsights password={password} inventory={inventory} state={coreWorkspace} onReadRecovery={previewEnabled ? undefined : readSaunaRecovery} onReadSources={previewEnabled ? undefined : readLtvSources} />}
+          {tab === "dashboard" && <CustomerInsights password={password} inventory={inventory} state={coreWorkspace} onReadAcquisition={previewEnabled ? undefined : readAcquisition} onReadRecovery={previewEnabled ? undefined : readSaunaRecovery} onReadSources={previewEnabled ? undefined : readLtvSources} />}
 
           {tab === "reservations" && coreWorkspace && <>
             <BookingsPanel state={coreWorkspace} onRentals={()=>setTab('rentals')} onRefresh={async()=>{if(!previewEnabled){await loadAll();return;}const r=await fetch('/__local-records',{headers:{'x-sf-local-records':'1'},cache:'no-store'});if(!r.ok)throw Error('Could not refresh local bookings');const copy=await r.json();setCoreWorkspace(copy);sessionStorage.setItem('sf-sauna-core-records-preview-v1',JSON.stringify(copy));}} onCommand={async(operation,record)=>{
