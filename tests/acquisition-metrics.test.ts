@@ -77,3 +77,13 @@ test('overall summary preserves unknown cash and commitments instead of dropping
  state.lifecycle.terms=[];s=acquisitionRatioSummary(acquisitionMetrics(state,sources,options).points,'today',options.asOf);
  assert.equal(s.committed,null);assert.equal(s.committedRatio,null);
 });
+
+test('known original contracts dated after historical installation still count in acquisition cohorts',()=>{
+ const {state,sources}=fixture();state.lifecycle.agreements[0].signed_on=null;
+ state.lifecycle.agreements[0].agreement_date='2026-04-01';state.lifecycle.terms[0].effective_from=null;
+ const before=JSON.stringify(state);
+ let m=acquisitionMetrics(state,sources,{...options,asOf:'2026-03-31'});assert.equal(m.points[0].committed,null);
+ m=acquisitionMetrics(state,sources,options);assert.equal(m.points[0].committed,90000);
+ assert.equal(acquisitionRatioSummary(m.points,'today',options.asOf).committedRatio,2);
+ assert.equal(JSON.stringify(state),before);
+});

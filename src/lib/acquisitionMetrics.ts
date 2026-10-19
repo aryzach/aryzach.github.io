@@ -55,7 +55,9 @@ export function acquisitionMetrics(state:RentalWorkspace,sources:AcquisitionSour
   const rollChosen=chosen.filter(c=>c.installedOn.slice(0,7)>=start&&c.installedOn.slice(0,7)<=month);
   const fullRolling=expenses.filter(e=>e.date.slice(0,7)>=start&&e.date.slice(0,7)<=month).reduce((n,e)=>n+e.amount,0);
   const rollingSpend=options.type&&options.type!=='all'?(rollAll.length?fullRolling*rollChosen.length/rollAll.length:0):fullRolling;
-  const commitments=group.map(c=>commitmentAsOf(state,c.id,monthEnd(month)<asOf?monthEnd(month):asOf));
+  // Cohorts use currently known original commitments, including later recovered contracts.
+  // The acquisition month groups customers; it is not a historical evidence cutoff.
+  const commitments=group.map(c=>commitmentAsOf(state,c.id,asOf));
   const actual=group.map(c=>cash(c.id,asOf));
   const sum=(values:(number|null)[])=>values.length&&values.every(v=>v!==null)?values.reduce<number>((n,v)=>n+v!,0):null;
   const committedTotal=sum(commitments.map(v=>v.value)),actualTotal=sum(actual.map(v=>v.value));
