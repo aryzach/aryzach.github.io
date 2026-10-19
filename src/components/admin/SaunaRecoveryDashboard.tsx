@@ -19,7 +19,7 @@ export function SaunaRecoveryDashboard({state,onRead}:{state:RentalWorkspace;onR
  });
  const changeSort=(key:typeof sort.key)=>setSort(s=>({key,desc:s.key===key?!s.desc:false}));
  const th=(label:string,key:typeof sort.key)=><button className="whitespace-nowrap text-left font-semibold" onClick={()=>changeSort(key)}>{label} {sort.key===key?(sort.desc?'↓':'↑'):'↕'}</button>;
- const totals=rows.reduce((a,r)=>({cost:a.cost+(r.cost||0),recovered:a.recovered+r.recovered,paid:a.paid+Number(r.status==='paid'),missing:a.missing+Number(r.status==='unknown')}),{cost:0,recovered:0,paid:0,missing:0});
+ const totals=rows.reduce((a,r)=>({cost:a.cost+(r.cost??r.heaterShare),recovered:a.recovered+r.recovered,paid:a.paid+Number(r.status==='paid'),missing:a.missing+Number(r.status==='unknown')}),{cost:0,recovered:0,paid:0,missing:0});
  return <section className="space-y-5 rounded-xl border bg-card p-5 sm:p-7" aria-label="Sauna cost recovery">
   <div><h3 className="text-xl font-semibold">Sauna cost recovery</h3><p className="mt-1 text-sm text-muted-foreground">Rental cash collected + sauna sale proceeds, compared with each unit’s recorded purchase and inbound shipping costs.</p></div>
   <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">Based on recorded costs, not net profit. The optional heater allocation is an estimate shared equally across units currently labeled Traditional, including sold units. Other missing costs remain unknown. Deposits, customer sales tax, delivery fees and card surcharges do not count as recovered revenue. Prepaid rent does count. Refunds reduce recovery.</div>
