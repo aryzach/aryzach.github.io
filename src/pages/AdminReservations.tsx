@@ -1,3 +1,4 @@
+import {inventoryAvailability} from '@/lib/inventoryAvailability';
 import {Dialog,DialogContent,DialogHeader,DialogTitle} from '@/components/ui/dialog';
 import {fleetEditable,incomingBookingConflicts} from '@/lib/incomingFleet';
 import SaunaStateBadge from '@/components/admin/SaunaStateBadge';
@@ -194,6 +195,8 @@ interface InventoryRow {
   minimum_term_ends: string | null;
   available_date: string | null;
   incoming_eta?: string | null;
+  condition_state?: string;
+  retired_on?: string | null;
   admin_notes: string | null;
   monthly_price: number | null;
   current_contract: RevenueUnit["current_contract"];
@@ -258,7 +261,6 @@ const AdminReservations = () => {
     ["future_customer", "Future Customer"],
     ["install", "Install"],
     ["committed", "Committed until"],
-    ["available", "Available"],
     ["monthly", "$/mo"],
     ["notes", "Notes"],
     ["updated", "Updated"],
@@ -286,6 +288,7 @@ const AdminReservations = () => {
     future_customer_id: string | null;
     install_date: string;
     available_date: string;
+    incoming_eta: string;
     admin_notes: string;
   }>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
@@ -324,8 +327,8 @@ const AdminReservations = () => {
   };
 
   const downloadTemplate = () => {
-    const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes"];
-    const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", ""];
+    const headers = ["ID", "Location", "Style", "Model", "Status", "Customer", "Install", "Available", "Notes", "Inbound"];
+    const sample = ["SF-001", "Indoor", "Traditional", "Standard", "Available", "", "", "", "", ""];
     const csv = headers.join(",") + "\n" + sample.join(",") + "\n";
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -354,6 +357,7 @@ const AdminReservations = () => {
         customer: idx("Customer"),
         install: idx("Install"),
         available: idx("Available"),
+        inbound: idx("Inbound"),
         notes: idx("Notes"),
       };
       let ok = 0;
@@ -383,6 +387,8 @@ const AdminReservations = () => {
           const available_date = normalizeDate(get(col.available));
           if (get(col.available) && !available_date) throw new Error(`Invalid Available date "${get(col.available)}"`);
 
+          const incoming_eta=normalizeDate(get(col.inbound));
+          if(status==='Incoming'&&(!incoming_eta||(available_date&&available_date<=incoming_eta)))throw Error('Inbound date required; availability must be after inbound.');
           const modelRaw = get(col.model);
           const model = modelRaw
             ? (MODELS.find((m) => m.toLowerCase() === modelRaw.toLowerCase()) || null)
@@ -406,6 +412,7 @@ const AdminReservations = () => {
             current_customer: get(col.customer) || "",
             install_date: install_date || "",
             available_date: available_date || "",
+            incoming_eta:incoming_eta||"",
             admin_notes: get(col.notes) || "",
           });
           ok++;
@@ -438,6 +445,7 @@ const AdminReservations = () => {
       future_customer_id: null,
       install_date: "",
       available_date: "",
+      incoming_eta: "",
       admin_notes: "",
     });
   };
@@ -450,6 +458,7 @@ const AdminReservations = () => {
     setDraftError(null);
     setDraftErrorField(null);
     const sauna_type_id = saunaTypeIdFor(draft.style, draft.indoor_outdoor_eligibility, draft.model);
+    if(draft.status==='Incoming'&&(!draft.incoming_eta||(draft.available_date&&draft.available_date<=draft.incoming_eta))){setDraftError('Inbound date is required; booking availability must be after inbound.');return;}
     setSavingDraft(true);
     try {
       const { style, ...rest } = draft;
@@ -470,6 +479,7 @@ const AdminReservations = () => {
       const fieldMatches: [RegExp, string][] = [
         [/install_date/i, "install_date"],
         [/available_date/i, "available_date"],
+        [/incoming_eta|Inbound date/i, "incoming_eta"],
         [/sauna_type_id/i, "sauna_type_id"],
         [/indoor_outdoor_eligibility/i, "indoor_outdoor_eligibility"],
         [/unit_code/i, "unit_code"],
@@ -607,6 +617,7 @@ const AdminReservations = () => {
 
   const fleetWorkspace=coreWorkspace?{...coreWorkspace,legacyInventory:previewEnabled?coreWorkspace.legacyInventory:inventory.map(row=>({...row}))}:null;
   const inventoryLife = (r: InventoryRow) => saunaLifecycle({...coreWorkspace?.assets.find(a=>a.id===r.id),sourceStatus:r.status});
+  const bookingAvailability=(r:InventoryRow)=>inventoryAvailability({status:r.status,currentCustomer:!!r.current_customer_id,reserved:!!r.future_customer_id,condition:r.condition_state||inventoryLife(r).condition,retired:inventoryLife(r).fleet==='Retired',inboundOn:r.incoming_eta,availableOn:r.available_date});
   const rowValues = (r: InventoryRow): Record<ColKey, string> => ({
     id: r.unit_code || "",
     location: ELIG_LABEL[r.indoor_outdoor_eligibility],
@@ -615,7 +626,7 @@ const AdminReservations = () => {
     fleet: inventoryLife(r).fleet,
     custody: inventoryLife(r).custody,
     condition: conditionLabel(inventoryLife(r).condition),
-    booking_availability: r.future_customer_id ? "Reserved" : "Unreserved",
+    booking_availability: bookingAvailability(r).label,
     customer: r.current_customer || "",
     future_customer: r.future_customer || "",
     install: r.install_date || "",
@@ -631,7 +642,7 @@ const AdminReservations = () => {
     const rows = inventory.filter((r) => {
       if (!active.length) return true;
       const vals = rowValues(r);
-      return active.every(([k, v]) => ['fleet','custody','condition','booking_availability'].includes(k)?vals[k]===v:vals[k].toLowerCase().includes(v.toLowerCase()));
+      return active.every(([k, v]) => k==='booking_availability'?bookingAvailability(r).kind===v:['fleet','custody','condition'].includes(k)?vals[k]===v:vals[k].toLowerCase().includes(v.toLowerCase()));
     });
     if (sortCol) {
       rows.sort((a, b) => {
@@ -852,7 +863,7 @@ const AdminReservations = () => {
             />
           )}
 
-          {tab === 'inventory' && coreWorkspace && <Dialog open={!!fleetEditor} onOpenChange={open=>{if(!open&&!bulkBusy)setFleetEditor(null);}}><DialogContent className="max-w-3xl max-h-[90vh] overflow-auto" onInteractOutside={e=>{if(bulkBusy)e.preventDefault();}} onEscapeKeyDown={e=>{if(bulkBusy)e.preventDefault();}}><DialogHeader><DialogTitle>Edit sauna fleet status</DialogTitle></DialogHeader>{fleetEditor&&<SaunaConditionPanel key={fleetEditor} inline onClose={()=>setFleetEditor(null)} initialTargets={[fleetEditor]} initialAction="incoming" state={fleetWorkspace!} onBusyChange={setBulkBusy} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}</DialogContent></Dialog>}
+          {tab === 'inventory' && coreWorkspace && <Dialog open={!!fleetEditor} onOpenChange={open=>{if(!open&&!bulkBusy)setFleetEditor(null);}}><DialogContent className="max-w-3xl max-h-[90vh] overflow-auto" onInteractOutside={e=>{if(bulkBusy)e.preventDefault();}} onEscapeKeyDown={e=>{if(bulkBusy)e.preventDefault();}}><DialogHeader><DialogTitle>Sauna location & availability</DialogTitle></DialogHeader>{fleetEditor&&<SaunaConditionPanel key={fleetEditor} inline onClose={()=>setFleetEditor(null)} initialTargets={[fleetEditor]} initialAction="incoming" state={fleetWorkspace!} onBusyChange={setBulkBusy} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}</DialogContent></Dialog>}
           {tab === "inventory" && coreWorkspace && <SaunaConditionPanel state={fleetWorkspace!} selectedIds={[...selectedIds]} onBusyChange={setBulkBusy} onSelectionChange={ids=>setSelectedIds(new Set(ids))} onRefresh={refreshInventoryWorkspace} onAssetState={(operation,record)=>inventoryStateCommand('lifecycle_command',operation,record)} onCommand={(operation,record)=>inventoryStateCommand('booking_command',operation,record)}/>}
 
           {tab === "inventory" && (
@@ -950,7 +961,7 @@ const AdminReservations = () => {
                         {(['fleet','custody','condition','booking_availability'] as const).map(key=><th key={key} className="px-1 py-1 border-r border-border">
                           <select aria-label={`Filter ${key==='custody'?'location':key==='booking_availability'?'booking availability':key}`} className="w-full h-6 px-1 text-xs bg-background border border-border rounded-sm outline-none" value={colFilters[key]} onChange={e=>setColFilter(key,e.target.value)}>
                             <option value="">All</option>
-                            {(key==='booking_availability'?['Reserved','Unreserved']:[...new Set(inventory.map(r=>rowValues(r)[key]))].sort()).map(value=><option key={value} value={value}>{value}</option>)}
+                            {(key==='booking_availability'?['Available now','Unavailable','Available on']:[...new Set(inventory.map(r=>rowValues(r)[key]))].sort()).map(value=><option key={value} value={value}>{value}</option>)}
                           </select>
                         </th>)}
                         <th className="px-1 py-1 border-r border-border">
@@ -964,9 +975,6 @@ const AdminReservations = () => {
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.committed} onChange={(e) => setColFilter("committed", e.target.value)} />
-                        </th>
-                        <th className="px-1 py-1 border-r border-border">
-                          <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="YYYY-MM" value={colFilters.available} onChange={(e) => setColFilter("available", e.target.value)} />
                         </th>
                         <th className="px-1 py-1 border-r border-border">
                           <input className="w-full h-6 px-1.5 text-xs bg-background border border-border rounded-sm outline-none focus:border-primary" placeholder="Filter…" value={colFilters.monthly} onChange={(e) => setColFilter("monthly", e.target.value)} />
@@ -1020,9 +1028,9 @@ const AdminReservations = () => {
                                 <SelectContent>{["Available","Maintenance","Incoming"].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                               </Select>
                             </td>
-                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={saunaLifecycle({sourceStatus:draft.status}).custody}/></td>
+                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={saunaLifecycle({sourceStatus:draft.status}).custody}/>{draft.status==='Incoming'&&<Input aria-label="New sauna inbound date" type="date" className="mt-1 h-7 text-xs" value={draft.incoming_eta} onChange={e=>setD('incoming_eta',e.target.value)}/>}</td>
                             <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value="Not recorded"/></td>
-                            <td className="px-2 py-1 border-r border-border"><SaunaStateBadge value={draft.future_customer_id?'Reserved':'Unreserved'}/></td>
+                            <td className="px-2 py-1 border-r border-border">{draft.status==='Incoming'?<Input aria-label="New sauna booking available on" type="date" className="h-7 text-xs" value={draft.available_date} onChange={e=>setD('available_date',e.target.value)}/>:<SaunaStateBadge value={draft.status==='Available'?'Available now':'Unavailable'}/>}</td>
                             <td className="px-1 py-1 border-r border-border">
                               <CustomerPickerCell
                                 readOnly
@@ -1047,9 +1055,6 @@ const AdminReservations = () => {
                               <Input type="date" className={`h-7 text-xs ${draftErrorField === "install_date" ? "border-destructive" : ""}`} value={draft.install_date} onChange={(e) => setD("install_date", e.target.value)} />
                             </td>
                             <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
-                            <td className="px-1 py-1 border-r border-border">
-                              <Input type="date" className={`h-7 text-xs ${draftErrorField === "available_date" ? "border-destructive" : ""}`} value={draft.available_date} onChange={(e) => setD("available_date", e.target.value)} />
-                            </td>
                             <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
                             <td className="px-1 py-1 border-r border-border text-muted-foreground">—</td>
                             <td className="px-1 py-1 border-r border-border">
@@ -1110,7 +1115,7 @@ const AdminReservations = () => {
                               onSave={(v) => updateModel(r, v || null)}
                             />
                           </td>
-                          {(['fleet','custody','condition','booking_availability'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><span title={key==='booking_availability'?'Based on the future-customer assignment. Unreserved does not mean ready or available for installation.':undefined}>{key==='fleet'?<div><button type="button" aria-label={`Edit fleet for sauna ${r.unit_code}`} title="Edit fleet status" className="rounded-md text-left hover:ring-2 hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default" disabled={bulkBusy||!coreWorkspace||!fleetEditable({...coreWorkspace?.assets.find(a=>a.id===r.id),sourceStatus:r.status},!!r.current_customer_id)} onClick={()=>setFleetEditor(r.id)}><SaunaStateBadge value={rowValues(r)[key]}/><span className="ml-1 text-primary" aria-hidden="true">✎</span></button>{r.status==='Incoming'&&incomingBookingConflicts(coreWorkspace?.bookings||[],[r.id],String(r.incoming_eta||'')).length>0&&<button type="button" className="mt-1 block text-left text-[10px] font-medium text-amber-800 underline" onClick={()=>setTab('reservations')}>Install date needs review</button>}</div>:<SaunaStateBadge value={rowValues(r)[key]}/>}</span></td>)}
+                          {(['fleet','custody','condition','booking_availability'] as const).map(key=><td key={key} className="px-2 py-1.5 border-r border-border align-top"><span title={key==='booking_availability'?'Reserved and customer-held units are unavailable. Incoming booking dates must follow inbound arrival.':undefined}>{key==='fleet'?<div><button type="button" aria-label={`Edit fleet for sauna ${r.unit_code}`} title="Edit fleet status" className="rounded-md text-left hover:ring-2 hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-default" disabled={bulkBusy||!coreWorkspace||!fleetEditable({...coreWorkspace?.assets.find(a=>a.id===r.id),sourceStatus:r.status},!!r.current_customer_id)} onClick={()=>setFleetEditor(r.id)}><SaunaStateBadge value={rowValues(r)[key]}/><span className="ml-1 text-primary" aria-hidden="true">✎</span></button>{r.status==='Incoming'&&incomingBookingConflicts(coreWorkspace?.bookings||[],[r.id],String(r.available_date&&r.incoming_eta&&r.available_date>r.incoming_eta?r.available_date:r.incoming_eta||'')).length>0&&<button type="button" className="mt-1 block text-left text-[10px] font-medium text-amber-800 underline" onClick={()=>setTab('reservations')}>Install date needs review</button>}</div>:key==='custody'&&r.status==='Incoming'?<button type="button" aria-label={`Edit inbound date for sauna ${r.unit_code}`} disabled={bulkBusy} className="text-left" onClick={()=>setFleetEditor(r.id)}><SaunaStateBadge value="Inbound"/><span className="mt-1 block text-xs text-primary underline">{r.incoming_eta||'Set inbound date'} ✎</span></button>:key==='booking_availability'?<button type="button" title={bookingAvailability(r).reason} aria-label={`Edit booking availability for sauna ${r.unit_code}`} disabled={bulkBusy||r.status!=='Incoming'||!coreWorkspace} className="text-left disabled:cursor-default" onClick={()=>setFleetEditor(r.id)}><SaunaStateBadge value={bookingAvailability(r).label}/>{r.status==='Incoming'&&<span className="ml-1 text-primary" aria-hidden="true">✎</span>}</button>:<SaunaStateBadge value={rowValues(r)[key]}/>}</span></td>)}
                           <td className="px-1 py-0.5 border-r border-border">
                             <CustomerPickerCell
                                 readOnly
@@ -1134,9 +1139,6 @@ const AdminReservations = () => {
                           </td>
                           <td className="px-1 py-0.5 border-r border-border">
                             <span className="px-1 text-xs">{r.minimum_term_ends||"—"}</span>
-                          </td>
-                          <td className="px-1 py-0.5 border-r border-border">
-                            <DateCell value={r.available_date} onSave={(v) => updateCell(r.id, "available_date", v)} />
                           </td>
                           <td className="px-2 py-1 border-r border-border tabular-nums whitespace-nowrap">{r.monthly_price == null ? "—" : r.monthly_price.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}</td>
                           <td className="px-1 py-0.5 border-r border-border">
@@ -1195,24 +1197,7 @@ const TextCell = ({ value, onSave, mono }: { value: string; onSave: (v: string) 
   );
 };
 
-const DateCell = ({ value, onSave }: { value: string | null; onSave: (v: string | null) => void }) => {
-  const [local, setLocal] = useState(value || "");
-  const ref = useRef(value || "");
-  const [focused, setFocused] = useState(false);
-  useEffect(() => { setLocal(value || ""); ref.current = value || ""; }, [value]);
-  const showAsDate = focused || !!local;
-  return (
-    <input
-      type={showAsDate ? "date" : "text"}
-      className="w-full h-7 px-1.5 text-xs bg-transparent border border-transparent hover:border-border focus:border-primary focus:bg-background rounded-sm outline-none"
-      value={local}
-      readOnly={previewEnabled || !showAsDate}
-      onChange={(e) => setLocal(e.target.value)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => { setFocused(false); if (local !== ref.current) onSave(local || null); }}
-    />
-  );
-};
+
 
 const SelectCell = ({
   value,
@@ -1248,14 +1233,8 @@ function isoDate(y: number, m: number, d: number): string {
 }
 
 function isAvailableOn(row: InventoryRow, dayIso: string): boolean {
-  // Not available if installed on or before this day (occupied by customer)
-  if (row.install_date && row.install_date <= dayIso) {
-    // if there's a later available_date after install, treat as available from that date
-    if (row.available_date && row.available_date <= dayIso) return true;
-    return false;
-  }
-  if (row.available_date) return row.available_date <= dayIso;
-  return row.status === "Available";
+ const a=inventoryAvailability({status:row.status,currentCustomer:!!row.current_customer_id,reserved:!!row.future_customer_id,condition:row.condition_state||'unknown',retired:!!row.retired_on,inboundOn:row.incoming_eta,availableOn:row.available_date});
+ return a.kind==='Available now'||(a.kind==='Available on'&&!!row.available_date&&row.available_date<=dayIso);
 }
 
 const CalendarView = ({

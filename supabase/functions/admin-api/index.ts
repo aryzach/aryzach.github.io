@@ -372,7 +372,7 @@ serveWithMigrationPolicy(async (req) => {
           "current_customer", "future_customer",
           "current_customer_id", "future_customer_id",
           "install_date",
-          "available_date",
+          "available_date", "incoming_eta",
           "admin_notes",
         ];
         const clean: Record<string, unknown> = {};

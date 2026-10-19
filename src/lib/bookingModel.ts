@@ -10,7 +10,7 @@ export function bookingGaps(booking:Booking):string[]{return Object.entries(requ
 export function saunaLifecycle(asset:{sourceStatus?:string;custody?:string;conditionState?:string;retired?:boolean}) {
  const status=asset.sourceStatus||'';
  const fleet=asset.retired?'Retired':status==='Sold'?'Sold':status==='Incoming'?'Incoming':'In fleet';
- const custody=asset.custody||(status==='Installed'||status==='Returning'?'With customer':status==='Incoming'?'Inbound':status==='Sold'?'Ownership transferred':'Unassigned / location unknown');
+ const custody=asset.custody?.replace('Unassigned / location unknown','Warehouse')||(status==='Installed'||status==='Returning'?'With customer':status==='Incoming'?'Inbound':status==='Sold'?'Ownership transferred':'Warehouse');
  const condition=asset.conditionState||'unknown';
  return {fleet,custody,condition};
 }
