@@ -63,3 +63,8 @@ test('CAC expense evidence stays cached without treating ad vendors as customers
  const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000088',Contact:{ContactID:'vendor',Name:'HIGHLEVEL'},Type:'SPEND',LineItems:[{AccountCode:'6155',LineAmount:100,TaxAmount:0}]}));
  const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,2);assert.equal(p.histories.some(h=>h.contact_id==='vendor'),false);
 });
+
+test('supplier capital bills and their payments stay cached without creating customers or rental cash',async()=>{
+ const i=input();i.cache.Invoices=[{InvoiceID:'supplier-bill',Type:'ACCPAY',Contact:{ContactID:'vendor'},Total:1000,Status:'AUTHORISED',LineItems:[{AccountCode:'1400',LineAmount:1000}]}];i.cache.Payments=[{PaymentID:'supplier-payment',Invoice:{InvoiceID:'supplier-bill',Type:'ACCPAY'},Amount:500,Status:'AUTHORISED'}];
+ const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='Invoices')!.records.length,1);assert.equal(p.cache.find(c=>c.resource==='Payments')!.records.length,1);assert.equal(p.histories.some(h=>h.contact_id==='vendor'),false);assert.equal(p.counts.payments,1);
+});

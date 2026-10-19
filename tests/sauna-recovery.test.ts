@@ -40,3 +40,11 @@ test('sales toggle recalculates recovery, remaining cost and paid-off status ind
  assert.equal(on.sale,40000);assert.equal(on.recovered,100000);assert.equal(on.status,'paid');
  assert.equal(off.sale,0);assert.equal(off.recovered,60000);assert.equal(off.remaining,40000);assert.equal(off.percentage,60);assert.equal(off.status,'unpaid');assert.equal(off.entries.some(e=>e.kind==='sale'),false);assert.equal(off.cost,on.cost);
 });
+
+test('supplier bill allocations count their cost once, including paid bills, and retain the bill source',()=>{
+ const bills=[{InvoiceID:'bill',Type:'ACCPAY',Status:'AUTHORISED',CurrencyCode:'USD',DateString:'2026-08-18',LineAmountTypes:'NoTax',Total:1200,AmountPaid:1000,LineItems:[line('1400',500),line('1400',500,'002'),line('1400',200,null)],Payments:[{Amount:1000}]}];
+ const sources=recoverySources([],null,true,bills);const r=saunaRecovery(state(),sources);
+ assert.equal(r.rows[0].cost,50000);assert.equal(r.rows[1].cost,50000);assert.equal(r.issues[0].amount,20000);assert.match(r.rows[0].entries[0].sourceUrl!,/AccountsPayable\/View/);
+ assert.equal(saunaRecovery(state(),recoverySources([],null,true,[{...bills[0],Status:'PAID'}])).rows[0].cost,50000);
+ assert.equal(recoverySources([],null,true,[{...bills[0],Status:'VOIDED'},{...bills[0],Type:'ACCREC'}]).transactions.length,0);
+});

@@ -120,9 +120,11 @@ export async function makeSyncProjection(input:SyncInput) {
   // Keep customer cash plus sauna capital-cost/revenue evidence for the private recovery dashboard.
   // Contacts stay cached so an existing contact can become a customer between nightly reads.
   const customerInvoices=cache.Invoices.filter(r=>r.Type==='ACCREC');
+  const supplierCostBills=cache.Invoices.filter(r=>r.Type==='ACCPAY'&&(r.LineItems||[]).some((l:XeroRecord)=>['540','SH','1400'].includes(String(l.AccountCode))));
+  const retainedInvoices=[...customerInvoices,...supplierCostBills];
   const customerCredits=cache.CreditNotes.filter(r=>r.Type==='ACCRECCREDIT');
-  const invoiceIds=new Set(customerInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
-  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>(['540','SH','102','542','372','788'].includes(String(l.AccountCode))||acquisitionCategory(String(l.AccountCode),r.Contact?.Name||''))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
+  const invoiceIds=new Set(retainedInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
+  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>(['540','SH','102','542','372','788'].includes(String(l.AccountCode))||acquisitionCategory(String(l.AccountCode),r.Contact?.Name||''))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:retainedInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
   const histories=[];
   for(const id of eligible) {
     const contact=contactMap.get(id)||oldHistory.find(h=>h.contact_id===id)?.contact_source;
