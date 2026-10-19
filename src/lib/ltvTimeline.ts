@@ -8,7 +8,8 @@ export interface LtvSources { contacts:LtvSourceContact[];payments:LtvSourcePaym
 export interface LtvPoint { date:string;committed:number|null;actual:number|null;customers:number;eligible:number;excluded:number;partial:boolean;estimatedDates:number;unverifiedTerms:number;newInstalledCommitted:number|null;newInstalledCustomers:number;newInstalledEligible:number }
 export interface LtvGap {customerId:string;name:string;reasons:string[]}
 export interface LtvTimeline {points:LtvPoint[];gaps:LtvGap[];types:string[];earliest:string|null;snapshotAt:string|null}
-export interface LtvOptions {from:string;to:string;today:string;types?:string[];endedOnly?:boolean}
+export type LtvCompletion='all'|'ended'|'ended_or_minimum';
+export interface LtvOptions {from:string;to:string;today:string;types?:string[];endedOnly?:boolean;completion?:LtvCompletion}
 const day=(value:unknown):value is string=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
 const monthEnd=(year:number,month:number)=>new Date(Date.UTC(year,month+1,0)).toISOString().slice(0,10);
 export function pacificToday(now=new Date()) {
@@ -74,6 +75,23 @@ function actualAsOf(state:RentalWorkspace,sources:LtvSources,customerId:string,c
  }
  return {value,reason:''};
 }
+
+function minimumReachedBy(state:RentalWorkspace,rental:LifecycleRental,cutoff:string):boolean {
+ if(rental.lifecycle_state!=='active'||!day(rental.actual_start)||rental.actual_start>cutoff)return false;
+ const terms=(state.lifecycle?.terms||[]).filter(t=>t.rental_id===rental.id&&!['superseded','voided','canceled'].includes(t.state)&&!state.lifecycle?.agreements.some(a=>a.id===t.agreement_id&&['voided','superseded'].includes(a.signing_state)));
+ // Explicit commitment starts survive rate changes; otherwise use the recorded
+ // term start, falling back to installation. Calendar months clamp at month-end.
+ return terms.length>0&&terms.every(t=>{
+  const start=t.commitment_start||t.effective_from||rental.actual_start;
+  if(!day(start)||!Number.isSafeInteger(t.minimum_months)||t.minimum_months!<1)return false;
+  const [year,month,date]=start.split('-').map(Number);const target=new Date(Date.UTC(year,month-1+t.minimum_months!,1));
+  if(!Number.isFinite(target.getTime()))return false;
+  const last=new Date(Date.UTC(target.getUTCFullYear(),target.getUTCMonth()+1,0)).getUTCDate();
+  target.setUTCDate(Math.min(date,last));
+  return target.toISOString().slice(0,10)<=cutoff;
+ });
+}
+
 /** Restated from current records. Date bounds select chart points, never truncate lifetime cash. */
 export function ltvTimeline(state:RentalWorkspace,sources:LtvSources,options:LtvOptions):LtvTimeline {
  const {from,to,today}=options;if(!day(from)||!day(to)||!day(today)||from>to||to>today)throw Error('Choose a valid date range ending today or earlier.');
@@ -85,11 +103,14 @@ export function ltvTimeline(state:RentalWorkspace,sources:LtvSources,options:Ltv
  const types=[...new Set(typeByCustomer.values())].sort();
  // The ended filter selects a fixed customer group at the chosen endpoint. Past
  // points still show that group's cash as of each date, not future final receipts.
- const endedByEndpoint=(id:string)=>{
+ const completed=(r:LifecycleRental)=>r.lifecycle_state==='ended'&&day(r.actual_start)&&day(r.actual_end)&&r.actual_end>=r.actual_start&&r.actual_end<=to;
+ const completion=options.completion||(options.endedOnly?'ended':'all');
+ const includedByCompletion=(id:string)=>{
+  if(completion==='all')return true;
   const rentals=(state.lifecycle?.rentals||[]).filter(r=>r.customer_id===id&&r.purpose!=='purchase'&&r.lifecycle_state!=='canceled'&&r.owner_review?.neverInstalled!==true);
-  return rentals.length>0&&rentals.every(r=>r.lifecycle_state==='ended'&&day(r.actual_start)&&day(r.actual_end)&&r.actual_end>=r.actual_start&&r.actual_end<=to);
+  return rentals.length>0&&rentals.every(r=>completed(r)||(completion==='ended_or_minimum'&&minimumReachedBy(state,r,to)));
  };
- const chosen=customerIds.filter(id=>(options.types===undefined||options.types.includes(typeByCustomer.get(id)!))&&(!options.endedOnly||endedByEndpoint(id)));
+ const chosen=customerIds.filter(id=>(options.types===undefined||options.types.includes(typeByCustomer.get(id)!))&&includedByCompletion(id));
  const firstInstall=new Map(chosen.map(id=>[id,all.filter(r=>r.customer_id===id).map(r=>r.actual_start!).sort()[0]]));
  const dates:string[]=[];let year=Number(from.slice(0,4)),month=Number(from.slice(5,7))-1;
  while(`${year}-${String(month+1).padStart(2,'0')}-01`<=to){const end=monthEnd(year,month);const date=end>to?to:end;if(date>=from)dates.push(date);month++;if(month===12){month=0;year++;}}

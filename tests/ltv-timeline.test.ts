@@ -87,3 +87,28 @@ test('monthly new-customer average counts distinct first installations, includin
  let chart=ltvTimeline(state,sources,{...options,from:'2026-01-20'});assert.equal(chart.points[0].newInstalledCommitted,1350);assert.equal(chart.points[0].newInstalledCustomers,2);
  chart=ltvTimeline(state,sources,{...options,to:'2026-01-10'});assert.equal(chart.points[0].newInstalledCommitted,900);assert.equal(chart.points[0].newInstalledCustomers,1);assert.equal(chart.points[0].partial,true);
 });
+test('ended-or-minimum uses the endpoint for the cohort and applies to all three lines',()=>{
+ const {state,sources}=fixture();
+ assert.equal(ltvTimeline(state,sources,{...options,completion:'ended_or_minimum'}).points.at(-1)!.eligible,0);
+ const chart=ltvTimeline(state,sources,{...options,to:'2026-04-01',completion:'ended_or_minimum'});
+ assert.equal(chart.points[0].customers,1);assert.equal(chart.points[0].committed,900);assert.equal(chart.points[0].actual,300);assert.equal(chart.points[0].newInstalledCommitted,900);
+ assert.equal(ltvTimeline(state,sources,{...options,to:'2026-04-01',completion:'ended'}).points[0].eligible,0);
+ Object.assign(state.lifecycle!.rentals[0],{lifecycle_state:'ended',actual_end:'2026-02-01'});state.lifecycle!.terms[0].minimum_months=null;
+ assert.equal(ltvTimeline(state,sources,{...options,completion:'ended_or_minimum'}).points.at(-1)!.eligible,1);
+});
+test('minimum filter respects explicit commitment starts, renewals, unknowns and pending rentals',()=>{
+ const {state,sources}=fixture();const selected={...options,to:'2026-04-01',completion:'ended_or_minimum' as const};
+ state.lifecycle!.terms[0].effective_from='2026-03-01';state.lifecycle!.terms[0].commitment_start='2026-01-01';
+ assert.equal(ltvTimeline(state,sources,selected).points.at(-1)!.eligible,1);
+ for(const patch of [{minimum_months:null},{minimum_months:0},{commitment_start:'2026-02-01'},{commitment_start:'2026-02-30'}]){const copy=structuredClone(state);Object.assign(copy.lifecycle!.terms[0],patch);assert.equal(ltvTimeline(copy,sources,selected).points.at(-1)!.eligible,0);}
+ state.lifecycle!.terms.push(term({id:'renewal',agreement_id:null,effective_from:'2026-03-01',minimum_months:6}));assert.equal(ltvTimeline(state,sources,selected).points.at(-1)!.eligible,0);
+ state.lifecycle!.terms[1].state='voided';assert.equal(ltvTimeline(state,sources,selected).points.at(-1)!.eligible,1);
+ state.lifecycle!.rentals.push({...state.lifecycle!.rentals[0],id:'pending',actual_start:null,lifecycle_state:'planned'});assert.equal(ltvTimeline(state,sources,selected).points.at(-1)!.eligible,0);
+});
+test('minimum terms use calendar months, including month-end and leap-year boundaries',()=>{
+ const {state,sources}=fixture();state.lifecycle!.rentals[0].actual_start='2026-01-31';state.lifecycle!.terms[0].effective_from='2026-01-31';state.lifecycle!.terms[0].minimum_months=1;
+ assert.equal(ltvTimeline(state,sources,{...options,to:'2026-02-27',completion:'ended_or_minimum'}).points.at(-1)!.eligible,0);
+ assert.equal(ltvTimeline(state,sources,{...options,to:'2026-02-28',completion:'ended_or_minimum'}).points.at(-1)!.eligible,1);
+ state.lifecycle!.terms[0].commitment_start='2024-02-29';state.lifecycle!.terms[0].minimum_months=12;state.lifecycle!.rentals[0].actual_start='2024-02-29';
+ assert.equal(ltvTimeline(state,sources,{...options,from:'2024-02-01',to:'2025-02-28',completion:'ended_or_minimum'}).points.at(-1)!.eligible,1);
+});
