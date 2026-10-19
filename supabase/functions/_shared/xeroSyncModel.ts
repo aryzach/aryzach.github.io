@@ -124,7 +124,7 @@ export async function makeSyncProjection(input:SyncInput) {
   const retainedInvoices=[...customerInvoices,...supplierCostBills];
   const customerCredits=cache.CreditNotes.filter(r=>r.Type==='ACCRECCREDIT');
   const invoiceIds=new Set(retainedInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
-  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>(['540','SH','102','542','372','788'].includes(String(l.AccountCode))||acquisitionCategory(String(l.AccountCode),r.Contact?.Name||''))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:retainedInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
+  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>(['540','SH','102','542','372','788','5140','876'].includes(String(l.AccountCode))||acquisitionCategory(String(l.AccountCode),r.Contact?.Name||''))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:retainedInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
   const histories=[];
   for(const id of eligible) {
     const contact=contactMap.get(id)||oldHistory.find(h=>h.contact_id===id)?.contact_source;

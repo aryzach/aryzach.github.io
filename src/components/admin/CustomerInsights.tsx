@@ -1,3 +1,4 @@
+import {CustomerEconomicsDashboard} from './CustomerEconomicsDashboard';
 import {AcquisitionDashboard} from './AcquisitionDashboard';
 import type {AcquisitionSources} from '@/lib/acquisitionMetrics';
 import {SaunaRecoveryDashboard} from './SaunaRecoveryDashboard';
@@ -15,12 +16,13 @@ export function CustomerInsights({ password, state, onReadSources, onReadRecover
   return <section className="space-y-6 py-4" aria-label="Dashboard">
     <div><h2 className="text-2xl font-semibold">Dashboard</h2><p className="mt-2 text-sm text-muted-foreground">Rental commitments, payments and monthly revenue.</p></div>
     <Tabs value={chart} onValueChange={setChart}>
-      <TabsList aria-label="Dashboard charts" className="h-auto flex-wrap justify-start"><TabsTrigger value="ltv">LTV</TabsTrigger><TabsTrigger value="revenue">Guaranteed monthly revenue</TabsTrigger><TabsTrigger value="recovery">Sauna cost recovery</TabsTrigger><TabsTrigger value="cac">CAC</TabsTrigger><TabsTrigger value="ratios">LTV:CAC</TabsTrigger></TabsList>
+      <TabsList aria-label="Dashboard charts" className="h-auto flex-wrap justify-start"><TabsTrigger value="ltv">LTV</TabsTrigger><TabsTrigger value="revenue">Guaranteed monthly revenue</TabsTrigger><TabsTrigger value="recovery">Sauna cost recovery</TabsTrigger><TabsTrigger value="cac">CAC</TabsTrigger><TabsTrigger value="ratios">LTV:CAC</TabsTrigger><TabsTrigger value="economics">Customer economics</TabsTrigger></TabsList>
       <TabsContent value="ltv">{state ? <LtvTimelineChart state={state} onReadSources={onReadSources} /> : <p role="status">Loading customer records…</p>}</TabsContent>
       <TabsContent value="revenue"><RevenueDashboard inventory={inventory} state={state}/></TabsContent>
       <TabsContent value="recovery">{state ? <SaunaRecoveryDashboard state={state} onRead={onReadRecovery}/> : <p role="status">Loading sauna records…</p>}</TabsContent>
       <TabsContent value="cac">{state ? <AcquisitionDashboard state={state} onRead={onReadAcquisition} view="cac"/> : <p role="status">Loading records…</p>}</TabsContent>
       <TabsContent value="ratios">{state ? <AcquisitionDashboard state={state} onRead={onReadAcquisition} view="ratio"/> : <p role="status">Loading records…</p>}</TabsContent>
+      <TabsContent value="economics">{state ? <CustomerEconomicsDashboard state={state} onRead={onReadAcquisition}/> : <p role="status">Loading records…</p>}</TabsContent>
     </Tabs>
     <details className="rounded-lg border p-4"><summary className="cursor-pointer text-sm font-medium">Xero connection settings</summary><div className="mt-4"><XeroConnection password={password} /></div></details>
   </section>;

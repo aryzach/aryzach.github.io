@@ -3,17 +3,19 @@ import {actualAsOf,commitmentAsOf,latestInstalledType,type LtvSources} from './l
 import {acquisitionCategory} from './acquisitionRules.ts';
 import {recoverySources} from './saunaRecovery.ts';
 export interface AcquisitionExpense {id:string;sourceId:string;date:string;payee:string;description:string;category:string;amount:number;}
-export interface AcquisitionSources {snapshotAt:string|null;expenses:AcquisitionExpense[];payments:LtvSources;issues:{sourceId:string;reason:string}[];}
+export interface LogisticsExpense extends AcquisitionExpense {account:string;saunaCodes:string[];}
+export interface AcquisitionSources {logistics?:{complete:boolean;expenses:LogisticsExpense[];issues:{sourceId:string;reason:string}[]};snapshotAt:string|null;expenses:AcquisitionExpense[];payments:LtvSources;issues:{sourceId:string;reason:string}[];}
 export function acquisitionSources(records:Record<string,unknown>[],snapshotAt:string|null,payments:LtvSources):AcquisitionSources {
- const result:AcquisitionSources={snapshotAt,expenses:[],payments,issues:[]};
+ const result:AcquisitionSources={snapshotAt,expenses:[],payments,issues:[],logistics:{complete:true,expenses:[],issues:[]}};
  const byId=new Map(records.map(r=>[String(r.BankTransactionID),r]));const seen=new Set<string>();
  for(const t of recoverySources(records,snapshotAt).transactions){
   if(seen.has(t.id))continue;seen.add(t.id);
   const payee=String((byId.get(t.id)?.Contact as {Name?:string}|undefined)?.Name||'Unknown payee');
   for(const [i,l] of t.lines.entries()){
-   const category=acquisitionCategory(l.account,payee);if(!category)continue;
-   if(t.currency!=='USD'||!validDay(t.date)){result.issues.push({sourceId:t.id,reason:'Acquisition expense needs currency or date review.'});continue;}
-   result.expenses.push({id:`${t.id}:${l.id}:${i}`,sourceId:t.id,date:t.date,payee,description:l.description,category,amount:l.gross*(t.direction==='SPEND'?1:-1)});
+   const category=acquisitionCategory(l.account,payee);const logistics=['5140','876'].includes(l.account);if(!category&&!logistics)continue;
+   if(t.currency!=='USD'||!validDay(t.date)){(logistics?result.logistics!.issues:result.issues).push({sourceId:t.id,reason:'Expense needs currency or date review.'});continue;}
+   if(logistics)result.logistics!.expenses.push({id:`${t.id}:${l.id}:${i}`,sourceId:t.id,date:t.date,payee,description:l.description,category:l.account==='5140'?'Installation and Delivery':'Sauna Logistics & Transportation',account:l.account,saunaCodes:l.saunaCodes,amount:l.gross*(t.direction==='SPEND'?1:-1)});
+   if(category)result.expenses.push({id:`${t.id}:${l.id}:${i}`,sourceId:t.id,date:t.date,payee,description:l.description,category,amount:l.gross*(t.direction==='SPEND'?1:-1)});
   }
  }
  return result;
