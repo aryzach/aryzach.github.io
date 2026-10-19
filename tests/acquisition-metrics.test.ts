@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {acquisitionMetrics,acquisitionSources,addCalendarMonths,type AcquisitionSources} from '../src/lib/acquisitionMetrics.ts';
+import {acquisitionMetrics,acquisitionRatioSummary,acquisitionSources,addCalendarMonths,type AcquisitionSources} from '../src/lib/acquisitionMetrics.ts';
 import {emptyRentalWorkspace} from '../src/lib/rentalModel.ts';
 import {emptyLifecycle} from '../src/lib/lifecycleModel.ts';
 function fixture(){
@@ -54,4 +54,26 @@ test('approved expense rules include ad spend and four tools, ignore contractor/
 test('month arithmetic clamps anniversaries and rejects bad date ranges',()=>{
  assert.equal(addCalendarMonths('2026-01-31',1),'2026-02-28');const {state,sources}=fixture();
  assert.throws(()=>acquisitionMetrics(state,sources,{...options,from:'2026-13'}));assert.throws(()=>acquisitionMetrics(state,sources,{...options,to:'2027-01'}));
+});
+
+test('overall ratios pool value and spending, include zero-install spending and avoid monthly averages',()=>{
+ const {state,sources}=fixture();const points=acquisitionMetrics(state,sources,options).points;
+ const s=acquisitionRatioSummary(points,'today',options.asOf);
+ assert.equal(s.customers,2);assert.equal(s.spend,90000);assert.equal(s.cac,45000);
+ assert.equal(s.committed,180000);assert.equal(s.committedRatio,2);assert.equal(s.actual,0);assert.equal(s.actualRatio,0);
+ assert.notEqual(s.committedRatio,(points[0].committedRatio!+points[2].committedRatio!)/2);
+});
+test('fixed-age summary uses matching mature groups for both lines and includes zero-spend cash',()=>{
+ const {state,sources}=fixture();sources.expenses[0].amount=0;
+ const points=acquisitionMetrics(state,sources,options).points;
+ const s=acquisitionRatioSummary(points,6,options.asOf);
+ assert.equal(s.customers,1);assert.equal(s.waitingCustomers,1);assert.equal(s.spend,0);assert.equal(s.committed,90000);
+ assert.equal(s.actual,0);assert.equal(s.actualRatio,null);assert.equal(s.committedRatio,null);
+});
+test('overall summary preserves unknown cash and commitments instead of dropping affected groups',()=>{
+ const {state,sources}=fixture();sources.payments.contacts[1].complete=false;
+ let s=acquisitionRatioSummary(acquisitionMetrics(state,sources,options).points,'today',options.asOf);
+ assert.equal(s.actual,null);assert.equal(s.missingCashGroups,1);assert.equal(s.spend,90000);assert.equal(s.committedRatio,2);
+ state.lifecycle.terms=[];s=acquisitionRatioSummary(acquisitionMetrics(state,sources,options).points,'today',options.asOf);
+ assert.equal(s.committed,null);assert.equal(s.committedRatio,null);
 });

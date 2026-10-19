@@ -23,7 +23,7 @@ const monthEnd=(month:string)=>{const [y,m]=month.split('-').map(Number);return 
 export function addCalendarMonths(date:string,count:number){const [y,m,d]=date.split('-').map(Number);const x=new Date(Date.UTC(y,m-1+count,1));x.setUTCDate(Math.min(d,new Date(Date.UTC(x.getUTCFullYear(),x.getUTCMonth()+1,0)).getUTCDate()));return x.toISOString().slice(0,10);}
 const priorDay=(d:string)=>new Date(Date.parse(d)-86400000).toISOString().slice(0,10);
 export interface AcquiredCustomer {id:string;name:string;installedOn:string;type:string;estimatedDate:boolean;}
-export interface AcquisitionPoint {month:string;spend:number;customers:number;allCustomers:number;cac:number|null;rollingCac:number|null;rollingSpend:number;rollingCustomers:number;partial:boolean;estimatedDates:number;committed:number|null;committedKnown:number;committedRatio:number|null;actual:number|null;actualKnown:number;actualRatio:number|null;ageRatios:Record<number,number|null>;mature:Record<number,number>;}
+export interface AcquisitionPoint {month:string;spend:number;customers:number;allCustomers:number;cac:number|null;rollingCac:number|null;rollingSpend:number;rollingCustomers:number;partial:boolean;estimatedDates:number;committed:number|null;committedKnown:number;committedRatio:number|null;actual:number|null;actualKnown:number;actualRatio:number|null;ageActual:Record<number,number|null>;ageRatios:Record<number,number|null>;mature:Record<number,number>;}
 export function acquisitionMetrics(state:RentalWorkspace,sources:AcquisitionSources,options:{from:string;to:string;asOf:string;type?:string}){
  const {from,to,asOf}=options;const monthValid=(v:string)=>/^\d{4}-(0[1-9]|1[0-2])$/.test(v);
  if(!monthValid(from)||!monthValid(to)||from>to||!validDay(asOf)||to>asOf.slice(0,7)||Number(to.slice(0,4))-Number(from.slice(0,4))>30)throw Error('Choose a valid month range ending this month or earlier (up to 30 years).');
@@ -59,13 +59,30 @@ export function acquisitionMetrics(state:RentalWorkspace,sources:AcquisitionSour
   const actual=group.map(c=>cash(c.id,asOf));
   const sum=(values:(number|null)[])=>values.length&&values.every(v=>v!==null)?values.reduce<number>((n,v)=>n+v!,0):null;
   const committedTotal=sum(commitments.map(v=>v.value)),actualTotal=sum(actual.map(v=>v.value));
-  const ageRatios:Record<number,number|null>={},mature:Record<number,number>={};
+  const ageActual:Record<number,number|null>={},ageRatios:Record<number,number|null>={},mature:Record<number,number>={};
   for(const age of [3,6,12]){
    mature[age]=group.filter(c=>addCalendarMonths(c.installedOn,age)<=asOf).length;
    const total=mature[age]===group.length?sum(group.map(c=>cash(c.id,priorDay(addCalendarMonths(c.installedOn,age))).value)):null;
+   ageActual[age]=total;
    ageRatios[age]=total!==null&&spend>0?total/spend:null;
   }
-  points.push({month,spend,customers:group.length,allCustomers:all.length,cac,rollingCac:start>=firstEvidence&&rollChosen.length&&rollingSpend>=0?rollingSpend/rollChosen.length:null,rollingSpend,rollingCustomers:rollChosen.length,partial:month===asOf.slice(0,7),estimatedDates:group.filter(c=>c.estimatedDate).length,committed:committedTotal===null?null:committedTotal/group.length,committedKnown:commitments.filter(v=>v.value!==null).length,committedRatio:committedTotal!==null&&spend>0?committedTotal/spend:null,actual:actualTotal===null?null:actualTotal/group.length,actualKnown:actual.filter(v=>v.value!==null).length,actualRatio:actualTotal!==null&&spend>0?actualTotal/spend:null,ageRatios,mature});
+  points.push({month,spend,customers:group.length,allCustomers:all.length,cac,rollingCac:start>=firstEvidence&&rollChosen.length&&rollingSpend>=0?rollingSpend/rollChosen.length:null,rollingSpend,rollingCustomers:rollChosen.length,partial:month===asOf.slice(0,7),estimatedDates:group.filter(c=>c.estimatedDate).length,committed:committedTotal===null?null:committedTotal/group.length,committedKnown:commitments.filter(v=>v.value!==null).length,committedRatio:committedTotal!==null&&spend>0?committedTotal/spend:null,actual:actualTotal===null?null:actualTotal/group.length,actualKnown:actual.filter(v=>v.value!==null).length,actualRatio:actualTotal!==null&&spend>0?actualTotal/spend:null,ageActual,ageRatios,mature});
  }
  return {points:points.filter(p=>p.month>=from),customers:chosen,unknown,types:[...new Set(customers.map(c=>c.type))].sort(),expenses:expenses.filter(e=>e.date.slice(0,7)>=from&&e.date.slice(0,7)<=to),issues:sources.issues,firstEvidence};
+}
+
+/** Pool matching groups and their spending; never average monthly ratios or drop missing cash. */
+export function acquisitionRatioSummary(points:AcquisitionPoint[],age:'today'|3|6|12,asOf:string){
+ const included=points.filter(p=>age==='today'||(p.customers>0?p.mature[age]===p.customers:addCalendarMonths(monthEnd(p.month),age)<=asOf));
+ const waiting=points.filter(p=>!included.includes(p));
+ const customers=included.reduce((n,p)=>n+p.customers,0);
+ const spend=included.reduce((n,p)=>n+p.spend,0);
+ const committedKnown=included.reduce((n,p)=>n+p.committedKnown,0);
+ const committed=customers>0&&committedKnown===customers?included.reduce((n,p)=>n+(p.committed||0)*p.customers,0):null;
+ const values=included.filter(p=>p.customers>0).map(p=>age==='today'?p.actual===null?null:p.actual*p.customers:p.ageActual[age]);
+ const actual=customers>0&&values.every(v=>v!==null&&v!==undefined)?values.reduce<number>((n,v)=>n+v!,0):null;
+ return {customers,spend,committed,actual,committedKnown,cac:customers>0&&spend>=0?spend/customers:null,
+  committedRatio:committed!==null&&spend>0?committed/spend:null,actualRatio:actual!==null&&spend>0?actual/spend:null,
+  from:included[0]?.month,to:included.at(-1)?.month,waitingCustomers:waiting.reduce((n,p)=>n+p.customers,0),waitingMonths:waiting.length,
+  missingCashGroups:included.filter(p=>p.customers>0&&(age==='today'?p.actual===null:p.ageActual[age]==null)).length};
 }
