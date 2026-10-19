@@ -33,3 +33,10 @@ test('optional heater total is shared across all traditional units before filter
  const off=saunaRecovery(s,sources);assert.equal(off.rows[0].cost,100000);assert.equal(off.rows[0].heaterShare,0);
  const on=saunaRecovery(s,sources,true);assert.equal(on.heaterTotal,10001);assert.equal(on.rows.reduce((n,r)=>n+r.heaterShare,0),10001);assert.equal(on.rows[0].cost,105001);assert.equal(on.rows[1].cost,null);assert.equal(on.rows[1].status,'unknown');
 });
+
+test('sales toggle recalculates recovery, remaining cost and paid-off status independently of heaters',()=>{
+ const sources=recoverySources([tx('cost','SPEND',[line('540',1000)]),tx('rent','RECEIVE',[line('102',600)]),tx('sale','RECEIVE',[line('372',550,'001',50)]),tx('refund','SPEND',[line('372',110,'001',10)])],null);
+ const on=saunaRecovery(state(),sources,false,true).rows[0],off=saunaRecovery(state(),sources,false,false).rows[0];
+ assert.equal(on.sale,40000);assert.equal(on.recovered,100000);assert.equal(on.status,'paid');
+ assert.equal(off.sale,0);assert.equal(off.recovered,60000);assert.equal(off.remaining,40000);assert.equal(off.percentage,60);assert.equal(off.status,'unpaid');assert.equal(off.entries.some(e=>e.kind==='sale'),false);assert.equal(off.cost,on.cost);
+});

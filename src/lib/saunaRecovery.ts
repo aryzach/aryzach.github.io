@@ -22,7 +22,7 @@ export function recoverySources(records:Record<string,unknown>[],snapshotAt:stri
  }
  return {snapshotAt,complete,transactions};
 }
-export function saunaRecovery(state:RentalWorkspace,sources:RecoverySources,includeHeaters=false) {
+export function saunaRecovery(state:RentalWorkspace,sources:RecoverySources,includeHeaters=false,includeSales=true) {
  const rows:RecoveryRow[]=state.assets.map(a=>({heaterShare:0,id:a.id,code:a.code.padStart(3,'0'),type:a.typeName||a.model||'Unknown type',cost:null,rent:0,sale:0,recovered:0,remaining:null,percentage:null,status:'unknown',entries:[]}));
  const byCode=new Map(rows.map(r=>[r.code,r]));const issues:{sourceId:string;date:string;kind:string;amount:number;reason:string}[]=[];
  const excluded=new Set((state.lifecycle?.paymentReviews||[]).map(r=>r.source_id));
@@ -42,6 +42,7 @@ export function saunaRecovery(state:RentalWorkspace,sources:RecoverySources,incl
   if(excluded.has(t.id))continue;
   const allocations=(state.lifecycle?.allocations||[]).filter(a=>a.source_id===t.id&&!a.voided_at&&a.currency==='USD');
   for(const [kind,accounts,category] of [['rent',rentAccounts,'rental'],['sale',saleAccounts,'sale']] as const){
+   if(kind==='sale'&&!includeSales)continue;
    const lines=t.lines.filter(l=>accounts.has(l.account));
    const sourceTotal=lines.reduce((n,l)=>n+l.net,0);
    const amount=allocations.length?allocations.filter(a=>a.category===category).reduce((n,a)=>n+a.amount_cents,0):sourceTotal;
