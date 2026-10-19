@@ -116,12 +116,12 @@ export async function makeSyncProjection(input:SyncInput) {
     replacements.push({sourceId:id,allocations:[]});
     await review('classification',`missing:${id}`,t.contactId,id,'This payment is no longer in Xero’s current cash records. It has been removed from actual LTV.',[id,'missing']);
   }
-  // Keep only customer cash/documents, rather than copying the supplier/expense ledger.
+  // Keep customer cash plus sauna capital-cost/revenue evidence for the private recovery dashboard.
   // Contacts stay cached so an existing contact can become a customer between nightly reads.
   const customerInvoices=cache.Invoices.filter(r=>r.Type==='ACCREC');
   const customerCredits=cache.CreditNotes.filter(r=>r.Type==='ACCRECCREDIT');
   const invoiceIds=new Set(customerInvoices.map(r=>r.InvoiceID)), creditIds=new Set(customerCredits.map(r=>r.CreditNoteID));
-  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>eligible.has(r.Contact?.ContactID)&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
+  const currentCache:Record<string,XeroRecord[]>={...cache,BankTransactions:cache.BankTransactions.filter(r=>(eligible.has(r.Contact?.ContactID)||(r.LineItems||[]).some((l:XeroRecord)=>['540','SH','102','542','372','788'].includes(String(l.AccountCode))))&&['RECEIVE','SPEND'].includes(r.Type)),Invoices:customerInvoices,CreditNotes:customerCredits,Payments:cache.Payments.filter(r=>invoiceIds.has(r.Invoice?.InvoiceID)||creditIds.has(r.CreditNote?.CreditNoteID))};
   const histories=[];
   for(const id of eligible) {
     const contact=contactMap.get(id)||oldHistory.find(h=>h.contact_id===id)?.contact_source;

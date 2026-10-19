@@ -41,6 +41,7 @@ export interface SaunaAssignment {
 }
 export interface XeroCustomerLink { customerId: string; tenantId: string; contactId: string; name: string; shortCode?: string; origin?: string; }
 export interface RentalWorkspace {
+  saunaRecoverySources?: import('./saunaRecovery.ts').RecoverySources;
   bookings?: Booking[];
   lifecycle?: LifecycleWorkspace;
   xeroLinks?: XeroCustomerLink[];

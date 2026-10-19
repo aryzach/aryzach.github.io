@@ -55,3 +55,7 @@ test('a cash credit-note refund subtracts net rent and does not count the credit
 test('the stored cache excludes supplier ledger entries while preserving all customer receipts',async()=>{
  const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000099',Contact:{ContactID:'vendor'},Type:'SPEND',LineItems:[{AccountCode:'5000',LineAmount:109,TaxAmount:0}]}));const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,1);assert.deepEqual(p.sourceResources,[...SYNC_RESOURCES]);assert.equal(p.histories[0].transactions.length,1);
 });
+test('sauna capital and heater evidence stays in private cache without creating supplier customers',async()=>{
+ const i=input();i.cache.BankTransactions.push(bank({BankTransactionID:'00000000-0000-4000-8000-000000000098',Contact:{ContactID:'vendor'},Type:'SPEND',LineItems:[{AccountCode:'540',LineAmount:1000,TaxAmount:0}]}));
+ const p=await makeSyncProjection(i);assert.equal(p.cache.find(c=>c.resource==='BankTransactions')!.records.length,2);assert.equal(p.histories.some(h=>h.contact_id==='vendor'),false);
+});
