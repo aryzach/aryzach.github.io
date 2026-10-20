@@ -1,3 +1,4 @@
+import { commercialPriceRows, type RentalCommercialTerms, SECOND_HEATER_DESCRIPTION } from "./rentalTerms.ts";
 // Server-side PDF builder for signed rental agreements.
 // Uses pdf-lib in Deno. Produces: [Rental Summary page(s)] + [Audit page] +
 // [Master Agreement pages], returned as a single Uint8Array.
@@ -11,6 +12,7 @@ import {
 } from "https://esm.sh/pdf-lib@1.17.1";
 
 export interface RentalSummarySnapshot {
+  commercial_terms?: RentalCommercialTerms;
   reservation_id: string;
   agreement_version: string;
   customer_legal_name: string;
@@ -57,7 +59,7 @@ const MARGIN_TOP = 60;
 const MARGIN_BOTTOM = 60;
 
 function fmtUSD(dollars: number): string {
-  return dollars.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  return dollars.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
 
 function fmtDate(d: string | null | undefined): string {
@@ -237,6 +239,19 @@ async function buildRentalSummary(
       : `${fmtUSD(s.stair_elevator_charge)}${s.stair_elevator_charge_note ? ` - ${s.stair_elevator_charge_note}` : ""}`,
   );
 
+  if (s.commercial_terms) {
+    drawHeading(c, "Payment arrangement");
+    drawParagraph(c, s.commercial_terms.choices.pay_upfront_selected ? "Pay Upfront & Save 10% - selected" : "Monthly base rent - no upfront discount");
+    for (const row of commercialPriceRows(s.commercial_terms)) drawKV(c, row.label, `${fmtUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`);
+    for (const paragraph of s.commercial_terms.payment_terms) { drawParagraph(c, paragraph, 9, 3); c.y -= 4; }
+    if (s.commercial_terms.choices.second_heater_selected) drawParagraph(c, SECOND_HEATER_DESCRIPTION, 9, 3);
+    if (s.commercial_terms.choices.premium_selected) {
+      drawHeading(c, "SF Sauna Premium - $100/month");
+      for (const benefit of s.commercial_terms.premium_benefits) drawParagraph(c, `- ${benefit}`, 9, 3);
+      drawParagraph(c, "Accessories are included at no additional charge. No setup fee.", 9, 3);
+    }
+  }
+
   c.y -= 10;
   drawParagraph(
     c,
@@ -244,7 +259,7 @@ async function buildRentalSummary(
     9, 3,
   );
   c.y -= 4;
-  drawParagraph(
+  if (!s.commercial_terms) drawParagraph(
     c,
     "Unless otherwise agreed in writing, the first and last month's rental fees, security deposit, and all applicable delivery, stair/elevator, site-preparation, equipment, and other charges are due upon delivery.",
     9, 3,

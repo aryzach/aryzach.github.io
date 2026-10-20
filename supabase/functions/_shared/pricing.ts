@@ -1,3 +1,5 @@
+import { LEGACY_RENTAL_TIERS } from "./legacyRentalPricing.ts";
+import { standardTraditionalTier } from "./rentalTerms.ts";
 // Server mirror of src/lib/contractConfig.ts. Sources numeric pricing from
 // the auto-generated file that is synced from the database at build time.
 //
@@ -42,7 +44,10 @@ export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
   return SAUNA_TYPES.find((s) => s.id === id);
 }
 
-export function getMonthlyPrice(saunaTypeId: string, months: number): number | null {
+export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.monthly ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.monthly ?? null;
+  const current = standardTraditionalTier(saunaTypeId, months);
+  if (current) return current.monthly;
   const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
   if (!table) return null;
   const row = table[months as 1 | 3 | 6 | 12];
@@ -77,7 +82,10 @@ export function getDeliveryFee(cityOrAddress: string | null | undefined): number
   if (isSanFranciscoCity(cityOrAddress)) return 0;
   return isSanFranciscoAddress(cityOrAddress) ? 0 : DELIVERY_FEE_OUTSIDE_SF;
 }
-export function getInstallFee(saunaTypeId: string, months: number): number {
+export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number {
+  if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? 0;
+  const current = standardTraditionalTier(saunaTypeId, months);
+  if (current) return current.installFee;
   const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
   if (!table) return 0;
   const row = table[months as 1 | 3 | 6 | 12];

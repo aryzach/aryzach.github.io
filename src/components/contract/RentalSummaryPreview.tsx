@@ -1,6 +1,8 @@
+import { commercialPriceRows, type RentalCommercialTerms } from "@/lib/rentalTerms";
 import { formatUSD, commitmentLabel } from "@/lib/contractConfig";
 
 interface Summary {
+  commercial_terms?: RentalCommercialTerms;
   reservation_id: string;
   agreement_version: string;
   customer_legal_name: string;
@@ -85,6 +87,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             label="Optional second heater"
             value={summary.second_heater_selected ? `${formatUSD(summary.second_heater_monthly_price)} / month` : "Not selected"}
           />
+          {summary.commercial_terms && commercialPriceRows(summary.commercial_terms).map(row => <PriceRow key={row.label} label={row.label} value={`${formatUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`} />)}
           <PriceRow
             label="Stair / elevator charge"
             value={
@@ -96,6 +99,13 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
         </div>
       </section>
 
+      {summary.commercial_terms && <section className="space-y-3 text-sm text-slate-700">
+        <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500">Payment arrangement</h3>
+        <p>{summary.commercial_terms.choices.pay_upfront_selected ? "Pay Upfront & Save 10% — selected" : "Monthly base rental payments — no upfront discount"}</p>
+        {summary.commercial_terms.payment_terms.map(p => <p key={p}>{p}</p>)}
+        {summary.commercial_terms.choices.second_heater_selected && <p>A second heater allows the sauna to heat up in under 30 minutes and requires an additional suitable outlet or electrical circuit and remains subject to SF Sauna confirming electrical compatibility.</p>}
+        {summary.commercial_terms.choices.premium_selected && <><h3 className="font-semibold">SF Sauna Premium — $100/month</h3><ul className="list-disc pl-5">{summary.commercial_terms.premium_benefits.map(b => <li key={b}>{b}</li>)}</ul><p>Accessories included at no additional charge. No setup fee.</p></>}
+      </section>}
       {Array.isArray(summary.custom_terms) && summary.custom_terms.length > 0 && (
         <section>
           <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-3">
@@ -124,11 +134,11 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
           If a conflict exists regarding a customer-specific commercial term, this Rental Summary controls
           for that term.
         </p>
-        <p>
+        {!summary.commercial_terms && <p>
           Unless otherwise agreed in writing, the first and last month's rental fees, security deposit, and
           all applicable delivery, stair/elevator, site-preparation, equipment, and other charges are due
           upon delivery.
-        </p>
+        </p>}
       </section>
     </div>
   );

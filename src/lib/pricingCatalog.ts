@@ -1,3 +1,4 @@
+import { getMonthlyPrice, getInstallFee } from "./contractConfig";
 // Catalog for the new /pricing experience.
 // Maps product URL slugs -> sauna_types.id in the database + display data.
 
@@ -47,8 +48,8 @@ function tiersFor(id: SaunaTypeId): PricingTier[] {
     const row = table[months];
     const tier: PricingTier = {
       months,
-      monthly: row.monthly,
-      installFee: row.installFee,
+      monthly: getMonthlyPrice(id, months) ?? row.monthly,
+      installFee: getInstallFee(id, months) ?? row.installFee,
     };
     if (row.badge) tier.badge = row.badge;
     return tier;

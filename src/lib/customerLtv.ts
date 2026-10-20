@@ -29,7 +29,13 @@ export function customerLtv(state: RentalWorkspace, customerId: string): Custome
         committed = null;
         commitmentNotes.push('A minimum term, monthly rate, or supported currency is missing.');
       } else if (committed !== null) {
-        committed += term.minimum_months * (term.base_monthly_cents + term.extras.reduce((sum, e) => sum + e.amountCents, 0));
+        const commercial = agreement?.source_terms?.commercialTerms as {version?: number;initial_commitment_cents?: number} | undefined;
+        // Preserve the signed initial commitment, including an upfront base-rent discount.
+        // Subsequent cash receipts/waivers do not change this original contract value.
+        if (term.source === 'Signed in-app agreement' && commercial?.version === 2) {
+          if (Number.isSafeInteger(commercial.initial_commitment_cents) && commercial.initial_commitment_cents! >= 0) committed += commercial.initial_commitment_cents!;
+          else { committed = null; commitmentNotes.push('Signed commercial terms need review.'); }
+        } else committed += term.minimum_months * (term.base_monthly_cents + term.extras.reduce((sum, e) => sum + e.amountCents, 0));
       }
       if (!agreement || agreement.signing_state !== 'signed') commitmentNotes.push('Based on recorded terms; signature confirmation is incomplete.');
     }

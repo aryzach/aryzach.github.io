@@ -1,3 +1,4 @@
+import type { RentalCommercialTerms } from "@/lib/rentalTerms";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -10,6 +11,7 @@ import { useSEO } from "@/hooks/useSEO";
 const PASSWORD_STORAGE_KEY = "sf-sauna-accounting-pw";
 
 interface AccountingRow {
+  commercial_terms?: RentalCommercialTerms | null;
   reservation_id: string;
   name: string;
   unit_code: string | null;
@@ -124,7 +126,8 @@ const Accounting = () => {
         sum +
         (r.monthly_price ?? 0) +
         (r.insurance_selected ? r.insurance_monthly_price : 0) +
-        (r.second_heater_selected ? r.second_heater_monthly_price : 0),
+        (r.second_heater_selected ? r.second_heater_monthly_price : 0) +
+        (r.commercial_terms?.premium_monthly_cents ?? 0) / 100,
       0,
     );
     return { monthly };
@@ -210,6 +213,7 @@ const Accounting = () => {
                     <th className="px-3 py-2 font-medium">Delivery</th>
                     <th className="px-3 py-2 font-medium">Damage protection</th>
                     <th className="px-3 py-2 font-medium">Second heater</th>
+                    <th className="px-3 py-2 font-medium">SF Sauna Premium</th><th className="px-3 py-2 font-medium">Payment arrangement</th><th className="px-3 py-2 font-medium">Initial monthly billing</th><th className="px-3 py-2 font-medium">Renewal / month</th>
                     <th className="px-3 py-2 font-medium">Stair / elevator</th>
                   </tr>
                 </thead>
@@ -231,12 +235,16 @@ const Accounting = () => {
                       <td className="px-3 py-2">
                         {r.second_heater_selected ? `${money(r.second_heater_monthly_price)}/mo` : "—"}
                       </td>
+                      <td className="px-3 py-2">{r.commercial_terms?.choices.premium_selected ? `${money(r.commercial_terms.premium_monthly_cents / 100)}/mo` : "—"}</td>
+                      <td className="px-3 py-2">{r.commercial_terms ? r.commercial_terms.choices.pay_upfront_selected ? <>{money(r.commercial_terms.initial_rental_cents / 100)} upfront base rent<br/>{money(r.commercial_terms.upfront_savings_cents / 100)} savings · initial term only</> : "Monthly" : "Existing terms"}</td>
+                      <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.initial_recurring_cents / 100) : "Existing terms"}</td>
+                      <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.renewal_monthly_cents / 100) : "Existing terms"}</td>
                       <td className="px-3 py-2">{money(r.stair_elevator_charge)}</td>
                     </tr>
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={12} className="px-3 py-8 text-center text-muted-foreground">
+                      <td colSpan={16} className="px-3 py-8 text-center text-muted-foreground">
                         No customers yet.
                       </td>
                     </tr>

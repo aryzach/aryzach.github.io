@@ -133,6 +133,7 @@ serveWithMigrationPolicy(async (req) => {
             unit_code: unitByReservation.get(r.id) ?? null,
             commitment_months: months,
             monthly_price: c?.monthly_price ?? null,
+            commercial_terms: c?.rental_summary_snapshot?.commercial_terms ?? null,
             security_deposit: c?.security_deposit ?? null,
             delivery_fee: c?.delivery_fee ?? null,
             install_fee: installFee,

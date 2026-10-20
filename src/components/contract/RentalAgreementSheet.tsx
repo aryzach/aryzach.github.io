@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, CheckCircle2, ChevronLeft, Download, ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { previewEnabled } from '@/lib/runtime';
 import {
   SAUNA_TYPES,
   COMMITMENT_MONTHS,
@@ -23,6 +24,7 @@ import {
   getInstallFee,
   ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
+import { PREMIUM_MONTHLY, PREMIUM_DESCRIPTION, PREMIUM_BENEFITS, SECOND_HEATER_DESCRIPTION, OPTION_LABELS, unansweredOptions, rentalCommercialTerms, commercialPriceRows } from "@/lib/rentalTerms";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
 
 interface Props {
@@ -31,9 +33,13 @@ interface Props {
   reservationId: string;
   token: string;
   onSaved?: () => void;
+  previewOnly?: boolean;
+  previewBookingVersion?: 1 | 2;
 }
 
 type Step = "configure" | "preview" | "sign" | "signed";
+
+type AgreedQuote = {saunaTypeId: string; months: number; monthly: number; installFee: number; variant: string | null};
 
 type PricingOption = { months: number; monthly: number; installFee: number; variant: string | null };
 
@@ -55,8 +61,10 @@ interface FormState {
   sauna_type: string;
   commitment_months: number;
   pricing_variant: string | null;
-  insurance_selected: boolean;
-  second_heater_selected: boolean;
+  insurance_selected: boolean | null;
+  second_heater_selected: boolean | null;
+  pay_upfront_selected: boolean | null;
+  premium_selected: boolean | null;
   preferred_installation_date: string; // YYYY-MM-DD
 }
 
@@ -69,12 +77,18 @@ const empty: FormState = {
   sauna_type: "",
   commitment_months: 6,
   pricing_variant: null,
-  insurance_selected: false,
-  second_heater_selected: false,
+  insurance_selected: null,
+  second_heater_selected: null,
+  pay_upfront_selected: null,
+  premium_selected: null,
   preferred_installation_date: "",
 };
 
-export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token, onSaved }: Props) => {
+export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token, onSaved, previewOnly = false, previewBookingVersion = 2 }: Props) => {
+  const demo = previewOnly && previewEnabled;
+  const [agreedQuote, setAgreedQuote] = useState<AgreedQuote | null>(null);
+  const [policyVersion, setPolicyVersion] = useState(1);
+  const [frozenPricing, setFrozenPricing] = useState<Record<string, any> | null>(null);
   const [step, setStep] = useState<Step>("configure");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -98,15 +112,27 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("contract-api", {
+      const { data, error } = demo ? { data: { reservation: {
+        first_name: 'Preview', last_name: 'Customer', email: 'preview@example.invalid',
+        install_address: 'Example installation address, San Francisco', sauna_type_id: 'indoor_traditional_standard',
+        preferred_install_at: '2027-01-15', rental_pricing_version: previewBookingVersion,
+      }, contract: null }, error: null } : await supabase.functions.invoke("contract-api", {
         body: { action: "get", id: reservationId, token },
       });
       if (error) throw error;
       const r = data.reservation;
       const c = data.contract;
+      const version = r.rental_pricing_version ?? 1;
+      setPolicyVersion(version);
+      setFrozenPricing(r.rental_pricing_snapshot ?? null);
       setActiveVersion(data.active_agreement_version?.version_name ?? "");
       setMasterAgreementUrl(data.master_agreement_url ?? null);
       setContract(c ?? null);
+      setAgreedQuote(c?.rental_summary_snapshot?.sauna_type_id ? {
+        saunaTypeId: c.rental_summary_snapshot.sauna_type_id, months: c.commitment_months,
+        monthly: c.monthly_price, installFee: c.rental_summary_snapshot.installation_fee ?? 0,
+        variant: c.rental_summary_snapshot.pricing_variant ?? null,
+      } : null);
       const hasCustom =
         typeof r.custom_commitment_months === "number" && typeof r.custom_monthly_price === "number";
       const custom = hasCustom
@@ -155,8 +181,10 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         commitment_months: c?.commitment_months ?? custom?.months ?? opts?.[0]?.months ?? r.min_commitment_months ?? 6,
         pricing_variant:
           c?.rental_summary_snapshot?.pricing_variant ?? opts?.[0]?.variant ?? null,
-        insurance_selected: !!c?.insurance_selected,
-        second_heater_selected: !!c?.second_heater_selected,
+        insurance_selected: c?.rental_summary_snapshot?.commercial_terms?.choices?.insurance_selected ?? (version < 2 ? !!c?.insurance_selected : null),
+        second_heater_selected: c?.rental_summary_snapshot?.commercial_terms?.choices?.second_heater_selected ?? (version < 2 ? !!c?.second_heater_selected : null),
+        pay_upfront_selected: c?.rental_summary_snapshot?.commercial_terms?.choices?.pay_upfront_selected ?? null,
+        premium_selected: c?.rental_summary_snapshot?.commercial_terms?.choices?.premium_selected ?? null,
         preferred_installation_date:
           c?.preferred_installation_date ??
           (r.preferred_install_at ? String(r.preferred_install_at).slice(0, 10) : ""),
@@ -170,26 +198,27 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           setSignedPdfUrl(urlRes?.url ?? null);
         } catch { /* non-fatal */ }
       } else {
-        setStep(c ? "preview" : "configure");
+        setStep(c && (version < 2 || c.rental_summary_snapshot?.commercial_terms?.version === 2) ? "preview" : "configure");
       }
     } catch (e) {
       toast.error((e as Error).message || "Failed to load contract");
     } finally {
       setLoading(false);
     }
-  }, [reservationId, token]);
+  }, [reservationId, token, demo, previewBookingVersion]);
 
   useEffect(() => { if (open) load(); }, [open, load]);
 
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
+      if (agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === form.commitment_months && agreedQuote.variant === form.pricing_variant) return agreedQuote.monthly;
       const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.monthly;
       if (customTerm && form.commitment_months === customTerm.months) return customTerm.monthly;
-      return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months) : null;
+      return form.sauna_type ? getMonthlyPrice(form.sauna_type, form.commitment_months, policyVersion, frozenPricing) : null;
     },
-    [form.sauna_type, form.commitment_months, form.pricing_variant, customTerm, customOptions],
+    [form.sauna_type, form.commitment_months, form.pricing_variant, customTerm, customOptions, policyVersion, frozenPricing, agreedQuote],
   );
   const isSf = useMemo(() => isSanFranciscoCity(form.installation_city), [form.installation_city]);
   const deliveryFee = useMemo(
@@ -214,6 +243,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     if (form.installation_address.trim().length < 5) return "Please enter your installation address.";
     if (form.installation_city.trim().length < 2) return "Please enter your installation city.";
     if (!saunaInfo) return "Please choose a sauna type.";
+    if (policyVersion >= 2 && unansweredOptions(form).length) return `Choose Yes or No for: ${unansweredOptions(form).join(", ")}.`;
+    if (form.second_heater_selected && !saunaInfo.allowsSecondHeater) return "A second heater is available only for compatible Traditional saunas.";
     if (!form.preferred_installation_date) return "Please choose a preferred installation date.";
     return null;
   };
@@ -223,6 +254,22 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     if (err) { toast.error(err); return; }
     setSaving(true);
     try {
+      if (demo) {
+        const install = getInstallFee(form.sauna_type, form.commitment_months, policyVersion, frozenPricing) ?? 0;
+        const commercial = policyVersion >= 2 ? rentalCommercialTerms({ monthly: monthlyPrice!, months: form.commitment_months, choices: form,
+          installation: install, delivery: deliveryFee, securityDeposit, insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY }) : undefined;
+        setContract({ status: 'Draft Created', rental_summary_snapshot: {
+          reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
+          email: form.email, phone: form.phone, installation_address: `${form.installation_address}, ${form.installation_city}`,
+          sauna_type: saunaInfo!.label, placement: saunaInfo!.placement, commitment_months: form.commitment_months,
+          monthly_price: monthlyPrice, installation_fee: install, delivery_fee: deliveryFee, security_deposit: securityDeposit,
+          insurance_selected: form.insurance_selected, insurance_monthly_price: form.insurance_selected ? INSURANCE_MONTHLY : 0,
+          second_heater_selected: form.second_heater_selected, second_heater_monthly_price: form.second_heater_selected ? SECOND_HEATER_MONTHLY : 0,
+          stair_elevator_charge: null, preferred_installation_date: form.preferred_installation_date, commercial_terms: commercial,
+        } });
+        setStep('preview');
+        return;
+      }
       const { data, error } = await supabase.functions.invoke("contract-api", {
         body: {
           action: "save_draft",
@@ -237,7 +284,9 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           commitment_months: form.commitment_months,
           pricing_variant: form.pricing_variant,
           insurance_selected: form.insurance_selected,
-          second_heater_selected: form.second_heater_selected && (saunaInfo?.allowsSecondHeater ?? false),
+          second_heater_selected: form.second_heater_selected,
+          pay_upfront_selected: form.pay_upfront_selected,
+          premium_selected: form.premium_selected,
           preferred_installation_date: form.preferred_installation_date,
         },
       });
@@ -303,7 +352,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         <SheetHeader className="px-5 md:px-8 pt-6 pb-4 border-b border-border sticky top-0 bg-background z-10">
           <SheetTitle className="text-xl md:text-2xl">Configure Your Rental Agreement</SheetTitle>
           <p className="text-sm text-muted-foreground">
-            Review your details, then generate a draft to preview before signing.
+            {demo ? 'Preview only — example future booking. Nothing is saved or signed.' : 'Review your details, then generate a draft to preview before signing.'}
           </p>
           {masterAgreementUrl && (
             <a
@@ -325,6 +374,9 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           ) : step === "configure" ? (
             <ConfigureStep
               form={form}
+              policyVersion={policyVersion}
+              frozenPricing={frozenPricing}
+              agreedQuote={agreedQuote}
               set={set}
               saunaInfo={saunaInfo}
               monthlyPrice={monthlyPrice}
@@ -362,7 +414,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
             {step === "configure" ? (
               <>
                 <Button variant="ghost" onClick={() => onOpenChange(false)}>Close</Button>
-                <Button onClick={generate} disabled={saving}>
+                <Button onClick={generate} disabled={saving || (policyVersion >= 2 && unansweredOptions(form).length > 0)}>
                   {saving ? <><Loader2 className="mr-2 animate-spin" size={16} /> Generating…</> : (
                     <><Sparkles className="mr-2" size={16} /> Generate Agreement</>
                   )}
@@ -373,7 +425,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
                 <Button variant="ghost" onClick={() => setStep("configure")}>
                   <ChevronLeft className="mr-1" size={16} /> Edit Agreement
                 </Button>
-                <Button onClick={() => setStep("sign")}>Continue to Sign</Button>
+                <Button disabled={demo} onClick={() => setStep("sign")}>{demo ? 'Preview only' : 'Continue to Sign'}</Button>
               </>
             ) : step === "sign" ? (
               <>
@@ -396,9 +448,12 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
 
 // ---------- Configure step ----------
 const ConfigureStep = ({
-  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, customOptions, minMonths, allowedMonths,
+  form, set, saunaInfo, monthlyPrice, deliveryFee, securityDeposit, isSf, activeVersion, customTerm, customOptions, minMonths, allowedMonths, policyVersion, frozenPricing, agreedQuote,
 }: {
   form: FormState;
+  agreedQuote: AgreedQuote | null;
+  policyVersion: number;
+  frozenPricing: Record<string, any> | null;
   set: <K extends keyof FormState>(k: K, v: FormState[K]) => void;
   saunaInfo: ReturnType<typeof getSaunaTypeInfo>;
   monthlyPrice: number | null;
@@ -428,23 +483,24 @@ const ConfigureStep = ({
     const base = [...COMMITMENT_MONTHS].filter(
       (m) =>
         (minMonths ? m >= minMonths : true) &&
-        (!form.sauna_type || getMonthlyPrice(form.sauna_type, m) != null),
+        (!form.sauna_type || getMonthlyPrice(form.sauna_type, m, policyVersion, frozenPricing) != null),
     );
     const all = customTerm ? [...base, customTerm.months] : base;
     const unique = Array.from(new Set(all)).sort((a, b) => a - b);
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
-  }, [customTerm, customOptions, minMonths, allowedMonths]);
+  }, [customTerm, customOptions, minMonths, allowedMonths, form.sauna_type, policyVersion, frozenPricing]);
   const installFee = useMemo(
     () => {
+      if (agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === form.commitment_months && agreedQuote.variant === form.pricing_variant) return agreedQuote.installFee;
       const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.installFee;
       return customTerm && form.commitment_months === customTerm.months
         ? customTerm.installFee
         : form.sauna_type
-          ? getInstallFee(form.sauna_type, form.commitment_months)
+          ? getInstallFee(form.sauna_type, form.commitment_months, policyVersion, frozenPricing)
           : null;
     },
-    [form.sauna_type, form.commitment_months, customTerm, customOptions],
+    [form.sauna_type, form.commitment_months, form.pricing_variant, customTerm, customOptions, policyVersion, frozenPricing, agreedQuote],
   );
   return (
     <div className="space-y-8">
@@ -483,21 +539,22 @@ const ConfigureStep = ({
         </Field>
       </Section>
 
-      <Section title="Sauna">
-        <Field label="Sauna type">
+      <Section title={policyVersion >= 2 ? "Sauna Type" : "Sauna"}>
+        {policyVersion < 2 && <Label className="text-xs text-muted-foreground">Sauna type</Label>}
+        <div>
           <Select value={form.sauna_type} onValueChange={(v) => {
             set("sauna_type", v);
             const info = getSaunaTypeInfo(v);
-            if (info && !info.allowsSecondHeater) set("second_heater_selected", false);
+            if (info && !info.allowsSecondHeater && form.second_heater_selected === true) set("second_heater_selected", null);
           }}>
-            <SelectTrigger><SelectValue placeholder="Choose a sauna type" /></SelectTrigger>
+            <SelectTrigger aria-label="Sauna type"><SelectValue placeholder="Choose a sauna type" /></SelectTrigger>
             <SelectContent>
               {SAUNA_TYPES.map((s) => (
                 <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-        </Field>
+        </div>
       </Section>
 
       <Section title="Term & pricing">
@@ -516,8 +573,8 @@ const ConfigureStep = ({
                         <TermButton
                           key={`${g.variant}-${o.months}`}
                           months={o.months}
-                          price={o.monthly}
-                          installFee={o.installFee}
+                          price={agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === o.months && agreedQuote.variant === o.variant ? agreedQuote.monthly : o.monthly}
+                          installFee={agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === o.months && agreedQuote.variant === o.variant ? agreedQuote.installFee : o.installFee}
                           active={active}
                           onClick={() => {
                             set("commitment_months", o.months);
@@ -535,20 +592,20 @@ const ConfigureStep = ({
               {termOptions.map((m) => {
                 const opt = findOption(customOptions, m, form.pricing_variant);
                 const price =
-                  opt
+                  agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.monthly : opt
                     ? opt.monthly
                     : customTerm && m === customTerm.months
                       ? customTerm.monthly
                       : form.sauna_type
-                        ? getMonthlyPrice(form.sauna_type, m)
+                        ? getMonthlyPrice(form.sauna_type, m, policyVersion, frozenPricing)
                         : null;
                 const fee =
-                  opt
+                  agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.installFee : opt
                     ? opt.installFee
                     : customTerm && m === customTerm.months
                       ? customTerm.installFee
                       : form.sauna_type
-                        ? getInstallFee(form.sauna_type, m)
+                        ? getInstallFee(form.sauna_type, m, policyVersion, frozenPricing)
                         : null;
                 return (
                   <TermButton
@@ -572,24 +629,21 @@ const ConfigureStep = ({
         </div>
       </Section>
 
-      <Section title="Optional coverage">
-        <ToggleRow
-          selected={form.insurance_selected}
-          onChange={(v) => set("insurance_selected", v)}
-          title="Add Optional Damage Protection"
-          price={`${formatUSD(INSURANCE_MONTHLY)} / month`}
-          description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions."
-        />
-        {showSecondHeater && (
-          <ToggleRow
-            selected={form.second_heater_selected}
-            onChange={(v) => set("second_heater_selected", v)}
-            title="Add optional second heater"
-            price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`}
-            description="A second heater requires an additional suitable outlet or electrical circuit and remains subject to SF Sauna confirming electrical compatibility."
-          />
-        )}
+      {policyVersion >= 2 ? <Section title="Additional Options">
+        <p className="text-xs text-muted-foreground" role="status">{unansweredOptions(form).length ? `Choose Yes or No for: ${unansweredOptions(form).join(", ")}.` : "All options answered."}</p>
+        <ToggleRow selected={form.insurance_selected} onChange={(v) => set("insurance_selected", v)} title="Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
+        <ToggleRow selected={form.second_heater_selected} onChange={(v) => set("second_heater_selected", v)} title="Second Heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description={SECOND_HEATER_DESCRIPTION} yesDisabled={!showSecondHeater} />
+        {!showSecondHeater && <p className="text-xs text-muted-foreground">A second heater is not available for this sauna type. Select No to continue.</p>}
+        <ToggleRow selected={form.pay_upfront_selected} onChange={(v) => set("pay_upfront_selected", v)} title="Pay Upfront & Save 10%" price="10% off base rent" description="Pay for your entire initial rental term upfront and save 10% on rental payments." />
+        <ToggleRow selected={form.premium_selected} onChange={(v) => set("premium_selected", v)} title="SF Sauna Premium" price={`+${formatUSD(PREMIUM_MONTHLY)} / month`} description={PREMIUM_DESCRIPTION} />
+        {form.premium_selected === true && <div className="text-xs text-muted-foreground space-y-2"><ul className="list-disc pl-5 space-y-1">{PREMIUM_BENEFITS.map(benefit => <li key={benefit}>{benefit}</li>)}</ul><p>Accessories included at no additional charge. No setup fee. Premium continues at $100/month on month-to-month renewals unless canceled under the applicable terms.</p></div>}
       </Section>
+      : <Section title="Optional coverage">
+        <LegacyToggleRow selected={!!form.insurance_selected} onChange={v => set("insurance_selected", v)} title="Add Optional Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
+        {showSecondHeater && <LegacyToggleRow selected={!!form.second_heater_selected} onChange={v => set("second_heater_selected", v)} title="Add optional second heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description="A second heater requires an additional suitable outlet or electrical circuit and remains subject to SF Sauna confirming electrical compatibility." />}
+      </Section>}
+      {policyVersion >= 2 && monthlyPrice != null && <RentalOptionsTotals form={form} monthly={monthlyPrice} installation={installFee ?? 0} delivery={deliveryFee} securityDeposit={securityDeposit} />}
+
 
     </div>
   );
@@ -814,30 +868,32 @@ const PriceRow = ({ label, value, hint, muted }: { label: string; value: string;
   </div>
 );
 
-const ToggleRow = ({
-  selected, onChange, title, price, description,
-}: {
-  selected: boolean;
-  onChange: (v: boolean) => void;
-  title: string;
-  price: string;
-  description: string;
+const ToggleRow = ({ selected, onChange, title, price, description, yesDisabled = false }: {
+  selected: boolean | null; onChange: (v: boolean) => void; title: string; price: string; description: string; yesDisabled?: boolean;
 }) => (
-  <div className={`rounded-md border p-3 ${selected ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
-    <div className="flex items-start gap-3">
-      <input
-        type="checkbox"
-        checked={selected}
-        onChange={(e) => onChange(e.target.checked)}
-        className="mt-1 h-4 w-4"
-      />
-      <div className="flex-grow">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-medium text-foreground">{title}</span>
-          <span className="text-sm text-foreground">{price}</span>
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">{description}</p>
-      </div>
-    </div>
+  <div className={`rounded-md border p-3 ${selected === true ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+    <div className="flex items-start justify-between gap-3"><div className="flex-grow">
+      <div className="flex flex-wrap justify-between gap-2"><span className="text-sm font-medium text-foreground">{title}</span><span className="text-sm text-foreground">{price}</span></div>
+      <p className="text-xs text-muted-foreground mt-1">{description}</p>
+      {selected === null && <p className="text-xs text-amber-700 mt-1">Selection required</p>}
+    </div><div role="group" aria-label={title} className="flex shrink-0 gap-1">
+      {[true, false].map(value => <Button key={String(value)} type="button" size="sm" variant={selected === value ? "default" : "outline"} aria-pressed={selected === value} disabled={value && yesDisabled} onClick={() => onChange(value)}>{value ? "Yes" : "No"}</Button>)}
+    </div></div>
   </div>
 );
+
+const RentalOptionsTotals = ({form, monthly, installation, delivery, securityDeposit}: {form: FormState; monthly: number; installation: number; delivery: number; securityDeposit: number}) => {
+  // Unanswered choices contribute nothing to the estimate; they never count as consent.
+  const terms = rentalCommercialTerms({ monthly, months: form.commitment_months, installation, delivery, securityDeposit,
+    choices: { insurance_selected: form.insurance_selected === true, second_heater_selected: form.second_heater_selected === true, pay_upfront_selected: form.pay_upfront_selected === true, premium_selected: form.premium_selected === true },
+    insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY });
+  return <Section title="Payment summary"><div aria-live="polite" className="rounded-md border border-border divide-y divide-border bg-card">
+    <PriceRow label="Monthly base rent" value={`${formatUSD(monthly)} / month`} />
+    <PriceRow label="Monthly add-ons (no discount)" value={`${formatUSD(terms.monthly_addons_cents / 100)} / month`} />
+    {commercialPriceRows(terms).filter(row => !['SF Sauna Premium'].includes(row.label)).map(row => <PriceRow key={row.label} label={row.label} value={`${formatUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`} />)}
+    <PriceRow label="Installation" value={installation ? formatUSD(installation) : "Free"} />
+    <PriceRow label="Delivery" value={formatUSD(delivery)} /><PriceRow label="Refundable security deposit" value={formatUSD(securityDeposit)} />
+  </div><p className="text-xs text-muted-foreground">{unansweredOptions(form).length ? "Estimate excludes unanswered options. " : ""}Upfront rent is due upon delivery before the rental begins. Add-ons remain monthly. Fees, deposits and taxes are not discounted. Reservation payments are credited separately; tax and unconfirmed access charges are not included above.</p></Section>;
+};
+
+const LegacyToggleRow = ({selected, onChange, title, price, description}: {selected: boolean; onChange: (v:boolean)=>void; title:string; price:string; description:string}) => <div className={`rounded-md border p-3 ${selected ? "border-primary bg-primary/5" : "border-border bg-card"}`}><label className="flex items-start gap-3"><input type="checkbox" checked={selected} onChange={e=>onChange(e.target.checked)} className="mt-1 h-4 w-4"/><div className="flex-grow"><div className="flex items-center justify-between gap-2"><span className="text-sm font-medium text-foreground">{title}</span><span className="text-sm text-foreground">{price}</span></div><p className="text-xs text-muted-foreground mt-1">{description}</p></div></label></div>;

@@ -1,3 +1,4 @@
+import { rentalCommercialTerms, unansweredOptions } from "../_shared/rentalTerms.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import {
@@ -54,6 +55,8 @@ interface AuthedReservation {
   default_sauna_type: string | null;
   custom_contract_terms: { heading: string; paragraphs: string[] }[] | null;
   contract_status: string;
+  rental_pricing_version: number;
+  rental_pricing_snapshot: Record<string, any> | null;
 }
 
 function createBackendClient() {
@@ -72,7 +75,7 @@ async function authReservation(
   const { data } = await supabase
     .from("reservations")
     .select(
-      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, custom_delivery_fee, custom_stair_elevator_charge, allowed_commitment_months, custom_pricing_options, default_sauna_type, custom_contract_terms, contract_status",
+      "id, first_name, last_name, email, phone, install_address, sauna_type_id, preferred_install_at, min_commitment_months, custom_commitment_months, custom_monthly_price, custom_security_deposit, custom_install_fee, custom_delivery_fee, custom_stair_elevator_charge, allowed_commitment_months, custom_pricing_options, default_sauna_type, custom_contract_terms, contract_status, rental_pricing_version, rental_pricing_snapshot",
     )
     .eq("id", id)
     .eq("secure_token", token)
@@ -126,6 +129,8 @@ serveWithMigrationPolicy(async (req) => {
         return json({
           reservation: {
             id: reservation.id,
+            rental_pricing_version: reservation.rental_pricing_version ?? 1,
+            rental_pricing_snapshot: reservation.rental_pricing_snapshot ?? null,
             first_name: reservation.first_name,
             last_name: reservation.last_name,
             email: reservation.email,
@@ -155,6 +160,15 @@ serveWithMigrationPolicy(async (req) => {
       }
 
       case "save_draft": {
+        const policyVersion = reservation.rental_pricing_version ?? 1;
+        const choices = {
+          insurance_selected: body.insurance_selected, second_heater_selected: body.second_heater_selected,
+          pay_upfront_selected: body.pay_upfront_selected, premium_selected: body.premium_selected,
+        };
+        if (policyVersion >= 2 && unansweredOptions(choices).length) return json({error: `Choose Yes or No for: ${unansweredOptions(choices).join(', ')}.`}, 400);
+        if (policyVersion < 2 && (body.pay_upfront_selected === true || body.premium_selected === true)) return json({error: 'This existing booking retains its original rental options.'}, 400);
+        const { data: signedContract } = await supabase.from('contracts').select('id').eq('reservation_id', reservation.id).eq('status', 'Signed').limit(1).maybeSingle();
+        if (signedContract) return json({error: 'This booking already has a signed agreement. Existing agreed terms are preserved.'}, 409);
         const {
           customer_legal_name,
           phone,
@@ -227,12 +241,19 @@ serveWithMigrationPolicy(async (req) => {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
 
+        const { data: existing, error: draftReadError } = await supabase.from("contracts").select("*")
+          .eq("reservation_id", reservation.id).in("status", ["Not Started", "Draft Created", "Ready to Sign", "Replacement Required"])
+          .order("created_at", { ascending: false }).limit(1).maybeSingle();
+        if (draftReadError) throw draftReadError;
+        const keepAgreedPrice = existing?.rental_summary_snapshot?.sauna_type_id === saunaInfo.id &&
+          Number(existing.commitment_months) === months && (existing.rental_summary_snapshot?.pricing_variant ?? null) === selectedVariant;
         const monthlyPrice =
+          keepAgreedPrice ? Number(existing.monthly_price) :
           matchedOption
             ? Number(matchedOption.monthly_price)
             : hasCustomTerm && months === reservation.custom_commitment_months
               ? reservation.custom_monthly_price
-              : getMonthlyPrice(saunaInfo.id, months);
+              : getMonthlyPrice(saunaInfo.id, months, policyVersion, reservation.rental_pricing_snapshot);
         if (monthlyPrice == null) return json({ error: "No pricing available for that selection." }, 400);
         const streetAddress = installation_address.trim();
         const city = installation_city.trim();
@@ -248,12 +269,14 @@ serveWithMigrationPolicy(async (req) => {
             ? reservation.custom_security_deposit
             : getSecurityDeposit(saunaInfo.id);
         const installationFee =
+          keepAgreedPrice && typeof existing.rental_summary_snapshot?.installation_fee === "number" ? existing.rental_summary_snapshot.installation_fee :
           matchedOption && matchedOption.install_fee != null
             ? Number(matchedOption.install_fee)
             : hasCustomTerm && months === reservation.custom_commitment_months &&
                 typeof reservation.custom_install_fee === "number"
               ? reservation.custom_install_fee
-              : getInstallFee(saunaInfo.id, months);
+              : getInstallFee(saunaInfo.id, months, policyVersion, reservation.rental_pricing_snapshot);
+        if (policyVersion >= 2 && second_heater_selected && !saunaInfo.allowsSecondHeater) return json({error: "A second heater is not available for this sauna type."}, 400);
         const insurance = Boolean(insurance_selected);
         const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
         // ---- Flag sauna-type mismatch with reservation-assigned inventory ----
@@ -273,19 +296,16 @@ serveWithMigrationPolicy(async (req) => {
           return json({ error: "No active Master Agreement is available. Please contact SF Sauna." }, 400);
         }
 
-        // ---- Find existing editable contract for this reservation ----
-        const { data: existing } = await supabase
-          .from("contracts")
-          .select("*")
-          .eq("reservation_id", reservation.id)
-          .in("status", ["Not Started", "Draft Created", "Ready to Sign", "Replacement Required"])
-          .order("created_at", { ascending: false })
-          .maybeSingle();
         const stairElevatorCharge =
           typeof reservation.custom_stair_elevator_charge === "number"
             ? reservation.custom_stair_elevator_charge
             : existing?.stair_elevator_charge ?? null;
 
+        const commercialTerms = policyVersion >= 2 ? rentalCommercialTerms({
+          monthly: monthlyPrice, months, choices, installation: installationFee,
+          delivery: deliveryFee, securityDeposit, stairs: stairElevatorCharge,
+          insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY,
+        }) : null;
         const nowIso = new Date().toISOString();
         const rentalSummary = {
           reservation_id: reservation.id,
@@ -302,6 +322,7 @@ serveWithMigrationPolicy(async (req) => {
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,
+          ...(commercialTerms ? { commercial_terms: commercialTerms } : {}),
           installation_fee: installationFee,
           delivery_fee: deliveryFee,
           delivery_fee_note:
@@ -345,6 +366,7 @@ serveWithMigrationPolicy(async (req) => {
           preferred_installation_date,
           rental_summary_snapshot: rentalSummary,
           pricing_snapshot: {
+            ...(commercialTerms ? { commercial_terms: commercialTerms } : {}),
             monthly_price: monthlyPrice,
             installation_fee: installationFee,
             delivery_fee: deliveryFee,
@@ -365,6 +387,8 @@ serveWithMigrationPolicy(async (req) => {
             .from("contracts")
             .update(commonFields)
             .eq("id", existing.id)
+            .in("status", ["Not Started", "Draft Created", "Ready to Sign", "Replacement Required"])
+            .is("signed_at", null)
             .select()
             .single();
           if (error) throw error;
@@ -421,6 +445,9 @@ serveWithMigrationPolicy(async (req) => {
         if (contract.status === "Signed") return json({ error: "This agreement has already been signed." }, 400);
         if (contract.status === "Voided") return json({ error: "This agreement has been voided." }, 400);
 
+        if ((reservation.rental_pricing_version ?? 1) >= 2 && !contract.rental_summary_snapshot?.commercial_terms) {
+          return json({error: 'Please regenerate the agreement and explicitly answer all Additional Options.'}, 400);
+        }
         // Require exact match of typed legal name (case-insensitive, trimmed) to prevent silent mismatch.
         const typed = typed_legal_name.trim();
         if (typed.toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {

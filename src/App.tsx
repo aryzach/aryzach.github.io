@@ -1,3 +1,4 @@
+import AgreementPreview from "./pages/AgreementPreview";
 import { previewEnabled } from "./lib/runtime";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -168,6 +169,7 @@ const App = () => (
           <Route path="/pre-fab-sauna-installation-form" element={<PrefabSaunaInstallationForm />} />
           <Route path="/reservation-system" element={<ReservationSystem />} />
           <Route path="/reservation-confirmation" element={<ReservationConfirmation />} />
+          {previewEnabled && <Route path="/agreement-preview" element={<AgreementPreview />} />}
           <Route path="/admin" element={<AdminReservations />} />
           <Route path="/accounting" element={<Accounting />} />
           <Route path="/reservation/:id" element={<ReservationDashboard />} />

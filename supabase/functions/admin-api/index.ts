@@ -331,7 +331,7 @@ serveWithMigrationPolicy(async (req) => {
         if (assignedIds.length) {
           const [{ data: contracts, error: contractError }, { data: reservations, error: reservationError }] = await Promise.all([
             supabase.from("contracts")
-              .select("reservation_id, status, monthly_price, commitment_months, signed_at, created_at")
+              .select("reservation_id, status, monthly_price, commitment_months, signed_at, created_at, rental_summary_snapshot")
               .in("reservation_id", assignedIds)
               .neq("status", "Voided")
               .order("created_at", { ascending: false }),
@@ -360,11 +360,13 @@ serveWithMigrationPolicy(async (req) => {
             monthly_price: current?.monthly_price ?? (unit.current_customer_id ? crmRates.get(unit.current_customer_id) : null) ?? null,
             current_contract: current ? {
               monthly_price: current.monthly_price,
+              commercial_terms: current.rental_summary_snapshot?.commercial_terms ?? null,
               commitment_months: current.commitment_months,
               signed_at: current.status === "Signed" ? current.signed_at : null,
             } : null,
             future_contract: future ? {
               monthly_price: future.monthly_price,
+              commercial_terms: future.rental_summary_snapshot?.commercial_terms ?? null,
               commitment_months: future.commitment_months,
               signed_at: future.status === "Signed" ? future.signed_at : null,
             } : null,

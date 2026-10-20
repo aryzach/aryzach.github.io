@@ -1,3 +1,5 @@
+import { LEGACY_RENTAL_TIERS } from "../../supabase/functions/_shared/legacyRentalPricing.ts";
+import { standardTraditionalTier } from "./rentalTerms";
 // Client-side helpers for the Rental Agreement configuration flow.
 // Pricing values come from src/lib/generatedPricing.ts (synced from Lovable
 // Cloud). The server mirror is supabase/functions/_shared/pricing.ts.
@@ -44,14 +46,20 @@ export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
   return SAUNA_TYPES.find((s) => s.id === id);
 }
 
-export function getMonthlyPrice(saunaTypeId: string, months: number): number | null {
+export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.monthly ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.monthly ?? null;
+  const current = standardTraditionalTier(saunaTypeId, months);
+  if (current) return current.monthly;
   const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
   if (!table) return null;
   const row = table[months as CommitmentMonths];
   return row ? row.monthly : null;
 }
 
-export function getInstallFee(saunaTypeId: string, months: number): number | null {
+export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? null;
+  const current = standardTraditionalTier(saunaTypeId, months);
+  if (current) return current.installFee;
   const table = PRICING_TIERS[saunaTypeId as SaunaTypeId];
   if (!table) return null;
   const row = table[months as CommitmentMonths];
@@ -88,7 +96,7 @@ export function getDeliveryFee(cityOrAddress: string | null | undefined): number
 }
 
 export function formatUSD(dollars: number): string {
-  return dollars.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  return dollars.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 }
 
 export function commitmentLabel(m: number): string {
