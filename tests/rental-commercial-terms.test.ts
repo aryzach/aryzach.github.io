@@ -74,9 +74,10 @@ test('signed initial contract value includes discount and Premium without alteri
 });
 test('rollout snapshots every existing booking before changing defaults and never rewrites contracts',()=>{
   const migration=readFileSync(new URL('../supabase/migrations/20261021010000_future_booking_rental_terms.sql',import.meta.url),'utf8');
-  assert.ok(migration.indexOf('SET rental_pricing_snapshot')<migration.indexOf('SET DEFAULT 2'));
+  assert.ok(migration.indexOf('ADD COLUMN rental_pricing_snapshot')<migration.indexOf('SET DEFAULT 2'));
   assert.match(migration,/DEFAULT 1/);assert.match(migration,/LOCK TABLE public.reservations IN ACCESS EXCLUSIVE MODE/);
   assert.doesNotMatch(migration,/UPDATE\s+(?:public\.)?contracts/i);
+  assert.doesNotMatch(migration,/UPDATE\s+(?:public\.)?reservations\s+SET/i);
   const lifecycle=readFileSync(new URL('../supabase/migrations/20261021011000_capture_future_rental_commercial_terms.sql',import.meta.url),'utf8');
   assert.doesNotMatch(lifecycle,/FOR c IN SELECT|DO \$\$/);assert.match(lifecycle,/IF NOT EXISTS\(SELECT 1 FROM rental_terms WHERE agreement_id=aid\)/);
 });

@@ -3,16 +3,20 @@ BEGIN;
 LOCK TABLE public.reservations IN ACCESS EXCLUSIVE MODE;
 ALTER TABLE public.reservations ADD COLUMN rental_pricing_version integer NOT NULL DEFAULT 1
   CHECK (rental_pricing_version IN (1,2));
-ALTER TABLE public.reservations ADD COLUMN rental_pricing_snapshot jsonb;
--- Snapshot the actual current catalog before publishing new Traditional prices.
-WITH catalog AS (
- SELECT jsonb_object_agg(sauna_type_id, tiers) AS value FROM (
+-- A constant column default freezes existing rows without UPDATEs, timestamps,
+-- notification triggers or lifecycle side effects. Future rows have no snapshot.
+DO $$
+DECLARE catalog jsonb;
+BEGIN
+ SELECT jsonb_object_agg(sauna_type_id, tiers) INTO catalog FROM (
    SELECT sauna_type_id, jsonb_object_agg(commitment_months::text,
      jsonb_build_object('monthly',monthly_price,'installFee',install_fee)) AS tiers
    FROM public.pricing_tiers GROUP BY sauna_type_id
- ) t
-)
-UPDATE public.reservations SET rental_pricing_snapshot=catalog.value FROM catalog;
+ ) t;
+ IF catalog IS NULL THEN RAISE EXCEPTION 'Cannot freeze an empty pricing catalog'; END IF;
+ EXECUTE format('ALTER TABLE public.reservations ADD COLUMN rental_pricing_snapshot jsonb DEFAULT %L::jsonb', catalog::text);
+END $$;
+ALTER TABLE public.reservations ALTER COLUMN rental_pricing_snapshot DROP DEFAULT;
 -- The default changes only INSERTs after this transaction commits.
 ALTER TABLE public.reservations ALTER COLUMN rental_pricing_version SET DEFAULT 2;
 CREATE FUNCTION public.preserve_booking_pricing_policy() RETURNS trigger
