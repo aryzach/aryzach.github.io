@@ -11,6 +11,7 @@ export const routes = [
   '/how-it-started',
   '/install-power',
   '/policies',
+  '/blog/chronic-pain-resources-sf',
   '/learn',
   '/reserve-your-sauna',
   '/learn-more',
