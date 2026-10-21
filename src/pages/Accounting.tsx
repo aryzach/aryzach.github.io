@@ -228,7 +228,7 @@ const Accounting = () => {
                       <td className="px-3 py-2">{money(r.security_deposit)}</td>
                       <td className="px-3 py-2">{money(r.reservation_deposit)}</td>
                       <td className="px-3 py-2">{money(r.install_fee)}</td>
-                      <td className="px-3 py-2">{money(r.delivery_fee)}</td>
+                      <td className="px-3 py-2">{money(r.commercial_terms?.discounted_delivery_cents != null ? r.commercial_terms.discounted_delivery_cents / 100 : r.delivery_fee)}</td>
                       <td className="px-3 py-2">
                         {r.insurance_selected ? `${money(r.insurance_monthly_price)}/mo` : "—"}
                       </td>
@@ -236,10 +236,10 @@ const Accounting = () => {
                         {r.second_heater_selected ? `${money(r.second_heater_monthly_price)}/mo` : "—"}
                       </td>
                       <td className="px-3 py-2">{r.commercial_terms?.choices.premium_selected ? `${money(r.commercial_terms.premium_monthly_cents / 100)}/mo` : "—"}</td>
-                      <td className="px-3 py-2">{r.commercial_terms ? r.commercial_terms.choices.pay_upfront_selected ? <>{money(r.commercial_terms.initial_rental_cents / 100)} upfront base rent<br/>{money(r.commercial_terms.upfront_savings_cents / 100)} savings · initial term only</> : "Monthly" : "Existing terms"}</td>
+                      <td className="px-3 py-2">{r.commercial_terms ? r.commercial_terms.choices.pay_upfront_selected ? <>{money((r.commercial_terms.initial_prepaid_recurring_cents ?? r.commercial_terms.initial_rental_cents) / 100)} upfront rental and add-ons<br/>{money(r.commercial_terms.upfront_savings_cents / 100)} savings · initial term only</> : "Monthly" : "Existing terms"}</td>
                       <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.initial_recurring_cents / 100) : "Existing terms"}</td>
                       <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.renewal_monthly_cents / 100) : "Existing terms"}</td>
-                      <td className="px-3 py-2">{money(r.stair_elevator_charge)}</td>
+                      <td className="px-3 py-2">{money(r.commercial_terms?.discounted_stair_charge_cents != null ? r.commercial_terms.discounted_stair_charge_cents / 100 : r.stair_elevator_charge)}</td>
                     </tr>
                   ))}
                   {rows.length === 0 && (

@@ -218,7 +218,7 @@ async function buildRentalSummary(
   drawPriceRow(
     c,
     "Delivery fee",
-    `${fmtUSD(s.delivery_fee)}${s.delivery_fee_note ? ` - ${s.delivery_fee_note}` : ""}`,
+    `${fmtUSD((s.commercial_terms?.discounted_delivery_cents ?? s.delivery_fee * 100) / 100)}${s.delivery_fee_note ? ` - ${s.delivery_fee_note}` : ""}`,
   );
   drawPriceRow(c, "Security deposit (refundable)", fmtUSD(s.security_deposit));
   drawPriceRow(
@@ -236,7 +236,7 @@ async function buildRentalSummary(
     "Stair / elevator charge",
     s.stair_elevator_charge == null
       ? "To be confirmed before delivery"
-      : `${fmtUSD(s.stair_elevator_charge)}${s.stair_elevator_charge_note ? ` - ${s.stair_elevator_charge_note}` : ""}`,
+      : `${fmtUSD((s.commercial_terms?.discounted_stair_charge_cents ?? s.stair_elevator_charge * 100) / 100)}${s.stair_elevator_charge_note ? ` - ${s.stair_elevator_charge_note}` : ""}`,
   );
 
   if (s.commercial_terms) {

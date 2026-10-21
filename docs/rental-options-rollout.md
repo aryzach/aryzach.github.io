@@ -16,23 +16,23 @@ The browser, contract API and PDF use `rentalTerms.ts`. The server calculates pr
 
 | Months | Initial base rent | Upfront rent | Savings | Installation |
 | --- | ---: | ---: | ---: | ---: |
-| 1 | $1,200 | $1,080 | $120 | $500 |
-| 3 | $2,400 | $2,160 | $240 | $500 |
-| 6 | $3,600 | $3,240 | $360 | $500 |
+| 1 | $1,200 | Not available | — | $500 |
+| 3 | $2,400 | Not available | — | $500 |
+| 6 | $3,600 | Not available | — | $500 |
 | 12 | $6,000 | $5,400 | $600 | $0 |
 | 24 | $7,200 | $6,480 | $720 | $0 |
 
-Premium is $100/month, damage protection $20/month, and the second heater $200/month. All remain monthly and receive no upfront discount. Renewal base rent is the selected undiscounted monthly rate; Premium continues unless canceled under applicable terms. No accessory or Premium setup charge is added. A one-month commitment charges only one month of advance base rent.
+Premium is $100/month, damage protection $20/month, and the second heater $200/month. For 12- or 24-month upfront leases, rent and selected add-ons are prepaid for the initial term and receive 10% off. Delivery, confirmed access charges and applicable tax charges also receive 10% off; only installation and the refundable security deposit are excluded. Tax amounts remain unknown until calculated on the invoice and must not be represented as zero. All discounts end at renewal. Renewal base rent is the selected undiscounted monthly rate; Premium continues unless canceled under applicable terms. No accessory or Premium setup charge is added. A one-month commitment charges only one month of advance base rent.
 
 The lifecycle signature trigger captures Premium as an add-on and the original commercial snapshot for future signatures only. Committed rental LTV uses the signed initial discounted commitment, while subsequent payments, refunds and settlements remain separate. Accounting and inventory API responses expose the stored plan; the accounting table displays Premium, upfront rent/savings, initial monthly billing and renewal billing.
 
 ## Required owner review
 
-1. **Payment timing:** the draft language makes the entire discounted base rent due upon delivery, before rental begins. This replaces first/last month advance base rent. Confirm this timing before deployment.
+1. **Payment timing:** the draft language makes the entire discounted initial rent and selected add-ons due upon delivery, before rental begins. This replaces first/last month advance base rent. Confirm this timing before deployment.
 2. **Premium service promise:** review the guaranteed visit within three business days, covered equipment issues, eligibility, safe access, business-day definition, start of the response clock, remedies and cancellation provisions against the Master Agreement. Accessories are included without an additional fee.
 3. **Prepaid refunds/cancellation:** the existing Master Agreement remains incorporated. Confirm whether its cancellation, unused-period and refund language adequately addresses prepaid base rent and Premium cancellation.
-4. **Billing operations:** this repository creates only the fixed $200 Stripe reservation-deposit checkout and bank setup; rental invoices/subscriptions are not created here. No new checkout or automatic rental charge has been introduced. Configure the existing operational invoice/subscription process from the stored plan: charge discounted initial base rent once, keep add-ons monthly, exclude prepaid base rent from recurring billing during that term, and resume undiscounted base rent only after the prepaid term. Do not represent the new option as automatic collection until that process is verified.
-5. **Taxes and credits:** the $200 reservation payment remains credited by the existing billing process. Do not subtract it twice or discount the deposit. Existing fee/tax treatment is unchanged; rental totals are before tax and unconfirmed site charges. Verify the final invoice's tax and deposit treatment in the existing billing system.
+4. **Billing operations:** this repository creates only the fixed $200 Stripe reservation-deposit checkout and bank setup; rental invoices/subscriptions are not created here. No new checkout or automatic rental charge has been introduced. Configure the existing operational invoice/subscription process from the stored plan: for eligible 12/24-month upfront leases, collect discounted rent and selected add-ons for the initial term once, discount eligible delivery/access/tax line items, leave installation and security deposit undiscounted, suppress recurring rent and add-on billing for the prepaid term, and resume undiscounted monthly rent and selected add-ons only after that term. Do not represent the new option as automatic collection until that process is verified.
+5. **Taxes and credits:** the $200 reservation payment remains credited by the existing billing process. Do not subtract it twice or treat the reservation credit as a charge to discount. Apply 10% to eligible tax and other charges on the final invoice, excluding installation and the security deposit. The preview does not invent a tax rate or unconfirmed access amount; these remain unestimated until invoiced. Verify the final invoice's tax and deposit treatment in the existing billing system.
 
 ## Production rollout
 
@@ -47,3 +47,7 @@ Regenerate the generated pricing mirrors from the updated catalog after activati
 - With the local dev server on port 8080: `npm run test:agreement:browser`. Tests explicit answers, every tier, immediate totals, preview generation, mobile layout and the legacy unsigned-booking flow. Set `AGREEMENT_PREVIEW_ORIGIN` for another origin.
 - Actual PDF rendering/text extraction was checked for all five terms against the same server PDF builder, including amounts, benefits and the incorporated master page. Deno PDF regression cases were added as well.
 - Production database migrations and real Stripe charges were not executed as tests.
+
+## October 21 preview refinement
+
+Options display in this order: SF Sauna Premium, Pay Upfront & Save 10%, Second Heater, Damage Protection. The accessory is described as Bucket and ladle. The customer summary omits the initial monthly-billing, renewal total and initial commitment total rows, while the full billing plan retains those facts for accounting. Shorter terms disable upfront Yes and require explicit No; moving from an eligible selected-upfront term to a shorter term clears that choice and requires a new answer.

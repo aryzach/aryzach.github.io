@@ -76,7 +76,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
           />
           <PriceRow
             label="Delivery fee"
-            value={`${formatUSD(summary.delivery_fee)}${summary.delivery_fee_note ? ` — ${summary.delivery_fee_note}` : ""}`}
+            value={`${formatUSD((summary.commercial_terms?.discounted_delivery_cents ?? summary.delivery_fee * 100) / 100)}${summary.delivery_fee_note ? ` — ${summary.delivery_fee_note}` : ""}`}
           />
           <PriceRow label="Security deposit" value={formatUSD(summary.security_deposit)} />
           <PriceRow
@@ -93,7 +93,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             value={
               summary.stair_elevator_charge == null
                 ? "To be confirmed before delivery"
-                : `${formatUSD(summary.stair_elevator_charge)}${summary.stair_elevator_charge_note ? ` — ${summary.stair_elevator_charge_note}` : ""}`
+                : `${formatUSD((summary.commercial_terms?.discounted_stair_charge_cents ?? summary.stair_elevator_charge * 100) / 100)}${summary.stair_elevator_charge_note ? ` — ${summary.stair_elevator_charge_note}` : ""}`
             }
           />
         </div>

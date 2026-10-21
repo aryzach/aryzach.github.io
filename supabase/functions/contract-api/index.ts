@@ -1,4 +1,4 @@
-import { rentalCommercialTerms, unansweredOptions } from "../_shared/rentalTerms.ts";
+import { rentalCommercialTerms, unansweredOptions, upfrontEligible } from "../_shared/rentalTerms.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import {
@@ -166,6 +166,7 @@ serveWithMigrationPolicy(async (req) => {
           pay_upfront_selected: body.pay_upfront_selected, premium_selected: body.premium_selected,
         };
         if (policyVersion >= 2 && unansweredOptions(choices).length) return json({error: `Choose Yes or No for: ${unansweredOptions(choices).join(', ')}.`}, 400);
+        if (policyVersion >= 2 && choices.pay_upfront_selected === true && !upfrontEligible(Number(body.commitment_months))) return json({error: 'Pay upfront is available only for 12- or 24-month leases.'}, 400);
         if (policyVersion < 2 && (body.pay_upfront_selected === true || body.premium_selected === true)) return json({error: 'This existing booking retains its original rental options.'}, 400);
         const { data: signedContract } = await supabase.from('contracts').select('id').eq('reservation_id', reservation.id).eq('status', 'Signed').limit(1).maybeSingle();
         if (signedContract) return json({error: 'This booking already has a signed agreement. Existing agreed terms are preserved.'}, 409);

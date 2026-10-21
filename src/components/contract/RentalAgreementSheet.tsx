@@ -24,7 +24,7 @@ import {
   getInstallFee,
   ACKNOWLEDGMENTS,
 } from "@/lib/contractConfig";
-import { PREMIUM_MONTHLY, PREMIUM_DESCRIPTION, PREMIUM_BENEFITS, SECOND_HEATER_DESCRIPTION, OPTION_LABELS, unansweredOptions, rentalCommercialTerms, commercialPriceRows } from "@/lib/rentalTerms";
+import { upfrontEligible, PREMIUM_MONTHLY, PREMIUM_DESCRIPTION, PREMIUM_BENEFITS, SECOND_HEATER_DESCRIPTION, OPTION_LABELS, unansweredOptions, rentalCommercialTerms, commercialPriceRows } from "@/lib/rentalTerms";
 import { RentalSummaryPreview } from "./RentalSummaryPreview";
 
 interface Props {
@@ -235,7 +235,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   );
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
-    setForm((p) => ({ ...p, [k]: v }));
+    setForm((p) => ({ ...p, [k]: v, ...(k === "commitment_months" && !upfrontEligible(Number(v)) && p.pay_upfront_selected === true ? { pay_upfront_selected: null } : {}) }));
 
   const validate = (): string | null => {
     if (form.customer_legal_name.trim().length < 2) return "Please enter your legal name.";
@@ -631,12 +631,13 @@ const ConfigureStep = ({
 
       {policyVersion >= 2 ? <Section title="Additional Options">
         <p className="text-xs text-muted-foreground" role="status">{unansweredOptions(form).length ? `Choose Yes or No for: ${unansweredOptions(form).join(", ")}.` : "All options answered."}</p>
-        <ToggleRow selected={form.insurance_selected} onChange={(v) => set("insurance_selected", v)} title="Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
-        <ToggleRow selected={form.second_heater_selected} onChange={(v) => set("second_heater_selected", v)} title="Second Heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description={SECOND_HEATER_DESCRIPTION} yesDisabled={!showSecondHeater} />
-        {!showSecondHeater && <p className="text-xs text-muted-foreground">A second heater is not available for this sauna type. Select No to continue.</p>}
-        <ToggleRow selected={form.pay_upfront_selected} onChange={(v) => set("pay_upfront_selected", v)} title="Pay Upfront & Save 10%" price="10% off base rent" description="Pay for your entire initial rental term upfront and save 10% on rental payments." />
         <ToggleRow selected={form.premium_selected} onChange={(v) => set("premium_selected", v)} title="SF Sauna Premium" price={`+${formatUSD(PREMIUM_MONTHLY)} / month`} description={PREMIUM_DESCRIPTION} />
         {form.premium_selected === true && <div className="text-xs text-muted-foreground space-y-2"><ul className="list-disc pl-5 space-y-1">{PREMIUM_BENEFITS.map(benefit => <li key={benefit}>{benefit}</li>)}</ul><p>Accessories included at no additional charge. No setup fee. Premium continues at $100/month on month-to-month renewals unless canceled under the applicable terms.</p></div>}
+        <ToggleRow selected={form.pay_upfront_selected} onChange={(v) => set("pay_upfront_selected", v)} title="Pay Upfront & Save 10%" price="12 or 24 months only" description="Prepay your entire initial rental term and selected add-ons. Save 10% on all eligible charges except installation and the security deposit." yesDisabled={!upfrontEligible(form.commitment_months)} />
+        {!upfrontEligible(form.commitment_months) && <p className="text-xs text-muted-foreground">Upfront savings are available only for 12- or 24-month leases. Select No to continue with this term.</p>}
+        <ToggleRow selected={form.second_heater_selected} onChange={(v) => set("second_heater_selected", v)} title="Second Heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description={SECOND_HEATER_DESCRIPTION} yesDisabled={!showSecondHeater} />
+        {!showSecondHeater && <p className="text-xs text-muted-foreground">A second heater is not available for this sauna type. Select No to continue.</p>}
+        <ToggleRow selected={form.insurance_selected} onChange={(v) => set("insurance_selected", v)} title="Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
       </Section>
       : <Section title="Optional coverage">
         <LegacyToggleRow selected={!!form.insurance_selected} onChange={v => set("insurance_selected", v)} title="Add Optional Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
@@ -885,15 +886,15 @@ const ToggleRow = ({ selected, onChange, title, price, description, yesDisabled 
 const RentalOptionsTotals = ({form, monthly, installation, delivery, securityDeposit}: {form: FormState; monthly: number; installation: number; delivery: number; securityDeposit: number}) => {
   // Unanswered choices contribute nothing to the estimate; they never count as consent.
   const terms = rentalCommercialTerms({ monthly, months: form.commitment_months, installation, delivery, securityDeposit,
-    choices: { insurance_selected: form.insurance_selected === true, second_heater_selected: form.second_heater_selected === true, pay_upfront_selected: form.pay_upfront_selected === true, premium_selected: form.premium_selected === true },
+    choices: { insurance_selected: form.insurance_selected === true, second_heater_selected: form.second_heater_selected === true, pay_upfront_selected: form.pay_upfront_selected === true && upfrontEligible(form.commitment_months), premium_selected: form.premium_selected === true },
     insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY });
   return <Section title="Payment summary"><div aria-live="polite" className="rounded-md border border-border divide-y divide-border bg-card">
     <PriceRow label="Monthly base rent" value={`${formatUSD(monthly)} / month`} />
-    <PriceRow label="Monthly add-ons (no discount)" value={`${formatUSD(terms.monthly_addons_cents / 100)} / month`} />
+    <PriceRow label="Monthly add-ons" value={`${formatUSD(terms.monthly_addons_cents / 100)} / month`} />
     {commercialPriceRows(terms).filter(row => !['SF Sauna Premium'].includes(row.label)).map(row => <PriceRow key={row.label} label={row.label} value={`${formatUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`} />)}
     <PriceRow label="Installation" value={installation ? formatUSD(installation) : "Free"} />
-    <PriceRow label="Delivery" value={formatUSD(delivery)} /><PriceRow label="Refundable security deposit" value={formatUSD(securityDeposit)} />
-  </div><p className="text-xs text-muted-foreground">{unansweredOptions(form).length ? "Estimate excludes unanswered options. " : ""}Upfront rent is due upon delivery before the rental begins. Add-ons remain monthly. Fees, deposits and taxes are not discounted. Reservation payments are credited separately; tax and unconfirmed access charges are not included above.</p></Section>;
+    <PriceRow label="Delivery" value={formatUSD((terms.discounted_delivery_cents ?? terms.delivery_cents) / 100)} /><PriceRow label="Refundable security deposit" value={formatUSD(securityDeposit)} />
+  </div><p className="text-xs text-muted-foreground">{unansweredOptions(form).length ? "Estimate excludes unanswered options. " : ""}Upfront payment is available for 12- or 24-month leases and includes rent and selected add-ons for the full initial term. Eligible charges receive 10% off; installation and the security deposit are excluded. Taxes and unconfirmed charges use the same discount policy when invoiced and are not estimated above. Reservation payments are credited separately.</p></Section>;
 };
 
 const LegacyToggleRow = ({selected, onChange, title, price, description}: {selected: boolean; onChange: (v:boolean)=>void; title:string; price:string; description:string}) => <div className={`rounded-md border p-3 ${selected ? "border-primary bg-primary/5" : "border-border bg-card"}`}><label className="flex items-start gap-3"><input type="checkbox" checked={selected} onChange={e=>onChange(e.target.checked)} className="mt-1 h-4 w-4"/><div className="flex-grow"><div className="flex items-center justify-between gap-2"><span className="text-sm font-medium text-foreground">{title}</span><span className="text-sm text-foreground">{price}</span></div><p className="text-xs text-muted-foreground mt-1">{description}</p></div></label></div>;

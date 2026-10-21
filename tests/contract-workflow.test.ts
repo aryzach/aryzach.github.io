@@ -62,6 +62,7 @@ const draft={action:'save_draft',customer_legal_name:'Test Customer',email:'test
 test('actual draft and signature handlers preserve the same server-calculated snapshot for every term',async()=>{
   for(const months of [1,3,6,12,24])for(const upfront of [false,true]) {
     const h=harness();const saved=await h.call({...draft,commitment_months:months,pay_upfront_selected:upfront,monthly_price:1,premium_monthly_price:1,discount_percent:99});
+    if(upfront && !terms.upfrontEligible(months)){assert.equal(saved.status,400);assert.deepEqual(h.writes,[]);continue;}
     assert.equal(saved.status,200,JSON.stringify(saved.body));
     const expected=terms.rentalCommercialTerms({monthly:pricing.getMonthlyPrice('indoor_traditional_standard',months)!,months,choices:{...choices,pay_upfront_selected:upfront},installation:pricing.getInstallFee('indoor_traditional_standard',months),securityDeposit:1500,delivery:0});
     assert.deepEqual(JSON.parse(JSON.stringify(h.contract.rental_summary_snapshot.commercial_terms)),expected);

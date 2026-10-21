@@ -13,8 +13,8 @@ Deno.test('every new rental term renders its frozen discount and Premium snapsho
   master.addPage([612, 792]).drawText('SYNTHETIC MASTER - NOT A REAL AGREEMENT');
   const hashes = new Set<string>();
   for (const [months, monthly] of [[1,1200],[3,800],[6,600],[12,500],[24,300]]) {
-    const commercial = rentalCommercialTerms({monthly, months, choices: {
-      insurance_selected:true, second_heater_selected:true, pay_upfront_selected:true, premium_selected:true,
+    const commercial = rentalCommercialTerms({monthly, months, delivery:150, securityDeposit:1500, choices: {
+      insurance_selected:true, second_heater_selected:true, pay_upfront_selected:months===12||months===24, premium_selected:true,
     }});
     const before = JSON.stringify(commercial);
     const bytes = await buildSignedContractPdf({
