@@ -1,6 +1,6 @@
 # Future-booking agreement changes — deployment review
 
-Implementation is prepared in source. Database migrations, Edge Functions, Stripe configuration and the live domain must be reviewed before production activation. The private preview's `/agreement-preview` route uses example details and the actual form; it never creates a booking, stores an agreement or signs anything. `/agreement-preview?legacy=1` demonstrates an existing unsigned booking.
+Production activation completed after the verified database export and owner authorization. The live frontend and contract/admin/accounting functions are deployed; future bookings default to pricing version 2. Existing bookings remain version 1. The private preview's `/agreement-preview` route uses example details and the actual form; it never creates a booking, stores an agreement or signs anything. `/agreement-preview?legacy=1` demonstrates an existing unsigned booking.
 
 ## Booking boundary and preservation
 
@@ -51,3 +51,16 @@ Regenerate the generated pricing mirrors from the updated catalog after activati
 ## October 21 preview refinement
 
 Options display in this order: SF Sauna Premium, Pay Upfront & Save 10%, Second Heater, Damage Protection. The accessory is described as Bucket and ladle. The customer summary omits the initial monthly-billing, renewal total and initial commitment total rows, while the full billing plan retains those facts for accounting. Shorter terms disable upfront Yes and require explicit No; moving from an eligible selected-upfront term to a shorter term clears that choice and requires a new answer.
+
+
+## Production activation result
+
+Activated after the verified private database export on October 20, 2026 (Pacific time). The two prepared schema changes were applied atomically as `activate_future_booking_rental_options`.
+
+- All 98 existing bookings retain version 1 and a snapshot of the original catalog, including unsigned bookings. Their original-field checksum is unchanged.
+- All 19 contracts and the existing rental-terms checksum are unchanged.
+- New bookings default to version 2; both standard Traditional catalogs match the approved five tiers.
+- Booking creation is open. The temporary rollout trigger remains disabled; it must not be enabled as part of normal operations.
+- Contract API v18, admin API v35 and accounting API v17 are active. Admin authentication remains unchanged. The accounting update also prefers the agreed installation fee stored in each signed summary over a later catalog/custom override.
+- The export includes all 81 database tables (4,601 rows), schema metadata and original versions of the three affected functions. It excludes Storage file bytes; none were modified by this rollout. It is a verified logical data export, not a tested blank-project disaster-recovery backup.
+- Existing reservation-deposit processing is unchanged. Rental/upfront invoicing remains the existing operational billing process; no automatic rental collection or real charge was tested or introduced.

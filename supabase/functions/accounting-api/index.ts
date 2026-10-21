@@ -116,7 +116,8 @@ serveWithMigrationPolicy(async (req) => {
           if (c) {
             const opts = Array.isArray(r.custom_pricing_options) ? r.custom_pricing_options : null;
             const opt = opts?.find((o: any) => Number(o?.months) === months);
-            if (opt) installFee = Number(opt.install_fee ?? 0);
+            if (typeof c.rental_summary_snapshot?.installation_fee === "number") installFee = c.rental_summary_snapshot.installation_fee;
+            else if (opt) installFee = Number(opt.install_fee ?? 0);
             else if (r.custom_install_fee != null) installFee = Number(r.custom_install_fee);
             else installFee = standardInstallFee(c.sauna_type_id ?? r.sauna_type_id, months);
           }
