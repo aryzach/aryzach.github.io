@@ -133,6 +133,6 @@ export function commercialPriceRows(t: RentalCommercialTerms): { label: string; 
     ...(t.choices.pay_upfront_selected ? [
       { label: expanded ? 'Upfront savings (eligible charges)' : 'Upfront savings (initial base rent only)', cents: -t.upfront_savings_cents },
       { label: expanded ? 'Total upfront rental and add-ons' : 'Total upfront base rental', cents: expanded ? t.initial_prepaid_recurring_cents! : t.initial_rental_cents },
-    ] : [{ label: 'Initial-term base rental', cents: t.initial_rental_cents }]),
+    ] : []),
   ];
 }
