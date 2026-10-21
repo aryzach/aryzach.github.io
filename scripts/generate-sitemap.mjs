@@ -15,6 +15,7 @@ const entries = [
   { path: '/install-power', changefreq: 'monthly', priority: '0.7' },
   { path: '/policies', changefreq: 'yearly', priority: '0.4' },
   { path: '/terms', changefreq: 'yearly', priority: '0.4' },
+  { path: '/blog/chronic-pain-resources-sf', priority: '0.7', changefreq: 'monthly' },
   { path: '/learn', changefreq: 'monthly', priority: '0.7' },
   { path: '/learn-more', changefreq: 'monthly', priority: '0.6' },
   { path: '/reserve-your-sauna', changefreq: 'monthly', priority: '0.8' },

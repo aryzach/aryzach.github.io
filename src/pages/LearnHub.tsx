@@ -7,6 +7,15 @@ import { seoData } from "@/lib/seoData";
 
 const blogPosts = [
   {
+    title: "Reviews of sport massage and physical therapists in the SF Bay Area",
+    excerpt: "My experiences with six Bay Area practitioners while navigating chronic pain, muscle tension, and injuries—what helped, what didn’t, and what I’d explore again.",
+    image: "https://static.wixstatic.com/media/526d7f_c5398d4348314085b264bce509651686~mv2.png/v1/crop/x_138,y_0,w_779,h_779/fill/w_500,h_500,al_c,q_85/24.png",
+    alt: "Sarah Day, one of the practitioners featured in these personal chronic pain reviews",
+    date: "Chronic pain resources",
+    readTime: "5 min read",
+    href: "/blog/chronic-pain-resources-sf",
+  },
+  {
     title: "Infrared vs Steam Sauna: Which Is Right for You?",
     excerpt: "Understanding the key differences between traditional steam saunas and modern infrared technology. Learn about heat types, health benefits, and which might be best for your home.",
     image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=800&q=80",
@@ -73,7 +82,7 @@ const LearnHub = () => {
                     {post.excerpt}
                   </p>
                   <Link
-                    to="#"
+                    to={post.href ?? "#"}
                     className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium"
                   >
                     Read More
