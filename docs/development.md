@@ -55,3 +55,17 @@ The existing `main` GitHub Pages and Cloudflare Worker deployment workflows are 
 Before using a shared staging backend: provision it using the existing provider's supported isolation, reconstruct/verify the combined migration history, add synthetic seeds and storage definitions, and route Stripe test mode, email sinks, CRM and scheduling to nonproduction destinations. Merely replacing the Supabase URL is insufficient: public API discovery metadata and backend emails/webhooks also contain production URLs. Staging integration mode is not enabled by this change; unrecognized modes/hosts remain guarded.
 
 Known production security findings (webhook fail-open behavior, lead-photo policies, legacy RPC access, shared-password authorization and token privacy) require separate reviewed backend changes. This setup does not fix or claim to validate them.
+
+## Planned returns
+
+In Inventory, click a rented sauna’s Booking availability label and choose **Schedule return / future availability**. Enter its planned pickup and next booking availability dates. Both may be the same day. The current customer, placement, rental dates, commitments and future assignment remain unchanged until actual pickup is recorded in Rentals. Confirm the returned sauna is ready before installing it for the next customer; same-day pickup and reinstallation are supported. Canceling a plan clears only its planned dates. Existing dated booking conflicts must be resolved before changing or canceling a conflicting plan.
+
+The owner explicitly approved the production database update and code publication in this chat on 2026-10-28, including same-day redeployment. Migration `20261028103314_schedule_sauna_returns.sql` was applied to project `vtmzagwocvgezbniewnu` through the connected Supabase migration tool. The migration ledger version is retained in the filename. Existing inventory assignment, availability and commitment values were verified unchanged after application. This is authorization for this release, not blanket authorization for future migrations.
+
+Regression checks use disposable local PostgreSQL databases and synthetic records only:
+
+```sh
+SF_LIFECYCLE_TEST_PG_PORT=55449 python3 scripts/test-return-plans-database.py
+```
+
+The isolated development form at `/tests/browser/return-plan.html` exercises scheduling requests and booking conflicts without using customer data or contacting live services. It is not included in the production build.

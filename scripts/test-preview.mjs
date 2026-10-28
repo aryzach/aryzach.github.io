@@ -42,9 +42,9 @@ try {
       await page.waitForFunction(() => !document.querySelector('input[type="password"]'));
       if (route === '/admin') {
         await page.setViewport({ width: 1440, height: 1050 });
-        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Customer insights').click());
-        await page.waitForSelector('[aria-label="Customer insights"]');
-        const section = '[aria-label="Customer insights"]';
+        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Dashboard').click());
+        await page.waitForSelector('[aria-label="Dashboard"]');
+        const section = '[aria-label="Dashboard"]';
         await page.waitForFunction(() => document.body.textContent.includes('No customers with sufficient data in this selection.'));
         assert.equal(await page.$$eval('[aria-label="Xero connection"] button', buttons => buttons.every(button => button.disabled)), true);
         assert.ok(await page.$eval('[aria-label="Xero connection"]', el => el.textContent.includes('Backend setup required')));
