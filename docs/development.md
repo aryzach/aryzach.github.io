@@ -69,3 +69,15 @@ SF_LIFECYCLE_TEST_PG_PORT=55449 python3 scripts/test-return-plans-database.py
 ```
 
 The isolated development form at `/tests/browser/return-plan.html` exercises scheduling requests and booking conflicts without using customer data or contacting live services. It is not included in the production build.
+
+## Fleet selection
+
+Check inventory rows before opening **Manage sauna condition / fleet**, or check/uncheck rows while the form is open. The single button uses all checked rows, including rows hidden by filters. With no rows checked, the unit dropdown remains available. Once submission begins, targets are pinned through the result summary; successful units are unchecked and failed units remain checked. Reopen the form for another update. Read-only assignment cells show names without a disabled removal button; use Bookings or Rentals for changes.
+
+Run the isolated checkbox integration regression with installed Chrome:
+
+```sh
+PUPPETEER_EXECUTABLE_PATH="/path/to/chrome" node scripts/test-fleet-selection.mjs
+```
+
+See [the state-machine diagrams](state-machines.md) for the separate customer, booking, rental, fleet, custody, condition and allocation states.

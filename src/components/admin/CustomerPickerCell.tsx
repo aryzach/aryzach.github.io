@@ -33,6 +33,8 @@ export function CustomerPickerCell({ value, customers, disabledIds, placeholder 
 
   const label = current?.name || (value ? "(unknown)" : "");
 
+  if(readOnly)return <span className="block truncate px-2 text-xs" title={label?`${label} — manage numbered allocations in Bookings and actual placements in Rentals.`:undefined}>{label}</span>;
+
   return (
     <div className="flex items-center gap-1">
       <Popover open={open} onOpenChange={(o) => { setOpen(o); }}>
