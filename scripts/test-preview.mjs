@@ -55,6 +55,23 @@ try {
         assert.ok(await page.$('[aria-label="LTV through date"]'));
         if (process.env.DASHBOARD_SCREENSHOT_PATH) await (await page.$(section)).screenshot({ path: process.env.DASHBOARD_SCREENSHOT_PATH });
         console.log('PASS customer insights: empty history stays unknown, no sample money or chart, private provider controls disabled');
+        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'State machines').click());
+        await page.waitForSelector('[aria-label="State machines"]');
+        await page.waitForFunction(() => document.querySelectorAll('[data-state-diagram] svg').length === 6, { timeout: 60000 });
+        assert.equal(await page.$$eval('[data-state-diagram] [role="alert"]', nodes => nodes.length), 0);
+        assert.ok(await page.$eval('[aria-label="State machines"]', el => el.textContent.includes('v1-only waitlist preference')));
+        assert.equal(await page.$$eval('button', buttons => buttons.some(b => b.textContent === 'Add sauna')), false);
+        await page.click('[aria-label="Zoom in diagram"]');
+        assert.equal(await page.$eval('[aria-label="Reset diagram zoom"]', el => el.textContent), '125%');
+        await page.click('[aria-label="Reset diagram zoom"]');
+        assert.equal(await page.$eval('[aria-label="Reset diagram zoom"]', el => el.textContent), '100%');
+        await page.setViewport({ width: 390, height: 844 });
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+        await page.setViewport({ width: 1440, height: 1050 });
+        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'Inventory').click());
+        await page.$$eval('button', buttons => buttons.find(b => b.textContent === 'State machines').click());
+        await page.waitForFunction(() => document.querySelectorAll('[data-state-diagram] svg').length === 6, { timeout: 60000 });
+        console.log('PASS admin state machines: all six diagrams, zoom, mobile containment and tab reopening');
       }
     }
     console.log(`PASS rendered ${route}`);

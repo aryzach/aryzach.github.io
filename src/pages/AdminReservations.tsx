@@ -12,7 +12,7 @@ import CoreRecordsPanel from "@/components/admin/CoreRecordsPanel";
 import { readWorkspace } from "@/dev/coreWorkspace";
 import { CustomerInsights } from "@/components/admin/CustomerInsights";
 import { previewEnabled } from "@/lib/runtime";
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { lazy, Suspense, useEffect, useState, useCallback, useMemo, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ import { StripeStatusCard } from "@/components/admin/StripeStatusCard";
 import { CustomerPickerCell, type CustomerOption } from "@/components/admin/CustomerPickerCell";
 import { useResizableColumns, ColResizeHandle } from "@/hooks/useResizableColumns";
 import { type RevenueUnit } from "@/components/admin/RevenueDashboard";
+
+const StateMachinesPanel = lazy(() => import("@/components/admin/StateMachinesPanel"));
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-admin-pw";
 const conditionLabel=(value:string)=>({ready:'Ready',inspection:'Needs inspection',maintenance:'Maintenance',unknown:'Not recorded'}[value]||'Not recorded');
@@ -221,7 +223,7 @@ const AdminReservations = () => {
   const [loading, setLoading] = useState(false);
   const [syncReview,setSyncReview]=useState<{customerId?:string;contactId?:string}|null>(null);
   const [coreWorkspace, setCoreWorkspace] = useState(() => previewEnabled ? readWorkspace() : null);
-  const [tab, setTab] = useState<"customers" | "rentals" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements">(() => new URLSearchParams(location.search).has("customerReservation") ? "customers" : new URLSearchParams(location.search).has("xero") ? "dashboard" : "inventory");
+  const [tab, setTab] = useState<"customers" | "rentals" | "dashboard" | "inventory" | "calendar" | "reservations" | "waitlist" | "agreements" | "state-machines">(() => new URLSearchParams(location.search).has("customerReservation") ? "customers" : new URLSearchParams(location.search).has("xero") ? "dashboard" : "inventory");
   const [calMonth, setCalMonth] = useState<{ y: number; m: number }>(() => {
     const d = new Date();
     return { y: d.getFullYear(), m: d.getMonth() };
@@ -755,7 +757,7 @@ const AdminReservations = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-semibold text-foreground">Admin</h1>
             <div className="flex gap-2">
-              {!["dashboard", "customers", "rentals"].includes(tab) && <>
+              {!["dashboard", "customers", "rentals", "state-machines"].includes(tab) && <>
               <Button onClick={startDraft} disabled={previewEnabled || !!draft}>Add sauna</Button>
               <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={previewEnabled || importing}>
                 {importing ? "Importing…" : "Import CSV"}
@@ -801,11 +803,12 @@ const AdminReservations = () => {
               className={`px-3 py-1.5 text-sm rounded ${tab === "agreements" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
               onClick={() => setTab("agreements")}
             >Agreements</button>
+            <Button variant={tab === "state-machines" ? "default" : "ghost"} size="sm" onClick={() => setTab("state-machines")}>State machines</Button>
           </div>
 
           {loading && <p className="text-muted-foreground">Loading…</p>}
 
-          {!["dashboard", "customers", "rentals"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
+          {!["dashboard", "customers", "rentals", "state-machines"].includes(tab) && !previewEnabled && <StripeStatusCard callAdmin={callAdmin} />}
 
           {coreWorkspace && tab==='customers' && <XeroSyncPanel password={password} onSynced={refreshAfterSync} onReview={setSyncReview}/>}
           {coreWorkspace && syncReview && <XeroCustomerHistory state={coreWorkspace} customerId={syncReview.customerId||null} initialContactId={syncReview.contactId} initialView="payments" onClose={()=>setSyncReview(null)} onRead={previewEnabled?undefined:selection=>callAdmin({action:'xero_customer_history',...selection})} onLifecycle={async(operation,record)=>{const {commandId,...fields}=record;const request={action:'lifecycle_command',operation,commandId,record:fields};if(previewEnabled){const r=await fetch('/__local-lifecycle',{method:'POST',headers:{'content-type':'application/json','x-sf-local-records':'1'},body:JSON.stringify(request)});if(!r.ok)throw Error('Could not save local classification');}else await callAdmin(request);await refreshAfterSync();}}/>}
@@ -844,6 +847,8 @@ const AdminReservations = () => {
             }}/>
             {!previewEnabled&&<details className="mt-5"><summary className="cursor-pointer text-sm text-muted-foreground">Booking links & payment tools</summary><div className="mt-3"><ReservationsListPanel callAdmin={callAdmin}/></div></details>}
           </>}
+
+          {tab === "state-machines" && <Suspense fallback={<p role="status">Loading state machines…</p>}><StateMachinesPanel /></Suspense>}
 
           {tab === "waitlist" && (
             <WaitlistPanel callAdmin={callAdmin} />

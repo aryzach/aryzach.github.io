@@ -125,7 +125,7 @@ stateDiagram-v2
   Planned --> Planned: Reschedule with conflict and version checks
   Planned --> Held: Cancel plan, only after booking conflicts resolved
   Held --> Returned: Record actual pickup
-  Planned --> Returned: Record actual pickup; clear plan
+  Planned --> Returned: Record actual pickup and clear plan
 ```
 
 Planning preserves the current customer, placement, rental dates and commitments. Next availability may equal the planned pickup date. Passing the planned date never records an actual pickup automatically; overdue plans require review.
@@ -139,6 +139,14 @@ Availability is derived rather than a separate manually set status:
 | Current customer, Ready, valid non-overdue plan, no future allocation | Available on the planned date; not available now |
 | Incoming, Ready, no future allocation, booking date after inbound arrival | Available on the booking date |
 | Ready and unreserved in warehouse | Available now |
+
+## Waitlist and model preferences
+
+The Waitlist tab currently lists entries and lets an admin change their status (Open, Contacted, Converted or Closed) or delete them. It has no add-entry or move-booking-to-waitlist form. Changing a waitlist status does not release an assigned sauna or change the booking.
+
+Payment/signing automation adds a qualifying booking to the waitlist when it cannot find a matching sauna. An existing inventory assignment is preserved. Standard traditional bookings match both v1 Fir/Cedar and v2 Cedar units; a v1-only waitlist preference is not represented in the current controls. Original Collection is a different product, not a v1 preference.
+
+To wait for v1 without claiming a numbered unit, the missing workflow is a single Move to waitlist action: preserve the booking and deposit, release only its future allocation, save the model preference and prevent automation from allocating a different model. Do not cancel the booking or mark a sauna unavailable merely to simulate this workflow.
 
 ## Current allocation mismatch to be aware of
 

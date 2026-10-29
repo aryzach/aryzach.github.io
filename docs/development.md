@@ -81,3 +81,7 @@ PUPPETEER_EXECUTABLE_PATH="/path/to/chrome" node scripts/test-fleet-selection.mj
 ```
 
 See [the state-machine diagrams](state-machines.md) for the separate customer, booking, rental, fleet, custody, condition and allocation states.
+
+## State machine reference
+
+Admin → State machines renders `docs/state-machines.md` directly, including all six Mermaid diagrams. The guide and renderer load only when that tab is opened. Diagrams support zoom and horizontal scrolling, with text available below each one. Edit the Markdown guide to update both the admin reference and GitHub documentation. The browser preview check verifies all six rendered diagrams, zoom, mobile containment and reopening the tab.
