@@ -1,8 +1,12 @@
 export type BookingState = 'draft'|'requested'|'confirmed'|'fulfilled'|'cancelled';
 export interface Booking {
+ requestedModelKey?:string|null;waitlistedAt?:string|null;
  magicLink?:string|null;
  id:string;customerId:string|null;customerName:string;state:BookingState;version:number;installOn:string|null;saunaId:string|null;saunaCode:string|null;saunaTypeId:string|null;saunaType:string|null;source:string;legacyStatus:string|null;confirmationMode:'automatic'|'manual'|'legacy'|null;confirmationNote:string|null;
  readiness:{agreement:boolean;deposit:boolean;photoId:boolean;numberedUnit:boolean;date:boolean};rentalId:string|null;rentalState:string|null;purpose:'rental'|'purchase';createdAt:string;holdDeadline:string|null;installAddress:string|null;
+}
+export function bookingTypeLabel(booking:Booking):string {
+ return `${booking.saunaType||'Type unknown'}${booking.requestedModelKey==='v1_fir_cedar'?' · v1 (Fir/Cedar)':booking.requestedModelKey==='v2_cedar'?' · v2 (Cedar)':''}`;
 }
 export const bookingLabels:Record<BookingState,string>={draft:'Draft',requested:'Requested',confirmed:'Confirmed',fulfilled:'Fulfilled',cancelled:'Cancelled'};
 export const requirementLabels={agreement:'Signed agreement',deposit:'Deposit received',photoId:'Photo ID uploaded',numberedUnit:'Matching numbered sauna allocation',date:'Unit available by agreed date'};

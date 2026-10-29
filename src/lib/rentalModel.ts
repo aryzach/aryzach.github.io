@@ -22,6 +22,8 @@ export interface Rental {
   source?: 'inventory_link';
 }
 export interface SaunaAsset {
+  currentCustomerName?: string | null;
+  modelKey?: string | null;
   id: string;
   code: string;
   model: string;

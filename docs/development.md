@@ -85,3 +85,13 @@ See [the state-machine diagrams](state-machines.md) for the separate customer, b
 ## State machine reference
 
 Admin → State machines renders `docs/state-machines.md` directly, including all six Mermaid diagrams. The guide and renderer load only when that tab is opened. Diagrams support zoom and horizontal scrolling, with text available below each one. Edit the Markdown guide to update both the admin reference and GitHub documentation. The browser preview check verifies all six rendered diagrams, zoom, mobile containment and reopening the tab.
+
+## Booking selector and model waitlist
+
+Numbered sauna selection is numerically sorted and supports exact case-insensitive substring search across the full label, including the current customer's name. The password-verified core workspace supplies customer names; no public customer query is added.
+
+Bookings → View / manage → Move to waitlist / change requested type releases a future allocation, preserves evidence/payment/terms, and records an explicit model preference and waitlist hold. Model preference is separate from the catalog type. Database guards protect it from legacy automatic allocation. Explicit compatible allocation converts the waitlist entry; cancellation closes it.
+
+Validation: `SF_LIFECYCLE_TEST_PG_PORT=55449 python3 scripts/test-booking-waitlist-database.py` and `node scripts/test-booking-picker.mjs` (set `PUPPETEER_EXECUTABLE_PATH` for installed Chrome). Fixtures use synthetic records only.
+
+Release on October 30, 2026 (Asia/Shanghai): the owner explicitly requested the v1 waitlist workflow and an existing booking's move to it. Migration `20261029162959_booking_model_waitlist.sql` was tested on a disposable local database, then applied to production through the connected migration tool (retain its migration-ledger timestamp in the filename). Production admin-api v36 preserves the existing v35 bundle outside five verified edits for the authenticated waitlist action and selector/waitlist display fields; JWT and password verification are unchanged. This is authorization for this release, not blanket authorization for later migrations. No signed agreements or pricing policies were rewritten.

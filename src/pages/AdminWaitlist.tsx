@@ -12,12 +12,15 @@ interface WaitlistEntry {
   phone: string | null;
   city: string | null;
   sauna_type_id: string;
+  requested_model_key?: string | null;
   preferred_install_date: string | null;
   reservation_source: string;
   status: string;
   admin_notes: string | null;
   created_at: string;
 }
+
+const waitlistType=(r:WaitlistEntry)=>`${saunaTypeLabel(r.sauna_type_id)}${r.requested_model_key==='v1_fir_cedar'?' · v1 (Fir/Cedar)':r.requested_model_key==='v2_cedar'?' · v2 (Cedar)':''}`;
 
 const STATUSES = ["Open", "Contacted", "Converted", "Closed"] as const;
 
@@ -74,7 +77,7 @@ export const WaitlistPanel = ({ callAdmin }: Props) => {
       if (filters.email && !norm(r.email).includes(norm(filters.email))) return false;
       if (filters.phone && !norm(r.phone ?? "").includes(norm(filters.phone))) return false;
       if (filters.city && !norm(r.city ?? "").includes(norm(filters.city))) return false;
-      if (filters.sauna && !norm(saunaTypeLabel(r.sauna_type_id)).includes(norm(filters.sauna))) return false;
+      if (filters.sauna && !norm(waitlistType(r)).includes(norm(filters.sauna))) return false;
       if (filters.preferred && !norm(r.preferred_install_date ?? "").includes(norm(filters.preferred))) return false;
       if (filters.source && !norm(r.reservation_source).includes(norm(filters.source))) return false;
       if (filters.status && r.status !== filters.status) return false;
@@ -90,7 +93,7 @@ export const WaitlistPanel = ({ callAdmin }: Props) => {
           case "email": return r.email;
           case "phone": return r.phone ?? "";
           case "city": return r.city ?? "";
-          case "sauna": return saunaTypeLabel(r.sauna_type_id);
+          case "sauna": return waitlistType(r);
           case "preferred": return r.preferred_install_date ?? "";
           case "source": return r.reservation_source;
           case "status": return r.status;
@@ -189,7 +192,7 @@ export const WaitlistPanel = ({ callAdmin }: Props) => {
               <td className="px-2 py-2">{r.email}</td>
               <td className="px-2 py-2 whitespace-nowrap">{r.phone || "—"}</td>
               <td className="px-2 py-2">{r.city || "—"}</td>
-              <td className="px-2 py-2">{saunaTypeLabel(r.sauna_type_id)}</td>
+              <td className="px-2 py-2">{waitlistType(r)}</td>
               <td className="px-2 py-2 whitespace-nowrap">{fmtDate(r.preferred_install_date)}</td>
               <td className="px-2 py-2">{r.reservation_source}</td>
               <td className="px-2 py-2">

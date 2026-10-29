@@ -1,0 +1,40 @@
+BEGIN;
+SET LOCAL sf_lifecycle.command='on';
+DO $$
+DECLARE c uuid:=gen_random_uuid(); b jsonb; bid uuid; aid uuid:=gen_random_uuid(); v1 uuid:=gen_random_uuid(); day date:=(now() AT TIME ZONE 'America/Los_Angeles')::date; p jsonb; cmd uuid:=gen_random_uuid(); result jsonb; rejected boolean; version_before integer; notices integer; payment_before jsonb;
+BEGIN
+ INSERT INTO sauna_types(id,name,description,placement,reservation_fee_cents,stripe_payment_link,location,style,model_key) VALUES('waitlist-traditional','Outdoor Traditional','Synthetic','outdoor',0,'https://example.invalid','outdoor','traditional','standard');
+ INSERT INTO customer_profiles(id,display_name) VALUES(c,'Waitlist test');
+ b:=rental_lifecycle_command(gen_random_uuid(),'manual_reservation',jsonb_build_object('customerId',c,'sourceKey','waitlist-'||c,'historical',false,'saunaTypeId','waitlist-traditional','scheduledInstall',day+20));bid:=(b->>'reservationId')::uuid;
+ INSERT INTO sauna_inventory(id,unit_code,sauna_type_id,status,condition_state,locations,style,model_key,incoming_eta,available_date) VALUES(aid,'TEST-58','waitlist-traditional','Incoming','ready',ARRAY['outdoor'],'traditional','v2_cedar',day+10,day+11);
+ INSERT INTO sauna_inventory(id,unit_code,sauna_type_id,status,condition_state,locations,style,model_key) VALUES(v1,'TEST-2','waitlist-traditional','Available','ready',ARRAY['outdoor'],'traditional','v1_fir_cedar');
+ PERFORM booking_command(gen_random_uuid(),'allocate',jsonb_build_object('id',bid,'version',(SELECT booking_version FROM reservations WHERE id=bid),'assetId',aid,'installOn',day+20));
+ UPDATE reservations SET payment_status='Paid' WHERE id=bid;
+ SELECT jsonb_build_object('payment',payment_status,'contract',contract_status,'id',id_status) INTO payment_before FROM reservations WHERE id=bid;
+ SELECT count(*) INTO notices FROM reservation_notification_intents;
+ p:=jsonb_build_object('id',bid,'version',(SELECT booking_version FROM reservations WHERE id=bid),'saunaTypeId','waitlist-traditional','modelKey','v1_fir_cedar','reason','Any v1 requested');
+ result:=booking_command(cmd,'waitlist',p);
+ IF booking_command(cmd,'waitlist',p)<>result THEN RAISE EXCEPTION 'Waitlist retry not idempotent';END IF;
+ IF NOT EXISTS(SELECT 1 FROM reservations WHERE id=bid AND requested_model_key='v1_fir_cedar' AND waitlisted_at IS NOT NULL AND sauna_inventory_id IS NULL AND booking_state='requested' AND booking_install_on IS NULL) THEN RAISE EXCEPTION 'Booking did not enter unallocated v1 waitlist';END IF;
+ IF NOT EXISTS(SELECT 1 FROM sauna_inventory WHERE id=aid AND future_customer_id IS NULL AND status='Incoming' AND incoming_eta=day+10 AND available_date=day+11) THEN RAISE EXCEPTION 'Incoming release changed shipment facts';END IF;
+ IF (SELECT count(*) FROM waitlist_entries WHERE reservation_id=bid AND status='Open')<>1 THEN RAISE EXCEPTION 'Missing or duplicate waitlist entry';END IF;
+ IF (SELECT jsonb_build_object('payment',payment_status,'contract',contract_status,'id',id_status) FROM reservations WHERE id=bid)<>payment_before OR (SELECT count(*) FROM reservation_notification_intents)<>notices THEN RAISE EXCEPTION 'Waitlist changed evidence or emitted notifications';END IF;
+ IF NOT EXISTS(SELECT 1 FROM jsonb_array_elements(booking_workspace()) x WHERE x->>'id'=bid::text AND x->>'requestedModelKey'='v1_fir_cedar' AND x->>'waitlistedAt' IS NOT NULL) THEN RAISE EXCEPTION 'Admin workspace lost preference';END IF;
+ rejected:=false;BEGIN UPDATE sauna_inventory SET future_customer_id=bid,status='Reservation Hold' WHERE id=v1;EXCEPTION WHEN OTHERS THEN rejected:=true;END;
+ IF NOT rejected THEN RAISE EXCEPTION 'Automation claimed an intentionally waitlisted booking';END IF;
+ rejected:=false;BEGIN UPDATE reservations SET waitlisted_at=NULL WHERE id=bid;EXCEPTION WHEN OTHERS THEN rejected:=true;END;
+ IF NOT rejected THEN RAISE EXCEPTION 'Direct update cleared waitlist';END IF;
+ rejected:=false;BEGIN PERFORM booking_command(gen_random_uuid(),'allocate',jsonb_build_object('id',bid,'version',(SELECT booking_version FROM reservations WHERE id=bid),'assetId',aid,'installOn',day+20));EXCEPTION WHEN OTHERS THEN rejected:=true;END;
+ IF NOT rejected OR NOT EXISTS(SELECT 1 FROM reservations WHERE id=bid AND waitlisted_at IS NOT NULL) THEN RAISE EXCEPTION 'Wrong-model allocation succeeded or partially cleared waitlist';END IF;
+ rejected:=false;BEGIN PERFORM booking_command(gen_random_uuid(),'waitlist',p);EXCEPTION WHEN serialization_failure THEN rejected:=true;END;
+ IF NOT rejected THEN RAISE EXCEPTION 'Stale waitlist command accepted';END IF;
+ PERFORM booking_command(gen_random_uuid(),'allocate',jsonb_build_object('id',bid,'version',(SELECT booking_version FROM reservations WHERE id=bid),'assetId',v1,'installOn',day+20));
+ IF NOT EXISTS(SELECT 1 FROM reservations WHERE id=bid AND waitlisted_at IS NULL AND sauna_inventory_id=v1 AND requested_model_key='v1_fir_cedar') OR NOT EXISTS(SELECT 1 FROM waitlist_entries WHERE reservation_id=bid AND status='Converted') THEN RAISE EXCEPTION 'Explicit v1 allocation did not convert waitlist';END IF;
+ -- An installed rental must not be converted into a waitlist by this operation.
+ PERFORM booking_command(gen_random_uuid(),'confirm',jsonb_build_object('id',bid,'version',(SELECT booking_version FROM reservations WHERE id=bid),'assetId',v1,'installOn',day,'reason','Synthetic manual evidence exception'));
+ PERFORM rental_lifecycle_command(gen_random_uuid(),'install',jsonb_build_object('rentalId',b->>'rentalId','version',(SELECT version FROM rentals WHERE id=(b->>'rentalId')::uuid),'assetId',v1,'date',day,'evidence','Synthetic installation'));
+ rejected:=false;BEGIN PERFORM booking_command(gen_random_uuid(),'waitlist',p||jsonb_build_object('version',(SELECT booking_version FROM reservations WHERE id=bid)));EXCEPTION WHEN OTHERS THEN rejected:=true;END;
+ IF NOT rejected OR NOT EXISTS(SELECT 1 FROM sauna_inventory WHERE id=v1 AND current_customer_id=bid) THEN RAISE EXCEPTION 'Installed booking was waitlisted or physical placement changed';END IF;
+ IF has_function_privilege('anon','booking_command(uuid,text,jsonb)','EXECUTE') OR has_function_privilege('authenticated','booking_command(uuid,text,jsonb)','EXECUTE') THEN RAISE EXCEPTION 'Waitlist command exposed to public';END IF;
+END $$;
+ROLLBACK;

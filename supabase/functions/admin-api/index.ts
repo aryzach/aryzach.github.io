@@ -88,7 +88,7 @@ serveWithMigrationPolicy(async (req) => {
         return json(await readXeroCustomerHistory(supabase, { customerId: payload.customerId, contactId: payload.contactId }));
 
       case "booking_command": {
-        if(!['allocate','confirm','cancel','condition','complete_purchase','accept_purchase'].includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a booking action and request ID'},400);
+        if(!['allocate','confirm','cancel','condition','complete_purchase','accept_purchase','waitlist'].includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a booking action and request ID'},400);
         const {error}=await supabase.rpc('booking_command',{command_id:payload.commandId,operation:payload.operation,payload:payload.record||{}});
         if(error)return json({error:error.message},error.code==='40001'?409:400);
         return json({workspace:await workspace()});
@@ -480,10 +480,10 @@ serveWithMigrationPolicy(async (req) => {
       case "list_waitlist": {
         const { data, error } = await supabase
           .from("waitlist_entries")
-          .select("*")
+          .select("*, reservations(requested_model_key)")
           .order("created_at", { ascending: false });
         if (error) throw error;
-        return json({ waitlist: data });
+        return json({ waitlist: (data||[]).map((row:any)=>{const {reservations,...entry}=row;return {...entry,requested_model_key:reservations?.requested_model_key||null};}) });
       }
 
       case "delete_waitlist": {

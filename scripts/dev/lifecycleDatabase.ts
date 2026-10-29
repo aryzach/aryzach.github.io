@@ -31,7 +31,7 @@ export async function localWorkspace(config:Config):Promise<RentalWorkspace>{
  base.customers=base.customers.map(c=>({...c,...result.profiles.find(p=>p.id===c.id),legacyReservationIds:result.links.filter(l=>l.customer_id===c.id).map(l=>l.reservation_id)}));
  base.rentals=result.lifecycle.rentals.map(r=>({id:r.id,customerId:r.customer_id,reservationId:r.originating_reservation_id,address:r.service_address||'',notes:''}));
  base.assignments=result.lifecycle.placements.map(p=>({id:p.id,rentalId:p.rental_id,assetId:p.asset_id,installedOn:p.installed_on,removedOn:p.removed_on,address:p.address||''}));
- base.assets=result.inventory.map(i=>({id:String(i.id),code:String(i.unit_code||''),model:String(i.model||''),sourceStatus:i.retired_on?'Retired':String(i.status),retired:!!i.retired_on,conditionState:String(i.condition_state||'unknown'),custody:i.current_customer_id&&['Installed','Returning','Maintenance','Transfer Planned'].includes(String(i.status))?'With customer':undefined,typeName:base.legacyTypes?.find(t=>t.id===i.sauna_type_id)?.name||''}));
+ base.assets=result.inventory.map(i=>({id:String(i.id),code:String(i.unit_code||''),model:String(i.model||''),modelKey:String(i.model_key||''),currentCustomerName:i.current_customer_id?(base.customers.find(c=>c.legacyReservationIds.includes(String(i.current_customer_id)))?.name||String(i.current_customer||'Unknown customer')):null,sourceStatus:i.retired_on?'Retired':String(i.status),retired:!!i.retired_on,conditionState:String(i.condition_state||'unknown'),custody:i.current_customer_id&&['Installed','Returning','Maintenance','Transfer Planned'].includes(String(i.status))?'With customer':undefined,typeName:base.legacyTypes?.find(t=>t.id===i.sauna_type_id)?.name||''}));
  base.legacyLinks=result.inventory.flatMap(i=>['current','future'].flatMap(kind=>{const r=base.rentals.find(r=>r.reservationId===i[`${kind}_customer_id`]);return r?[{assetId:String(i.id),rentalId:r.id,kind:kind as 'current'|'future',recordedInstallDate:kind==='current'?i.install_date as string:null}]:[];}));
  base.lifecycle.documents=base.lifecycle.documents.map(d=>({...d,local_url:documentMap[d.id]?`/__local-documents/${d.id}`:undefined}));
  base.lifecycle.agreements=base.lifecycle.agreements.map(a=>{if(a.contract_id&&documentMap[a.contract_id])documentMap[a.id]=documentMap[a.contract_id];return {...a,local_url:documentMap[a.id]?`/__local-documents/${a.id}`:undefined};});
@@ -50,7 +50,7 @@ export async function localLifecycleRequest(body:Record<string,unknown>){
  }
  const allowed=['manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
  if(body.action==='booking_command'){
-  if(!['allocate','confirm','cancel','condition','complete_purchase','accept_purchase'].includes(String(body.operation)))throw new Error('Unsupported booking operation.');
+  if(!['allocate','confirm','cancel','condition','complete_purchase','accept_purchase','waitlist'].includes(String(body.operation)))throw new Error('Unsupported booking operation.');
   localQuery(config,`SELECT booking_command(${uuid(body.commandId)},'${body.operation}',${literal(body.record||{})});`);
   return {workspace:await localWorkspace(config)};
  }

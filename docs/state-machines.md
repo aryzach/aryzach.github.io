@@ -142,17 +142,19 @@ Availability is derived rather than a separate manually set status:
 
 ## Waitlist and model preferences
 
-The Waitlist tab currently lists entries and lets an admin change their status (Open, Contacted, Converted or Closed) or delete them. It has no add-entry or move-booking-to-waitlist form. Changing a waitlist status does not release an assigned sauna or change the booking.
+In Bookings → View / manage, choose **Move to waitlist / change requested type**. Select the sauna type and model preference (including Traditional v1 Fir/Cedar), and record a reason. This releases only the future numbered-unit allocation, clears the agreed installation date and confirmation, and keeps the booking Requested. It preserves deposits, signed documents, pricing snapshots, rental history and physical placements. Started rentals and purchases cannot use this action.
 
-Payment/signing automation adds a qualifying booking to the waitlist when it cannot find a matching sauna. An existing inventory assignment is preserved. Standard traditional bookings match both v1 Fir/Cedar and v2 Cedar units; a v1-only waitlist preference is not represented in the current controls. Original Collection is a different product, not a v1 preference.
+A v1-only waitlist preference is stored separately from indoor/outdoor type. Standard traditional bookings can request v1 Fir/Cedar, v2 Cedar or any matching model. Original Collection is a different product. Correcting the requested type does not rewrite signed agreements or their commercial terms.
 
-To wait for v1 without claiming a numbered unit, the missing workflow is a single Move to waitlist action: preserve the booking and deposit, release only its future allocation, save the model preference and prevent automation from allocating a different model. Do not cancel the booking or mark a sauna unavailable merely to simulate this workflow.
+An intentional waitlist hold blocks automatic allocation, including retries from older payment/signing handlers. To leave the waitlist, explicitly assign a compatible numbered sauna and date in Bookings; a mismatched model is rejected atomically. Successful assignment marks the waitlist entry Converted; cancellation closes it. The Waitlist tab displays the model preference. Its manual status control alone does not release the booking's intentional waitlist hold.
+
+Numbered sauna options are sorted numerically and display type, model, status and current customer. Search matches an exact case-insensitive text fragment anywhere in the displayed label, without fuzzy matching.
 
 ## Current allocation mismatch to be aware of
 
 The deployed `assignSoonestSauna` helper preserves existing assignments, matches style/model/location and chooses the earliest eligible availability date. Its candidate filter excludes Maintenance/inspection but permits an unknown condition. For incoming candidates it requires a stored availability date, but does not require that date to follow inbound arrival or fit the requested installation date. The stricter public-availability and booking-readiness checks can therefore flag an automatically allocated unit as unavailable or requiring date review. This document describes that existing behavior; it does not silently change the allocator policy.
 
-The inventory customer cells are read-only. Direct customer-link edits are also rejected by the admin API. Bookings supports reassignment and cancellation; it currently has no standalone release-unit-without-cancelling operation. Current placements must use actual return/swap/sale actions in Rentals.
+The inventory customer cells are read-only. Direct customer-link edits are also rejected by the admin API. Bookings supports reassignment, cancellation, and moving an open rental booking to an unallocated waitlist without cancelling it. Current placements must use actual return/swap/sale actions in Rentals.
 
 ## Sources
 

@@ -5,7 +5,7 @@ export async function readCoreRecords(client: any) {
     client.from('customer_profiles').select('id,kind,display_name,email,phone,archived_at,version,primary_contact_name').order('created_at'),
     client.from('reservation_customer_links').select('reservation_id,customer_id'),
     client.from('rentals').select('id,customer_id,originating_reservation_id,service_address,notes,origin').order('created_at'),
-    client.from('sauna_inventory').select('id,unit_code,model,status,current_customer_id,future_customer_id,install_date,sauna_type_id,retired_on,condition_state'),
+    client.from('sauna_inventory').select('id,unit_code,model,model_key,status,current_customer,current_customer_id,future_customer_id,install_date,sauna_type_id,retired_on,condition_state'),
     client.from('reservations').select('id,created_at,reservation_status,install_address,sauna_type_id,stripe_customer_id,booking_kind,booked_on'),
     client.from('sauna_types').select('id,name,sort_order'),
     client.from('xero_customer_links').select('tenant_id,contact_id,customer_id,contact_name,organisation_short_code,origin'),
@@ -24,7 +24,7 @@ export async function readCoreRecords(client: any) {
     // deno-lint-ignore no-explicit-any
     rentals: rentals.map((r: any) => ({ id: r.id, customerId: r.customer_id, reservationId: r.originating_reservation_id, address: r.service_address || '', notes: r.notes || '', ...(r.origin === 'legacy_inventory_link' ? { source: 'inventory_link' } : {}) })),
     // deno-lint-ignore no-explicit-any
-    assets: assets.map((a: any) => ({ id: a.id, code: a.unit_code || '', model: a.model || '', sourceStatus: a.retired_on ? 'Retired' : a.status, retired:!!a.retired_on, conditionState:a.condition_state||'unknown', custody:a.current_customer_id&&['Installed','Returning','Maintenance','Transfer Planned'].includes(a.status)?'With customer':undefined, typeName: typeName(a.sauna_type_id) })),
+    assets: assets.map((a: any) => ({ id: a.id, code: a.unit_code || '', model: a.model || '', modelKey:a.model_key||null,currentCustomerName:a.current_customer_id?(profiles.find((p:any)=>links.some((l:any)=>l.reservation_id===a.current_customer_id&&l.customer_id===p.id))?.display_name||a.current_customer||'Unknown customer'):null, sourceStatus: a.retired_on ? 'Retired' : a.status, retired:!!a.retired_on, conditionState:a.condition_state||'unknown', custody:a.current_customer_id&&['Installed','Returning','Maintenance','Transfer Planned'].includes(a.status)?'With customer':undefined, typeName: typeName(a.sauna_type_id) })),
     assignments: [],
     // Existing inventory stays the operational authority in this phase. No dated history is inferred.
     // deno-lint-ignore no-explicit-any
