@@ -5,7 +5,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
+const Academy = lazy(() => import("./academy/Academy"));
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import PricingCategory from "./pages/PricingCategory";
@@ -94,7 +95,7 @@ const ScrollToHash = () => {
 
   useEffect(() => {
     const hash = location.hash;
-    if (!hash) return;
+    if (!hash || location.pathname === "/learn-certify") return;
 
     const delays = [200, 1000, 2000, 3500];
     const timeouts = delays.map((delay) =>
@@ -143,6 +144,7 @@ const App = () => (
           <Route path="/policies" element={<Policies />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/learn" element={<LearnHub />} />
+          <Route path="/learn-certify" element={<Suspense fallback={<main className="p-10">Opening your academy…</main>}><Academy /></Suspense>} />
           <Route path="/reserve-your-sauna" element={<Contact />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/contact" element={<ContactPage />} />

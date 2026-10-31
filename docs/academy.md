@@ -1,0 +1,55 @@
+# Electrical Safety & Certification Academy
+
+The single-owner academy lives at `/learn-certify`. It uses the existing React/Vite app and PostgreSQL project, with an independent `academy-api` function and private `academy` schema. It never queries customer, booking, rental, accounting, payment or messaging records.
+
+## Learning and evidence
+
+The first curriculum release contains 15 modules, 30 original lessons, 52 stable questions across all eight question formats, 14 case studies and three numerical tools plus a scope comparison. Five heating-product recall cases also serve as the five documented failure cases; they are the same incidents, not ten distinct events. There is an additional residential battery recall. Copper and Impulse plus Form Energy, SPAN and Lumin illustrate evidence boundaries for unusual products. Manufacturer announcements are explicitly distinguished from independently verified current listings. HUUM's historical certificate URL no longer supplies a readable document; its scope remains unknown. The source library records this limitation.
+
+Curriculum, sources, prerequisites, rubrics and cases are typed, versioned repository content rather than a new CMS. The database consolidates lesson progress, notes, settings, external exercises, product requirements/decisions/questions, milestones and conversation turns into versioned records; attempts, sessions, credentials and AI budget reservations have separate tables. Mastery and misconception summaries are derived from retained assessment evidence. This avoids dozens of tables and duplicated scheduling state. No seed operation overwrites personal data.
+
+Question responses, confidence, submission time and content version are retained. Numeric and multiple-choice grading is deterministic on the server. Open responses remain pending until a structured rubric evaluation passes validation. The tutor cannot directly assign mastery. A concept requires two distinct successful question IDs, successful application/transfer, and successful retrieval at least 24 hours after the first successful evidence. A subsequent error invalidates the current successful streak. One successful UTC day advances the schedule by one step through 1/3/7/14/30 days. Reading, repeated same-question answers and external ChatGPT scores do not grant mastery. Imported open grades are discarded. No algorithm can prove a learner did not look up an answer; evidence labels are a learning policy, not a proctored credential.
+
+Lessons are introductory engineering interpretations and educational simplifications supported by source links. Public standards catalogs are not treated as verified full normative clauses. Applicability, test limits, local adopted codes, exact-model certification and Product B's certification path need primary evidence and qualified laboratory/AHJ confirmation. No invented clause numbers or hazardous live-test procedures are supplied.
+
+## Access and sync
+
+One owner password (minimum 12 characters), PBKDF2-SHA256 with a random salt and 310,000 iterations. Each device receives a separate random 256-bit session, stored in that browser; only its SHA-256 hash is stored in PostgreSQL. Sessions expire after 90 days; sign-out revokes the current session. This is independent of the rental admin password. There is no public signup, multi-user management or email flow.
+
+An operator creates a random, expiring, one-use activation secret, stores only its hash in `academy.owner`, and gives the owner a private `/learn-certify#activate=...` link. The owner chooses the password directly. Never commit the activation secret, password, hash, browser token or API key. The URL fragment is not sent in HTTP requests. Reissuing activation is permitted only before a password is set. Password recovery is an operator action: revoke sessions and deliberately replace the credential after owner verification; do not build an unauthenticated reset shortcut.
+
+Every private action is session-checked server-side. The only public RPC is revoked from PUBLIC, anon and authenticated and granted only to service_role. All six private tables have RLS enabled with no client policies. The function has its own authentication, so gateway JWT checking is disabled **for this function only**. Origin checks are an additional browser boundary, not a substitute for sessions. Sign-in is rate-limited. No service-role value or OpenAI key reaches the browser.
+
+Snapshots refresh every 20 seconds while visible and on returning to the tab. Attempts append idempotently. Notes and notebook records use per-record expected versions so a stale device edit is rejected rather than silently overwriting another device. Live offline edits stay in the visible form and require retry; this release does not implement an offline mutation queue or service worker.
+
+## Tutor setup and costs
+
+Set `OPENAI_API_KEY` as a server-side Supabase Edge Function secret using a secure setup flow. Do not put it in VITE variables, the tracked public `.env`, an academy setting, a URL or chat. Missing keys produce an explicit unavailable state; lessons, saved progress and numerical tools still work. The OpenAI Developers onboarding was interrupted before a key choice was confirmed; no new key was created by that flow.
+
+The tutor uses the Responses API, `store:false`, medium reasoning, a validated JSON schema, no paid tools, a 4,096-token output limit and bounded lesson/recent-turn context. It supports GPT-6.1 Sol (default) and GPT-6.1 Terra through a server allowlist. Citations can reference only supplied source IDs. Open-answer grading must address the exact rubric criteria, each with response evidence. Provider output is evidence and can still be mistaken; the original response and evaluation metadata remain auditable.
+
+The application reserves a conservative maximum request cost under a database transaction lock before calling OpenAI. The UTC-month ceiling is $50 for academy requests. Repeating a request ID cannot make another paid call. Known usage reconciles the reservation; ambiguous failures retain it and require operator reconciliation against provider records. Do not release an uncertain reservation merely to make retry work. Rates checked October 31, 2026: Sol standard input/output $2/$10 per million, Terra $1/$5. Budget accounting deliberately uses $3/$12 and $1.50/$6 to allow headroom for cache-write/processing differences. The dashboard therefore shows a conservative used/reserved amount, not an exact invoice. There are no automatic paid retries. Review rates before changing models or provider pricing; this application cannot cap unrelated usage of the same API account, taxes or infrastructure billing.
+
+## Preview and verification
+
+Use the existing `npm run dev` preview at `http://127.0.0.1:5173/learn-certify`. It stores academy-only practice in browser localStorage and never calls cloud sync or a paid tutor. It is intentionally not synchronized with the live site. Production prerendering shows the signed-out page and never loads private data. Academy code is loaded only on its route.
+
+Run `npm run typecheck`, `npm run lint:safety`, `npm test`, `npm run build:preview`, and `npm run test:browser`. Academy tests include in-memory PostgreSQL migration/security/conflict/budget checks, endpoint tests with a mocked provider, and DOM interaction checks without external traffic. Test-only PGlite and Happy DOM are not imported into the deployed app. Chrome visual QA must be reported separately from DOM tests. In this workspace session native Chrome launch was unavailable; do not describe DOM tests as visual browser verification.
+
+Edit `src/academy/curriculum.ts` and `engine.ts` as the canonical content/policy files. Run `npm run academy:sync` to copy the exact files into the Edge Function bundle; tests reject any difference. Preserve IDs and immutable attempts. Substantially changed questions/rubrics should receive new IDs; retain historical question definitions when evolving the curriculum so old evidence remains interpretable.
+
+## Backup and restore
+
+Settings → Download JSON backup exports all attempts and versioned records, including notes, external exercises, product decisions, certification questions, milestones, settings and tutor turns. Mastery and misconception state can be deterministically reconstructed from the attempts. No credential or API key is exported. Keep encrypted backups outside the public website checkout.
+
+The UI restore validates version 1 exports, merges missing non-conversation records, skips existing records, regrades deterministic answers and leaves open answers pending. Cloud-imported attempts receive current server submission times so old timestamps cannot forge delayed retrieval. Conversation history stays in the export for reference and is not replayed as trusted tutor context. Full fidelity disaster recovery uses a database backup.
+
+Use Supabase's managed backups/PITR according to the project's configured plan. An operator logical backup can use `pg_dump --format=custom --schema=academy --file=<private-backup-path> <connection>` against a secure, environment-supplied connection string; never paste credentials into documentation or the shell command history. Include the migration and the `public.academy_store(text,jsonb)` function definition from version control when recovering to a fresh database. Restore to an isolated database first, verify counts/permissions and export round-trips, then deliberately restore the academy schema. Sessions and owner credentials are private backup material. Do not restore over business schemas or lower the budget ledger while provider requests may still be unresolved.
+
+## Initial release verification
+
+On October 31, 2026, the approved academy rollout applied migration `20261031080900_academy_private_learning.sql` and deployed `academy-api` version 1 to the existing project. Live checks confirmed all six academy tables reject anonymous/authenticated client reads, only service_role can execute the persistence interface, unauthenticated requests return 401, and disallowed browser origins return 403. A temporary operator test session confirmed an empty learning snapshot, a $50 ceiling and the missing-key tutor state, then was revoked. No customer or rental records were used or changed.
+
+The security advisor reports RLS without policies for the six academy tables. This is intentional deny-by-default protection: those tables have no client grants and access passes through the service-only interface. See the [Supabase advisor explanation](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy). Do not add permissive policies to silence this informational finding.
+
+Validation: 175 tests passed; typecheck, academy lint, safety lint and the preview build passed. Native Chrome failed to launch in this session, so visual browser verification remains outstanding. OpenAI onboarding was canceled and the deployed tutor correctly reports unavailable until a server-side key is configured.

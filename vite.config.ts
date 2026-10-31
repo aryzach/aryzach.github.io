@@ -13,6 +13,7 @@ export const routes = [
   '/policies',
   '/blog/chronic-pain-resources-sf',
   '/learn',
+  '/learn-certify',
   '/reserve-your-sauna',
   '/learn-more',
   '/contact',

@@ -40,3 +40,8 @@ verify_jwt = false
 
 [functions.codex-read]
 verify_jwt = false
+
+# Separate academy password/session verification is implemented in the function.
+# Browser publishable keys are not JWTs; no business function is changed.
+[functions.academy-api]
+verify_jwt = false
