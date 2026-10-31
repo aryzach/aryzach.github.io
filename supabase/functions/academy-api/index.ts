@@ -69,6 +69,15 @@ async function store(command: string, payload: unknown = {}) {
   if (error) throw Error(error.message);
   return data;
 }
+async function tutorKey(): Promise<string | null> {
+  const env = Deno.env.get("OPENAI_API_KEY");
+  if (env) return env;
+  const { data, error } = await db.rpc("academy_tutor_secret", {
+    command: "read",
+  });
+  if (error) throw Error("Tutor credential storage unavailable.");
+  return data?.key || null;
+}
 const entrySchema = z
   .object({
     id: z.string().regex(/^[a-zA-Z0-9:._-]{1,150}$/),
@@ -177,7 +186,7 @@ Deno.serve(async (req) => {
       return reply({
         state: await store("snapshot"),
         usage: await store("usage"),
-        tutorReady: !!Deno.env.get("OPENAI_API_KEY"),
+        tutorReady: !!(await tutorKey()),
       });
     if (action === "entry") {
       const entry = entrySchema.parse(body.entry);
@@ -204,7 +213,8 @@ Deno.serve(async (req) => {
     }
     if (action !== "tutor" && action !== "evaluate")
       throw Error("Unsupported academy action");
-    if (!Deno.env.get("OPENAI_API_KEY"))
+    const openAIKey = await tutorKey();
+    if (!openAIKey)
       return reply(
         {
           error:
@@ -288,7 +298,7 @@ Deno.serve(async (req) => {
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
-        Authorization: "Bearer " + Deno.env.get("OPENAI_API_KEY"),
+        Authorization: "Bearer " + openAIKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

@@ -38,6 +38,8 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
         "',activation_expires_at=now()+interval '1 hour';",
     );
     let key = "";
+    let vaultKey: string | null = null;
+    let vaultReads = 0;
     (globalThis as any).Deno = {
       env: {
         get: (name: string) =>
@@ -54,6 +56,17 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
     globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const request = new Request(input, init);
       const url = new URL(request.url);
+      if (url.pathname === "/rest/v1/rpc/academy_tutor_secret") {
+        vaultReads++;
+        assert.equal(
+          request.headers.get("authorization"),
+          "Bearer test-service-role",
+        );
+        assert.deepEqual(await request.json(), { command: "read" });
+        return new Response(JSON.stringify({ key: vaultKey }), {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
       if (url.pathname === "/rest/v1/rpc/academy_store") {
         const { command, payload } = await request.json();
         try {
@@ -147,6 +160,11 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
         .status,
       403,
     );
+    assert.equal(
+      vaultReads,
+      0,
+      "Unauthenticated requests never read the secret",
+    );
     const activated = await call({
       action: "activate",
       password: "fixture-password-not-real",
@@ -227,6 +245,11 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
     assert.equal((await call(prompt, token)).status, 200);
     assert.equal((await call(prompt, token)).status, 200);
     assert.equal(paidCalls, 1);
+    key = "";
+    vaultKey = "fixture-vault-openai-key";
+    const snapshot = await call({ action: "snapshot" }, token);
+    assert.equal(snapshot.data.tutorReady, true);
+    assert.ok(!JSON.stringify(snapshot.data).includes(vaultKey));
     const evaluated = await call(
       {
         action: "evaluate",
