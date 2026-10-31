@@ -1,0 +1,87 @@
+{
+  "modules1To19Hash": "15824c76a7e8eb2ccc420f40e5ac7f250ab7bd683517428ebe16585d6d090b1c",
+  "module20": {
+    "id": "20",
+    "title": "Final Capstone: Design and Certification Strategy for Two Sauna Heaters",
+    "objective": "Apply the curriculum to the two actual products you intend to develop.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "20.1",
+        "title": "Product A requirements and architecture",
+        "why": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+        "questions": [
+          "Which wattage variants are feasible on standard residential circuits?",
+          "What plug and receptacle configurations may be appropriate?",
+          "What protective controls are required?",
+          "What components are safety-critical?",
+          "What certification standard should apply?",
+          "Can multiple wattage variants be included in one certification family?",
+          "Should the heater or complete cabin be certified?",
+          "What information must be obtained from an NRTL?"
+        ],
+        "readings": [
+          {
+            "id": "20.1:r1",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 875",
+            "summary": "Primary traditional sauna heater safety standard to investigate. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.1:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 60335-2-53",
+            "summary": "Alternative sauna-specific standards framework whose applicability should be confirmed. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.1:r3",
+            "title": "NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "NFPA 70",
+            "summary": "Relevant branch-circuit, appliance, grounding, and installation requirements. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [
+          "Product: 1.7–2.2 kW, 120V AC traditional sauna heater."
+        ],
+        "incomplete": false,
+        "objectives": [
+          "Define proposed wattages, circuit options, protections, and certification scope.",
+          "Compile unresolved NRTL questions and product-family decisions."
+        ]
+      },
+      {
+        "id": "20.2",
+        "title": "Product B requirements and architecture",
+        "why": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+        "questions": [],
+        "readings": [],
+        "context": [
+          "Product: Battery-assisted traditional sauna heater.",
+          "Preliminary design:",
+          "- 5–10 kWh LFP battery.",
+          "- Nominal 48V DC architecture under consideration.",
+          "- 6–10 kW DC heating.",
+          "- 1.2–2.2 kW AC heating.",
+          "- 120V residential input.",
+          "- Rapid heatup followed by sustained heating."
+        ],
+        "incomplete": true,
+        "objectives": [
+          "Document the supplied preliminary battery, heating, and residential-input requirements."
+        ]
+      }
+    ]
+  }
+}

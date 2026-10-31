@@ -8,6 +8,7 @@ export type Reading = {
   relevance: string;
   access: boolean;
   accessNote: string;
+  extensionSummary?: string;
 };
 export type Topic = {
   id: string;
@@ -18,6 +19,8 @@ export type Topic = {
   context: string[];
   objectives: string[];
   incomplete: boolean;
+  exercise?: string;
+  closingNote?: string;
 };
 export type Section = {
   id: string;
@@ -34,11 +37,14 @@ export function matches(topic: Topic, query: string, section?: Section) {
     section?.title,
     topic.title,
     topic.why,
+    topic.exercise,
+    topic.closingNote,
     ...topic.questions,
     ...topic.readings.flatMap((r) => [
       r.title,
       r.scope,
       r.summary,
+      r.extensionSummary,
       r.relevance,
     ]),
   ]

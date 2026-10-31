@@ -2124,7 +2124,7 @@
   {
     "id": "20",
     "title": "Final Capstone: Design and Certification Strategy for Two Sauna Heaters",
-    "objective": "Apply the curriculum to the two actual products you intend to develop.",
+    "objective": "Apply everything learned to two real products intended for residential installation, rental, and potentially sale in the United States.",
     "capstone": "",
     "topics": [
       {
@@ -2139,7 +2139,17 @@
           "What certification standard should apply?",
           "Can multiple wattage variants be included in one certification family?",
           "Should the heater or complete cabin be certified?",
-          "What information must be obtained from an NRTL?"
+          "What information must be obtained from an NRTL?",
+          "What current does each heater variant draw at 120V?",
+          "Which variants might be suitable for 15A versus 20A circuits, and what additional information is needed?",
+          "How do continuous-load rules affect the design?",
+          "What plug configurations may be appropriate?",
+          "What independent overtemperature protection should be evaluated?",
+          "Which components are safety-critical?",
+          "What are the likely worst-case thermal conditions?",
+          "What is the difference between certifying the heater and certifying the complete sauna?",
+          "Could multiple power variants be evaluated as one product family?",
+          "What must be confirmed by an NRTL before selecting the final architecture?"
         ],
         "readings": [
           {
@@ -2150,7 +2160,8 @@
             "summary": "Primary traditional sauna heater safety standard to investigate. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
             "access": true,
             "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
-            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition.",
+            "extensionSummary": "Study the scope and requirements of the traditional electric dry-bath heater standard. Focus on product construction, normal and abnormal operation, protective controls, installation instructions, and certification scope."
           },
           {
             "id": "20.1:r2",
@@ -2160,7 +2171,8 @@
             "summary": "Alternative sauna-specific standards framework whose applicability should be confirmed. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
             "access": true,
             "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
-            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition.",
+            "extensionSummary": "Review the sauna-specific household appliance safety framework and how it relates to the general requirements of UL 60335-1. Investigate whether this is an appropriate certification route for a new US-market heater."
           },
           {
             "id": "20.1:r3",
@@ -2170,24 +2182,104 @@
             "summary": "Relevant branch-circuit, appliance, grounding, and installation requirements. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
             "access": true,
             "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
-            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition.",
+            "extensionSummary": "Focus on branch circuits, continuous loads, equipment approval, grounding, cord-connected appliances, and installation instructions."
+          },
+          {
+            "id": "20.1:r4",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Understand how to verify that a certification laboratory is recognized for the relevant product standard.",
+            "summary": "Understand how to verify that a certification laboratory is recognized for the relevant product standard. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": false,
+            "accessNote": ""
           }
         ],
         "context": [
-          "Product: 1.7–2.2 kW, 120V AC traditional sauna heater."
+          "Product: 1.7–2.2 kW, 120V AC traditional sauna heater.",
+          "Target product: A traditional electric sauna heater operating at 120V AC, with approximately 1.7–2.2 kW heating power."
         ],
         "incomplete": false,
         "objectives": [
           "Define proposed wattages, circuit options, protections, and certification scope.",
           "Compile unresolved NRTL questions and product-family decisions."
-        ]
+        ],
+        "exercise": "Create a preliminary product requirements document containing:\n\n- Intended use.\n- Electrical ratings.\n- Installation assumptions.\n- Functional requirements.\n- Safety requirements.\n- Component requirements.\n- Relevant standards.\n- Unresolved regulatory questions.\n- Preliminary verification plan.\n\n"
       },
       {
         "id": "20.2",
         "title": "Product B requirements and architecture",
         "why": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
-        "questions": [],
-        "readings": [],
+        "questions": [
+          "What current does a 6 kW load draw at nominal 48V?",
+          "What current does a 10 kW load draw?",
+          "How do actual battery voltage and resistive-element behavior affect current and heating power?",
+          "What are the approximate C-rates for the proposed battery and power combinations?",
+          "What determines whether the cells can safely support the intended discharge?",
+          "How do conductor losses and connection resistance affect the architecture?",
+          "What independent protection is required for AC and DC heating?",
+          "What happens if the DC switching device fails closed?",
+          "How should the system respond to a BMS fault?",
+          "What are the thermal risks of integrating an LFP battery near a sauna?",
+          "Should the battery be physically separate from the heater?",
+          "Which certification standards may apply to the battery subsystem?",
+          "Which standards may apply to the finished appliance?",
+          "What evidence is needed to determine whether ESS requirements apply?",
+          "What should be discussed with an NRTL before detailed design?"
+        ],
+        "readings": [
+          {
+            "id": "20.2:r1",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate safety requirements for stationary and other covered battery applications.",
+            "summary": "Investigate safety requirements for stationary and other covered battery applications. Determine what battery subsystem evidence might be relevant to the proposed product.",
+            "relevance": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.2:r2",
+            "title": "UL 9540, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the scope of complete energy storage system certification and investigate whether it applies to an integrated battery-powered heating appliance.",
+            "summary": "Study the scope of complete energy storage system certification and investigate whether it applies to an integrated battery-powered heating appliance. Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "relevance": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.2:r3",
+            "title": "UL Solutions: UL 9540A",
+            "url": "https://www.ul.com/services/ul-9540a-test-method",
+            "scope": "Learn what thermal runaway fire propagation testing measures and how it differs from complete system certification.",
+            "summary": "Learn what thermal runaway fire propagation testing measures and how it differs from complete system certification. Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "relevance": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "20.2:r4",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Practical reference for DC wiring, protection, grounding, connections, and battery electrical installations.",
+            "summary": "Practical reference for DC wiring, protection, grounding, connections, and battery electrical installations. Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "relevance": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "20.2:r5",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Study a real-world example of integrating battery, power electronics, automatic controls, and appliance-level certification.",
+            "summary": "Study a real-world example of integrating battery, power electronics, automatic controls, and appliance-level certification. Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "relevance": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
         "context": [
           "Product: Battery-assisted traditional sauna heater.",
           "Preliminary design:",
@@ -2196,12 +2288,507 @@
           "- 6–10 kW DC heating.",
           "- 1.2–2.2 kW AC heating.",
           "- 120V residential input.",
-          "- Rapid heatup followed by sustained heating."
+          "- Rapid heatup followed by sustained heating.",
+          "Target product: A traditional sauna heater combining a 5–10 kWh LFP battery, approximately 6–10 kW of DC heating, and approximately 1.2–2.2 kW of AC heating.",
+          "The proposed nominal battery voltage is approximately 48V, but this is not a fixed design decision."
         ],
-        "incomplete": true,
+        "incomplete": false,
         "objectives": [
           "Document the supplied preliminary battery, heating, and residential-input requirements."
-        ]
+        ],
+        "exercise": "Produce a preliminary architecture comparison for at least three configurations:\n\n1. Battery and heating elements integrated into one assembly.\n2. Battery in a separate enclosure with a high-power DC connection to the heater.\n3. An alternative electrical architecture selected for comparison.\n\nCompare:\n\n- Safety.\n- Electrical losses.\n- Thermal isolation.\n- Installation complexity.\n- Serviceability.\n- Weight.\n- Component availability.\n- Certification uncertainty.\n- Cost.\n\nDo not select a final architecture solely from theoretical calculations.\n\n"
+      },
+      {
+        "id": "20.3",
+        "title": "Certification feasibility and laboratory engagement",
+        "why": "Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+        "objectives": [
+          "Prepare separate scope-determination inquiries for Products A and B.",
+          "Compare feasibility reviews, laboratory proposals, and formal certification testing."
+        ],
+        "questions": [
+          "What information should be included in a preliminary certification inquiry?",
+          "How would you describe Product B without assuming its classification?",
+          "What is the difference between a feasibility review and formal certification testing?",
+          "What would make two laboratory proposals comparable?",
+          "How should unresolved standards-applicability questions be documented?",
+          "What are the risks of committing to a product architecture before resolving certification scope?"
+        ],
+        "readings": [
+          {
+            "id": "20.3:r1",
+            "title": "UL Solutions: Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review the general process of product evaluation, certification, and maintaining approved construction.",
+            "summary": "Review the general process of product evaluation, certification, and maintaining approved construction. Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "relevance": "Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "20.3:r2",
+            "title": "OSHA: Current NRTLs",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/current-list-of-nrtls",
+            "scope": "Identify recognized laboratories and learn how to verify the standards within their recognition scope.",
+            "summary": "Identify recognized laboratories and learn how to verify the standards within their recognition scope. Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "relevance": "Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "20.3:r3",
+            "title": "UL Solutions: Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "Understand how equipment may be evaluated outside a conventional product-listing program and the limitations of such evaluations.",
+            "summary": "Understand how equipment may be evaluated outside a conventional product-listing program and the limitations of such evaluations. Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "relevance": "Early laboratory engagement helps test classification assumptions before a product architecture is fixed.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare two laboratory inquiry packages, one for each product, including:\n\n- Product description.\n- Intended installation.\n- Electrical architecture.\n- Safety-critical subsystems.\n- Preliminary hazard analysis.\n- Candidate standards.\n- Requested scope determination.\n- Questions about model families.\n- Questions about certification of integrated versus separate subsystems.\n\n"
+      },
+      {
+        "id": "20.4",
+        "title": "Final engineering and certification deliverables",
+        "why": "The capstone brings the two products’ requirements, hazards, and certification questions into reviewable documents.",
+        "objectives": [
+          "Assemble the specified engineering and regulatory deliverables.",
+          "Explain the evidence behind each conclusion and identify what needs independent verification."
+        ],
+        "questions": [
+          "Product A requirements document.",
+          "Product A preliminary electrical architecture.",
+          "Product A safety-critical component register.",
+          "Product A hazard analysis.",
+          "Product A certification applicability matrix.",
+          "Product A preliminary test plan.",
+          "Product B requirements document.",
+          "Product B energy and power budget.",
+          "Product B architecture alternatives.",
+          "Product B preliminary hazard analysis.",
+          "Product B battery safety considerations.",
+          "Product B certification applicability matrix.",
+          "Product B preliminary test plan.",
+          "Laboratory inquiry packages for both products.",
+          "List of unresolved engineering questions.",
+          "List of unresolved regulatory questions.",
+          "Initial manufacturing and quality-control plan."
+        ],
+        "readings": [],
+        "context": [],
+        "incomplete": false,
+        "closingNote": "The capstone is complete when I can explain the engineering and regulatory reasoning behind these documents and identify which conclusions require independent verification."
+      }
+    ]
+  },
+  {
+    "id": "21",
+    "title": "Safety-Critical Software and Control Systems",
+    "objective": "Understand how firmware, electronics, and control architectures affect appliance safety, especially in a heater with both AC and battery-powered DC heating.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "21.1",
+        "title": "Functional safety fundamentals",
+        "why": "The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+        "objectives": [
+          "Distinguish functional control, safety functions, and failure categories.",
+          "Identify evidence needed to evaluate independent and redundant protections."
+        ],
+        "questions": [
+          "What distinguishes a functional control from a safety-related control?",
+          "What is a safety function?",
+          "Why does ordinary software reliability differ from functional safety?",
+          "What is a systematic failure?",
+          "What is a random hardware failure?",
+          "Why can two redundant systems still fail from a common cause?",
+          "What evidence is needed to evaluate a safety-related control function?"
+        ],
+        "readings": [
+          {
+            "id": "21.1:r1",
+            "title": "IEC: Functional Safety",
+            "url": "https://www.iec.ch/functional-safety",
+            "scope": "Introduces the concept of safety-related control systems and the importance of preventing unacceptable risk when components or control functions fail.",
+            "summary": "Introduces the concept of safety-related control systems and the importance of preventing unacceptable risk when components or control functions fail. The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+            "relevance": "The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "21.1:r2",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "General requirements for automatic electrical controls, including the evaluation of safety-related control functions within the standard's scope.",
+            "summary": "General requirements for automatic electrical controls, including the evaluation of safety-related control functions within the standard's scope. The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+            "relevance": "The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "21.1:r3",
+            "title": "IEC 61508, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "General functional safety framework.",
+            "summary": "General functional safety framework. Study its concepts of systematic failures, hardware failures, safety functions, and safety lifecycle. Do not assume IEC 61508 certification is required for the sauna heater.",
+            "relevance": "The combined heater needs a clear distinction between normal controls and safety-related control functions.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "21.2",
+        "title": "Firmware failures and safe states",
+        "why": "Controller, sensor, and communication failures need defined responses in the proposed heater.",
+        "objectives": [
+          "Analyze firmware and communication failure scenarios.",
+          "Explain safe states, watchdog limitations, and independent protection."
+        ],
+        "questions": [
+          "What happens if a heater controller freezes while heating is enabled?",
+          "What happens if a temperature sensor returns an invalid value?",
+          "What happens if a communication link between controllers is lost?",
+          "What is a watchdog timer?",
+          "What are the limitations of watchdogs?",
+          "What does it mean for a system to enter a safe state?",
+          "Which protective functions should not depend solely on application firmware?"
+        ],
+        "readings": [
+          {
+            "id": "21.2:r1",
+            "title": "UL 60730-1",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Investigate requirements relevant to electronic controls, software-dependent safety functions, and abnormal behavior.",
+            "summary": "Investigate requirements relevant to electronic controls, software-dependent safety functions, and abnormal behavior. Controller, sensor, and communication failures need defined responses in the proposed heater.",
+            "relevance": "Controller, sensor, and communication failures need defined responses in the proposed heater.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "21.2:r2",
+            "title": "NASA Software Engineering Handbook",
+            "url": "https://swehb.nasa.gov/",
+            "scope": "General reference for software requirements, verification, validation, fault management, and disciplined software engineering.",
+            "summary": "General reference for software requirements, verification, validation, fault management, and disciplined software engineering. This is not an appliance certification standard.",
+            "relevance": "Controller, sensor, and communication failures need defined responses in the proposed heater.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "21.3",
+        "title": "Hardware interlocks and independent protection",
+        "why": "AC and DC power removal needs consideration beyond the normal software-controlled heating sequence.",
+        "objectives": [
+          "Analyze failed switching devices and shared failure mechanisms.",
+          "Compare independent high-limit and reset strategies."
+        ],
+        "questions": [
+          "Why might an independent high-limit control be necessary?",
+          "What happens if the primary relay welds closed?",
+          "Can a software command alone guarantee that a heater turns off?",
+          "How can protective devices share a common failure mechanism?",
+          "What are the tradeoffs between automatic-reset and manual-reset protection?",
+          "How should the AC and DC heating subsystems be considered during hazard analysis?"
+        ],
+        "readings": [
+          {
+            "id": "21.3:r1",
+            "title": "UL 60730-2-9",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Temperature-sensing control requirements and the evaluation of control functions.",
+            "summary": "Temperature-sensing control requirements and the evaluation of control functions. AC and DC power removal needs consideration beyond the normal software-controlled heating sequence.",
+            "relevance": "AC and DC power removal needs consideration beyond the normal software-controlled heating sequence.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "21.3:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Sauna-specific safety requirements, including relevant temperature-control and abnormal-operation considerations.",
+            "summary": "Sauna-specific safety requirements, including relevant temperature-control and abnormal-operation considerations. AC and DC power removal needs consideration beyond the normal software-controlled heating sequence.",
+            "relevance": "AC and DC power removal needs consideration beyond the normal software-controlled heating sequence.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "21.4",
+        "title": "Control-system verification and validation",
+        "why": "Safety claims need traceable requirements and evidence from more than successful normal operation.",
+        "objectives": [
+          "Distinguish verification from validation.",
+          "Plan control-system test evidence and software change review."
+        ],
+        "questions": [
+          "What is the difference between verification and validation?",
+          "How do you demonstrate that a safety requirement is satisfied?",
+          "What is requirements traceability?",
+          "How should software changes be evaluated?",
+          "What evidence should be retained from control-system testing?",
+          "Why is successful normal operation insufficient evidence of safety?"
+        ],
+        "readings": [
+          {
+            "id": "21.4:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Introduces requirements traceability, verification, validation, and systematic engineering reviews.",
+            "summary": "Introduces requirements traceability, verification, validation, and systematic engineering reviews. Safety claims need traceable requirements and evidence from more than successful normal operation.",
+            "relevance": "Safety claims need traceable requirements and evidence from more than successful normal operation.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "21.4:r2",
+            "title": "UL 60730-1",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Review applicable control evaluation and testing concepts, using the actual standard where accessible.",
+            "summary": "Review applicable control evaluation and testing concepts, using the actual standard where accessible. Safety claims need traceable requirements and evidence from more than successful normal operation.",
+            "relevance": "Safety claims need traceable requirements and evidence from more than successful normal operation.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A battery-assisted sauna heater has separate AC and DC heating controls. A communication fault causes the supervisory controller to stop responding while one power-switching device remains closed.\n\nExplain the hazards, identify which assumptions need verification, and propose a high-level safety architecture that does not depend on one software command to remove all heating power.\n\n"
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "title": "EMC, FCC, and Electrical Interference",
+    "objective": "Understand electromagnetic interference, regulatory emissions requirements, and the possibility that electrical noise can affect appliance controls.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "22.1",
+        "title": "Electromagnetic compatibility fundamentals",
+        "why": "The heater’s electronics and environment need evaluation for emissions and immunity.",
+        "objectives": [
+          "Distinguish conducted and radiated interference, emissions, and immunity.",
+          "Investigate regulatory applicability for the actual product electronics."
+        ],
+        "questions": [
+          "What is electromagnetic interference?",
+          "What is the difference between emissions and immunity?",
+          "What is conducted interference?",
+          "What is radiated interference?",
+          "Why can switching electronics generate electrical noise?",
+          "How could interference affect temperature sensors or controllers?",
+          "Does every purely resistive heating appliance have the same EMC requirements?"
+        ],
+        "readings": [
+          {
+            "id": "22.1:r1",
+            "title": "IEC: Electromagnetic Compatibility",
+            "url": "https://www.iec.ch/emc",
+            "scope": "Introduces electromagnetic compatibility, emissions, immunity, and the importance of electrical equipment functioning correctly in its intended electromagnetic environment.",
+            "summary": "Introduces electromagnetic compatibility, emissions, immunity, and the importance of electrical equipment functioning correctly in its intended electromagnetic environment. The heater’s electronics and environment need evaluation for emissions and immunity.",
+            "relevance": "The heater’s electronics and environment need evaluation for emissions and immunity.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "22.1:r2",
+            "title": "FCC: Equipment Authorization",
+            "url": "https://www.fcc.gov/oet/ea/rfdevice",
+            "scope": "Explains the FCC equipment authorization framework and how it applies to relevant electronic and radio-frequency devices.",
+            "summary": "Explains the FCC equipment authorization framework and how it applies to relevant electronic and radio-frequency devices. The heater’s electronics and environment need evaluation for emissions and immunity.",
+            "relevance": "The heater’s electronics and environment need evaluation for emissions and immunity.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "22.2",
+        "title": "Switching electronics and interference sources",
+        "why": "Switching electronics can create investigation questions about sensor signals and controller behavior.",
+        "objectives": [
+          "Identify interference sources and coupling paths to investigate.",
+          "Separate measurement artifacts from real thermal changes."
+        ],
+        "questions": [
+          "Why can rapid switching generate electromagnetic interference?",
+          "How do switching frequency and edge speed affect interference?",
+          "How can electrical noise enter a sensor signal?",
+          "Why do grounding and PCB layout matter?",
+          "What is the difference between a noise problem and a genuine temperature change?",
+          "How might high-current DC switching affect nearby electronics?"
+        ],
+        "readings": [
+          {
+            "id": "22.2:r1",
+            "title": "Texas Instruments: Technical Resources",
+            "url": "https://www.ti.com/design-development/technical-resources.html",
+            "scope": "Find introductory material on switching power supplies, grounding, PCB layout, and electromagnetic interference.",
+            "summary": "Find introductory material on switching power supplies, grounding, PCB layout, and electromagnetic interference. Switching electronics can create investigation questions about sensor signals and controller behavior.",
+            "relevance": "Switching electronics can create investigation questions about sensor signals and controller behavior.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "22.2:r2",
+            "title": "Analog Devices: Technical Articles",
+            "url": "https://www.analog.com/en/resources/technical-articles.html",
+            "scope": "Study relevant material on switching transients, noise coupling, power electronics, and measurement techniques.",
+            "summary": "Study relevant material on switching transients, noise coupling, power electronics, and measurement techniques. Switching electronics can create investigation questions about sensor signals and controller behavior.",
+            "relevance": "Switching electronics can create investigation questions about sensor signals and controller behavior.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "22.3",
+        "title": "Regulatory emissions and immunity requirements",
+        "why": "FCC and product-standard obligations need to be established for the proposed electronics.",
+        "objectives": [
+          "Distinguish intentional and unintentional radiators.",
+          "Prepare an EMC laboratory inquiry covering emissions and immunity applicability."
+        ],
+        "questions": [
+          "What is FCC Part 15?",
+          "How do intentional and unintentional radiators differ?",
+          "When might a heater controller require emissions evaluation?",
+          "Why is passing an emissions test different from demonstrating immunity?",
+          "Which EMC requirements are regulatory versus product-standard requirements?",
+          "What information should be included in an EMC laboratory inquiry?"
+        ],
+        "readings": [
+          {
+            "id": "22.3:r1",
+            "title": "FCC Part 15, eCFR",
+            "url": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-15",
+            "scope": "US rules concerning radio-frequency devices and relevant emissions requirements.",
+            "summary": "US rules concerning radio-frequency devices and relevant emissions requirements. Determine applicability based on the product's actual electronics.",
+            "relevance": "FCC and product-standard obligations need to be established for the proposed electronics.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "22.3:r2",
+            "title": "IEC 61000 Series, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Standards covering aspects of electromagnetic compatibility, including emissions and immunity testing.",
+            "summary": "Standards covering aspects of electromagnetic compatibility, including emissions and immunity testing. FCC and product-standard obligations need to be established for the proposed electronics.",
+            "relevance": "FCC and product-standard obligations need to be established for the proposed electronics.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "22.4",
+        "title": "EMC as a functional safety concern",
+        "why": "Control behavior under electrical disturbance matters when assessing the combined heater’s safety.",
+        "objectives": [
+          "Analyze corrupted signals, resets, and communication failures.",
+          "Identify engineering evidence needed to investigate switching-related disturbances."
+        ],
+        "questions": [
+          "What could happen if electromagnetic interference causes a false temperature reading?",
+          "What could happen if a relay-control signal is corrupted?",
+          "Why should an appliance not depend on perfect communication to remain safe?",
+          "How can EMC testing reveal weaknesses in control-system design?",
+          "Why might battery-integrated appliances present different EMC challenges from conventional resistive heaters?"
+        ],
+        "readings": [
+          {
+            "id": "22.4:r1",
+            "title": "IEC 60730 Series",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Study the relationship between electronic control performance and abnormal electrical conditions.",
+            "summary": "Study the relationship between electronic control performance and abnormal electrical conditions. Control behavior under electrical disturbance matters when assessing the combined heater’s safety.",
+            "relevance": "Control behavior under electrical disturbance matters when assessing the combined heater’s safety.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "22.4:r2",
+            "title": "IEC 61000 Series",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Investigate relevant immunity concepts such as electrostatic discharge, electrical fast transients, and conducted disturbances.",
+            "summary": "Investigate relevant immunity concepts such as electrostatic discharge, electrical fast transients, and conducted disturbances. Control behavior under electrical disturbance matters when assessing the combined heater’s safety.",
+            "relevance": "Control behavior under electrical disturbance matters when assessing the combined heater’s safety.",
+            "access": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A heater operates correctly during normal use, but its controller intermittently resets when the battery-powered heating subsystem switches.\n\nIdentify possible categories of causes, the safety consequences, and the types of engineering evidence needed to investigate the issue.\n\n"
+      }
+    ]
+  },
+  {
+    "id": "23",
+    "title": "Product Verification and Reliability Engineering",
+    "objective": "Understand how to establish that a product remains safe and reliable after months or years of real-world use, not merely during an initial certification test.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "23.1",
+        "title": "Reliability fundamentals",
+        "why": "Long-term field performance requires evidence beyond an initial certification test.",
+        "objectives": [
+          "Distinguish safety, reliability, and certification.",
+          "Interpret failure data and statistical confidence in reliability claims."
+        ],
+        "questions": [
+          "What is the difference between safety and reliability?",
+          "Can a reliable product still be unsafe?",
+          "Can a certified product develop reliability problems?",
+          "What is a failure rate?",
+          "What is mean time between failures, and when is it misleading?",
+          "Why is field failure data valuable?",
+          "How does sample size affect confidence in reliability claims?"
+        ],
+        "readings": [
+          {
+            "id": "23.1:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Introduces engineering verification, validation, lifecycle considerations, and risk management.",
+            "summary": "Introduces engineering verification, validation, lifecycle considerations, and risk management. Long-term field performance requires evidence beyond an initial certification test.",
+            "relevance": "Long-term field performance requires evidence beyond an initial certification test.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.1:r2",
+            "title": "NIST Engineering Statistics Handbook",
+            "url": "https://www.itl.nist.gov/div898/handbook/",
+            "scope": "Statistical methods relevant to reliability, experimental design, measurement, and engineering data analysis.",
+            "summary": "Statistical methods relevant to reliability, experimental design, measurement, and engineering data analysis. Long-term field performance requires evidence beyond an initial certification test.",
+            "relevance": "Long-term field performance requires evidence beyond an initial certification test.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
       }
     ]
   }

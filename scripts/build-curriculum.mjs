@@ -1,3 +1,4 @@
+import { extendCurriculum } from "./extend-curriculum.mjs";
 // Rebuild from the owner's supplied text. Continuations supersede truncated versions.
 import { readFileSync, writeFileSync } from "node:fs";
 const files = [
@@ -214,6 +215,7 @@ for (const s of data) {
     }
   }
 }
+extendCurriculum(data, guidance);
 writeFileSync(
   new URL("../src/academy/content.json", import.meta.url),
   JSON.stringify(data, null, 2) + "\n",

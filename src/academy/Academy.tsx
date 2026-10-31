@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import { useEffect, useRef, useState } from "react";
 import { sections, topics, byTopic, matches, type Topic } from "./curriculum";
 import {
@@ -272,7 +273,7 @@ export default function Academy() {
               {totals.questions}
               <small> / {totals.questionTotal}</small>
             </strong>
-            Questions understood
+            Self-assessed questions
           </div>
           <div>
             <strong>{sections.length}</strong>Sections received
@@ -512,10 +513,15 @@ export default function Academy() {
                 </ul>
               </section>
               <section className="ce-panel">
-                <h3>Questions I should be able to answer</h3>
+                <h3>
+                  {topic.id === "20.4"
+                    ? "Capstone deliverables"
+                    : "Questions I should be able to answer"}
+                </h3>
                 <p>
-                  Check a question when you can explain the answer. Reading
-                  completion does not check these automatically.
+                  These checkboxes are your self-assessment, not a verified
+                  mastery score. Reading completion does not check questions
+                  automatically.
                 </p>
                 {topic.questions.map((q, i) => (
                   <label key={q} className="ce-check">
@@ -602,6 +608,11 @@ export default function Academy() {
                         <b>Read:</b> {r.scope}
                       </p>
                       <p>{r.summary}</p>
+                      {r.extensionSummary && (
+                        <p>
+                          <b>Extension focus:</b> {r.extensionSummary}
+                        </p>
+                      )}
                       <p className="ce-muted">
                         <b>Why read it:</b> {r.relevance}
                       </p>
@@ -612,6 +623,19 @@ export default function Academy() {
                   </div>
                 ))}
               </section>
+              {topic.closingNote && (
+                <p className="ce-notice">{topic.closingNote}</p>
+              )}
+              {topic.exercise && (
+                <section className="ce-panel ce-exercise">
+                  <h3>Applied exercise / case</h3>
+                  <ReactMarkdown>{topic.exercise}</ReactMarkdown>
+                  <p>
+                    Use your topic notes below to record your analysis,
+                    evidence, and unresolved questions.
+                  </p>
+                </section>
+              )}
               <section className="ce-panel">
                 <h3>Your notes</h3>
                 <label>
@@ -654,9 +678,10 @@ export default function Academy() {
           ) : (
             <>
               <aside className="ce-notice">
-                Content received: Sections 1–2 and 12–20. The first file stops
-                during Topic 2.6; Sections 3–11 and the end of Topic 20.2 are
-                awaiting continuation. No missing lessons have been invented.
+                Content received: Sections 1–2 and 12–22, plus Topic 23.1. Still
+                awaiting the rest of Topic 2.6, Sections 3–11, the remainder of
+                Section 23, and Section 24. No missing lessons have been
+                invented.
               </aside>
               {sections
                 .filter((s) => !section || s.id === section)

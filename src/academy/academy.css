@@ -458,3 +458,11 @@
     gap: 4px;
   }
 }
+
+.ce-exercise ol {
+  list-style: decimal;
+  padding-left: 24px;
+}
+.ce-exercise li {
+  margin: 5px 0;
+}

@@ -47,7 +47,7 @@ test("curriculum navigation persists independent checks and notes locally withou
     w.eval(compiled.outputFiles[0].text);
     await tick();
     await tick();
-    assert.match(d.body.textContent!, /267/);
+    assert.match(d.body.textContent!, /372/);
     await click("How US Electrical Product Regulation Works");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 9);
     d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
@@ -88,6 +88,23 @@ test("curriculum navigation persists independent checks and notes locally withou
     );
     await click("Settings & backup");
     assert.match(d.body.textContent!, /Change access password/);
+    await click("← Curriculum");
+    await click("All sections");
+    await click("Final engineering and certification deliverables");
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 17);
+    d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
+    await tick();
+    const capstone = JSON.parse(
+      w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
+    ).entries.find((e: { id: string }) => e.id === "explorer:20.4");
+    assert.equal(capstone.value.questions["20.4:q1"], true);
+    await click("All sections");
+    await click("Control-system verification and validation");
+    assert.match(
+      d.body.textContent!,
+      /communication fault causes the supervisory controller/,
+    );
+    assert.match(d.body.textContent!, /self-assessment/);
     assert.equal(network, 0);
   } finally {
     await w.happyDOM.close();
