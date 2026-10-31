@@ -33,8 +33,8 @@ test("all complete supplied questions survive verbatim and partial topics stay e
   );
   for (const [, question] of extension.matchAll(/^- \[ \] (.+)$/gm))
     assert.ok(actual.includes(question), question);
-  assert.equal(sections.length, 14);
-  assert.equal(topics.length, 58);
+  assert.equal(sections.length, 15);
+  assert.equal(topics.length, 71);
   assert.equal(expected.length, 267);
   assert.deepEqual(
     topics.filter((t) => t.incomplete).map((t) => t.id),
@@ -46,7 +46,7 @@ test("all complete supplied questions survive verbatim and partial topics stay e
       assert.ok(r.summary && r.scope && r.relevance);
       if (r.url.includes("shopulstandards")) assert.ok(r.access);
     }
-  assert.equal(topics.flatMap((t) => t.readings).length, 142);
+  assert.equal(topics.flatMap((t) => t.readings).length, 182);
 });
 test("reading completion does not imply understanding; backups validate before writes", () => {
   const t = topics[0],
@@ -115,12 +115,74 @@ test("extension preserves all Modules 1–19 and every previous progress identit
     for (const r of before.readings) v.readings[r.id] = true;
     assert.deepEqual(validateValue(before.id, v), v);
   }
-  assert.equal(topics.flatMap((t) => t.questions).length, 372);
-  assert.equal(topics.filter((t) => t.exercise).length, 5);
+  assert.equal(topics.flatMap((t) => t.questions).length, 484);
+  assert.equal(topics.filter((t) => t.exercise).length, 13);
   const emc = topics.find((t) => t.id === "22.4")!;
   assert.equal(emc.readings.length, 2);
   assert.notEqual(emc.readings[0].title, emc.readings[1].title);
   assert.equal(topics.find((t) => t.id === "20.4")!.questions.length, 17);
   for (const t of topics.filter((t) => t.exercise))
     assert.ok(matches(t, t.exercise!.split("\n")[0]));
+});
+
+test("final continuation preserves every old topic and all supplied new assignments", () => {
+  const baseline = JSON.parse(
+    readFileSync(
+      new URL(
+        "./fixtures/curriculum-through-23-1-baseline.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(
+    createHash("sha256")
+      .update(
+        JSON.stringify(topics.filter((t) => baseline.topicIds.includes(t.id))),
+      )
+      .digest("hex"),
+    baseline.topicHash,
+  );
+  for (const name of ["05-modules-23-24.md", "06-topic-24-7-capstone.md"]) {
+    let source = readFileSync(
+      new URL("../docs/curriculum-source/" + name, import.meta.url),
+      "utf8",
+    );
+    if (name.startsWith("05")) source = source.split("## Topic 24.7:")[0];
+    for (const [, q] of source.matchAll(/^- \[ \] (.+)$/gm))
+      assert.ok(
+        topics.some((t) => t.questions.includes(q)),
+        q,
+      );
+  }
+  const final = topics.find((t) => t.id === "24.7")!;
+  assert.equal(final.questions.length, 28);
+  assert.equal(final.readings.length, 5);
+  for (let i = 1; i <= 3; i++)
+    assert.ok(final.exercise?.includes("Applied exercise " + i + ":"));
+  assert.ok(!final.exercise?.includes("Final mastery questions"));
+  assert.ok(
+    sections
+      .find((s) => s.id === "23")!
+      .capstone.includes("Corrective-action procedures."),
+  );
+  assert.ok(
+    sections
+      .find((s) => s.id === "24")!
+      .capstone.includes("10. **Recommended next actions:**"),
+  );
+  assert.ok(
+    !JSON.stringify(sections).includes(
+      "Final Implementation Instruction to Codex",
+    ),
+  );
+  assert.ok(
+    topics
+      .find((t) => t.id === "23.3")!
+      .readings.find((r) => r.title.startsWith("Omron"))!.searchDestination,
+  );
+  const value = emptyValue();
+  value.questions["24.7:q28"] = true;
+  value.readings["24.7:r5"] = true;
+  assert.deepEqual(validateValue("24.7", value), value);
 });

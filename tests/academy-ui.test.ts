@@ -34,7 +34,7 @@ test("curriculum navigation persists independent checks and notes locally withou
   };
   const d = w.document;
   d.body.innerHTML = '<div id="root"></div>';
-  const tick = () => new Promise((r) => setTimeout(r, 40));
+  const tick = () => new Promise((r) => setTimeout(r, 100));
   const click = async (text: string) => {
     const b = [...d.querySelectorAll("button")].find((b) =>
       b.textContent?.includes(text),
@@ -47,7 +47,7 @@ test("curriculum navigation persists independent checks and notes locally withou
     w.eval(compiled.outputFiles[0].text);
     await tick();
     await tick();
-    assert.match(d.body.textContent!, /372/);
+    assert.match(d.body.textContent!, /484/);
     await click("How US Electrical Product Regulation Works");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 9);
     d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
@@ -105,6 +105,40 @@ test("curriculum navigation persists independent checks and notes locally withou
       /communication fault causes the supervisory controller/,
     );
     assert.match(d.body.textContent!, /self-assessment/);
+    await click("All sections");
+    const navigation = d.querySelector<HTMLSelectElement>(
+      'select[aria-label="Go to module"]',
+    )!;
+    assert.equal(navigation.options.length, 25);
+    assert.match(
+      navigation.options[3].textContent!,
+      /Module 3.*Content not received/,
+    );
+    navigation.value = "3";
+    navigation.dispatchEvent(new w.Event("change", { bubbles: true }));
+    await tick();
+    assert.match(d.body.textContent!, /Module 3 · Content not received/);
+    assert.ok(!d.body.textContent!.includes("No matching topics"));
+    await click("All sections");
+    assert.match(
+      d.body.textContent!,
+      /Certification Feasibility and Development Strategy Report/,
+    );
+    await click("Certification Economics and Product Development Strategy");
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 33);
+    for (let i = 1; i <= 3; i++)
+      assert.match(
+        d.body.textContent!,
+        new RegExp("Applied exercise " + i + ":"),
+      );
+    assert.match(d.body.textContent!, /Stage 7: Commercial deployment/);
+    const checks = d.querySelectorAll<HTMLInputElement>("input[type=checkbox]");
+    checks[27].click();
+    await tick();
+    const final = JSON.parse(
+      w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
+    ).entries.find((e: { id: string }) => e.id === "explorer:24.7");
+    assert.equal(final.value.questions["24.7:q28"], true);
     assert.equal(network, 0);
   } finally {
     await w.happyDOM.close();

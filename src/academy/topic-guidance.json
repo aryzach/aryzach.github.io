@@ -286,5 +286,53 @@
     "Long-term field performance requires evidence beyond an initial certification test.",
     "Distinguish safety, reliability, and certification.",
     "Interpret failure data and statistical confidence in reliability claims."
+  ],
+  "23.2": [
+    "Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+    "Identify failure mechanisms, measurements, and assumptions for a preliminary heater reliability test plan."
+  ],
+  "23.3": [
+    "Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+    "Compare relay electrical and mechanical life and identify the evidence needed for five-year service."
+  ],
+  "23.4": [
+    "Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+    "Build a verification matrix linking requirements, evidence, acceptance criteria, and responsible evaluators."
+  ],
+  "23.5": [
+    "Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+    "Analyze a damaged heater terminal without assuming an installation error; identify corrective-action evidence."
+  ],
+  "23.6": [
+    "Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+    "Explain why five failures among 100 heaters do not by themselves establish lifetime failure probability."
+  ],
+  "23.7": [
+    "Connect production consistency, component traceability, field feedback, and corrective action.",
+    "Prepare a five-year quality and reliability plan that separates certification requirements from voluntary goals."
+  ],
+  "24.1": [
+    "Understand how consensus processes develop and revise safety standards as technologies change.",
+    "Distinguish standards development from certification programs and identify participation routes."
+  ],
+  "24.2": [
+    "Investigate product classification through verified standard scopes and written laboratory determinations.",
+    "Prepare a standards-applicability inquiry for a battery-assisted sauna heater without assuming its category."
+  ],
+  "24.3": [
+    "Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+    "Identify the evidence and commercial limitations of each potential approval route."
+  ],
+  "24.4": [
+    "Examine what HUUM’s published certificate establishes and what requires current verification.",
+    "Prepare separate SGS inquiries for conventional and battery-assisted 120V sauna heaters."
+  ],
+  "24.5": [
+    "Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+    "Identify transferable lessons and cooking-specific limitations in the Copper and Impulse cases."
+  ],
+  "24.6": [
+    "Identify how manufacturers can participate in standards development and seek clarification.",
+    "Distinguish a proposed standards change from a requirement or approval already in effect."
   ]
 }

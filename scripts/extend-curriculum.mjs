@@ -1,13 +1,25 @@
 import { readFileSync } from "node:fs";
 // Append-only IDs keep existing saved checkboxes attached to the same content.
 export function extendCurriculum(data, guidance) {
-  const text = readFileSync(
-    new URL(
-      "../docs/curriculum-source/04-module-20-extension.md",
-      import.meta.url,
-    ),
-    "utf8",
-  );
+  const sources = [
+    "04-module-20-extension.md",
+    "05-modules-23-24.md",
+    "06-topic-24-7-capstone.md",
+  ];
+  const text = sources
+    .map((file) => {
+      const source = readFileSync(
+        new URL("../docs/curriculum-source/" + file, import.meta.url),
+        "utf8",
+      );
+      // The complete continuation replaces the truncated 24.7 paste.
+      return file === "05-modules-23-24.md"
+        ? source
+            .slice(source.indexOf("# Module 23:"))
+            .split("## Topic 24.7:")[0]
+        : source;
+    })
+    .join("\n");
   let section,
     topic,
     reading,
@@ -18,6 +30,18 @@ export function extendCurriculum(data, guidance) {
   const incoming = [];
   for (const raw of text.split("\n")) {
     const line = clean(raw.replace(/^#+\s*/, ""));
+    if (/^Final Implementation Instruction to Codex/.test(line)) break;
+    const capstone = line.match(
+      /^Module (\d+)(?: Final)? [Cc]apstone(?:: (.+))?$/,
+    );
+    if (capstone) {
+      section = data.find((s) => s.id === capstone[1]);
+      topic = null;
+      reading = null;
+      mode = "capstone";
+      section.capstone = capstone[2] ? "### " + capstone[2] + "\n" : "";
+      continue;
+    }
     let m = line.match(/^Module (\d+): (.+)$/);
     if (m) {
       section = data.find((s) => s.id === m[1]);
@@ -38,7 +62,10 @@ export function extendCurriculum(data, guidance) {
     }
     if (!section) continue;
     if (line.startsWith("Objective:")) {
-      section.objective = line.slice(10).trim();
+      if (topic) {
+        topic.why = line.slice(10).trim();
+        topic.objectives = [topic.why];
+      } else if (!section.objective) section.objective = line.slice(10).trim();
       continue;
     }
     m = line.match(/^Topic (\d+\.\d+): (.+)$/);
@@ -48,8 +75,12 @@ export function extendCurriculum(data, guidance) {
         topic = {
           id: m[1],
           title: m[2],
-          why: guidance[m[1]]?.[0] || section.objective,
-          objectives: guidance[m[1]]?.slice(1) || [],
+          why: guidance[m[1]]?.[0] || "Study " + m[2].toLocaleLowerCase() + ".",
+          objectives: guidance[m[1]]?.slice(1) || [
+            "Explain " +
+              m[2].toLocaleLowerCase() +
+              " using the assigned evidence and mastery questions.",
+          ],
           questions: [],
           readings: [],
           context: [],
@@ -62,24 +93,36 @@ export function extendCurriculum(data, guidance) {
       reading = null;
       continue;
     }
-    if (!topic) continue;
+    if (mode === "capstone") {
+      if (line !== "---")
+        section.capstone += (section.capstone ? "\n" : "") + raw.trimEnd();
+      continue;
+    }
+    if (!topic) {
+      if (line && line !== "---" && section.id === "24") section.context = line;
+      continue;
+    }
     if (/^Readings$/.test(line)) {
       mode = "readings";
       reading = null;
       continue;
     }
     if (
-      /^Mastery questions$/.test(line) ||
+      /^(?:Final mastery|Mastery) questions$/.test(line) ||
       /^Complete the following checklist:/.test(line)
     ) {
       mode = "questions";
       reading = null;
       continue;
     }
-    if (/^Applied (exercise|case)$/.test(line)) {
+    if (/^Applied (exercise|case)(?: \d+)?(?::.*)?$/.test(line)) {
       mode = "exercise";
       reading = null;
-      topic.exercise = "";
+      topic.exercise =
+        (topic.exercise ? topic.exercise + "\n\n" : "") +
+        (/^Applied (?:exercise|case)(?: \d+|:)/.test(line)
+          ? "### " + line + "\n"
+          : "");
       continue;
     }
     // The supplied paste ends at an unfinished heading; do not invent another topic.
@@ -126,6 +169,8 @@ export function extendCurriculum(data, guidance) {
     if (r.title.includes("UL 60730-1"))
       url =
         "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031";
+    if (url === "https://www.ul.com/services/follow-up-services")
+      url = "https://www.ul.com/services/follow-services";
     const access =
       /shopulstandards|webstore\.iec|nfpa\.org\/codes-and-standards/.test(url);
     const scope = r.summary.split(/(?<=[.!?])\s+/)[0];
@@ -140,9 +185,15 @@ export function extendCurriculum(data, guidance) {
           : r.summary,
       relevance: t.why,
       access,
+      ...(/components.omron.com\/.*support/.test(url) ||
+      (Number(t.id.split(".")[0]) >= 23 && access)
+        ? { searchDestination: true }
+        : {}),
       accessNote: access
         ? "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
-        : "",
+        : /components.omron.com\/.*support/.test(url)
+          ? "Search destination: locate the relevant manufacturer technical document; this library is not a direct document link."
+          : "",
     });
   }
   return data;

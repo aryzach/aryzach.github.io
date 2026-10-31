@@ -2124,7 +2124,7 @@
   {
     "id": "20",
     "title": "Final Capstone: Design and Certification Strategy for Two Sauna Heaters",
-    "objective": "Apply everything learned to two real products intended for residential installation, rental, and potentially sale in the United States.",
+    "objective": "Apply the curriculum to the two actual products you intend to develop.",
     "capstone": "",
     "topics": [
       {
@@ -2746,7 +2746,7 @@
     "id": "23",
     "title": "Product Verification and Reliability Engineering",
     "objective": "Understand how to establish that a product remains safe and reliable after months or years of real-world use, not merely during an initial certification test.",
-    "capstone": "",
+    "capstone": "Prepare a five-year reliability and quality-assurance plan for Product A.\n\nInclude:\n\n- Expected usage assumptions.\n- Critical components.\n- Relevant failure mechanisms.\n- Design verification tests.\n- Accelerated aging considerations.\n- Production quality controls.\n- Field data collection.\n- Failure investigation.\n- Revision tracking.\n- Corrective-action procedures.\n\nClearly distinguish regulatory certification requirements from voluntary reliability goals.\n\n",
     "topics": [
       {
         "id": "23.1",
@@ -2789,7 +2789,724 @@
         ],
         "context": [],
         "incomplete": false
+      },
+      {
+        "id": "23.2",
+        "title": "Accelerated aging and thermal cycling",
+        "why": "Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+        "objectives": [
+          "Identify failure mechanisms, measurements, and assumptions for a preliminary heater reliability test plan."
+        ],
+        "questions": [
+          "What is accelerated life testing?",
+          "What assumptions are necessary to extrapolate accelerated test results to normal operation?",
+          "Why can thermal cycling be more damaging than constant elevated temperature?",
+          "How can repeated expansion and contraction affect electrical connections?",
+          "What failure mechanisms might occur in a sauna timer repeatedly exposed to heat?",
+          "Why might an accelerated test produce failure mechanisms that would not occur in normal service?",
+          "How would you choose meaningful reliability tests for a heater expected to operate for several years?"
+        ],
+        "readings": [
+          {
+            "id": "23.2:r1",
+            "title": "NIST Engineering Statistics Handbook: Reliability",
+            "url": "https://www.itl.nist.gov/div898/handbook/apr/apr.htm",
+            "scope": "Introduces reliability engineering and accelerated life testing.",
+            "summary": "Introduces reliability engineering and accelerated life testing. Learn how elevated stresses can be used to investigate failure mechanisms, and why accelerated test results require assumptions about the relationship between stress and real-world aging.",
+            "relevance": "Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.2:r2",
+            "title": "IEC 60068 Environmental Testing Series, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Standards covering environmental tests, including temperature, humidity, and temperature changes.",
+            "summary": "Standards covering environmental tests, including temperature, humidity, and temperature changes. Investigate which test methods are relevant to appliance components and assemblies.",
+            "relevance": "Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "23.2:r3",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Provides a systems-level approach to verification, validation, and lifecycle reliability.",
+            "summary": "Provides a systems-level approach to verification, validation, and lifecycle reliability. Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+            "relevance": "Evaluate how accelerated aging and thermal cycling can reveal degradation without assuming they reproduce normal service.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Develop a preliminary reliability test plan for a sauna heater that experiences repeated heating and cooling cycles.\n\nConsider:\n\n- Heating-element connections.\n- Timer mechanisms.\n- Relay contacts.\n- Wire insulation.\n- Temperature sensors.\n- Mechanical fasteners.\n- Protective thermal controls.\n\nIdentify the failure mechanisms being investigated and the measurements that would reveal degradation.\n\nDo not specify hazardous live-fault procedures for an unqualified operator.\n\n"
+      },
+      {
+        "id": "23.3",
+        "title": "Component lifetime and derating",
+        "why": "Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+        "objectives": [
+          "Compare relay electrical and mechanical life and identify the evidence needed for five-year service."
+        ],
+        "questions": [
+          "What is component derating?",
+          "Why might a relay rated for a particular current have a shorter life at elevated ambient temperature?",
+          "How do resistive and inductive loads affect switching requirements?",
+          "What is the difference between electrical life and mechanical life?",
+          "Why does a component's maximum temperature rating not guarantee a particular lifetime?",
+          "How should manufacturer endurance data influence component selection?",
+          "What information would you need to estimate whether a timer could survive five years of sauna operation?"
+        ],
+        "readings": [
+          {
+            "id": "23.3:r1",
+            "title": "Texas Instruments: Reliability and Quality",
+            "url": "https://www.ti.com/support-quality/reliability/reliability-testing.html",
+            "scope": "Learn how semiconductor manufacturers evaluate reliability, qualification, and operating conditions.",
+            "summary": "Learn how semiconductor manufacturers evaluate reliability, qualification, and operating conditions. Understand why component ratings and lifetime expectations depend on the intended environment.",
+            "relevance": "Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.3:r2",
+            "title": "Omron: Technical Support",
+            "url": "https://components.omron.com/us-en/support",
+            "scope": "Find relay technical documentation concerning electrical life, mechanical life, contact ratings, switching conditions, and application limitations.",
+            "summary": "Find relay technical documentation concerning electrical life, mechanical life, contact ratings, switching conditions, and application limitations. Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+            "relevance": "Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant manufacturer technical document; this library is not a direct document link."
+          },
+          {
+            "id": "23.3:r3",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Investigate endurance and component suitability requirements for automatic electrical controls, where applicable.",
+            "summary": "Investigate endurance and component suitability requirements for automatic electrical controls, where applicable. Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+            "relevance": "Select components using endurance, temperature, load, and environmental evidence rather than nominal ratings alone.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare two hypothetical relay options for a 120V sauna heater.\n\nOne has a higher nominal current rating but limited high-temperature documentation. The other has a lower current rating but more complete endurance and environmental data.\n\nIdentify the evidence needed to make a defensible selection. Do not assume either is suitable without checking the actual load and operating conditions.\n\n"
+      },
+      {
+        "id": "23.4",
+        "title": "Design verification versus certification testing",
+        "why": "Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+        "objectives": [
+          "Build a verification matrix linking requirements, evidence, acceptance criteria, and responsible evaluators."
+        ],
+        "questions": [
+          "What is the difference between design verification and design validation?",
+          "How does internal reliability testing differ from NRTL certification testing?",
+          "Why can a certified product still have a short service life?",
+          "What tests might a manufacturer conduct beyond those required for certification?",
+          "What is a verification matrix?",
+          "How should test results be linked to product requirements?",
+          "Why should engineering tests be repeatable and documented?"
+        ],
+        "readings": [
+          {
+            "id": "23.4:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Explains requirements verification and validation, including how engineering teams demonstrate that a design satisfies its intended requirements.",
+            "summary": "Explains requirements verification and validation, including how engineering teams demonstrate that a design satisfies its intended requirements. Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "relevance": "Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.4:r2",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Provides context for third-party certification and why certification testing is distinct from a manufacturer's broader engineering verification program.",
+            "summary": "Provides context for third-party certification and why certification testing is distinct from a manufacturer's broader engineering verification program. Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "relevance": "Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.4:r3",
+            "title": "NIST Engineering Statistics Handbook",
+            "url": "https://www.itl.nist.gov/div898/handbook/",
+            "scope": "Introduces statistical approaches to experiments, measurements, and evaluating engineering evidence.",
+            "summary": "Introduces statistical approaches to experiments, measurements, and evaluating engineering evidence. Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "relevance": "Separate requirements verification, intended-use validation, certification, and voluntary reliability work.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a verification matrix for Product A with three categories:\n\n1. Regulatory and certification requirements.\n2. Functional performance requirements.\n3. Reliability and durability requirements.\n\nInclude the proposed evidence type, acceptance criteria where supported, and responsible evaluator.\n\n"
+      },
+      {
+        "id": "23.5",
+        "title": "Field failure analysis and root-cause investigation",
+        "why": "Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+        "objectives": [
+          "Analyze a damaged heater terminal without assuming an installation error; identify corrective-action evidence."
+        ],
+        "questions": [
+          "What is the difference between a failure symptom and a root cause?",
+          "How should a failed component be documented before disassembly?",
+          "Why is it important to preserve physical evidence?",
+          "How can a design defect be distinguished from a manufacturing defect?",
+          "What is a common-cause failure?",
+          "How can field failure data reveal a problem that certification testing did not identify?",
+          "What evidence would demonstrate that a corrective action actually resolved a problem?"
+        ],
+        "readings": [
+          {
+            "id": "23.5:r1",
+            "title": "ASQ: Root Cause Analysis",
+            "url": "https://asq.org/quality-resources/root-cause-analysis",
+            "scope": "Introduces structured root-cause analysis and methods for distinguishing symptoms from underlying causes.",
+            "summary": "Introduces structured root-cause analysis and methods for distinguishing symptoms from underlying causes. Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "relevance": "Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.5:r2",
+            "title": "ASQ: Failure Mode and Effects Analysis",
+            "url": "https://asq.org/quality-resources/fmea",
+            "scope": "Explains FMEA as a method for identifying and prioritizing potential failure modes.",
+            "summary": "Explains FMEA as a method for identifying and prioritizing potential failure modes. Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "relevance": "Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.5:r3",
+            "title": "CPSC: Recall Guidance",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance",
+            "scope": "Provides regulatory context for investigating defects, determining corrective actions, and addressing unsafe products already in use.",
+            "summary": "Provides regulatory context for investigating defects, determining corrective actions, and addressing unsafe products already in use. Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "relevance": "Investigate field failures by preserving evidence and distinguishing symptoms from supported root causes.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "### Applied case: Loose heating-element connection\n\n\nA sauna heater fails after several months of use. Inspection reveals a discolored wire terminal and damaged insulation near the heating element.\n\nAnalyze:\n\n- Possible failure mechanisms.\n- Evidence that should be preserved.\n- Relevant manufacturing records.\n- Potential design weaknesses.\n- Potential assembly-process weaknesses.\n- How to investigate whether other installed units are affected.\n- What corrective actions might require certification-body review.\n\nDo not assume the terminal was improperly installed merely because it failed.\n\n"
+      },
+      {
+        "id": "23.6",
+        "title": "Reliability statistics and field data",
+        "why": "Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+        "objectives": [
+          "Explain why five failures among 100 heaters do not by themselves establish lifetime failure probability."
+        ],
+        "questions": [
+          "Why does observing zero failures in ten products not establish a near-zero failure rate?",
+          "What is a confidence interval?",
+          "What is a Weibull distribution, and why is it useful in reliability engineering?",
+          "What is the difference between early-life, random, and wear-out failures?",
+          "How does censored data affect lifetime analysis?",
+          "Why should usage hours be tracked in addition to calendar age?",
+          "How can a manufacturer compare failure rates across product revisions?"
+        ],
+        "readings": [
+          {
+            "id": "23.6:r1",
+            "title": "NIST Engineering Statistics Handbook",
+            "url": "https://www.itl.nist.gov/div898/handbook/",
+            "scope": "Study confidence intervals, statistical inference, reliability distributions, and the interpretation of limited engineering data.",
+            "summary": "Study confidence intervals, statistical inference, reliability distributions, and the interpretation of limited engineering data. Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+            "relevance": "Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.6:r2",
+            "title": "NIST: Reliability and Accelerated Life Testing",
+            "url": "https://www.itl.nist.gov/div898/handbook/apr/apr.htm",
+            "scope": "Introduces statistical modeling of component and system lifetimes.",
+            "summary": "Introduces statistical modeling of component and system lifetimes. Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+            "relevance": "Interpret field failure data using exposure time, uncertainty, censoring, and product revisions.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Suppose 100 heaters have been installed for different lengths of time and five have experienced timer failures.\n\nExplain why the raw 5% failure fraction is insufficient to establish the expected lifetime failure probability.\n\nIdentify the additional data required to estimate reliability.\n\n"
+      },
+      {
+        "id": "23.7",
+        "title": "Production testing and ongoing quality control",
+        "why": "Connect production consistency, component traceability, field feedback, and corrective action.",
+        "objectives": [
+          "Prepare a five-year quality and reliability plan that separates certification requirements from voluntary goals."
+        ],
+        "questions": [
+          "What is the difference between a production test and a design verification test?",
+          "Why is a passing prototype insufficient evidence of production consistency?",
+          "What information should be recorded for each manufactured heater?",
+          "How can component traceability help investigate failures?",
+          "What is statistical process control?",
+          "Why can a process remain within specification while still producing reliability problems?",
+          "How should field failures feed back into manufacturing controls?"
+        ],
+        "readings": [
+          {
+            "id": "23.7:r1",
+            "title": "ISO 9001: Quality Management",
+            "url": "https://www.iso.org/iso-9001-quality-management.html",
+            "scope": "Introduces process control, traceability, corrective action, and quality-management principles.",
+            "summary": "Introduces process control, traceability, corrective action, and quality-management principles. Connect production consistency, component traceability, field feedback, and corrective action.",
+            "relevance": "Connect production consistency, component traceability, field feedback, and corrective action.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.7:r2",
+            "title": "UL Solutions: Follow-Up Services",
+            "url": "https://www.ul.com/services/follow-services",
+            "scope": "Investigate how certification bodies oversee production consistency with certified construction.",
+            "summary": "Investigate how certification bodies oversee production consistency with certified construction. Connect production consistency, component traceability, field feedback, and corrective action.",
+            "relevance": "Connect production consistency, component traceability, field feedback, and corrective action.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "23.7:r3",
+            "title": "ASQ: Statistical Process Control",
+            "url": "https://asq.org/quality-resources/statistical-process-control",
+            "scope": "Introduces monitoring manufacturing processes to detect variation and identify conditions requiring investigation.",
+            "summary": "Introduces monitoring manufacturing processes to detect variation and identify conditions requiring investigation. Connect production consistency, component traceability, field feedback, and corrective action.",
+            "relevance": "Connect production consistency, component traceability, field feedback, and corrective action.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
       }
     ]
+  },
+  {
+    "id": "24",
+    "title": "Standards Strategy for Novel Products",
+    "objective": "Understand how manufacturers certify products that do not fit neatly into existing standards, and how to navigate uncertainty without committing prematurely to an unsuitable design.",
+    "capstone": "### Novel Product Certification Strategy\n\n\nPrepare a written **Certification Feasibility and Development Strategy Report** covering both proposed sauna heaters.\n\nThe report must contain:\n\n1. **Product definitions:** Intended use, electrical ratings, installation environment, and major subsystems.\n2. **Candidate standards:** Potentially applicable standards, their verified scopes, and unresolved applicability questions.\n3. **Hazard comparison:** Principal electrical, thermal, battery, control, and installation hazards.\n4. **Architecture alternatives:** At least two reasonable configurations for each product.\n5. **Certification strategy:** Potential evaluation pathways, laboratory engagement, and scope decisions.\n6. **Manufacturing considerations:** Safety-critical components, production consistency, and change control.\n7. **Regulatory considerations:** Residential installation, AHJ acceptance, and product liability.\n8. **Economic considerations:** Major cost drivers, development dependencies, and schedule risks.\n9. **Uncertainty register:** Questions that cannot yet be answered from available evidence.\n10. **Recommended next actions:** A prioritized plan for obtaining the evidence needed to make the next engineering decisions.\n\nThe report must explicitly distinguish:\n\n- Verified requirements.\n- Engineering interpretations.\n- Assumptions.\n- Hypotheses.\n- Questions requiring laboratory confirmation.\n- Questions requiring AHJ or legal confirmation.\n\n**Completion criterion:** I should be capable of presenting the report to an experienced product safety engineer or NRTL project engineer, understanding their responses, challenging questionable assumptions, and making informed decisions about how to proceed.\n\nThis does not mean I am personally qualified to perform hazardous certification tests or issue product approvals.\n\n",
+    "topics": [
+      {
+        "id": "24.1",
+        "title": "How technical safety standards are developed",
+        "why": "Understand how consensus processes develop and revise safety standards as technologies change.",
+        "objectives": [
+          "Distinguish standards development from certification programs and identify participation routes."
+        ],
+        "questions": [
+          "Who writes UL standards?",
+          "How are technical committees and consensus bodies involved?",
+          "What is the difference between a standard and a certification program?",
+          "How are new product technologies incorporated into existing standards?",
+          "Who can propose changes to a standard?",
+          "Why can standards lag behind technological development?",
+          "Why might different countries adopt different requirements for similar products?"
+        ],
+        "readings": [
+          {
+            "id": "24.1:r1",
+            "title": "UL Standards & Engagement",
+            "url": "https://ulse.org/",
+            "scope": "Learn how UL safety standards are developed, maintained, and revised through standards-development processes.",
+            "summary": "Learn how UL safety standards are developed, maintained, and revised through standards-development processes. Understand how consensus processes develop and revise safety standards as technologies change.",
+            "relevance": "Understand how consensus processes develop and revise safety standards as technologies change.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.1:r2",
+            "title": "ANSI: Standards Development",
+            "url": "https://www.ansi.org/standards-activities",
+            "scope": "Explains the broader US voluntary consensus standards ecosystem.",
+            "summary": "Explains the broader US voluntary consensus standards ecosystem. Understand how consensus processes develop and revise safety standards as technologies change.",
+            "relevance": "Understand how consensus processes develop and revise safety standards as technologies change.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.1:r3",
+            "title": "IEC: Standards Development",
+            "url": "https://www.iec.ch/standards-development",
+            "scope": "Introduces the international standards development process and the role of technical committees.",
+            "summary": "Introduces the international standards development process and the role of technical committees. Understand how consensus processes develop and revise safety standards as technologies change.",
+            "relevance": "Understand how consensus processes develop and revise safety standards as technologies change.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "24.2",
+        "title": "Product classification and standards applicability",
+        "why": "Investigate product classification through verified standard scopes and written laboratory determinations.",
+        "objectives": [
+          "Prepare a standards-applicability inquiry for a battery-assisted sauna heater without assuming its category."
+        ],
+        "questions": [
+          "How is a product assigned to a certification category?",
+          "Why can't a manufacturer simply select whichever standard is easiest?",
+          "What happens when a product combines two previously separate categories?",
+          "How do scope exclusions affect certification?",
+          "Can a laboratory evaluate a product using multiple standards?",
+          "How can a manufacturer obtain a written applicability determination?",
+          "What are the risks of designing around an unconfirmed interpretation?"
+        ],
+        "readings": [
+          {
+            "id": "24.2:r1",
+            "title": "UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Compare the scopes of UL 875, UL 60335-2-53, UL 499, UL 858, UL 1973, and UL 9540.",
+            "summary": "Compare the scopes of UL 875, UL 60335-2-53, UL 499, UL 858, UL 1973, and UL 9540. Focus on what each standard covers and excludes.",
+            "relevance": "Investigate product classification through verified standard scopes and written laboratory determinations.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "24.2:r2",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Understand how NRTL recognition relates to product safety standards and certification.",
+            "summary": "Understand how NRTL recognition relates to product safety standards and certification. Investigate product classification through verified standard scopes and written laboratory determinations.",
+            "relevance": "Investigate product classification through verified standard scopes and written laboratory determinations.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.2:r3",
+            "title": "IECEE CB Scheme",
+            "url": "https://www.iecee.org/",
+            "scope": "Review how international testing and certification can support national market access, subject to national differences.",
+            "summary": "Review how international testing and certification can support national market access, subject to national differences. Investigate product classification through verified standard scopes and written laboratory determinations.",
+            "relevance": "Investigate product classification through verified standard scopes and written laboratory determinations.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A manufacturer proposes a sauna heater containing a large LFP battery and separate AC and DC heating circuits.\n\nPrepare a standards-applicability question for an NRTL.\n\nIdentify:\n\n- Product functions.\n- Electrical architecture.\n- Installation environment.\n- Candidate standards.\n- Areas of uncertainty.\n- Specific determinations requested.\n\nDo not assume the product is automatically classified as either a conventional sauna heater or a stationary energy storage system.\n\n"
+      },
+      {
+        "id": "24.3",
+        "title": "Alternative evaluations and certification pathways",
+        "why": "Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+        "objectives": [
+          "Identify the evidence and commercial limitations of each potential approval route."
+        ],
+        "questions": [
+          "What is a field evaluation?",
+          "How does field evaluation differ from a product listing?",
+          "What is an alternative materials or methods approval?",
+          "Can an AHJ accept equipment that lacks a conventional NRTL listing?",
+          "What limitations might apply to an individual field evaluation?",
+          "Why might an alternative approval be commercially impractical for a product installed in hundreds of homes?",
+          "What evidence would be required before relying on an alternative pathway?"
+        ],
+        "readings": [
+          {
+            "id": "24.3:r1",
+            "title": "UL Solutions: Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "Explains equipment evaluations outside conventional product certification programs and their relationship to AHJ approval.",
+            "summary": "Explains equipment evaluations outside conventional product certification programs and their relationship to AHJ approval. Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "relevance": "Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.3:r2",
+            "title": "UL Solutions: Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review the general certification process and how evaluation scope depends on the product and applicable requirements.",
+            "summary": "Review the general certification process and how evaluation scope depends on the product and applicable requirements. Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "relevance": "Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.3:r3",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Study the distinction between recognized certification activities and other engineering evaluations.",
+            "summary": "Study the distinction between recognized certification activities and other engineering evaluations. Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "relevance": "Compare product certification, installation-specific field evaluation, and AHJ acceptance pathways.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "24.4",
+        "title": "HUUM's certification strategy revisited",
+        "why": "Examine what HUUM’s published certificate establishes and what requires current verification.",
+        "objectives": [
+          "Prepare separate SGS inquiries for conventional and battery-assisted 120V sauna heaters."
+        ],
+        "questions": [
+          "What does HUUM's certificate actually establish?",
+          "Which specific standards and editions does it reference?",
+          "Why is the inclusion of an IEC sauna standard interesting?",
+          "What installation conditions are attached to the certified products?",
+          "Does the certificate alone establish how every US AHJ must treat the product?",
+          "How would you verify the current status of the certification?",
+          "What questions would you ask SGS about applying a similar route to Product A?",
+          "What changes if the proposed heater includes a battery?"
+        ],
+        "readings": [
+          {
+            "id": "24.4:r1",
+            "title": "HUUM SGS Certificate of Compliance",
+            "url": "https://www.bathingbrands.com/sites/default/files/2022-09/HUUM%20Certificate%20of%20Compliance.pdf",
+            "scope": "Review the specific heater models, referenced standards, installation conditions, and certification statements.",
+            "summary": "Review the specific heater models, referenced standards, installation conditions, and certification statements. Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "relevance": "Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.4:r2",
+            "title": "OSHA: SGS NRTL Recognition",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/sgs",
+            "scope": "Investigate the relevant recognized standards and limitations of SGS's NRTL scope.",
+            "summary": "Investigate the relevant recognized standards and limitations of SGS's NRTL scope. Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "relevance": "Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.4:r3",
+            "title": "IEC 60335-2-53, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Investigate the international sauna-specific standard referenced by HUUM and compare it with US sauna standards.",
+            "summary": "Investigate the international sauna-specific standard referenced by HUUM and compare it with US sauna standards. Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "relevance": "Examine what HUUM’s published certificate establishes and what requires current verification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Write a technical inquiry to SGS requesting clarification about the certification route available for a new 120V traditional sauna heater.\n\nInclude a separate inquiry about the battery-assisted version.\n\nAsk for written confirmation of applicable standards, product scope, national differences, and required evaluations.\n\n"
+      },
+      {
+        "id": "24.5",
+        "title": "Copper Home and Impulse Labs revisited",
+        "why": "Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+        "objectives": [
+          "Identify transferable lessons and cooking-specific limitations in the Copper and Impulse cases."
+        ],
+        "questions": [
+          "What regulatory challenges do battery-integrated cooking appliances present?",
+          "Why might battery and appliance certification need to be considered together?",
+          "What are the differences between Copper's and Impulse's publicly documented approaches?",
+          "Why can passing a collection of tests differ from obtaining complete product certification?",
+          "What role can multiple laboratories play?",
+          "Which lessons are directly transferable to Product B?",
+          "Which aspects of these cases are specific to cooking appliances and cannot be assumed to apply to saunas?"
+        ],
+        "readings": [
+          {
+            "id": "24.5:r1",
+            "title": "Copper Home: FAQ",
+            "url": "https://copperhome.com/pages/faq",
+            "scope": "Review Copper's published claims concerning battery safety, appliance testing, certification, and installation.",
+            "summary": "Review Copper's published claims concerning battery safety, appliance testing, certification, and installation. Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "relevance": "Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.5:r2",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Study Impulse's account of coordinating multiple subsystem and product-level certification activities.",
+            "summary": "Study Impulse's account of coordinating multiple subsystem and product-level certification activities. Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "relevance": "Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.5:r3",
+            "title": "UL 858, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate the household electric range standard and the challenges of applying existing appliance requirements to battery-integrated products.",
+            "summary": "Investigate the household electric range standard and the challenges of applying existing appliance requirements to battery-integrated products. Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "relevance": "Compare manufacturer accounts of battery-integrated appliance certification without treating them as verified sauna requirements.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "24.6",
+        "title": "Participating in standards development",
+        "why": "Identify how manufacturers can participate in standards development and seek clarification.",
+        "objectives": [
+          "Distinguish a proposed standards change from a requirement or approval already in effect."
+        ],
+        "questions": [
+          "When might a manufacturer seek clarification or revision of an existing standard?",
+          "What is the difference between a formal standards revision and a laboratory's product-specific interpretation?",
+          "How can a manufacturer participate in standards development?",
+          "Why might developing a new product category take years?",
+          "What are the risks of depending on a future standards revision?",
+          "How can a manufacturer make progress while a standards question remains unresolved?"
+        ],
+        "readings": [
+          {
+            "id": "24.6:r1",
+            "title": "UL Standards & Engagement",
+            "url": "https://ulse.org/",
+            "scope": "Explore standards development, stakeholder participation, and standards revision.",
+            "summary": "Explore standards development, stakeholder participation, and standards revision. Identify how manufacturers can participate in standards development and seek clarification.",
+            "relevance": "Identify how manufacturers can participate in standards development and seek clarification.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.6:r2",
+            "title": "ANSI: Standards Activities",
+            "url": "https://www.ansi.org/standards-activities",
+            "scope": "Learn how consensus standards are developed and how interested stakeholders can participate.",
+            "summary": "Learn how consensus standards are developed and how interested stakeholders can participate. Identify how manufacturers can participate in standards development and seek clarification.",
+            "relevance": "Identify how manufacturers can participate in standards development and seek clarification.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.6:r3",
+            "title": "IEC: Standards Development",
+            "url": "https://www.iec.ch/standards-development",
+            "scope": "Understand how international technical committees develop and maintain standards.",
+            "summary": "Understand how international technical committees develop and maintain standards. Identify how manufacturers can participate in standards development and seek clarification.",
+            "relevance": "Identify how manufacturers can participate in standards development and seek clarification.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "24.7",
+        "title": "Certification Economics and Product Development Strategy",
+        "why": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+        "objectives": [
+          "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy."
+        ],
+        "questions": [
+          "What are the major cost categories in a product certification project?",
+          "Which costs are typically one-time, and which recur?",
+          "Why might two NRTLs provide substantially different quotations?",
+          "What determines the number of product samples and test configurations required?",
+          "How can selecting certified components reduce certification uncertainty?",
+          "Why might an initially inexpensive component create greater certification costs later?",
+          "What is a preliminary construction review, and when is it worth paying for?",
+          "Why is it risky to finalize an electrical architecture before confirming the applicable standards?",
+          "How can a failed certification test affect development cost and schedule?",
+          "How do model families affect testing scope and certification economics?",
+          "What happens to certification when a manufacturer changes a critical component?",
+          "How do factory surveillance and production inspections affect ongoing costs?",
+          "What is the economic difference between certifying a heater alone and certifying a complete sauna assembly?",
+          "When might field evaluation be economically reasonable?",
+          "Why might field evaluation be unsuitable for a product intended for hundreds of residential installations?",
+          "What are the advantages and disadvantages of certifying subsystems separately?",
+          "How can certification constraints influence whether a battery is integrated into or separated from an appliance?",
+          "What commercial risks arise when a product's certification pathway remains unresolved?",
+          "How should certification uncertainty influence prototype spending and manufacturing commitments?",
+          "When should a company engage a certification laboratory during product development?",
+          "Can I explain why certification should influence product architecture from the beginning?",
+          "Can I identify the largest unresolved certification risks for Product A?",
+          "Can I identify the largest unresolved certification risks for Product B?",
+          "Can I explain why a novel battery-integrated appliance may require a different certification strategy from a conventional heater?",
+          "Can I compare the commercial implications of integrated and modular architectures?",
+          "Can I prepare a technically credible inquiry to an NRTL?",
+          "Can I distinguish what I know from what requires laboratory or AHJ confirmation?",
+          "Can I propose a development plan that avoids committing substantial capital before resolving major certification uncertainties?"
+        ],
+        "readings": [
+          {
+            "id": "24.7:r1",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review the product certification lifecycle, including application, construction review, testing, corrective actions, certification authorization, and ongoing surveillance.",
+            "summary": "Review the product certification lifecycle, including application, construction review, testing, corrective actions, certification authorization, and ongoing surveillance. Identify which activities create initial and recurring costs. Understand why certification is an ongoing obligation rather than a one-time test.",
+            "relevance": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.7:r2",
+            "title": "Intertek: ETL Listed Mark",
+            "url": "https://www.intertek.com/marks/etl/",
+            "scope": "Understand how third-party certification programs evaluate products and maintain confidence in production consistency.",
+            "summary": "Understand how third-party certification programs evaluate products and maintain confidence in production consistency. Compare the general ETL certification approach with UL Solutions and other NRTLs.",
+            "relevance": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.7:r3",
+            "title": "OSHA: Nationally Recognized Testing Laboratory Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Review NRTL recognition and scope.",
+            "summary": "Review NRTL recognition and scope. Understand why selecting a laboratory requires more than comparing price quotations, particularly when developing a novel product combining several electrical subsystems.",
+            "relevance": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.7:r4",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Study Impulse's publicly described certification process for a battery-integrated cooking appliance.",
+            "summary": "Study Impulse's publicly described certification process for a battery-integrated cooking appliance. Focus on how product architecture, component selection, subsystem testing, multiple laboratories, and certification uncertainty affected development.",
+            "relevance": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "24.7:r5",
+            "title": "Copper Home: FAQ",
+            "url": "https://copperhome.com/pages/faq",
+            "scope": "Review Copper's publicly documented safety testing and certification approach.",
+            "summary": "Review Copper's publicly documented safety testing and certification approach. Consider the commercial consequences of developing an appliance whose architecture does not fit neatly into conventional product certification categories.",
+            "relevance": "Understand how certification requirements influence engineering decisions, development costs, timelines, product architecture, and commercial strategy.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "### Applied exercise 1: Compare certification strategies for Product A\n\n\nEvaluate three possible approaches for the 1.7–2.2 kW, 120V traditional sauna heater.\n\n**Strategy A: Certify the heater as a standalone product.**\n\nInvestigate the scope of certification, integration conditions, required testing, and implications for installing it in different wooden sauna cabins.\n\n**Strategy B: Certify the heater and prefabricated sauna cabin as a complete assembly.**\n\nInvestigate whether integrated evaluation could reduce installation uncertainty while restricting changes to cabin dimensions, materials, controls, or heater placement.\n\n**Strategy C: Pursue field evaluation or another AHJ-accepted approval pathway.**\n\nInvestigate whether this is legally available, whether approval would be installation-specific, and whether the approach is commercially viable for a rental business.\n\nCreate a comparison table with:\n\n- Candidate standards.\n- Certification scope.\n- Required engineering documentation.\n- Likely testing categories.\n- Design flexibility.\n- Factory surveillance.\n- Installation limitations.\n- Unresolved regulatory questions.\n- Relative cost and schedule uncertainty.\n- Commercial scalability.\n\nDo not invent precise certification costs. Obtain laboratory quotations before treating estimates as actionable.\n\n\n### Applied exercise 2: Compare certification strategies for Product B\n\n\nEvaluate three possible architectures for the battery-assisted sauna heater.\n\n**Strategy A: Fully integrated appliance**\n\nThe battery, DC heating elements, AC heating elements, charging electronics, and controls are housed in a single integrated product.\n\n**Strategy B: Separate battery subsystem**\n\nThe battery and associated protection equipment are located in a separate enclosure, with an electrical connection to the heater.\n\n**Strategy C: Modular architecture**\n\nThe battery, power-management system, and heating appliance are separate, defined subsystems intended to operate together in an approved configuration.\n\nFor each architecture, investigate:\n\n- Applicable standards.\n- Product certification boundaries.\n- Integration testing.\n- Electrical and thermal hazards.\n- Installation requirements.\n- Battery location restrictions.\n- Serviceability.\n- Manufacturing complexity.\n- Component substitution flexibility.\n- Product liability considerations.\n- Cost and schedule uncertainty.\n- Potential certification obstacles.\n\nExplain why certification of individual subsystems may not eliminate the need to evaluate the integrated system.\n\n\n### Applied exercise 3: Stage-gated development plan\n\n\nCreate a development strategy for Product B that minimizes expensive commitments before resolving major safety and certification uncertainties.\n\nUse these stages:\n\n**Stage 1: Standards and classification feasibility**\n\nIdentify candidate standards, unresolved scope questions, and laboratories capable of evaluating the proposed product.\n\n**Stage 2: Preliminary architecture evaluation**\n\nCompare electrical and mechanical architectures, major hazards, component availability, and potential certification constraints.\n\n**Stage 3: Engineering prototype and design verification**\n\nDevelop a preliminary verification program with qualified engineers, focusing on electrical, thermal, battery, and protective-control safety.\n\n**Stage 4: Preliminary laboratory review**\n\nSubmit documentation and representative design information to an appropriate laboratory to identify major compliance gaps.\n\n**Stage 5: Design refinement and formal evaluation**\n\nAddress identified issues, control safety-critical design changes, and complete the required certification evaluation.\n\n**Stage 6: Manufacturing readiness**\n\nEstablish production controls, approved components, traceability, quality documentation, and any required factory surveillance.\n\n**Stage 7: Commercial deployment**\n\nConfirm installation requirements, regulatory acceptance, insurance coverage, service procedures, and post-market safety processes.\n\nFor each stage, identify:\n\n- Required deliverables.\n- Important uncertainties.\n- Decision criteria.\n- Reasons to proceed.\n- Reasons to redesign.\n- Reasons to stop development.\n"
+      }
+    ],
+    "context": "This module is particularly important for Product B."
   }
 ]

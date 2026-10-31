@@ -477,6 +477,24 @@ export default function Academy() {
             )}
             {topic && <span>/ {topic.id}</span>}
           </nav>
+          <label className="ce-search">
+            Go to module
+            <select
+              aria-label="Go to module"
+              value={section}
+              disabled={busy}
+              onChange={(e) => void navigate(e.target.value)}
+            >
+              <option value="">All modules</option>
+              {Array.from({ length: 24 }, (_, i) => String(i + 1)).map((id) => (
+                <option key={id} value={id}>
+                  Module {id} ·{" "}
+                  {sections.find((s) => s.id === id)?.title ||
+                    "Content not received"}
+                </option>
+              ))}
+            </select>
+          </label>
           {!topic && (
             <label className="ce-search">
               Search the curriculum
@@ -599,9 +617,11 @@ export default function Academy() {
                     </label>
                     <div className="ce-reading-body">
                       <a href={r.url} target="_blank" rel="noreferrer">
-                        {r.access
-                          ? "Open catalog / access page"
-                          : "Open reading"}{" "}
+                        {r.searchDestination
+                          ? "Open search destination"
+                          : r.access
+                            ? "Open catalog / access page"
+                            : "Open reading"}{" "}
                         ↗
                       </a>
                       <p>
@@ -678,11 +698,25 @@ export default function Academy() {
           ) : (
             <>
               <aside className="ce-notice">
-                Content received: Sections 1–2 and 12–22, plus Topic 23.1. Still
-                awaiting the rest of Topic 2.6, Sections 3–11, the remainder of
-                Section 23, and Section 24. No missing lessons have been
-                invented.
+                Content received: Modules 1–2 and 12–24. Still awaiting the rest
+                of Topic 2.6 and Modules 3–11. Missing content is marked below.
               </aside>
+              {Array.from({ length: 24 }, (_, i) => String(i + 1))
+                .filter((id) => !sections.some((s) => s.id === id))
+                .filter((id) => section === id)
+                .map((id) => (
+                  <section
+                    className="ce-section"
+                    key={id}
+                    aria-label={"Module " + id + " content not received"}
+                  >
+                    <h2>Module {id} · Content not received</h2>
+                    <p>
+                      Send the source material to add this module. No lessons or
+                      progress items have been invented.
+                    </p>
+                  </section>
+                ))}
               {sections
                 .filter((s) => !section || s.id === section)
                 .filter((s) => s.topics.some((t) => matches(t, search, s)))
@@ -712,6 +746,7 @@ export default function Academy() {
                       </button>
                     </div>
                     {s.objective && <p>{s.objective}</p>}
+                    {s.context && <p>{s.context}</p>}
                     {progress(s.topics)}
                     {!collapsed.includes(s.id) && (
                       <div className="ce-topics">
@@ -740,16 +775,19 @@ export default function Academy() {
                     {s.capstone && (
                       <div className="ce-capstone">
                         <b>Section capstone</b>
-                        <p>{s.capstone}</p>
+                        <ReactMarkdown>{s.capstone}</ReactMarkdown>
                       </div>
                     )}
                   </section>
                 ))}
-              {!sections.some(
-                (s) =>
-                  (!section || s.id === section) &&
-                  s.topics.some((t) => matches(t, search, s)),
-              ) && <p>No matching topics. Try a different phrase.</p>}
+              {!Array.from({ length: 24 }, (_, i) => String(i + 1)).some(
+                (id) => id === section && !sections.some((s) => s.id === id),
+              ) &&
+                !sections.some(
+                  (s) =>
+                    (!section || s.id === section) &&
+                    s.topics.some((t) => matches(t, search, s)),
+                ) && <p>No matching topics. Try a different phrase.</p>}
             </>
           )}
         </>

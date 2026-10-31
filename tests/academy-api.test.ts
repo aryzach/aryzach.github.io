@@ -168,6 +168,24 @@ test("checklist backend removes its key, isolates legacy data, changes password,
         .status,
       400,
     );
+    const finalEntry = {
+      id: "explorer:24.7",
+      kind: "note",
+      value: {
+        readings: { "24.7:r5": true },
+        questions: { "24.7:q28": true },
+        notes: "Final exercise evidence",
+      },
+      version: 0,
+    };
+    assert.equal(
+      (await call("entry", { entry: finalEntry }, token)).status,
+      200,
+    );
+    const persistedFinal = (
+      await call("snapshot", {}, token)
+    ).body.state.entries.find((e: { id: string }) => e.id === finalEntry.id);
+    assert.equal(persistedFinal.value.questions["24.7:q28"], true);
     assert.equal((await call("tutor", {}, token)).status, 410);
     assert.equal((await call("evaluate", {}, token)).status, 410);
     const changed = await call(

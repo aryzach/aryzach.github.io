@@ -9,6 +9,7 @@ export type Reading = {
   access: boolean;
   accessNote: string;
   extensionSummary?: string;
+  searchDestination?: boolean;
 };
 export type Topic = {
   id: string;
@@ -27,6 +28,7 @@ export type Section = {
   title: string;
   objective: string;
   capstone: string;
+  context?: string;
   topics: Topic[];
 };
 export const sections = content as Section[];
