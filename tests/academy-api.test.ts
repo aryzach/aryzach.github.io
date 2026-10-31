@@ -2,117 +2,93 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { build } from "esbuild";
 import { PGlite } from "@electric-sql/pglite";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
-test("Edge Function enforces owner session, regrades submitted answers, validates tutor output and prevents duplicate paid calls", async () => {
-  const pg = new PGlite();
-  const oldFetch = globalThis.fetch;
-  const oldDeno = (globalThis as any).Deno;
+test("checklist backend removes its key, isolates legacy data, changes password, revokes sessions and rejects AI calls", async () => {
+  const pg = new PGlite(),
+    oldFetch = globalThis.fetch,
+    oldDeno = (globalThis as any).Deno;
   let handler: (r: Request) => Promise<Response>;
-  let paidCalls = 0;
   try {
     await pg.exec(
       "create role anon;create role authenticated;create role service_role;",
     );
-    const dir = new URL("../supabase/migrations/", import.meta.url);
     await pg.exec(
       readFileSync(
-        new URL(
-          readdirSync(dir).find((n) =>
-            n.endsWith("_academy_private_learning.sql"),
-          )!,
-          dir,
-        ),
+        "supabase/migrations/20261031080900_academy_private_learning.sql",
         "utf8",
       ),
     );
+    // Vault extension is represented by its catalog table; no real secrets enter fixtures.
     await pg.exec(
-      "update academy.owner set activation_hash='" +
-        Buffer.from(
-          await crypto.subtle.digest(
-            "SHA-256",
-            new TextEncoder().encode("fixture-activation-token-32-characters"),
-          ),
-        ).toString("hex") +
-        "',activation_expires_at=now()+interval '1 hour';",
+      `create schema vault;create table vault.secrets(id uuid,name text);create table academy.tutor_config(singleton boolean,secret_id uuid,setup_hash text,setup_expires_at timestamptz);insert into vault.secrets values('11111111-1111-4111-8111-111111111111','sf_sauna_academy_openai_api_key'),('22222222-2222-4222-8222-222222222222','unrelated_service');insert into academy.tutor_config values(true,'11111111-1111-4111-8111-111111111111',null,null);create function public.academy_tutor_secret(text,jsonb) returns jsonb language sql as $$select '{}'::jsonb$$;`,
     );
-    let key = "";
-    let vaultKey: string | null = null;
-    let vaultReads = 0;
+    await pg.exec(
+      readFileSync(
+        "supabase/migrations/20261031104124_academy_curriculum_explorer.sql",
+        "utf8",
+      ),
+    );
+    assert.equal(
+      (await pg.query("select count(*)::int n from vault.secrets")).rows[0].n,
+      1,
+    );
+    assert.equal(
+      (await pg.query("select name from vault.secrets")).rows[0].name,
+      "unrelated_service",
+    );
+    assert.equal(
+      (
+        await pg.query(
+          "select has_function_privilege('anon','public.academy_store(text,jsonb)','EXECUTE') ok",
+        )
+      ).rows[0].ok,
+      false,
+    );
+    const activation = "fixture-owner-reset-link-with-32-characters";
+    const hash = Buffer.from(
+      await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(activation),
+      ),
+    ).toString("hex");
+    await pg.query(
+      "update academy.owner set activation_hash=$1,activation_expires_at=now()+interval '1 hour'",
+      [hash],
+    );
     (globalThis as any).Deno = {
       env: {
         get: (name: string) =>
           ({
             SUPABASE_URL: "https://academy-test.invalid",
-            SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
-            OPENAI_API_KEY: key,
+            SUPABASE_SERVICE_ROLE_KEY: "fixture-service",
           })[name],
       },
-      serve: (h: typeof handler) => {
-        handler = h;
-      },
+      serve: (h: typeof handler) => (handler = h),
     };
     globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const request = new Request(input, init);
-      const url = new URL(request.url);
-      if (url.pathname === "/rest/v1/rpc/academy_tutor_secret") {
-        vaultReads++;
-        assert.equal(
-          request.headers.get("authorization"),
-          "Bearer test-service-role",
+      const r = new Request(input, init);
+      assert.equal(
+        new URL(r.url).pathname,
+        "/rest/v1/rpc/academy_store",
+        "no AI or Vault reads are permitted",
+      );
+      const { command, payload } = await r.json();
+      try {
+        const result = await pg.query(
+          "select public.academy_store($1,$2::jsonb) result",
+          [command, JSON.stringify(payload || {})],
         );
-        assert.deepEqual(await request.json(), { command: "read" });
-        return new Response(JSON.stringify({ key: vaultKey }), {
+        return new Response(JSON.stringify(result.rows[0].result), {
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (e) {
+        return new Response(JSON.stringify({ message: (e as Error).message }), {
+          status: 400,
           headers: { "Content-Type": "application/json" },
         });
       }
-      if (url.pathname === "/rest/v1/rpc/academy_store") {
-        const { command, payload } = await request.json();
-        try {
-          const data = await pg.query<{ result: unknown }>(
-            "select public.academy_store($1,$2::jsonb) result",
-            [command, JSON.stringify(payload)],
-          );
-          return new Response(JSON.stringify(data.rows[0].result), {
-            headers: { "Content-Type": "application/json" },
-          });
-        } catch (e) {
-          return new Response(
-            JSON.stringify({ message: (e as Error).message }),
-            { status: 400, headers: { "Content-Type": "application/json" } },
-          );
-        }
-      }
-      assert.equal(url.href, "https://api.openai.com/v1/responses");
-      paidCalls++;
-      const body = await request.json();
-      assert.equal(body.store, false);
-      assert.equal(body.max_output_tokens, 4096);
-      assert.equal(body.service_tier, "default");
-      return new Response(
-        JSON.stringify({
-          status: "completed",
-          usage: { input_tokens: 100, output_tokens: 200 },
-          output: [
-            {
-              content: [
-                {
-                  type: "output_text",
-                  text: JSON.stringify({
-                    score: 1,
-                    feedback:
-                      "Explain the evidence boundary before drawing a conclusion.",
-                    criteria: [],
-                    sources: ["osha"],
-                  }),
-                },
-              ],
-            },
-          ],
-        }),
-        { headers: { "Content-Type": "application/json" } },
-      );
     };
     const compiled = await build({
       entryPoints: ["supabase/functions/academy-api/index.ts"],
@@ -123,12 +99,10 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
       packages: "external",
       plugins: [
         {
-          name: "deno-npm",
+          name: "npm",
           setup(b) {
-            b.onResolve({ filter: /^npm:/ }, (a) => ({
-              path: a.path.startsWith("npm:zod")
-                ? "zod"
-                : "@supabase/supabase-js",
+            b.onResolve({ filter: /^npm:/ }, (args) => ({
+              path: args.path.replace(/^npm:/, "").replace(/@\d[^/]*$/, ""),
               external: true,
             }));
           },
@@ -137,136 +111,103 @@ test("Edge Function enforces owner session, regrades submitted answers, validate
     });
     new Function("require", compiled.outputFiles[0].text)(require);
     const call = async (
-      body: unknown,
-      token?: string,
-      origin = "https://sfsaunarental.com",
+      action: string,
+      body: Record<string, unknown> = {},
+      token = "",
     ) => {
-      const res = await handler(
+      const r = await handler(
         new Request("https://academy-test.invalid/functions/v1/academy-api", {
           method: "POST",
           headers: {
+            origin: "https://sfsaunarental.com",
             "Content-Type": "application/json",
-            origin,
-            ...(token ? { "x-academy-session": token } : {}),
+            "x-academy-session": token,
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify({ action, ...body }),
         }),
       );
-      return { status: res.status, data: await res.json() };
+      return { status: r.status, body: await r.json() };
     };
-    assert.equal((await call({ action: "snapshot" })).status, 401);
-    assert.equal(
-      (await call({ action: "snapshot" }, undefined, "https://evil.invalid"))
-        .status,
-      403,
-    );
-    assert.equal(
-      vaultReads,
-      0,
-      "Unauthenticated requests never read the secret",
-    );
-    const activated = await call({
-      action: "activate",
-      password: "fixture-password-not-real",
-      activation: "fixture-activation-token-32-characters",
+    assert.equal((await call("snapshot")).status, 401);
+    const activated = await call("activate", {
+      activation,
+      password: "first-password-fixture",
     });
     assert.equal(activated.status, 200);
-    const token = activated.data.token;
-    assert.ok(token);
+    let token = activated.body.token;
     assert.equal(
       (
-        await call({
-          action: "activate",
-          password: "fixture-password-not-real",
-          activation: "fixture-activation-token-32-characters",
+        await call("activate", {
+          activation,
+          password: "another-password-fixture",
         })
       ).status,
       400,
     );
+    await pg.exec(
+      "insert into academy.entries(id,kind,value) values('legacy-note','note','{}');",
+    );
     assert.equal(
-      (await call({ action: "login", password: "incorrect-password" })).status,
+      (await call("snapshot", {}, token)).body.state.entries.length,
+      0,
+    );
+    const entry = {
+      id: "explorer:1.1",
+      kind: "note",
+      value: {
+        readings: { "1.1:r1": true },
+        questions: {},
+        notes: "Private evidence",
+      },
+      version: 0,
+    };
+    assert.equal((await call("entry", { entry }, token)).status, 200);
+    assert.equal((await call("entry", { entry }, token)).status, 409);
+    assert.equal(
+      (await call("entry", { entry: { ...entry, id: "other:1.1" } }, token))
+        .status,
+      400,
+    );
+    assert.equal((await call("tutor", {}, token)).status, 410);
+    assert.equal((await call("evaluate", {}, token)).status, 410);
+    const changed = await call(
+      "password",
+      {
+        currentPassword: "first-password-fixture",
+        password: "second-password-fixture",
+      },
+      token,
+    );
+    assert.equal(changed.status, 200);
+    assert.equal((await call("snapshot", {}, token)).status, 401);
+    token = changed.body.token;
+    assert.equal(
+      (await call("snapshot", {}, token)).body.state.entries[0].value.notes,
+      "Private evidence",
+    );
+    assert.equal(
+      (await call("login", { password: "first-password-fixture" })).status,
       401,
     );
     assert.equal(
-      (await call({ action: "login", password: "fixture-password-not-real" }))
-        .status,
+      (await call("login", { password: "second-password-fixture" })).status,
       200,
     );
-    const result = await call(
-      {
-        action: "attempt",
-        attempt: {
-          id: crypto.randomUUID(),
-          questionId: "diag-current",
-          response: "20",
-          confidence: 5,
-          correct: true,
-        },
-      },
-      token,
+    // Owner-authorized one-use password reset also invalidates every previous device.
+    await pg.query(
+      "update academy.owner set activation_hash=$1,activation_expires_at=now()+interval '1 hour'",
+      [hash],
     );
-    assert.equal(result.status, 200);
-    assert.equal(result.data.attempt.correct, false);
-    const waiting = await call(
-      {
-        action: "attempt",
-        attempt: {
-          id: crypto.randomUUID(),
-          questionId: "regulation-transfer",
-          response:
-            "A component mark does not cover changed cabin controls. Request exact scope.",
-          confidence: 3,
-        },
-      },
-      token,
-    );
-    assert.equal(waiting.data.attempt.method, "pending");
     assert.equal(
       (
-        await call(
-          {
-            action: "tutor",
-            requestId: crypto.randomUUID(),
-            message: "What is listing scope?",
-          },
-          token,
-        )
+        await call("activate", {
+          activation,
+          password: "third-password-fixture",
+        })
       ).status,
-      503,
+      200,
     );
-    key = "fixture-openai-key";
-    const requestId = crypto.randomUUID();
-    const prompt = {
-      action: "tutor",
-      requestId,
-      message: "Explain component recognition versus finished listing.",
-      moduleId: "regulation",
-    };
-    assert.equal((await call(prompt, token)).status, 200);
-    assert.equal((await call(prompt, token)).status, 200);
-    assert.equal(paidCalls, 1);
-    key = "";
-    vaultKey = "fixture-vault-openai-key";
-    const snapshot = await call({ action: "snapshot" }, token);
-    assert.equal(snapshot.data.tutorReady, true);
-    assert.ok(!JSON.stringify(snapshot.data).includes(vaultKey));
-    const evaluated = await call(
-      {
-        action: "evaluate",
-        requestId: crypto.randomUUID(),
-        attemptId: waiting.data.attempt.id,
-        moduleId: "regulation",
-      },
-      token,
-    );
-    assert.equal(evaluated.status, 200);
-    assert.equal(
-      evaluated.data.attempt.correct,
-      false,
-      "Empty rubric cannot pass even when model score is 1",
-    );
-    await call({ action: "logout" }, token);
-    assert.equal((await call({ action: "snapshot" }, token)).status, 401);
+    assert.equal((await call("snapshot", {}, token)).status, 401);
   } finally {
     globalThis.fetch = oldFetch;
     (globalThis as any).Deno = oldDeno;

@@ -144,7 +144,7 @@ const App = () => (
           <Route path="/policies" element={<Policies />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/learn" element={<LearnHub />} />
-          <Route path="/learn-certify" element={<Suspense fallback={<main className="p-10">Opening your academy…</main>}><Academy /></Suspense>} />
+          <Route path="/learn-certify" element={<Suspense fallback={<main className="p-10">Opening your curriculum…</main>}><Academy /></Suspense>} />
           <Route path="/reserve-your-sauna" element={<Contact />} />
           <Route path="/learn-more" element={<LearnMore />} />
           <Route path="/contact" element={<ContactPage />} />

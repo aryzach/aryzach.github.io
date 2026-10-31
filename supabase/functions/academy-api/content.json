@@ -1,0 +1,2208 @@
+[
+  {
+    "id": "1",
+    "title": "Regulatory and Certification Foundations",
+    "objective": "",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "1.1",
+        "title": "How US Electrical Product Regulation Works",
+        "why": "I need to distinguish legal requirements from voluntary standards, certification programs, and laboratory interpretations.",
+        "questions": [
+          "What's the difference between a law, regulation, code, standard, and certification?",
+          "Who writes UL standards, and who certifies products?",
+          "What is an NRTL?",
+          "Why can multiple laboratories certify to the same standard?",
+          "Does the US require all consumer electrical appliances to be UL Listed?",
+          "How does product certification differ from legal installation approval?"
+        ],
+        "readings": [
+          {
+            "id": "1.1:r1",
+            "title": "OSHA, Nationally Recognized Testing Laboratory Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Read the program overview and recognition requirements.",
+            "summary": "Read the program overview and recognition requirements. Explains how laboratories are recognized, why recognition has a defined scope, and what NRTL certification signifies. Distinguish workplace equipment requirements from residential consumer-product requirements.",
+            "access": false,
+            "relevance": "I need to distinguish legal requirements from voluntary standards, certification programs, and laboratory interpretations.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.1:r2",
+            "title": "UL Solutions, Certification Services",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Read the overview of product certification.",
+            "summary": "Read the overview of product certification. Understand that certification evaluates defined products against specified requirements and can involve ongoing production surveillance.",
+            "access": false,
+            "relevance": "I need to distinguish legal requirements from voluntary standards, certification programs, and laboratory interpretations.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.1:r3",
+            "title": "CPSC, Business and Manufacturing",
+            "url": "https://www.cpsc.gov/Business--Manufacturing",
+            "scope": "Read the overview of manufacturer responsibilities.",
+            "summary": "Read the overview of manufacturer responsibilities. Understand the separate federal consumer-product safety framework, including reporting and recall obligations.",
+            "access": false,
+            "relevance": "I need to distinguish legal requirements from voluntary standards, certification programs, and laboratory interpretations.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish laws, codes, standards, and certification.",
+          "Explain the different roles of OSHA, NRTLs, and the CPSC."
+        ]
+      },
+      {
+        "id": "1.2",
+        "title": "UL Listed, Recognized, Classified, and Field Evaluated",
+        "why": "Component marks and an evaluation of a finished heater answer different questions about your product.",
+        "questions": [
+          "What does UL Listed mean?",
+          "What does UL Recognized mean?",
+          "What are Conditions of Acceptability?",
+          "Why don't individually certified components certify a finished heater?",
+          "What is a field evaluation?",
+          "Can a field evaluation substitute for product listing in every installation?"
+        ],
+        "readings": [
+          {
+            "id": "1.2:r1",
+            "title": "UL Solutions, Certification Services",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Focus on the scope of finished-product certification and component evaluation.",
+            "summary": "Focus on the scope of finished-product certification and component evaluation. A certification applies to a defined construction, not an unlimited family of similar products.",
+            "access": false,
+            "relevance": "Component marks and an evaluation of a finished heater answer different questions about your product.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.2:r2",
+            "title": "UL Solutions, Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "Read how individual equipment is evaluated outside conventional mass-production certification.",
+            "summary": "Read how individual equipment is evaluated outside conventional mass-production certification. Understand why field evaluation and product listing are not interchangeable.",
+            "access": false,
+            "relevance": "Component marks and an evaluation of a finished heater answer different questions about your product.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.2:r3",
+            "title": "OSHA, NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Review how certification marks and recognized laboratories relate to regulatory acceptance.",
+            "summary": "Review how certification marks and recognized laboratories relate to regulatory acceptance. Component marks and an evaluation of a finished heater answer different questions about your product.",
+            "access": false,
+            "relevance": "Component marks and an evaluation of a finished heater answer different questions about your product.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish listing, recognition, classification, and field evaluation.",
+          "Identify the construction and conditions covered by a certification."
+        ]
+      },
+      {
+        "id": "1.3",
+        "title": "Certification Laboratories and Recognition Scope",
+        "why": "Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+        "questions": [
+          "How do UL, Intertek, SGS, TÜV, MET, and CSA differ?",
+          "How can I verify a certification?",
+          "How do I verify whether a laboratory is recognized for a standard?",
+          "Can a laboratory test to a standard outside its NRTL recognition scope?",
+          "What documents should I request from a manufacturer claiming certification?"
+        ],
+        "readings": [
+          {
+            "id": "1.3:r1",
+            "title": "OSHA, Recognized Standards",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/list-standards",
+            "scope": "OSHA, Recognized Standards",
+            "summary": "Learn that recognition is tied to specific standards and laboratory scopes. Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+            "access": false,
+            "relevance": "Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.3:r2",
+            "title": "OSHA, SGS Recognition",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/sgs",
+            "scope": "Examine SGS as a real example.",
+            "summary": "Examine SGS as a real example. Use this when investigating HUUM's certificate.",
+            "access": false,
+            "relevance": "Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.3:r3",
+            "title": "UL Product iQ",
+            "url": "https://productiq.ulprospector.com/",
+            "scope": "Explore the certification-directory interface and how product categories, model numbers, and file numbers are used.",
+            "summary": "Explore the certification-directory interface and how product categories, model numbers, and file numbers are used. Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+            "access": false,
+            "relevance": "Supplier certificates need to be checked against actual model coverage and laboratory recognition.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Find a laboratory’s recognized standards and scope.",
+          "Verify certification records and request supporting documents."
+        ]
+      },
+      {
+        "id": "1.4",
+        "title": "IEC, UL, CSA, and the CB Scheme",
+        "why": "An overseas factory’s IEC documentation needs to be assessed for its usefulness in a US certification project.",
+        "questions": [
+          "What is an IEC standard?",
+          "What does US national adoption mean?",
+          "What are national differences?",
+          "What is the IECEE CB Scheme?",
+          "Can IEC test results support US certification?",
+          "Why might a product certified in Europe still need additional evaluation in the US?"
+        ],
+        "readings": [
+          {
+            "id": "1.4:r1",
+            "title": "IECEE CB Scheme",
+            "url": "https://www.iecee.org/",
+            "scope": "Read the scheme overview.",
+            "summary": "Read the scheme overview. Understand how test certificates and reports support national certification without guaranteeing automatic acceptance everywhere.",
+            "access": false,
+            "relevance": "An overseas factory’s IEC documentation needs to be assessed for its usefulness in a US certification project.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.4:r2",
+            "title": "IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Locate IEC 60335-1 and IEC 60335-2-53.",
+            "summary": "Locate IEC 60335-1 and IEC 60335-2-53. Read their official scopes and publication information.",
+            "access": true,
+            "relevance": "An overseas factory’s IEC documentation needs to be assessed for its usefulness in a US certification project.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "1.4:r3",
+            "title": "UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Locate UL 60335-1 and UL 60335-2-53.",
+            "summary": "Locate UL 60335-1 and UL 60335-2-53. Compare their designations, editions, and US-specific context.",
+            "access": true,
+            "relevance": "An overseas factory’s IEC documentation needs to be assessed for its usefulness in a US certification project.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare IEC standards with national adoptions and national differences.",
+          "Explain the CB Scheme’s role and limitations."
+        ]
+      },
+      {
+        "id": "1.5",
+        "title": "AHJs, Permits, and Legal Installation",
+        "why": "SF Sauna needs a documented installation pathway as well as a product development plan.",
+        "questions": [
+          "What is an Authority Having Jurisdiction?",
+          "What does NEC equipment approval mean?",
+          "Can an AHJ approve unlisted equipment?",
+          "Does plugging into an existing receptacle eliminate all regulatory obligations?",
+          "When is an electrical permit required?",
+          "What requirements apply specifically in San Francisco?"
+        ],
+        "readings": [
+          {
+            "id": "1.5:r1",
+            "title": "NEC Articles 100 and 110",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study definitions of approval and listing and the general requirements for electrical equipment.",
+            "summary": "Study definitions of approval and listing and the general requirements for electrical equipment. SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "access": true,
+            "relevance": "SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "1.5:r2",
+            "title": "California Building Standards Commission",
+            "url": "https://www.dgs.ca.gov/BSC/Codes",
+            "scope": "California Building Standards Commission",
+            "summary": "Identify the currently applicable California Electrical, Building, and Fire Codes and their effective dates. SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "access": false,
+            "relevance": "SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.5:r3",
+            "title": "San Francisco Department of Building Inspection",
+            "url": "https://www.sf.gov/departments/department-building-inspection",
+            "scope": "Find the locally adopted electrical code, amendments, permit rules, and relevant approval procedures.",
+            "summary": "Find the locally adopted electrical code, amendments, permit rules, and relevant approval procedures. SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "access": false,
+            "relevance": "SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.5:r4",
+            "title": "UL Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "UL Field Evaluations",
+            "summary": "Understand how field evaluation might support AHJ acceptance of equipment without conventional listing. SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "access": false,
+            "relevance": "SF Sauna needs a documented installation pathway as well as a product development plan.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Identify the relevant AHJ, code edition, and permit process.",
+          "Separate product listing from approval of a particular installation."
+        ]
+      },
+      {
+        "id": "1.6",
+        "title": "Manufacturer, Importer, Installer, and Product Liability",
+        "why": "Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+        "questions": [
+          "What legal responsibilities does an appliance manufacturer have?",
+          "What responsibilities does an importer have?",
+          "What changes when a business rents rather than sells equipment?",
+          "What is strict products liability?",
+          "What is failure to warn?",
+          "When must a manufacturer report a dangerous defect to the CPSC?",
+          "How do recalls and product insurance interact with certification?"
+        ],
+        "readings": [
+          {
+            "id": "1.6:r1",
+            "title": "CPSC Business Guidance",
+            "url": "https://www.cpsc.gov/Business--Manufacturing",
+            "scope": "Read about manufacturer and importer responsibilities.",
+            "summary": "Read about manufacturer and importer responsibilities. Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "access": false,
+            "relevance": "Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.6:r2",
+            "title": "CPSC Reporting",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance/Duty-to-Report-to-the-CPSC-Your-Rights-and-Responsibilities",
+            "scope": "Study the duty to report potentially hazardous products and the difference between reporting obligations and voluntary recalls.",
+            "summary": "Study the duty to report potentially hazardous products and the difference between reporting obligations and voluntary recalls. Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "access": false,
+            "relevance": "Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "accessNote": ""
+          },
+          {
+            "id": "1.6:r3",
+            "title": "CPSC Recalls",
+            "url": "https://www.cpsc.gov/Recalls",
+            "scope": "Examine several electrical heating-appliance recalls to understand how product defects create real commercial and legal consequences.",
+            "summary": "Examine several electrical heating-appliance recalls to understand how product defects create real commercial and legal consequences. Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "access": false,
+            "relevance": "Importing, renting, installing, and selling heaters creates responsibilities beyond obtaining a certificate.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Identify manufacturer, importer, installer, and lessor responsibilities.",
+          "Investigate reporting, recalls, liability, and insurance."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Residential Electrical Engineering and Codes",
+    "objective": "",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "2.1",
+        "title": "NEC Structure and Interpretation",
+        "why": "Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+        "questions": [
+          "How is the NEC organized?",
+          "Which articles apply to a plug-in sauna heater?",
+          "How do definitions affect requirements?",
+          "How do general and product-specific provisions interact?",
+          "How do I determine which edition applies in a jurisdiction?"
+        ],
+        "readings": [
+          {
+            "id": "2.1:r1",
+            "title": "NEC Articles 90 and 100",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Read the code's scope and definitions.",
+            "summary": "Read the code's scope and definitions. These establish the framework for interpreting later requirements.",
+            "access": true,
+            "relevance": "Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.1:r2",
+            "title": "NEC Article 110",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study general equipment requirements, including approval, installation, use, and electrical connections.",
+            "summary": "Study general equipment requirements, including approval, installation, use, and electrical connections. Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+            "access": true,
+            "relevance": "Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.1:r3",
+            "title": "California Codes",
+            "url": "https://www.dgs.ca.gov/BSC/Codes",
+            "scope": "California Codes",
+            "summary": "Identify how California adopts and amends the national model code. Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+            "access": false,
+            "relevance": "Understanding the NEC’s structure helps you ask precise questions about the proposed 120V heater.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Locate definitions and general equipment requirements.",
+          "Identify the edition and amendments adopted locally."
+        ]
+      },
+      {
+        "id": "2.2",
+        "title": "Continuous Loads and Branch-Circuit Sizing",
+        "why": "The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+        "questions": [
+          "What is the NEC definition of a continuous load?",
+          "How are continuous and noncontinuous loads treated?",
+          "What is the origin of the common 80% rule?",
+          "Does a two-hour operating duration automatically allow higher current?",
+          "Can a 2,000W heater operate on a 20A circuit?",
+          "Can a 2,200W heater operate on a 20A circuit?",
+          "What changes if the heater is specifically evaluated and listed for a configuration?"
+        ],
+        "readings": [
+          {
+            "id": "2.2:r1",
+            "title": "NEC Article 100, Continuous Load",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Read the definition carefully.",
+            "summary": "Read the definition carefully. Do not interpret it as a universal timer-based permission to exceed circuit design limits.",
+            "access": true,
+            "relevance": "The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.2:r2",
+            "title": "NEC Article 210, Branch Circuits",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study the rules governing circuit sizing, equipment ratings, and continuous loads.",
+            "summary": "Study the rules governing circuit sizing, equipment ratings, and continuous loads. The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+            "access": true,
+            "relevance": "The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.2:r3",
+            "title": "NEC Article 422, Appliances",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study appliance-specific installation and rating requirements.",
+            "summary": "Study appliance-specific installation and rating requirements. The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+            "access": true,
+            "relevance": "The proposed AC wattages need evaluation against actual circuit, appliance, and listing requirements.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Interpret continuous-load and branch-circuit provisions in context.",
+          "Evaluate the evidence needed for proposed wattage and circuit combinations."
+        ]
+      },
+      {
+        "id": "2.3",
+        "title": "120V Plugs, Receptacles, and Circuits",
+        "why": "Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+        "questions": [
+          "What's the difference between NEMA 5-15 and 5-20?",
+          "What receptacles can be used on a 20A branch circuit?",
+          "When is a dedicated circuit required?",
+          "What does a circuit breaker actually protect?",
+          "Why might a heater need its own internal protective devices?",
+          "How do receptacle and conductor ratings affect the installation?"
+        ],
+        "readings": [
+          {
+            "id": "2.3:r1",
+            "title": "NEC Article 210",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Focus on receptacle and branch-circuit requirements.",
+            "summary": "Focus on receptacle and branch-circuit requirements. Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "access": true,
+            "relevance": "Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.3:r2",
+            "title": "NEC Articles 240 and 250",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Read overcurrent protection and grounding/bonding provisions.",
+            "summary": "Read overcurrent protection and grounding/bonding provisions. Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "access": true,
+            "relevance": "Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.3:r3",
+            "title": "NEMA Standards",
+            "url": "https://www.nema.org/standards",
+            "scope": "Find the relevant wiring-device and plug/receptacle standards and reference material.",
+            "summary": "Find the relevant wiring-device and plug/receptacle standards and reference material. Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "access": true,
+            "relevance": "Plug selection must be evaluated together with the receptacle, circuit, conductors, and appliance.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare NEMA 5-15 and 5-20 configurations.",
+          "Distinguish branch-circuit protection from internal appliance protection."
+        ]
+      },
+      {
+        "id": "2.4",
+        "title": "GFCI, AFCI, Grounding, and Shock Protection",
+        "why": "Shock and fault protection must be considered across the installation and the heater’s internal design.",
+        "questions": [
+          "What is a ground fault?",
+          "How does GFCI protection work?",
+          "How does AFCI protection differ?",
+          "What is protective grounding?",
+          "What happens if the protective earth connection fails?",
+          "How do these protections interact with an appliance's internal safety systems?"
+        ],
+        "readings": [
+          {
+            "id": "2.4:r1",
+            "title": "NEC Articles 210 and 250",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Read relevant GFCI/AFCI and grounding requirements.",
+            "summary": "Read relevant GFCI/AFCI and grounding requirements. Shock and fault protection must be considered across the installation and the heater’s internal design.",
+            "access": true,
+            "relevance": "Shock and fault protection must be considered across the installation and the heater’s internal design.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.4:r2",
+            "title": "OSHA Electrical Safety Resources",
+            "url": "https://www.osha.gov/electrical",
+            "scope": "Read the general electrical shock and grounding safety explanations.",
+            "summary": "Read the general electrical shock and grounding safety explanations. Shock and fault protection must be considered across the installation and the heater’s internal design.",
+            "access": false,
+            "relevance": "Shock and fault protection must be considered across the installation and the heater’s internal design.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish GFCI, AFCI, grounding, and bonding functions.",
+          "Explain the consequences of a failed protective earth connection."
+        ]
+      },
+      {
+        "id": "2.5",
+        "title": "Wiring, Terminals, and Overcurrent Protection",
+        "why": "Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+        "questions": [
+          "What determines conductor ampacity?",
+          "Why does insulation temperature rating matter?",
+          "Why can a loose terminal overheat without tripping a breaker?",
+          "What causes contact resistance to increase?",
+          "What are terminal torque requirements?",
+          "How does thermal cycling affect electrical connections?"
+        ],
+        "readings": [
+          {
+            "id": "2.5:r1",
+            "title": "NEC Articles 110 and 240",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study electrical connections, conductor suitability, and overcurrent protection.",
+            "summary": "Study electrical connections, conductor suitability, and overcurrent protection. Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+            "access": true,
+            "relevance": "Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.5:r2",
+            "title": "UL 486 series",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Catalog/access link.",
+            "summary": "Catalog/access link. Study the scope of wire connector and terminal standards.",
+            "access": true,
+            "relevance": "Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.5:r3",
+            "title": "UL 758",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study appliance wiring material classifications and ratings.",
+            "summary": "Study appliance wiring material classifications and ratings. Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+            "access": true,
+            "relevance": "Connections and wiring deserve specific attention when investigating heater overheating and production reliability.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Evaluate conductor, insulation, and terminal suitability.",
+          "Explain contact resistance, torque, and thermal-cycling concerns."
+        ]
+      },
+      {
+        "id": "2.6",
+        "title": "Cord-Connected Versus Hardwired Appliances",
+        "why": "The proposed plug-in heater needs to be distinguished from equipment intended for permanent installation.",
+        "questions": [
+          "What distinguishes a cord-connected appliance from permanently installed equipment?"
+        ],
+        "readings": [],
+        "context": [],
+        "incomplete": true,
+        "objectives": [
+          "Explain the distinction between cord-connected and permanently installed equipment."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "title": "High-Current DC Power Engineering",
+    "objective": "Understand the engineering and safety challenges of supplying 6–10 kW of resistive heating from a nominal 48V LFP battery.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "12.1",
+        "title": "High-current DC fundamentals",
+        "why": "Product B’s proposed power and voltage create a high-current DC design problem that needs quantitative analysis.",
+        "questions": [
+          "How much current does a 6 kW heater draw at 48V nominal?",
+          "How much current does a 10 kW heater draw?",
+          "How do actual battery voltage and element resistance affect current and power?",
+          "Why do conductor losses increase with the square of current?",
+          "What are the advantages and disadvantages of increasing system voltage?"
+        ],
+        "readings": [
+          {
+            "id": "12.1:r1",
+            "title": "All About Circuits: Direct Current",
+            "url": "https://www.allaboutcircuits.com/textbook/direct-current/",
+            "scope": "Reviews current, resistance, power dissipation, circuit behavior, and the electrical principles underlying high-current DC systems.",
+            "summary": "Reviews current, resistance, power dissipation, circuit behavior, and the electrical principles underlying high-current DC systems. Focus on resistive losses and voltage drop.",
+            "access": false,
+            "relevance": "Product B’s proposed power and voltage create a high-current DC design problem that needs quantitative analysis.",
+            "accessNote": ""
+          },
+          {
+            "id": "12.1:r2",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Victron Energy: Wiring Unlimited",
+            "summary": "Practical reference covering DC wiring, connections, conductor sizing, voltage drop, grounding, fuses, and battery electrical installations. Product B’s proposed power and voltage create a high-current DC design problem that needs quantitative analysis.",
+            "access": false,
+            "relevance": "Product B’s proposed power and voltage create a high-current DC design problem that needs quantitative analysis.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Calculate current and resistive losses across operating voltages.",
+          "Compare the consequences of alternative system voltages."
+        ]
+      },
+      {
+        "id": "12.2",
+        "title": "Conductors, busbars, and electrical connections",
+        "why": "Product B’s current path includes conductors, joints, terminals, and busbars that must work together reliably.",
+        "questions": [
+          "Why is conductor cross-sectional area only one consideration in selecting wiring?",
+          "How do connection resistance and terminal temperature affect reliability?",
+          "What are the tradeoffs between busbars and flexible conductors?",
+          "Why must connections be evaluated under thermal cycling?",
+          "What information is required to select a suitable connector?"
+        ],
+        "readings": [
+          {
+            "id": "12.2:r1",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Study the sections covering conductor sizing, cable routing, connections, temperature effects, and protective devices.",
+            "summary": "Study the sections covering conductor sizing, cable routing, connections, temperature effects, and protective devices. Product B’s current path includes conductors, joints, terminals, and busbars that must work together reliably.",
+            "access": false,
+            "relevance": "Product B’s current path includes conductors, joints, terminals, and busbars that must work together reliably.",
+            "accessNote": ""
+          },
+          {
+            "id": "12.2:r2",
+            "title": "UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "search UL 486A-486B.",
+            "summary": "Standards governing wire connectors and their evaluation. Investigate terminal suitability, ratings, and installation conditions.",
+            "access": true,
+            "relevance": "Product B’s current path includes conductors, joints, terminals, and busbars that must work together reliably.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Evaluate connection resistance and temperature effects.",
+          "Compare conductor and busbar options using documented ratings."
+        ]
+      },
+      {
+        "id": "12.3",
+        "title": "DC protection and switching",
+        "why": "The battery heating path needs a protection strategy for faults and failed switching devices.",
+        "questions": [
+          "Why can interrupting DC current be more difficult than interrupting AC?",
+          "What is interrupting capacity?",
+          "Why is a fuse's current rating insufficient to establish suitability?",
+          "How do battery fault currents differ from normal operating currents?",
+          "What happens if a DC contactor welds closed?",
+          "What independent protection could prevent continued heating?"
+        ],
+        "readings": [
+          {
+            "id": "12.3:r1",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Victron Energy: Wiring Unlimited",
+            "summary": "Covers practical DC fuse placement, protective devices, isolation, and battery wiring principles. The battery heating path needs a protection strategy for faults and failed switching devices.",
+            "access": false,
+            "relevance": "The battery heating path needs a protection strategy for faults and failed switching devices.",
+            "accessNote": ""
+          },
+          {
+            "id": "12.3:r2",
+            "title": "UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "search UL 248, UL 489, UL 1077, and UL 60947 series.",
+            "summary": "Different standards apply to different categories of fuses, circuit breakers, supplementary protectors, and switching devices. The relevant standard depends on component type and intended application.",
+            "access": true,
+            "relevance": "The battery heating path needs a protection strategy for faults and failed switching devices.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish current rating from interrupting capacity.",
+          "Analyze welded-contact and battery-fault scenarios."
+        ]
+      },
+      {
+        "id": "12.4",
+        "title": "DC system architecture and voltage selection",
+        "why": "Nominal 48V is a proposal to evaluate against current, shock, arc, and system-integration concerns.",
+        "questions": [
+          "Why might 48V be attractive for a residential appliance?",
+          "What problems arise at 200A?",
+          "What changes if the system uses a higher DC voltage?",
+          "How do shock hazards and arc hazards change with voltage?",
+          "What determines whether a battery should be integrated into or separated from the heater?"
+        ],
+        "readings": [
+          {
+            "id": "12.4:r1",
+            "title": "Victron Energy: Technical Information",
+            "url": "https://www.victronenergy.com/",
+            "scope": "Explore technical documentation for battery systems, DC distribution, chargers, and protection architectures.",
+            "summary": "Explore technical documentation for battery systems, DC distribution, chargers, and protection architectures. Nominal 48V is a proposal to evaluate against current, shock, arc, and system-integration concerns.",
+            "access": false,
+            "relevance": "Nominal 48V is a proposal to evaluate against current, shock, arc, and system-integration concerns.",
+            "accessNote": ""
+          },
+          {
+            "id": "12.4:r2",
+            "title": "UL 1973 and UL 1741",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the scope of battery and power-conversion equipment standards.",
+            "summary": "Study the scope of battery and power-conversion equipment standards. Determine which parts of a proposed architecture might require separate evaluation.",
+            "access": true,
+            "relevance": "Nominal 48V is a proposal to evaluate against current, shock, arc, and system-integration concerns.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare DC voltage and distribution architectures.",
+          "Identify subsystem boundaries for engineering and certification review."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "title": "Battery-Assisted Sauna Heater Architecture",
+    "objective": "Evaluate the technical and certification feasibility of Product B.",
+    "capstone": "Write a preliminary architecture and certification feasibility report for Product B. Distinguish verified requirements from engineering assumptions and questions requiring laboratory confirmation.",
+    "topics": [
+      {
+        "id": "13.1",
+        "title": "System energy budget",
+        "why": "A battery capacity target needs to be related to cabin heatup, losses, and sustaining operation.",
+        "questions": [
+          "How much energy can a 5 kWh battery theoretically supply?",
+          "How long could a 10 kWh battery supply 8 kW, ignoring losses?",
+          "Why does heating sauna air require much less energy than heating the entire cabin?",
+          "How do wood, stones, insulation, ventilation, and ambient temperature affect heatup?",
+          "How would you estimate the required sustaining power?"
+        ],
+        "readings": [
+          {
+            "id": "13.1:r1",
+            "title": "Engineering Toolbox: Specific Heat Capacity",
+            "url": "https://www.engineeringtoolbox.com/specific-heat-capacity-d_391.html",
+            "scope": "Engineering Toolbox: Specific Heat Capacity",
+            "summary": "Introduces energy required to raise material temperatures. Useful for estimating the heating of air, wood, stones, and other sauna materials.",
+            "access": false,
+            "relevance": "A battery capacity target needs to be related to cabin heatup, losses, and sustaining operation.",
+            "accessNote": ""
+          },
+          {
+            "id": "13.1:r2",
+            "title": "Engineering Toolbox: Heat Transfer",
+            "url": "https://www.engineeringtoolbox.com/heat-transfer-d_431.html",
+            "scope": "Engineering Toolbox: Heat Transfer",
+            "summary": "Reviews heat transfer and heat-loss principles relevant to estimating heatup time and sustaining power. A battery capacity target needs to be related to cabin heatup, losses, and sustaining operation.",
+            "access": false,
+            "relevance": "A battery capacity target needs to be related to cabin heatup, losses, and sustaining operation.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Construct an energy budget with stated assumptions.",
+          "Distinguish air heating from heating the cabin’s thermal mass."
+        ]
+      },
+      {
+        "id": "13.2",
+        "title": "Coordinating AC heating, DC heating, and battery charging",
+        "why": "AC heating and battery charging share a residential input whose permitted loading needs to be established.",
+        "questions": [
+          "Can a 120V/20A circuit supply a 2 kW heater and a 1 kW charger simultaneously?",
+          "What determines the maximum permitted combined input current?",
+          "Should battery charging stop while AC heating is operating?",
+          "What happens when the battery is depleted?",
+          "How should the system respond to loss of AC input?",
+          "How can control software avoid exceeding the input power limit?"
+        ],
+        "readings": [
+          {
+            "id": "13.2:r1",
+            "title": "NEC: NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Review branch-circuit loading, appliance requirements, and the treatment of connected electrical loads.",
+            "summary": "Review branch-circuit loading, appliance requirements, and the treatment of connected electrical loads. AC heating and battery charging share a residential input whose permitted loading needs to be established.",
+            "access": true,
+            "relevance": "AC heating and battery charging share a residential input whose permitted loading needs to be established.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.2:r2",
+            "title": "Victron Energy: Battery Charger Documentation",
+            "url": "https://www.victronenergy.com/chargers",
+            "scope": "Victron Energy: Battery Charger Documentation",
+            "summary": "Provides examples of charger ratings, charging control, current limitations, and battery-system integration. AC heating and battery charging share a residential input whose permitted loading needs to be established.",
+            "access": false,
+            "relevance": "AC heating and battery charging share a residential input whose permitted loading needs to be established.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Evaluate combined input demand and charge-control options.",
+          "Define responses to depleted batteries and loss of AC input."
+        ]
+      },
+      {
+        "id": "13.3",
+        "title": "Protective controls and operating states",
+        "why": "Normal operating controls need to be considered separately from protections against sensor, relay, and software failures.",
+        "questions": [
+          "What should happen if the AC heater relay sticks closed?",
+          "What should happen if the DC contactor sticks closed?",
+          "Can a single thermal cutoff safely protect both heating subsystems?",
+          "What common-cause failures could defeat multiple protective devices?",
+          "How should the system behave when a temperature sensor becomes disconnected?",
+          "Which protective functions should remain effective if the software crashes?"
+        ],
+        "readings": [
+          {
+            "id": "13.3:r1",
+            "title": "UL 60730-1",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General safety requirements for automatic electrical controls.",
+            "summary": "General safety requirements for automatic electrical controls. Study protective-control suitability, fault behavior, and safety-related control functions.",
+            "access": true,
+            "relevance": "Normal operating controls need to be considered separately from protections against sensor, relay, and software failures.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.3:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 60335-2-53",
+            "summary": "Sauna-specific requirements that may govern temperature regulation, protective devices, and abnormal operation. Normal operating controls need to be considered separately from protections against sensor, relay, and software failures.",
+            "access": true,
+            "relevance": "Normal operating controls need to be considered separately from protections against sensor, relay, and software failures.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Analyze failure states in both heating subsystems.",
+          "Identify independent protections and common-cause failures."
+        ]
+      },
+      {
+        "id": "13.4",
+        "title": "Battery placement and thermal isolation",
+        "why": "The proposed battery location needs review in the heater and cabin’s thermal environment.",
+        "questions": [
+          "Why is battery placement especially important in a sauna appliance?",
+          "What temperature limitations would the battery manufacturer impose?",
+          "What are the tradeoffs between an integrated and remote battery enclosure?",
+          "How could battery thermal runaway affect the heater and wooden cabin?",
+          "What evidence would be necessary to evaluate safe separation?"
+        ],
+        "readings": [
+          {
+            "id": "13.4:r1",
+            "title": "UL 1973",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 1973",
+            "summary": "Battery safety requirements, including construction and abnormal-condition evaluation within the standard's scope. The proposed battery location needs review in the heater and cabin’s thermal environment.",
+            "access": true,
+            "relevance": "The proposed battery location needs review in the heater and cabin’s thermal environment.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.4:r2",
+            "title": "NFPA 855",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Installation safety requirements for stationary energy storage systems.",
+            "summary": "Installation safety requirements for stationary energy storage systems. Study as a potential reference, while verifying whether it applies to the proposed integrated appliance.",
+            "access": true,
+            "relevance": "The proposed battery location needs review in the heater and cabin’s thermal environment.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.4:r3",
+            "title": "UL Solutions: UL 9540A",
+            "url": "https://www.ul.com/services/ul-9540a-test-method",
+            "scope": "UL Solutions: UL 9540A",
+            "summary": "Explains the test method used to evaluate thermal runaway fire propagation characteristics. The proposed battery location needs review in the heater and cabin’s thermal environment.",
+            "access": false,
+            "relevance": "The proposed battery location needs review in the heater and cabin’s thermal environment.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare integrated and remote battery arrangements.",
+          "Identify temperature, separation, and propagation evidence to obtain."
+        ]
+      },
+      {
+        "id": "13.5",
+        "title": "Certification feasibility",
+        "why": "Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+        "questions": [
+          "What standards might apply to the battery subsystem?",
+          "What standards might apply to the heater?",
+          "What additional integrated-system testing might be necessary?",
+          "Could the battery and heater be certified separately?",
+          "What evidence would establish whether UL 9540 applies?",
+          "What should be included in an initial NRTL technical inquiry?"
+        ],
+        "readings": [
+          {
+            "id": "13.5:r1",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate whether the scope and construction requirements accommodate the proposed heating architecture.",
+            "summary": "Investigate whether the scope and construction requirements accommodate the proposed heating architecture. Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "access": true,
+            "relevance": "Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.5:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate the treatment of sauna heating appliances and any relevant provisions for unconventional power architectures.",
+            "summary": "Investigate the treatment of sauna heating appliances and any relevant provisions for unconventional power architectures. Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "access": true,
+            "relevance": "Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "13.5:r3",
+            "title": "Impulse Labs Certification Case Study",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Impulse Labs Certification Case Study",
+            "summary": "A real-world example of integrating battery, power electronics, control, and finished-appliance certification. Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "access": false,
+            "relevance": "Product B’s combined architecture needs an explicit standards-applicability inquiry rather than assumed coverage.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Map heater, battery, and integrated-system evaluation questions.",
+          "Prepare an initial technical inquiry for certification laboratories."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "title": "Cooking Appliances and Battery-Integrated Products",
+    "objective": "Understand how other companies have integrated batteries into high-power residential heating appliances.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "14.1",
+        "title": "Conventional electric cooking appliance certification",
+        "why": "Cooking-appliance standards provide a comparison for evaluating another class of residential heating equipment.",
+        "questions": [
+          "Why do household ranges have their own safety standard?",
+          "What hazards differ between ovens and sauna heaters?",
+          "What hazards are common to both?",
+          "How does an induction cooktop differ electrically from a resistive heater?",
+          "Why can adding a battery change the required evaluation?"
+        ],
+        "readings": [
+          {
+            "id": "14.1:r1",
+            "title": "UL 858",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 858",
+            "summary": "Household electric range safety, including electrical construction, heating, controls, and abnormal-operation considerations. Cooking-appliance standards provide a comparison for evaluating another class of residential heating equipment.",
+            "access": true,
+            "relevance": "Cooking-appliance standards provide a comparison for evaluating another class of residential heating equipment.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "14.1:r2",
+            "title": "UL 1026",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 1026",
+            "summary": "Household cooking and food-serving appliances. Compare scope with UL 858.",
+            "access": true,
+            "relevance": "Cooking-appliance standards provide a comparison for evaluating another class of residential heating equipment.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "14.1:r3",
+            "title": "UL 197",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 197",
+            "summary": "Commercial electric cooking appliances. Useful for understanding product-classification boundaries.",
+            "access": true,
+            "relevance": "Cooking-appliance standards provide a comparison for evaluating another class of residential heating equipment.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare the scopes of household and commercial cooking standards.",
+          "Identify shared hazards and limits of comparison with sauna heaters."
+        ]
+      },
+      {
+        "id": "14.2",
+        "title": "Copper Home",
+        "why": "Copper’s published experience is a case study to investigate for battery-assisted residential appliances.",
+        "questions": [
+          "Why did Copper integrate a battery into a cooking appliance?",
+          "What electrical installation problem was it solving?",
+          "Which battery standards has Copper publicly discussed?",
+          "What is the distinction between component recognition, successful testing, and complete appliance certification?",
+          "What certification obstacles has Copper publicly described?",
+          "What aspects of Copper's approach might be relevant to Product B?"
+        ],
+        "readings": [
+          {
+            "id": "14.2:r1",
+            "title": "Copper Home: FAQ",
+            "url": "https://copperhome.com/pages/faq",
+            "scope": "Copper Home: FAQ",
+            "summary": "Copper's public descriptions of its battery-integrated cooking appliance, installation requirements, safety testing, and certification approach. Copper’s published experience is a case study to investigate for battery-assisted residential appliances.",
+            "access": false,
+            "relevance": "Copper’s published experience is a case study to investigate for battery-assisted residential appliances.",
+            "accessNote": ""
+          },
+          {
+            "id": "14.2:r2",
+            "title": "Copper Home",
+            "url": "https://copperhome.com/",
+            "scope": "Review current product specifications, installation documentation, and published certification statements.",
+            "summary": "Review current product specifications, installation documentation, and published certification statements. Copper’s published experience is a case study to investigate for battery-assisted residential appliances.",
+            "access": false,
+            "relevance": "Copper’s published experience is a case study to investigate for battery-assisted residential appliances.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Identify the installation problem and published architecture.",
+          "Separate marketing, component evaluation, and finished-product certification evidence."
+        ]
+      },
+      {
+        "id": "14.3",
+        "title": "Impulse Labs",
+        "why": "Impulse’s published certification account provides a case study for coordinating subsystem and appliance evaluation.",
+        "questions": [
+          "Why did Impulse use multiple certification standards?",
+          "Which subsystems were evaluated separately?",
+          "What did final appliance certification add?",
+          "Why might multiple laboratories participate in one product's certification?",
+          "How does Impulse's strategy differ from Copper's?",
+          "Which lessons apply directly to a battery-integrated sauna heater?"
+        ],
+        "readings": [
+          {
+            "id": "14.3:r1",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "summary": "Impulse's published account of certification work involving its battery-integrated induction cooktop and multiple safety standards. Impulse’s published certification account provides a case study for coordinating subsystem and appliance evaluation.",
+            "access": false,
+            "relevance": "Impulse’s published certification account provides a case study for coordinating subsystem and appliance evaluation.",
+            "accessNote": ""
+          },
+          {
+            "id": "14.3:r2",
+            "title": "Impulse Labs",
+            "url": "https://www.impulselabs.com/",
+            "scope": "Review the current product architecture, specifications, and installation information.",
+            "summary": "Review the current product architecture, specifications, and installation information. Impulse’s published certification account provides a case study for coordinating subsystem and appliance evaluation.",
+            "access": false,
+            "relevance": "Impulse’s published certification account provides a case study for coordinating subsystem and appliance evaluation.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Map the publicly described subsystem and appliance evaluations.",
+          "Compare lessons with Copper and identify relevance to Product B."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "title": "Sauna Manufacturer Certification Case Studies",
+    "objective": "Understand how existing sauna manufacturers certify their products and what their approaches imply for SF Sauna.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "15.1",
+        "title": "HUUM and SGS",
+        "why": "HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+        "questions": [
+          "What exactly did HUUM's certificate cover?",
+          "Which standards were referenced?",
+          "Why was IEC 60335-2-53 referenced rather than UL 875?",
+          "Does the certificate establish that all HUUM heaters are certified?",
+          "What installation and controller conditions apply?",
+          "What is the relationship between SGS's NRTL recognition and the certificate?",
+          "Could a new 120V heater use a similar pathway today?",
+          "What must be verified directly with SGS?"
+        ],
+        "readings": [
+          {
+            "id": "15.1:r1",
+            "title": "HUUM SGS Certificate of Compliance",
+            "url": "https://www.bathingbrands.com/sites/default/files/2022-09/HUUM%20Certificate%20of%20Compliance.pdf",
+            "scope": "A September 2022 certificate for specified HUUM heater models referencing UL 60335-1, IEC 60335-2-53, and Canadian standards.",
+            "summary": "A September 2022 certificate for specified HUUM heater models referencing UL 60335-1, IEC 60335-2-53, and Canadian standards. Study the exact models, conditions, and limitations.",
+            "access": false,
+            "relevance": "HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+            "accessNote": ""
+          },
+          {
+            "id": "15.1:r2",
+            "title": "OSHA: SGS NRTL Recognition",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/sgs",
+            "scope": "OSHA: SGS NRTL Recognition",
+            "summary": "Explains SGS's NRTL recognition and provides a basis for checking the standards within its recognized scope. HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+            "access": false,
+            "relevance": "HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+            "accessNote": ""
+          },
+          {
+            "id": "15.1:r3",
+            "title": "HUUM",
+            "url": "https://huumsauna.com/",
+            "scope": "Review heater specifications, installation instructions, control systems, and current certification claims.",
+            "summary": "Review heater specifications, installation instructions, control systems, and current certification claims. HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+            "access": false,
+            "relevance": "HUUM’s supplied certificate offers specific model and standards evidence to investigate without generalizing its scope.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Read the exact models, standards, and conditions on the certificate.",
+          "Identify questions requiring current confirmation from SGS."
+        ]
+      },
+      {
+        "id": "15.2",
+        "title": "Harvia",
+        "why": "Harvia’s manuals and certification records provide a comparison for heater controls and installation documentation.",
+        "questions": [
+          "Which Harvia models have documented North American certification?",
+          "Which standards apply to those models?",
+          "How are their safety controls arranged?",
+          "What installation conditions are imposed?",
+          "What can be learned from their heater construction and documentation?"
+        ],
+        "readings": [
+          {
+            "id": "15.2:r1",
+            "title": "Harvia",
+            "url": "https://www.harvia.com/",
+            "scope": "Review North American heater models, manuals, electrical requirements, safety controls, and certification information.",
+            "summary": "Review North American heater models, manuals, electrical requirements, safety controls, and certification information. Harvia’s manuals and certification records provide a comparison for heater controls and installation documentation.",
+            "access": false,
+            "relevance": "Harvia’s manuals and certification records provide a comparison for heater controls and installation documentation.",
+            "accessNote": ""
+          },
+          {
+            "id": "15.2:r2",
+            "title": "UL Product iQ",
+            "url": "https://productiq.ulprospector.com/",
+            "scope": "Search for relevant product certification records and verify model coverage rather than relying exclusively on marketing claims.",
+            "summary": "Search for relevant product certification records and verify model coverage rather than relying exclusively on marketing claims. Harvia’s manuals and certification records provide a comparison for heater controls and installation documentation.",
+            "access": false,
+            "relevance": "Harvia’s manuals and certification records provide a comparison for heater controls and installation documentation.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Find model-specific North American certification evidence.",
+          "Compare controls and documented installation conditions."
+        ]
+      },
+      {
+        "id": "15.3",
+        "title": "Saunum",
+        "why": "Saunum provides another architecture and documentation set to compare with the proposed heater.",
+        "questions": [
+          "What distinguishes Saunum's heater architecture?",
+          "What certification standards are documented for its North American products?",
+          "How are controls and protective systems implemented?",
+          "What are the relevant installation limitations?",
+          "How does Saunum compare with HUUM and Harvia?"
+        ],
+        "readings": [
+          {
+            "id": "15.3:r1",
+            "title": "Saunum",
+            "url": "https://saunum.com/",
+            "scope": "Review North American product specifications, heater construction, installation manuals, and certification claims.",
+            "summary": "Review North American product specifications, heater construction, installation manuals, and certification claims. Saunum provides another architecture and documentation set to compare with the proposed heater.",
+            "access": false,
+            "relevance": "Saunum provides another architecture and documentation set to compare with the proposed heater.",
+            "accessNote": ""
+          },
+          {
+            "id": "15.3:r2",
+            "title": "UL Product iQ",
+            "url": "https://productiq.ulprospector.com/",
+            "scope": "Investigate the existence and scope of relevant listings.",
+            "summary": "Investigate the existence and scope of relevant listings. Saunum provides another architecture and documentation set to compare with the proposed heater.",
+            "access": false,
+            "relevance": "Saunum provides another architecture and documentation set to compare with the proposed heater.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Investigate model-specific certification and installation limits.",
+          "Compare protective systems with HUUM and Harvia."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "title": "Manufacturing and Quality Assurance",
+    "objective": "Understand how to manufacture consistently safe, certifiable heaters with overseas suppliers.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "16.1",
+        "title": "Supplier qualification and documentation",
+        "why": "A supplier’s documents need to support repeatable production of the construction actually evaluated.",
+        "questions": [
+          "What documents should a heater supplier provide?",
+          "What distinguishes a component certificate from a product certificate?",
+          "How do you verify a certificate is genuine?",
+          "What is a safety-critical bill of materials?",
+          "What supplier changes could affect certification?"
+        ],
+        "readings": [
+          {
+            "id": "16.1:r1",
+            "title": "ISO 9001 Overview",
+            "url": "https://www.iso.org/iso-9001-quality-management.html",
+            "scope": "ISO 9001 Overview",
+            "summary": "Introduces quality-management systems, process control, documentation, and continuous improvement. A supplier’s documents need to support repeatable production of the construction actually evaluated.",
+            "access": false,
+            "relevance": "A supplier’s documents need to support repeatable production of the construction actually evaluated.",
+            "accessNote": ""
+          },
+          {
+            "id": "16.1:r2",
+            "title": "UL Solutions: Certification Services",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Explore certification programs and their implications for maintaining approved product construction.",
+            "summary": "Explore certification programs and their implications for maintaining approved product construction. A supplier’s documents need to support repeatable production of the construction actually evaluated.",
+            "access": false,
+            "relevance": "A supplier’s documents need to support repeatable production of the construction actually evaluated.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Verify supplier certificates and safety-critical component records.",
+          "Identify substitutions that need certification review."
+        ]
+      },
+      {
+        "id": "16.2",
+        "title": "Production quality and electrical connections",
+        "why": "Production workmanship and traceability matter when investigating terminals and other recurring field failures.",
+        "questions": [
+          "Why is terminal installation quality safety-critical?",
+          "How should a manufacturer control component substitutions?",
+          "What records should be retained for production batches?",
+          "What failures might be discovered during production testing?",
+          "How should field failures inform design and process changes?"
+        ],
+        "readings": [
+          {
+            "id": "16.2:r1",
+            "title": "UL 486 series",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study connector ratings and requirements relevant to reliable electrical terminations.",
+            "summary": "Study connector ratings and requirements relevant to reliable electrical terminations. Production workmanship and traceability matter when investigating terminals and other recurring field failures.",
+            "access": true,
+            "relevance": "Production workmanship and traceability matter when investigating terminals and other recurring field failures.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "16.2:r2",
+            "title": "NASA Workmanship Standards",
+            "url": "https://workmanship.nasa.gov/",
+            "scope": "NASA Workmanship Standards",
+            "summary": "Examples of disciplined workmanship requirements, inspection, and process documentation. Not a substitute for appliance manufacturing standards.",
+            "access": false,
+            "relevance": "Production workmanship and traceability matter when investigating terminals and other recurring field failures.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Define connection-quality and component-change controls.",
+          "Plan batch records, inspections, and field-failure feedback."
+        ]
+      },
+      {
+        "id": "16.3",
+        "title": "Factory surveillance and change control",
+        "why": "A passing prototype needs to remain consistent with the construction manufactured and installed later.",
+        "questions": [
+          "Why doesn't a passing prototype guarantee compliant production?",
+          "What happens when a supplier changes a relay or timer?",
+          "What happens when manufacturing moves to another factory?",
+          "What is the difference between a design revision and an approved certified construction?",
+          "How should a manufacturer document and investigate field failures?"
+        ],
+        "readings": [
+          {
+            "id": "16.3:r1",
+            "title": "UL Solutions: Follow-Up Services",
+            "url": "https://www.ul.com/services/follow-services",
+            "scope": "Investigate how ongoing factory oversight helps maintain consistency with certified construction.",
+            "summary": "Investigate how ongoing factory oversight helps maintain consistency with certified construction. A passing prototype needs to remain consistent with the construction manufactured and installed later.",
+            "access": false,
+            "relevance": "A passing prototype needs to remain consistent with the construction manufactured and installed later.",
+            "accessNote": ""
+          },
+          {
+            "id": "16.3:r2",
+            "title": "ISO 9001 Overview",
+            "url": "https://www.iso.org/iso-9001-quality-management.html",
+            "scope": "Review nonconformance management, corrective action, traceability, and controlled changes.",
+            "summary": "Review nonconformance management, corrective action, traceability, and controlled changes. A passing prototype needs to remain consistent with the construction manufactured and installed later.",
+            "access": false,
+            "relevance": "A passing prototype needs to remain consistent with the construction manufactured and installed later.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Explain factory surveillance and controlled design changes.",
+          "Document substitutions, factory changes, and corrective actions."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "title": "Legal Installation, Product Liability, and Commercial Deployment",
+    "objective": "Understand when an electrical appliance can legally be installed, rented, or sold in US homes, and how manufacturers and installers manage regulatory and liability exposure.",
+    "capstone": "Prepare a legal and regulatory due-diligence memo for SF Sauna's 120V heater installations, distinguishing verified requirements from questions requiring written confirmation by regulators, insurers, or counsel.",
+    "topics": [
+      {
+        "id": "17.1",
+        "title": "Installation legality",
+        "why": "The proposed installations need a documented local approval pathway separate from product certification claims.",
+        "questions": [
+          "What conditions make an electrical appliance legally installable in a US residence?",
+          "Does using an existing receptacle eliminate product approval requirements?",
+          "What's the difference between a permit exemption and exemption from electrical safety requirements?",
+          "Can an AHJ approve an unlisted appliance?",
+          "What are the legal differences between a cord-connected heater and a hardwired heater?",
+          "Does a certified heater automatically make the complete sauna cabin compliant?",
+          "Which code sections and local determinations are most relevant to SF Sauna?"
+        ],
+        "readings": [
+          {
+            "id": "17.1:r1",
+            "title": "NFPA 70: National Electrical Code",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study NEC Articles 100, 110, 210, and 422.",
+            "summary": "Study NEC Articles 100, 110, 210, and 422. Focus on equipment approval, listing, installation instructions, appliance requirements, and the distinction between cord-connected and permanently connected equipment.",
+            "access": true,
+            "relevance": "The proposed installations need a documented local approval pathway separate from product certification claims.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "17.1:r2",
+            "title": "California Building Standards Commission",
+            "url": "https://www.dgs.ca.gov/BSC/Codes",
+            "scope": "California Building Standards Commission",
+            "summary": "Understand how California adopts and modifies model building, electrical, and fire codes. Identify the code editions applicable to residential appliance installations.",
+            "access": false,
+            "relevance": "The proposed installations need a documented local approval pathway separate from product certification claims.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.1:r3",
+            "title": "San Francisco Department of Building Inspection",
+            "url": "https://www.sf.gov/departments/department-building-inspection",
+            "scope": "San Francisco Department of Building Inspection",
+            "summary": "Learn how local permitting, inspections, interpretations, and alternative approval processes operate. The proposed installations need a documented local approval pathway separate from product certification claims.",
+            "access": false,
+            "relevance": "The proposed installations need a documented local approval pathway separate from product certification claims.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish permit exemptions from equipment approval requirements.",
+          "Identify code provisions and local determinations to confirm."
+        ]
+      },
+      {
+        "id": "17.2",
+        "title": "Field evaluations and alternative approval",
+        "why": "Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+        "questions": [
+          "How does field evaluation differ from a conventional NRTL product listing?",
+          "Does a field evaluation approve one installation or an entire product model?",
+          "What evidence might an AHJ require?",
+          "Can field evaluation be a practical pathway for a rental business with dozens of installations?",
+          "What are the limitations of alternative approval?",
+          "What would need to be confirmed in writing before relying on this approach?"
+        ],
+        "readings": [
+          {
+            "id": "17.2:r1",
+            "title": "UL Solutions: Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "UL Solutions: Field Evaluations",
+            "summary": "Explains evaluations of equipment outside conventional product certification, including how evaluation results can support approval by an AHJ. Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "access": false,
+            "relevance": "Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.2:r2",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "OSHA: NRTL Program",
+            "summary": "Explains the recognition of testing laboratories and the regulatory role of their certifications. Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "access": false,
+            "relevance": "Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.2:r3",
+            "title": "San Francisco DBI",
+            "url": "https://www.sf.gov/departments/department-building-inspection",
+            "scope": "San Francisco DBI",
+            "summary": "Consult local requirements for alternative materials, methods, equipment approval, and inspection. Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "access": false,
+            "relevance": "Field evaluation needs to be assessed for its actual scope and practicality across a rental fleet.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare field evaluation with ongoing product listing.",
+          "Identify written AHJ and laboratory confirmations needed before deployment."
+        ]
+      },
+      {
+        "id": "17.3",
+        "title": "Manufacturer, importer, and installer responsibilities",
+        "why": "SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+        "questions": [
+          "What responsibilities does a US importer assume when purchasing heaters from a Chinese factory?",
+          "Does purchasing a product DDP eliminate the importer's potential product liability?",
+          "How do manufacturer, distributor, installer, and lessor responsibilities differ?",
+          "Does selling an appliance create different obligations from renting it?",
+          "Who is responsible for verifying installation conditions?",
+          "What documentation should be retained for each installed sauna?"
+        ],
+        "readings": [
+          {
+            "id": "17.3:r1",
+            "title": "CPSC: Business and Manufacturing",
+            "url": "https://www.cpsc.gov/Business--Manufacturing",
+            "scope": "CPSC: Business and Manufacturing",
+            "summary": "Introduces federal consumer product safety responsibilities, including reporting, recalls, and manufacturer obligations. SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "access": false,
+            "relevance": "SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.3:r2",
+            "title": "CBP: Basic Importing and Exporting",
+            "url": "https://www.cbp.gov/trade/basic-import-export",
+            "scope": "CBP: Basic Importing and Exporting",
+            "summary": "Explains the customs and import framework, including importer responsibilities. SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "access": false,
+            "relevance": "SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.3:r3",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "OSHA: NRTL Program",
+            "summary": "Useful for distinguishing workplace electrical equipment approval from residential consumer product regulation. SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "access": false,
+            "relevance": "SF Sauna’s supply and delivery model spans several roles whose responsibilities need to be identified.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish importer, manufacturer, distributor, installer, and lessor responsibilities.",
+          "Specify documentation to retain for each installation."
+        ]
+      },
+      {
+        "id": "17.4",
+        "title": "Product liability and insurance",
+        "why": "Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+        "questions": [
+          "What is the difference between a design defect and a manufacturing defect?",
+          "Can a certified appliance still create product liability?",
+          "Can an uncertified appliance be legally sold but still expose the seller to substantial liability?",
+          "How might a failure-to-warn claim arise?",
+          "What happens if a sauna causes a residential fire?",
+          "Under what circumstances might an owner or founder face personal liability?",
+          "How do general liability and product liability insurance differ?",
+          "What evidence should be preserved after an incident?"
+        ],
+        "readings": [
+          {
+            "id": "17.4:r1",
+            "title": "Cornell Legal Information Institute: Products Liability",
+            "url": "https://www.law.cornell.edu/wex/products_liability",
+            "scope": "Cornell Legal Information Institute: Products Liability",
+            "summary": "Overview of liability for defective products, including manufacturing defects, design defects, and inadequate warnings. Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "access": false,
+            "relevance": "Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.4:r2",
+            "title": "CPSC: Reporting Unsafe Products",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance/Duty-to-Report-to-the-CPSC-Your-Rights-and-Responsibilities",
+            "scope": "CPSC: Reporting Unsafe Products",
+            "summary": "Explains manufacturers' and other regulated parties' duties to report certain product hazards and defects. Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "access": false,
+            "relevance": "Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.4:r3",
+            "title": "CPSC: Recall Guidance",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance",
+            "scope": "CPSC: Recall Guidance",
+            "summary": "Explains product recall processes and corrective actions. Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "access": false,
+            "relevance": "Certification evidence is only one part of understanding incident exposure and insurance arrangements.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish defect categories and failure-to-warn issues.",
+          "Identify insurance questions and incident evidence to preserve."
+        ]
+      },
+      {
+        "id": "17.5",
+        "title": "Recalls and post-market safety",
+        "why": "Field-failure reports need a structured path into investigation and possible corrective action.",
+        "questions": [
+          "What types of defects trigger reporting obligations?",
+          "What distinguishes a field repair campaign from a formal recall?",
+          "What information should a manufacturer collect about field failures?",
+          "How should repeated timer or terminal failures be investigated?",
+          "When might continued installation or distribution become inappropriate?",
+          "How does a manufacturer demonstrate that a corrective action worked?"
+        ],
+        "readings": [
+          {
+            "id": "17.5:r1",
+            "title": "CPSC Recalls Database",
+            "url": "https://www.cpsc.gov/Recalls",
+            "scope": "Search documented recalls of electric heaters, heating appliances, sauna products, batteries, and cooking equipment.",
+            "summary": "Search documented recalls of electric heaters, heating appliances, sauna products, batteries, and cooking equipment. Field-failure reports need a structured path into investigation and possible corrective action.",
+            "access": false,
+            "relevance": "Field-failure reports need a structured path into investigation and possible corrective action.",
+            "accessNote": ""
+          },
+          {
+            "id": "17.5:r2",
+            "title": "CPSC: Recall Guidance",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance",
+            "scope": "Study reporting obligations, corrective-action plans, consumer notification, and product recovery.",
+            "summary": "Study reporting obligations, corrective-action plans, consumer notification, and product recovery. Field-failure reports need a structured path into investigation and possible corrective action.",
+            "access": false,
+            "relevance": "Field-failure reports need a structured path into investigation and possible corrective action.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Investigate reporting and recall responsibilities using CPSC guidance.",
+          "Define field data and evidence for evaluating corrective actions."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "title": "Certification Project Management",
+    "objective": "Understand how to take an electrical appliance from an early prototype through NRTL certification and maintain its certification during manufacturing.",
+    "capstone": "Prepare a preliminary certification application package for Product A, including a product description, standards-applicability matrix, safety-critical BOM template, test plan, and list of questions for three NRTLs.",
+    "topics": [
+      {
+        "id": "18.1",
+        "title": "Choosing a certification laboratory",
+        "why": "A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+        "questions": [
+          "What is the practical difference between UL, ETL, SGS, and other NRTL certification marks?",
+          "How do you verify whether a laboratory can certify a particular product to a particular standard?",
+          "What is the difference between a testing laboratory and a certification body?",
+          "Can multiple laboratories participate in one product's evaluation?",
+          "What factors should influence laboratory selection besides cost?",
+          "Why might a laboratory decline a novel product?"
+        ],
+        "readings": [
+          {
+            "id": "18.1:r1",
+            "title": "OSHA: Recognized NRTLs",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "OSHA: Recognized NRTLs",
+            "summary": "Identify recognized laboratories and understand that recognition must be verified for the relevant standards and activities. A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "access": false,
+            "relevance": "A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.1:r2",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "UL Solutions: Product Certification",
+            "summary": "Overview of certification programs and product evaluation. A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "access": false,
+            "relevance": "A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.1:r3",
+            "title": "Intertek: Electrical Product Certification",
+            "url": "https://www.intertek.com/marks/etl/",
+            "scope": "Intertek: Electrical Product Certification",
+            "summary": "Explains ETL certification and the role of third-party evaluation. A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "access": false,
+            "relevance": "A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.1:r4",
+            "title": "SGS: Product Certification",
+            "url": "https://www.sgs.com/en/services/product-certification",
+            "scope": "Investigate SGS's electrical product certification capabilities and applicable recognition scope.",
+            "summary": "Investigate SGS's electrical product certification capabilities and applicable recognition scope. A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "access": false,
+            "relevance": "A suitable laboratory needs relevant recognition, technical scope, and experience with your proposed product.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Verify a laboratory’s scope for the proposed standards.",
+          "Compare certification providers beyond price."
+        ]
+      },
+      {
+        "id": "18.2",
+        "title": "Determining applicable standards",
+        "why": "A standards matrix must reflect product scope and unresolved integration questions.",
+        "questions": [
+          "Who determines which standard applies to a new product?",
+          "Can a manufacturer choose a less demanding standard simply because it is cheaper?",
+          "How do product scope and exclusions affect certification?",
+          "What happens when a product combines two traditionally separate product categories?",
+          "How are gaps in existing standards handled?",
+          "What happens when a standard is revised during a certification project?",
+          "What can be learned from HUUM's SGS certification approach?"
+        ],
+        "readings": [
+          {
+            "id": "18.2:r1",
+            "title": "UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate the scopes of UL 875, UL 60335-2-53, UL 60335-1, UL 499, and relevant battery standards.",
+            "summary": "Investigate the scopes of UL 875, UL 60335-2-53, UL 60335-1, UL 499, and relevant battery standards. A standards matrix must reflect product scope and unresolved integration questions.",
+            "access": true,
+            "relevance": "A standards matrix must reflect product scope and unresolved integration questions.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "18.2:r2",
+            "title": "IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "IEC Webstore",
+            "summary": "Compare IEC standards and editions with their US counterparts. A standards matrix must reflect product scope and unresolved integration questions.",
+            "access": true,
+            "relevance": "A standards matrix must reflect product scope and unresolved integration questions.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "18.2:r3",
+            "title": "IECEE CB Scheme",
+            "url": "https://www.iecee.org/",
+            "scope": "IECEE CB Scheme",
+            "summary": "Learn how international test reports and certificates may support national certification. A standards matrix must reflect product scope and unresolved integration questions.",
+            "access": false,
+            "relevance": "A standards matrix must reflect product scope and unresolved integration questions.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare candidate standard scopes and exclusions.",
+          "Prepare applicability questions for novel combined products."
+        ]
+      },
+      {
+        "id": "18.3",
+        "title": "Preparing a certification application",
+        "why": "A clear application helps laboratories evaluate the heater’s variants, construction, and proposed certification boundary.",
+        "questions": [
+          "What information should be included in a product description?",
+          "Why are schematics and bills of materials necessary?",
+          "What is a safety-critical component list?",
+          "What documentation is needed for temperature controls?",
+          "How should multiple wattage variants be presented?",
+          "What constitutes a product family?",
+          "How should the certification scope distinguish a heater from a complete sauna cabin?"
+        ],
+        "readings": [
+          {
+            "id": "18.3:r1",
+            "title": "UL Solutions: Certification Services",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review the certification process and typical documentation requirements.",
+            "summary": "Review the certification process and typical documentation requirements. A clear application helps laboratories evaluate the heater’s variants, construction, and proposed certification boundary.",
+            "access": false,
+            "relevance": "A clear application helps laboratories evaluate the heater’s variants, construction, and proposed certification boundary.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.3:r2",
+            "title": "Intertek: ETL Listed Mark",
+            "url": "https://www.intertek.com/marks/etl/",
+            "scope": "Intertek: ETL Listed Mark",
+            "summary": "Understand how product certification relates to approved construction and ongoing compliance. A clear application helps laboratories evaluate the heater’s variants, construction, and proposed certification boundary.",
+            "access": false,
+            "relevance": "A clear application helps laboratories evaluate the heater’s variants, construction, and proposed certification boundary.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Prepare product descriptions, schematics, and safety-critical BOMs.",
+          "Define product families and heater-versus-cabin scope."
+        ]
+      },
+      {
+        "id": "18.4",
+        "title": "Testing, failure correction, and retesting",
+        "why": "Test results and construction changes need a controlled process during certification.",
+        "questions": [
+          "What happens when a prototype fails a thermal test?",
+          "Who determines whether a design change requires retesting?",
+          "Can a manufacturer substitute components during evaluation?",
+          "How should test failures be documented?",
+          "How can precompliance testing reduce certification uncertainty?",
+          "Why might a seemingly minor design change affect multiple tests?"
+        ],
+        "readings": [
+          {
+            "id": "18.4:r1",
+            "title": "UL Solutions: Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review evaluation and certification stages.",
+            "summary": "Review evaluation and certification stages. Test results and construction changes need a controlled process during certification.",
+            "access": false,
+            "relevance": "Test results and construction changes need a controlled process during certification.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.4:r2",
+            "title": "UL 875 and UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the relevant testing requirements using authorized access, distinguishing construction requirements, normal operation, abnormal operation, and acceptance criteria.",
+            "summary": "Study the relevant testing requirements using authorized access, distinguishing construction requirements, normal operation, abnormal operation, and acceptance criteria. Test results and construction changes need a controlled process during certification.",
+            "access": true,
+            "relevance": "Test results and construction changes need a controlled process during certification.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Document failures and evaluate corrective design changes.",
+          "Identify retesting and precompliance questions for the laboratory."
+        ]
+      },
+      {
+        "id": "18.5",
+        "title": "Factory inspections and maintaining certification",
+        "why": "Certification maintenance needs to be planned alongside supplier and factory operations.",
+        "questions": [
+          "Why does certification involve more than testing a prototype?",
+          "What happens if the manufacturer changes a relay, timer, or heating element?",
+          "Can the factory change its wire supplier without notifying the certification body?",
+          "How are alternate components approved?",
+          "What production records are useful during an inspection?",
+          "What happens if a certified product no longer matches its approved construction?"
+        ],
+        "readings": [
+          {
+            "id": "18.5:r1",
+            "title": "UL Solutions: Follow-Up Services",
+            "url": "https://www.ul.com/services/follow-services",
+            "scope": "Study how ongoing factory oversight helps ensure that production products remain consistent with certified construction.",
+            "summary": "Study how ongoing factory oversight helps ensure that production products remain consistent with certified construction. Certification maintenance needs to be planned alongside supplier and factory operations.",
+            "access": false,
+            "relevance": "Certification maintenance needs to be planned alongside supplier and factory operations.",
+            "accessNote": ""
+          },
+          {
+            "id": "18.5:r2",
+            "title": "ISO 9001",
+            "url": "https://www.iso.org/iso-9001-quality-management.html",
+            "scope": "ISO 9001",
+            "summary": "General quality-management principles applicable to manufacturing documentation, traceability, and corrective action. Certification maintenance needs to be planned alongside supplier and factory operations.",
+            "access": false,
+            "relevance": "Certification maintenance needs to be planned alongside supplier and factory operations.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Define component and supplier change-control procedures.",
+          "Prepare traceability and factory-inspection records."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "title": "Real-World Failures, Recalls, and Regulatory Case Studies",
+    "objective": "Learn from actual product failures and certification experiences, focusing on how engineering decisions, manufacturing processes, and regulatory systems interact.",
+    "capstone": "Write three case analyses: one electrical heater failure, one battery failure, and one certification case involving HUUM, Copper, or Impulse. For each, separate documented evidence, engineering interpretation, and unresolved questions.",
+    "topics": [
+      {
+        "id": "19.1",
+        "title": "Electric heater fires and thermal failures",
+        "why": "Documented heater incidents help distinguish possible failure mechanisms from evidence of an actual cause.",
+        "questions": [
+          "What failure mechanisms commonly cause electric heaters to become fire hazards?",
+          "How can a product overheat without tripping a branch-circuit breaker?",
+          "Why might an appliance pass normal-operation tests but fail abnormal-operation tests?",
+          "What kinds of failures can independent protective controls mitigate?",
+          "What evidence is needed to establish the cause of a fire?"
+        ],
+        "readings": [
+          {
+            "id": "19.1:r1",
+            "title": "CPSC Recalls: Electric Heaters",
+            "url": "https://www.cpsc.gov/Recalls",
+            "scope": "Search for electric heater recalls involving overheating, fire hazards, faulty controls, and electrical connections.",
+            "summary": "Search for electric heater recalls involving overheating, fire hazards, faulty controls, and electrical connections. Documented heater incidents help distinguish possible failure mechanisms from evidence of an actual cause.",
+            "access": false,
+            "relevance": "Documented heater incidents help distinguish possible failure mechanisms from evidence of an actual cause.",
+            "accessNote": ""
+          },
+          {
+            "id": "19.1:r2",
+            "title": "NFPA Research",
+            "url": "https://www.nfpa.org/education-and-research/research",
+            "scope": "Review fire research and statistics concerning heating equipment and residential electrical fires.",
+            "summary": "Review fire research and statistics concerning heating equipment and residential electrical fires. Documented heater incidents help distinguish possible failure mechanisms from evidence of an actual cause.",
+            "access": false,
+            "relevance": "Documented heater incidents help distinguish possible failure mechanisms from evidence of an actual cause.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Analyze normal, abnormal, and protective-control failure scenarios.",
+          "Identify evidence needed to establish a fire’s cause."
+        ]
+      },
+      {
+        "id": "19.2",
+        "title": "Lithium-ion battery fires",
+        "why": "Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+        "questions": [
+          "What initiates thermal runaway?",
+          "Why can a battery fire continue after electrical power is disconnected?",
+          "What distinguishes cell failure from pack-level propagation?",
+          "How does battery chemistry affect risk?",
+          "What does UL 9540A actually evaluate?",
+          "What design lessons are relevant to a battery-assisted sauna heater?"
+        ],
+        "readings": [
+          {
+            "id": "19.2:r1",
+            "title": "UL Solutions: UL 9540A",
+            "url": "https://www.ul.com/services/ul-9540a-test-method",
+            "scope": "UL Solutions: UL 9540A",
+            "summary": "Introduces thermal runaway propagation testing for energy storage technologies. Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "access": false,
+            "relevance": "Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "accessNote": ""
+          },
+          {
+            "id": "19.2:r2",
+            "title": "NFPA 855",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Study the installation safety framework for stationary energy storage systems.",
+            "summary": "Study the installation safety framework for stationary energy storage systems. Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "access": true,
+            "relevance": "Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "19.2:r3",
+            "title": "CPSC Recalls",
+            "url": "https://www.cpsc.gov/Recalls",
+            "scope": "CPSC Recalls",
+            "summary": "Identify documented battery-related recalls involving fire or thermal hazards. Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "access": false,
+            "relevance": "Battery incidents need analysis at both cell and integrated-system levels for Product B.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Distinguish initiating cell failures from propagation.",
+          "Explain the purpose and applicability questions of UL 9540A and NFPA 855."
+        ]
+      },
+      {
+        "id": "19.3",
+        "title": "HUUM's certification approach",
+        "why": "A certificate can be examined as evidence while keeping its date, model scope, and limitations visible.",
+        "questions": [
+          "What evidence establishes the scope of HUUM's certification?",
+          "Why is the referenced combination of standards interesting?",
+          "What conclusions cannot be drawn from the certificate alone?",
+          "What might have changed since its issuance?",
+          "How would you investigate whether the same pathway is available for a new 120V heater?"
+        ],
+        "readings": [
+          {
+            "id": "19.3:r1",
+            "title": "HUUM SGS Certificate of Compliance",
+            "url": "https://www.bathingbrands.com/sites/default/files/2022-09/HUUM%20Certificate%20of%20Compliance.pdf",
+            "scope": "Review the exact models, referenced standards, certification conditions, and limitations.",
+            "summary": "Review the exact models, referenced standards, certification conditions, and limitations. A certificate can be examined as evidence while keeping its date, model scope, and limitations visible.",
+            "access": false,
+            "relevance": "A certificate can be examined as evidence while keeping its date, model scope, and limitations visible.",
+            "accessNote": ""
+          },
+          {
+            "id": "19.3:r2",
+            "title": "OSHA: SGS Recognition",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program/sgs",
+            "scope": "Investigate SGS's NRTL recognition and the relevant standards scope.",
+            "summary": "Investigate SGS's NRTL recognition and the relevant standards scope. A certificate can be examined as evidence while keeping its date, model scope, and limitations visible.",
+            "access": false,
+            "relevance": "A certificate can be examined as evidence while keeping its date, model scope, and limitations visible.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Identify conclusions supported by HUUM’s certificate.",
+          "List current verification needed before using a similar pathway."
+        ]
+      },
+      {
+        "id": "19.4",
+        "title": "Copper Home versus Impulse Labs",
+        "why": "Comparing two published case studies helps frame questions for Product B without assuming equivalent certification paths.",
+        "questions": [
+          "What certification challenges did the two companies face?",
+          "What standards were involved?",
+          "What differences exist between their publicly documented certification approaches?",
+          "Why can a novel appliance require multiple subsystem evaluations?",
+          "What can their experiences teach about Product B?",
+          "Which claims require verification against current certification records?"
+        ],
+        "readings": [
+          {
+            "id": "19.4:r1",
+            "title": "Copper Home: FAQ",
+            "url": "https://copperhome.com/pages/faq",
+            "scope": "Review Copper's published safety, installation, and certification information.",
+            "summary": "Review Copper's published safety, installation, and certification information. Comparing two published case studies helps frame questions for Product B without assuming equivalent certification paths.",
+            "access": false,
+            "relevance": "Comparing two published case studies helps frame questions for Product B without assuming equivalent certification paths.",
+            "accessNote": ""
+          },
+          {
+            "id": "19.4:r2",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Study Impulse's publicly described approach to battery, power-electronics, control, and finished-appliance certification.",
+            "summary": "Study Impulse's publicly described approach to battery, power-electronics, control, and finished-appliance certification. Comparing two published case studies helps frame questions for Product B without assuming equivalent certification paths.",
+            "access": false,
+            "relevance": "Comparing two published case studies helps frame questions for Product B without assuming equivalent certification paths.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Compare documented subsystem and appliance certification strategies.",
+          "Separate verified records from claims needing current confirmation."
+        ]
+      },
+      {
+        "id": "19.5",
+        "title": "Product recalls and manufacturer liability",
+        "why": "Actual recall records connect design and manufacturing choices with post-market corrective action.",
+        "questions": [
+          "What was the underlying defect in each recall?",
+          "How was the defect discovered?",
+          "What engineering controls failed or were missing?",
+          "What corrective action was implemented?",
+          "Could the problem have been discovered during design verification?",
+          "What changes to quality control might prevent recurrence?"
+        ],
+        "readings": [
+          {
+            "id": "19.5:r1",
+            "title": "CPSC Recall Database",
+            "url": "https://www.cpsc.gov/Recalls",
+            "scope": "Select at least five documented electrical appliance or battery recalls.",
+            "summary": "Select at least five documented electrical appliance or battery recalls. Actual recall records connect design and manufacturing choices with post-market corrective action.",
+            "access": false,
+            "relevance": "Actual recall records connect design and manufacturing choices with post-market corrective action.",
+            "accessNote": ""
+          },
+          {
+            "id": "19.5:r2",
+            "title": "CPSC Recall Guidance",
+            "url": "https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance",
+            "scope": "CPSC Recall Guidance",
+            "summary": "Understand reporting, corrective action, and product recovery. Actual recall records connect design and manufacturing choices with post-market corrective action.",
+            "access": false,
+            "relevance": "Actual recall records connect design and manufacturing choices with post-market corrective action.",
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "objectives": [
+          "Analyze at least five documented recalls.",
+          "Connect discovered defects with verification and quality-control improvements."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "title": "Final Capstone: Design and Certification Strategy for Two Sauna Heaters",
+    "objective": "Apply the curriculum to the two actual products you intend to develop.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "20.1",
+        "title": "Product A requirements and architecture",
+        "why": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+        "questions": [
+          "Which wattage variants are feasible on standard residential circuits?",
+          "What plug and receptacle configurations may be appropriate?",
+          "What protective controls are required?",
+          "What components are safety-critical?",
+          "What certification standard should apply?",
+          "Can multiple wattage variants be included in one certification family?",
+          "Should the heater or complete cabin be certified?",
+          "What information must be obtained from an NRTL?"
+        ],
+        "readings": [
+          {
+            "id": "20.1:r1",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 875",
+            "summary": "Primary traditional sauna heater safety standard to investigate. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.1:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 60335-2-53",
+            "summary": "Alternative sauna-specific standards framework whose applicability should be confirmed. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "20.1:r3",
+            "title": "NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "NFPA 70",
+            "summary": "Relevant branch-circuit, appliance, grounding, and installation requirements. Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "access": true,
+            "relevance": "Product A needs a coherent requirements and certification package for review by engineers and laboratories.",
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [
+          "Product: 1.7–2.2 kW, 120V AC traditional sauna heater."
+        ],
+        "incomplete": false,
+        "objectives": [
+          "Define proposed wattages, circuit options, protections, and certification scope.",
+          "Compile unresolved NRTL questions and product-family decisions."
+        ]
+      },
+      {
+        "id": "20.2",
+        "title": "Product B requirements and architecture",
+        "why": "Product B needs an integrated architecture and certification strategy for its proposed battery and heating subsystems.",
+        "questions": [],
+        "readings": [],
+        "context": [
+          "Product: Battery-assisted traditional sauna heater.",
+          "Preliminary design:",
+          "- 5–10 kWh LFP battery.",
+          "- Nominal 48V DC architecture under consideration.",
+          "- 6–10 kW DC heating.",
+          "- 1.2–2.2 kW AC heating.",
+          "- 120V residential input.",
+          "- Rapid heatup followed by sustained heating."
+        ],
+        "incomplete": true,
+        "objectives": [
+          "Document the supplied preliminary battery, heating, and residential-input requirements."
+        ]
+      }
+    ]
+  }
+]

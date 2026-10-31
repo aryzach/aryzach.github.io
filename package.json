@@ -18,7 +18,8 @@
     "test:browser": "node scripts/test-preview.mjs",
     "test:agreement:browser": "node scripts/test-agreement-preview.mjs",
     "lint:safety": "eslint src/dev src/lib/runtime.ts src/lib/runtimePolicy.ts tests/runtime-policy.test.ts src/lib/customerMetrics.ts tests/fixtures/customerHistory.ts src/components/admin/CustomerInsights.tsx tests/customer-metrics.test.ts src/components/admin/XeroConnection.tsx tests/xero-oauth.test.ts proposals/xero/functions/_shared/xero.ts src/components/admin/CustomerMatchReview.tsx proposals/xero-history/*.ts tests/xero-history.test.ts",
-    "academy:sync": "node scripts/sync-academy.mjs"
+    "academy:sync": "node scripts/sync-academy.mjs",
+    "academy:content": "node scripts/build-curriculum.mjs && node scripts/sync-academy.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

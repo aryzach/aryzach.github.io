@@ -4,22 +4,19 @@ import {
   services,
 } from "../lib/runtime";
 import {
-  attempt,
-  blank,
-  type Attempt,
   type Entry,
+  type Value,
   type Snapshot,
+  entryId,
+  validateValue,
 } from "./engine";
 export const localMode = !productionEnabled && !staticRenderEnabled;
-const cacheKey = "sf-academy-preview-v1";
-const sessionKey = "sf-academy-session-v1";
+const cacheKey = "sf-curriculum-explorer-preview-v1",
+  sessionKey = "sf-academy-session-v1";
 export const getSession = () =>
   localMode ? "preview" : localStorage.getItem(sessionKey);
 export async function api(action: string, data: Record<string, unknown> = {}) {
-  if (localMode)
-    throw Error(
-      "Local preview: cloud sync and paid tutor requests are disabled.",
-    );
+  if (localMode) throw Error("Cloud access is disabled in local preview.");
   const response = await fetch(
     services.supabaseUrl + "/functions/v1/academy-api",
     {
@@ -39,70 +36,62 @@ export async function api(action: string, data: Record<string, unknown> = {}) {
   if (!response.ok) {
     if (response.status === 401 && action !== "login")
       localStorage.removeItem(sessionKey);
-    throw Error(result.error || "Academy request failed.");
+    throw Error(result.error || "Request failed.");
   }
   return result;
 }
 export async function login(password: string, activation?: string) {
-  const result = await api(activation ? "activate" : "login", {
+  const r = await api(activation ? "activate" : "login", {
     password,
     activation,
   });
-  localStorage.setItem(sessionKey, result.token);
+  localStorage.setItem(sessionKey, r.token);
 }
 export async function logout() {
   if (!localMode) await api("logout");
   localStorage.removeItem(sessionKey);
 }
+export async function changePassword(
+  currentPassword: string,
+  password: string,
+) {
+  const r = await api("password", { currentPassword, password });
+  localStorage.setItem(sessionKey, r.token);
+}
 export function localSnapshot(): Snapshot {
   try {
-    return (
-      JSON.parse(localStorage.getItem(cacheKey) || "null") ||
-      structuredClone(blank)
+    const state = JSON.parse(
+      localStorage.getItem(cacheKey) || '{"entries":[]}',
     );
+    if (!Array.isArray(state.entries)) throw Error();
+    for (const e of state.entries)
+      validateValue(e.id.replace("explorer:", ""), e.value);
+    return state;
   } catch {
-    return structuredClone(blank);
+    return { entries: [] };
   }
 }
-export async function load() {
-  return localMode
-    ? {
-        state: localSnapshot(),
-        usage: { usedMicros: 0, ceilingMicros: 50000000 },
-        tutorReady: false,
-      }
-    : api("snapshot");
+export async function load(): Promise<Snapshot> {
+  return localMode ? localSnapshot() : (await api("snapshot")).state;
 }
-export async function saveEntry(entry: Omit<Entry, "updatedAt">) {
-  if (!localMode) return (await api("entry", { entry })).entry as Entry;
+export async function saveTopic(
+  topic: string,
+  value: Value,
+  version: number,
+): Promise<Entry> {
+  validateValue(topic, value);
+  const entry = { id: entryId(topic), kind: "note" as const, value, version };
+  if (!localMode) return (await api("entry", { entry })).entry;
   const state = localSnapshot();
   const previous = state.entries.find((e) => e.id === entry.id);
-  if ((previous?.version || 0) !== entry.version)
-    throw Error("This record changed. Refresh before saving.");
+  if ((previous?.version || 0) !== version)
+    throw Error("This topic changed in another tab. Refresh and retry.");
   const result = {
     ...entry,
-    version: entry.version + 1,
+    version: version + 1,
     updatedAt: new Date().toISOString(),
   };
   state.entries = [...state.entries.filter((e) => e.id !== entry.id), result];
   localStorage.setItem(cacheKey, JSON.stringify(state));
   return result;
-}
-export async function saveAttempt(input: Attempt) {
-  if (!localMode)
-    return (
-      await api("attempt", {
-        attempt: {
-          id: input.id,
-          questionId: input.questionId,
-          response: input.response,
-          confidence: input.confidence,
-        },
-      })
-    ).attempt as Attempt;
-  const state = localSnapshot();
-  if (!state.attempts.some((a) => a.id === input.id))
-    state.attempts.push(input);
-  localStorage.setItem(cacheKey, JSON.stringify(state));
-  return input;
 }
