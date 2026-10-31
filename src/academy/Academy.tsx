@@ -929,10 +929,17 @@ function LessonNotes({
   ) => Promise<Entry>;
   go: (v: View, id?: string) => void;
 }) {
-  // Keep the draft and its base version stable during background sync. A new
-  // lesson remounts this keyed editor; a remote edit is caught on save.
+  // Refresh untouched notes, but preserve a draft and its base version during
+  // background sync so concurrent edits are caught on save.
   const [draft, setDraft] = useState(String(note?.value.text || ""));
   const [base, setBase] = useState(note?.version || 0);
+  const [dirty, setDirty] = useState(false);
+  useEffect(() => {
+    if (!dirty) {
+      setDraft(String(note?.value.text || ""));
+      setBase(note?.version || 0);
+    }
+  }, [note, dirty]);
   return (
     <aside className="ac-card ac-notes">
       <NotebookPen size={21} />
@@ -946,7 +953,10 @@ function LessonNotes({
         rows={10}
         maxLength={20000}
         value={draft}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={(e) => {
+          setDraft(e.target.value);
+          setDirty(true);
+        }}
       />
       <button
         disabled={busy}
@@ -959,6 +969,7 @@ function LessonNotes({
               base,
             );
             setBase(e.version);
+            setDirty(false);
           })
         }
       >

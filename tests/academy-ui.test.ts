@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { build } from "esbuild";
 import { Window } from "happy-dom";
-test("academy renders every view, saves practice locally without contacting a backend", async () => {
+test("academy renders every view, saves practice and protects note drafts locally without contacting a backend", async () => {
   const compiled = await build({
     stdin: {
       contents:
@@ -89,6 +89,47 @@ test("academy renders every view, saves practice locally without contacting a ba
     );
     assert.equal(saved.attempts.length, 1);
     assert.equal(saved.attempts[0].correct, true);
+    window.history.pushState(null, "", "?view=lesson&module=regulation");
+    window.dispatchEvent(new window.PopStateEvent("popstate"));
+    await tick();
+    const editNote = async (text: string) => {
+      const note = doc.querySelector("#lesson-note")!;
+      setter.call(note, text);
+      note.dispatchEvent(new window.Event("input", { bubbles: true }));
+      await tick();
+    };
+    await editNote("My saved note");
+    await click("Save note");
+    const persisted = JSON.parse(
+      window.localStorage.getItem("sf-academy-preview-v1")!,
+    );
+    const savedNote = persisted.entries.find(
+      (e: { kind: string }) => e.kind === "note",
+    );
+    assert.equal(savedNote.value.text, "My saved note");
+    await editNote("Unsent local draft");
+    savedNote.value.text = "New note from another device";
+    savedNote.version++;
+    window.localStorage.setItem(
+      "sf-academy-preview-v1",
+      JSON.stringify(persisted),
+    );
+    doc.dispatchEvent(new window.Event("visibilitychange"));
+    await tick();
+    assert.equal(
+      (doc.querySelector("#lesson-note") as HTMLTextAreaElement).value,
+      "Unsent local draft",
+    );
+    await click("Save note");
+    assert.match(doc.body.textContent!, /This record changed/);
+    const afterConflict = JSON.parse(
+      window.localStorage.getItem("sf-academy-preview-v1")!,
+    );
+    assert.equal(
+      afterConflict.entries.find((e: { kind: string }) => e.kind === "note")
+        .value.text,
+      "New note from another device",
+    );
     assert.equal(network, 0);
   } finally {
     await window.happyDOM.close();
