@@ -41,12 +41,12 @@ test("all complete supplied questions survive verbatim and partial topics stay e
   );
   for (const [, question] of extension.matchAll(/^- \[ \] (.+)$/gm))
     assert.ok(actual.includes(question), question);
-  assert.equal(sections.length, 19);
-  assert.equal(topics.length, 97);
+  assert.equal(sections.length, 24);
+  assert.equal(topics.length, 145);
   assert.equal(expected.length, 267);
   assert.deepEqual(
     topics.filter((t) => t.incomplete).map((t) => t.id),
-    ["6.6"],
+    [],
   );
   for (const t of topics)
     for (const r of t.readings) {
@@ -54,7 +54,7 @@ test("all complete supplied questions survive verbatim and partial topics stay e
       assert.ok(r.summary && r.scope && r.relevance);
       if (r.url.includes("shopulstandards")) assert.ok(r.access);
     }
-  assert.equal(topics.flatMap((t) => t.readings).length, 245);
+  assert.equal(topics.flatMap((t) => t.readings).length, 364);
 });
 test("reading completion does not imply understanding; backups validate before writes", () => {
   const t = topics[0],
@@ -131,8 +131,8 @@ test("extension preserves all Modules 1–19 and every previous progress identit
     for (const r of before.readings) v.readings[r.id] = true;
     assert.deepEqual(validateValue(before.id, v), v);
   }
-  assert.equal(topics.flatMap((t) => t.questions).length, 698);
-  assert.equal(topics.filter((t) => t.exercise).length, 21);
+  assert.equal(topics.flatMap((t) => t.questions).length, 1129);
+  assert.equal(topics.filter((t) => t.exercise).length, 46);
   const emc = topics.find((t) => t.id === "22.4")!;
   assert.equal(emc.readings.length, 2);
   assert.notEqual(emc.readings[0].title, emc.readings[1].title);
@@ -246,8 +246,8 @@ test("foundation additions preserve prior identities and every supplied assignme
   }
   for (const id of ["3", "4", "5"])
     assert.ok(sections.find((s) => s.id === id)!.capstone);
-  assert.equal(topics.find((t) => t.id === "6.6")!.questions.length, 4);
-  assert.ok(topics.find((t) => t.id === "6.6")!.incomplete);
+  assert.equal(topics.find((t) => t.id === "6.6")!.questions.length, 11);
+  assert.equal(topics.find((t) => t.id === "6.6")!.incomplete, false);
   assert.deepEqual(
     sections.map((s) => Number(s.id)),
     [...sections.map((s) => Number(s.id))].sort((a, b) => a - b),
@@ -256,5 +256,114 @@ test("foundation additions preserve prior identities and every supplied assignme
     topics
       .find((t) => t.id === "5.1")!
       .readings.find((r) => r.title.startsWith("ISO"))!.access,
+  );
+});
+
+test("completion preserves all prior topics and adds every received reading and checklist", () => {
+  const before = JSON.parse(
+    readFileSync(
+      new URL("./fixtures/curriculum-before-completion.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const unchanged = topics.filter(
+    (t) => before.topicIds.includes(t.id) && t.id !== "6.6",
+  );
+  assert.equal(
+    createHash("sha256").update(JSON.stringify(unchanged)).digest("hex"),
+    before.unchangedTopicsHash,
+  );
+  const completed = topics.find((t) => t.id === "6.6")!;
+  assert.deepEqual(
+    completed.questions.slice(0, 4),
+    before.original6_6.questions,
+  );
+  assert.deepEqual(completed.readings, before.original6_6.readings);
+  const sources = [
+    "09-modules-6-8.md",
+    "10-modules-8-10.md",
+    "11-module-10-continuation.md",
+    "12-module-11.md",
+    "13-module-11-capstone.md",
+  ];
+  let readings = 0;
+  for (const file of sources) {
+    let source = readFileSync(
+      new URL("../docs/curriculum-source/" + file, import.meta.url),
+      "utf8",
+    );
+    if (file.startsWith("09"))
+      source = source
+        .slice(source.indexOf("# Module 6:"))
+        .split("## Topic 8.4:")[0];
+    if (file.startsWith("10"))
+      source = source
+        .slice(source.indexOf("# Module 8:"))
+        .split("## Topic 10.3:")[0];
+    if (file.startsWith("11"))
+      source = source.split("# Implementation Reminder")[0];
+    if (file.startsWith("12"))
+      source = source
+        .slice(
+          source.indexOf("# Module 11:", source.indexOf("# Module 11:") + 1),
+        )
+        .split("# Module 11 Capstone:")[0];
+    if (file.startsWith("13"))
+      source = source.split("# Final Instructions to Codex")[0];
+    for (const [, question] of source.matchAll(/^- \[ \] (.+)$/gm))
+      assert.ok(
+        topics.some((t) => t.questions.includes(question)),
+        question,
+      );
+    const blocks = source.split(/^#+ Topic /m).slice(1);
+    for (const block of blocks) {
+      const id = block.match(/^(\d+\.\d+):/)![1],
+        t = topics.find((t) => t.id === id)!;
+      for (const [, title, , summary] of block.matchAll(
+        /\*\*\d+\. \[([^\]]+)\]\(([^)]+)\)\*\*\s+(?:\*\*)?Summary:(?:\*\*)? ([^\n]+)/g,
+      )) {
+        readings++;
+        const reading = t.readings.find((r) => r.title === title)!;
+        assert.ok(reading, id + ": " + title);
+        assert.ok(reading.summary.includes(summary), id + ": " + summary);
+      }
+      assert.ok(t.why && t.objectives.length, id);
+    }
+  }
+  assert.equal(readings, 119);
+  assert.equal(
+    topics.find((t) => t.id === "10.6")!.readings.length,
+    2,
+    "distinct assignments at the same NEC URL retain separate checks",
+  );
+  assert.deepEqual(
+    sections.map((s) => Number(s.id)),
+    Array.from({ length: 24 }, (_, i) => i + 1),
+  );
+  assert.ok(!topics.some((t) => t.incomplete));
+  for (const id of ["6", "7", "8", "9"])
+    assert.ok(sections.find((s) => s.id === id)!.capstone);
+  const final = topics.find((t) => t.id === "11.11")!;
+  assert.equal(final.deliverableCount, 15);
+  assert.equal(final.questions.length, 33);
+  assert.ok(final.exercise!.includes("15. **Recommended next steps:**"));
+  assert.ok(
+    final.exercise!.includes(
+      "8. Distinguish conclusions supported by evidence",
+    ),
+  );
+  assert.equal(topics.find((t) => t.id === "10.10")!.questions.length, 12);
+  assert.ok(!JSON.stringify(sections).includes("Instructions to Codex"));
+  assert.ok(!JSON.stringify(sections).includes("Implementation Reminder"));
+  const progress = emptyValue();
+  progress.questions["11.11:q1"] = true;
+  progress.questions["11.11:q33"] = true;
+  progress.notes = "My preliminary engineering assessment";
+  assert.deepEqual(validateValue(final.id, progress), progress);
+  assert.throws(() =>
+    validateValue(final.id, {
+      ...progress,
+      questions: { "11.11:q34": true },
+    }),
   );
 });

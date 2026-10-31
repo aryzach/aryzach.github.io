@@ -532,9 +532,11 @@ export default function Academy() {
               </section>
               <section className="ce-panel">
                 <h3>
-                  {topic.id === "20.4"
-                    ? "Capstone deliverables"
-                    : "Questions I should be able to answer"}
+                  {topic.deliverableCount
+                    ? "Capstone deliverables and mastery questions"
+                    : topic.id === "20.4"
+                      ? "Capstone deliverables"
+                      : "Questions I should be able to answer"}
                 </h3>
                 <p>
                   These checkboxes are your self-assessment, not a verified
@@ -542,33 +544,41 @@ export default function Academy() {
                   automatically.
                 </p>
                 {topic.questions.map((q, i) => (
-                  <label key={q} className="ce-check">
-                    <input
-                      type="checkbox"
-                      disabled={busy}
-                      checked={
-                        !!valueFor(entries, topic.id).questions[
-                          questionId(topic, i)
-                        ]
-                      }
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        void run(async () => {
-                          const v = valueFor(liveEntries.current, topic.id);
-                          await persist(topic.id, {
-                            ...v,
-                            notes: dirty.current ? draft : v.notes,
-                            questions: {
-                              ...v.questions,
-                              [questionId(topic, i)]: checked,
-                            },
+                  <div key={q}>
+                    {topic.deliverableCount && i === 0 ? (
+                      <h4>Required deliverables</h4>
+                    ) : null}
+                    {topic.deliverableCount && i === topic.deliverableCount ? (
+                      <h4>Final mastery questions</h4>
+                    ) : null}
+                    <label className="ce-check">
+                      <input
+                        type="checkbox"
+                        disabled={busy}
+                        checked={
+                          !!valueFor(entries, topic.id).questions[
+                            questionId(topic, i)
+                          ]
+                        }
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          void run(async () => {
+                            const v = valueFor(liveEntries.current, topic.id);
+                            await persist(topic.id, {
+                              ...v,
+                              notes: dirty.current ? draft : v.notes,
+                              questions: {
+                                ...v.questions,
+                                [questionId(topic, i)]: checked,
+                              },
+                            });
+                            dirty.current = false;
                           });
-                          dirty.current = false;
-                        });
-                      }}
-                    />
-                    <span>{q}</span>
-                  </label>
+                        }}
+                      />
+                      <span>{q}</span>
+                    </label>
+                  </div>
                 ))}
               </section>
               <section className="ce-panel">
@@ -698,9 +708,8 @@ export default function Academy() {
           ) : (
             <>
               <aside className="ce-notice">
-                Content received: Modules 1–6 and 12–24. The remainder of Topic
-                6.6 and Modules 7–11 are still awaiting source material. Missing
-                modules are marked in navigation.
+                All 24 modules are included. Reading checks and question checks
+                track your self-assessed progress independently.
               </aside>
               {Array.from({ length: 24 }, (_, i) => String(i + 1))
                 .filter((id) => !sections.some((s) => s.id === id))
@@ -747,7 +756,7 @@ export default function Academy() {
                       </button>
                     </div>
                     {s.objective && <p>{s.objective}</p>}
-                    {s.context && <p>{s.context}</p>}
+                    {s.context && <ReactMarkdown>{s.context}</ReactMarkdown>}
                     {progress(s.topics)}
                     {!collapsed.includes(s.id) && (
                       <div className="ce-topics">

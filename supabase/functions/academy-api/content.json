@@ -1578,7 +1578,7 @@
     "id": "6",
     "title": "Sauna Safety Standards and Certification",
     "objective": "Understand the standards governing traditional electric sauna heaters, how those standards are interpreted, and how they affect the design and certification of a 120V residential sauna heater.",
-    "capstone": "",
+    "capstone": "Create a preliminary standards-applicability and certification-scope report for Product A.\n\nInclude:\n\n1. Comparison of UL 875, UL 60335-1, UL 60335-2-53, and IEC 60335-2-53.\n2. Comparison with general heating standards.\n3. Heater-only versus complete-cabin certification.\n4. Candidate model-family configurations.\n5. Preliminary normal and abnormal-operation considerations.\n6. Safety-critical controls.\n7. Installation and marking requirements.\n8. Unresolved questions for an NRTL.\n\n",
     "topics": [
       {
         "id": "6.1",
@@ -1832,7 +1832,14 @@
           "What does it mean to certify a heater alone?",
           "What does it mean to certify a complete sauna assembly?",
           "What installation conditions might accompany heater-only certification?",
-          "Can a certified heater be installed in any wooden enclosure?"
+          "Can a certified heater be installed in any wooden enclosure?",
+          "What installation limitations might accompany a heater-only certification?",
+          "How can cabin dimensions affect heater safety?",
+          "How can insulation and ventilation affect the certified configuration?",
+          "What happens if the heater is installed closer to wood than permitted?",
+          "What happens if a manufacturer changes the cabin's construction materials?",
+          "Does a certified heater automatically establish that the entire sauna installation complies with local electrical and building codes?",
+          "What evidence would be needed to certify a heater and cabin as one assembly?"
         ],
         "readings": [
           {
@@ -1869,9 +1876,2442 @@
           }
         ],
         "context": [],
-        "incomplete": true
+        "incomplete": false,
+        "exercise": "Compare two certification strategies:\n\n1. Certify the heater as a standalone appliance and specify permitted installation conditions.\n2. Certify a defined heater-and-cabin assembly.\n\nExplain the implications for product variations, installation flexibility, manufacturing changes, testing scope, and certification maintenance.\n\n"
+      },
+      {
+        "id": "6.7",
+        "title": "Normal and Abnormal Operation Requirements",
+        "why": "Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+        "objectives": [
+          "Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions."
+        ],
+        "questions": [
+          "What is normal operation?",
+          "What is abnormal operation?",
+          "Why is successful normal operation insufficient to establish safety?",
+          "What happens if the thermostat fails to regulate temperature?",
+          "What happens if a relay becomes stuck closed?",
+          "How might blocked airflow affect heater temperatures?",
+          "Why might sensor placement affect abnormal-operation results?",
+          "What is the purpose of an independent protective control?",
+          "How do laboratories determine which abnormal conditions must be evaluated?",
+          "Why must exact test conditions and acceptance criteria come from the applicable standard?"
+        ],
+        "readings": [
+          {
+            "id": "6.7:r1",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the normal-operation and abnormal-operation requirements relevant to electric dry-bath heaters, including temperature behavior and protective systems.",
+            "summary": "Study the normal-operation and abnormal-operation requirements relevant to electric dry-bath heaters, including temperature behavior and protective systems. Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "relevance": "Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.7:r2",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General household appliance safety framework, including abnormal-operation testing and the evaluation of protective construction.",
+            "summary": "General household appliance safety framework, including abnormal-operation testing and the evaluation of protective construction. Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "relevance": "Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.7:r3",
+            "title": "UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Sauna-specific requirements that supplement or modify general appliance requirements.",
+            "summary": "Sauna-specific requirements that supplement or modify general appliance requirements. Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "relevance": "Understand why appliance safety standards evaluate products under both expected operation and foreseeable abnormal conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Create a conceptual abnormal-operation test matrix for Product A.\n\nFor each scenario, identify the hazard being investigated, expected protective response, evidence needed, and relevant standards questions.\n\nDo not perform hazardous fault-injection tests outside a qualified laboratory.\n\n"
+      },
+      {
+        "id": "6.8",
+        "title": "Certification Model Families and Product Variants",
+        "why": "Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+        "objectives": [
+          "Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration."
+        ],
+        "questions": [
+          "What is a certification model family?",
+          "Can 1,700W, 2,000W, and 2,200W heaters potentially belong to one family?",
+          "What construction differences might prevent family grouping?",
+          "How can a laboratory select representative worst-case configurations?",
+          "Why might the highest-power heater not be the worst case for every test?",
+          "What happens when a timer or relay is changed?",
+          "What happens when the heater enclosure changes dimensions?",
+          "How can approved alternate components be documented?",
+          "Who determines the permissible scope of a model family?"
+        ],
+        "readings": [
+          {
+            "id": "6.8:r1",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review how product certification relates to defined product constructions, models, and ongoing compliance.",
+            "summary": "Review how product certification relates to defined product constructions, models, and ongoing compliance. Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "relevance": "Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "6.8:r2",
+            "title": "UL Product iQ",
+            "url": "https://productiq.ulprospector.com/",
+            "scope": "Explore certification records and observe how model numbers, product categories, and certified configurations are documented.",
+            "summary": "Explore certification records and observe how model numbers, product categories, and certified configurations are documented. Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "relevance": "Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "6.8:r3",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate requirements that may affect grouping related heater designs within a certification program.",
+            "summary": "Investigate requirements that may affect grouping related heater designs within a certification program. Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "relevance": "Understand how manufacturers certify multiple versions of a product without necessarily conducting a completely separate evaluation for every configuration.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Develop a hypothetical model-family proposal for three 120V sauna heaters:\n\n- 1,700W.\n- 2,000W.\n- 2,200W.\n\nIdentify shared components, differing components, potential worst-case configurations, and questions requiring laboratory confirmation.\n\n"
+      },
+      {
+        "id": "6.9",
+        "title": "Certification Markings, Manuals, and Installation Conditions",
+        "why": "Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+        "objectives": [
+          "Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use."
+        ],
+        "questions": [
+          "What information normally appears on an electrical appliance nameplate?",
+          "Why are voltage, current, and power ratings important?",
+          "How do installation instructions relate to certification?",
+          "What happens if an installer disregards required clearances?",
+          "Why might a heater require particular supply conductor temperature ratings?",
+          "How can the installation environment affect permissible use?",
+          "What warnings and maintenance instructions might be necessary?",
+          "What information should be included in a heater installation manual?",
+          "Why can changing instructions or markings require certification review?"
+        ],
+        "readings": [
+          {
+            "id": "6.9:r1",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the standard's marking and installation instruction requirements for relevant products.",
+            "summary": "Study the standard's marking and installation instruction requirements for relevant products. Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "relevance": "Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.9:r2",
+            "title": "NEC Article 110",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Review equipment approval and the importance of installation according to applicable listing and labeling instructions.",
+            "summary": "Review equipment approval and the importance of installation according to applicable listing and labeling instructions. Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "relevance": "Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.9:r3",
+            "title": "Harvia",
+            "url": "https://www.harvia.com/",
+            "scope": "Locate a North American sauna heater installation manual and study its electrical requirements, clearances, warnings, and installation conditions.",
+            "summary": "Locate a North American sauna heater installation manual and study its electrical requirements, clearances, warnings, and installation conditions. Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "relevance": "Understand how safety requirements extend beyond internal construction to product markings, installation instructions, and restrictions on use.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
       }
     ]
+  },
+  {
+    "id": "7",
+    "title": "Component Standards and Certification",
+    "objective": "Understand how individual electrical components are evaluated, how their certifications interact with finished-appliance certification, and how to select components appropriate for high-temperature sauna applications.",
+    "capstone": "Create a safety-critical bill of materials for Product A, including:\n\n- Component description.\n- Manufacturer and model.\n- Electrical ratings.\n- Temperature ratings.\n- Certification status.\n- Conditions of acceptability.\n- Potential failure modes.\n- Approved alternatives.\n- Supplier documentation required.\n\n",
+    "topics": [
+      {
+        "id": "7.1",
+        "title": "UL Listed Versus UL Recognized Components",
+        "why": "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+        "objectives": [
+          "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability."
+        ],
+        "questions": [
+          "What is a UL Listed product?",
+          "What is a UL Recognized Component?",
+          "What are conditions of acceptability?",
+          "Why doesn't using certified components automatically certify the finished heater?",
+          "How can a component's certification restrict its use?",
+          "What happens when a component is used outside its rated environment?",
+          "How can you verify that a supplier's claimed certification is genuine?"
+        ],
+        "readings": [
+          {
+            "id": "7.1:r1",
+            "title": "UL Solutions: Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Introduces certification programs and the distinction between finished-product evaluation and component evaluation.",
+            "summary": "Introduces certification programs and the distinction between finished-product evaluation and component evaluation. Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+            "relevance": "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "7.1:r2",
+            "title": "UL Product iQ",
+            "url": "https://productiq.ulprospector.com/",
+            "scope": "Learn how to investigate certification records, product categories, and component files.",
+            "summary": "Learn how to investigate certification records, product categories, and component files. Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+            "relevance": "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.2",
+        "title": "Thermostats and Temperature-Sensing Controls",
+        "why": "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+        "objectives": [
+          "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions."
+        ],
+        "questions": [
+          "What is the difference between a thermostat and an independent high-limit control?",
+          "How does a temperature-sensing control fail?",
+          "What is the difference between automatic reset and manual reset?",
+          "Why does sensor placement matter?",
+          "How can high ambient temperature affect control reliability?",
+          "What certification documentation should a thermostat supplier provide?",
+          "What is the significance of a control's rated operating conditions?"
+        ],
+        "readings": [
+          {
+            "id": "7.2:r1",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "General safety requirements for automatic electrical controls, including construction, operation, and fault considerations.",
+            "summary": "General safety requirements for automatic electrical controls, including construction, operation, and fault considerations. Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+            "relevance": "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.2:r2",
+            "title": "UL 60730-2-9, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Particular requirements for temperature-sensing controls.",
+            "summary": "Particular requirements for temperature-sensing controls. Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+            "relevance": "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.3",
+        "title": "Relays, Contactors, and Switching Components",
+        "why": "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+        "objectives": [
+          "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings."
+        ],
+        "questions": [
+          "What is the difference between a relay and a contactor?",
+          "What is a normally open contact?",
+          "What happens when contacts weld closed?",
+          "What is electrical endurance?",
+          "What is mechanical endurance?",
+          "Why do load type and switching conditions affect contact ratings?",
+          "Why is a component's current rating insufficient without environmental information?",
+          "What changes when switching high-current DC instead of AC?"
+        ],
+        "readings": [
+          {
+            "id": "7.3:r1",
+            "title": "UL 61058 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Appliance switch safety requirements.",
+            "summary": "Appliance switch safety requirements. Investigate relevant switching ratings and application conditions.",
+            "relevance": "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.3:r2",
+            "title": "UL 508, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Industrial control equipment standard, useful for understanding some categories of switching and control equipment.",
+            "summary": "Industrial control equipment standard, useful for understanding some categories of switching and control equipment. Applicability depends on the component and application.",
+            "relevance": "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.3:r3",
+            "title": "Omron Electronic Components",
+            "url": "https://components.omron.com/us-en/",
+            "scope": "Explore relay datasheets and application documentation, including current ratings, switching endurance, and ambient-temperature limitations.",
+            "summary": "Explore relay datasheets and application documentation, including current ratings, switching endurance, and ambient-temperature limitations. Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+            "relevance": "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.4",
+        "title": "Thermal Fuses and Protective Cutoffs",
+        "why": "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings.",
+        "objectives": [
+          "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings."
+        ],
+        "questions": [
+          "What is a thermal fuse?",
+          "How does a thermal fuse differ from a thermostat?",
+          "What is a one-shot protective device?",
+          "What is a manual-reset temperature limiter?",
+          "Why might protective-device placement be safety-critical?",
+          "What happens if a protective device is thermally isolated from the hazardous location?",
+          "How should component ratings and installation conditions be verified?"
+        ],
+        "readings": [
+          {
+            "id": "7.4:r1",
+            "title": "UL 60730 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate automatic electrical control and protective temperature-control requirements.",
+            "summary": "Investigate automatic electrical control and protective temperature-control requirements. Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings.",
+            "relevance": "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.4:r2",
+            "title": "UL 60691 / IEC 60691, Standards Catalogs",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Thermal-link safety requirements.",
+            "summary": "Thermal-link safety requirements. Study the difference between one-time thermal links and resettable temperature controls.",
+            "relevance": "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.5",
+        "title": "Wires, Cords, and Insulation",
+        "why": "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+        "objectives": [
+          "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence."
+        ],
+        "questions": [
+          "What factors determine conductor suitability?",
+          "How does insulation temperature rating affect wire selection?",
+          "Why is current rating alone insufficient?",
+          "What is the difference between internal appliance wiring and a supply cord?",
+          "Why are strain relief and mechanical protection important?",
+          "What happens if a supply cord is routed near a hot surface?",
+          "How can a manufacturer verify wire certification and ratings?"
+        ],
+        "readings": [
+          {
+            "id": "7.5:r1",
+            "title": "UL 758, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Appliance wiring material requirements and ratings.",
+            "summary": "Appliance wiring material requirements and ratings. Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "relevance": "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.5:r2",
+            "title": "UL 62, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Flexible cords and cables.",
+            "summary": "Flexible cords and cables. Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "relevance": "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.5:r3",
+            "title": "UL 817, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Cord sets and power-supply cords.",
+            "summary": "Cord sets and power-supply cords. Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "relevance": "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.5:r4",
+            "title": "NEC Article 400",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Installation requirements for flexible cords and cables.",
+            "summary": "Installation requirements for flexible cords and cables. Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "relevance": "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.6",
+        "title": "Electrical Connectors and Terminals",
+        "why": "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+        "objectives": [
+          "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence."
+        ],
+        "questions": [
+          "What causes contact resistance?",
+          "Why do terminals heat during normal operation?",
+          "How can thermal cycling affect connection integrity?",
+          "What is the importance of installation torque?",
+          "How do screw terminals and crimped connections differ?",
+          "Why can a connector's temperature rating matter as much as its current rating?",
+          "What evidence would support using a particular connector in a sauna heater?"
+        ],
+        "readings": [
+          {
+            "id": "7.6:r1",
+            "title": "UL 486 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Standards governing different categories of wire connectors and electrical terminations.",
+            "summary": "Standards governing different categories of wire connectors and electrical terminations. Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+            "relevance": "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.6:r2",
+            "title": "NASA Workmanship Standards",
+            "url": "https://workmanship.nasa.gov/",
+            "scope": "Examples of controlled electrical assembly and inspection practices.",
+            "summary": "Examples of controlled electrical assembly and inspection practices. Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+            "relevance": "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.7",
+        "title": "PCB Materials, Plastics, and Flammability",
+        "why": "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+        "objectives": [
+          "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification."
+        ],
+        "questions": [
+          "What does a UL 94 flammability classification indicate?",
+          "Why doesn't a flammability classification establish overall product safety?",
+          "What is relative thermal index?",
+          "How can elevated temperature affect polymer properties?",
+          "Why do PCB material ratings matter?",
+          "How can contamination and moisture affect PCB insulation?",
+          "What documentation should be requested for plastic enclosures?"
+        ],
+        "readings": [
+          {
+            "id": "7.7:r1",
+            "title": "UL 94, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Flammability testing and classification of plastic materials.",
+            "summary": "Flammability testing and classification of plastic materials. Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+            "relevance": "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "7.7:r2",
+            "title": "UL 746 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Evaluation of polymeric materials used in electrical equipment.",
+            "summary": "Evaluation of polymeric materials used in electrical equipment. Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+            "relevance": "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "7.8",
+        "title": "Component Substitution and Certification Maintenance",
+        "why": "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+        "objectives": [
+          "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review."
+        ],
+        "questions": [
+          "What is a safety-critical component?",
+          "What is an approved alternate component?",
+          "Can a manufacturer substitute a relay with the same nominal current rating?",
+          "What information must be compared before substitution?",
+          "Why might a component change require additional testing?",
+          "How should substitutions be documented?",
+          "What happens if the factory uses an unapproved component?"
+        ],
+        "readings": [
+          {
+            "id": "7.8:r1",
+            "title": "UL Solutions: Follow-Up Services",
+            "url": "https://www.ul.com/services/follow-services",
+            "scope": "Investigate how certification bodies verify that production products remain consistent with approved construction.",
+            "summary": "Investigate how certification bodies verify that production products remain consistent with approved construction. Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+            "relevance": "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "7.8:r2",
+            "title": "ISO 9001",
+            "url": "https://www.iso.org/iso-9001-quality-management.html",
+            "scope": "Quality-management principles concerning controlled changes, traceability, and corrective action.",
+            "summary": "Quality-management principles concerning controlled changes, traceability, and corrective action. Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+            "relevance": "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "title": "Laboratory Testing and Precompliance",
+    "objective": "Understand how safety laboratories evaluate electrical appliances and how manufacturers prepare for certification testing.",
+    "capstone": "Create a preliminary certification evaluation plan for Product A covering:\n\n1. Construction review.\n2. Component documentation.\n3. Normal operation.\n4. Thermal testing.\n5. Electrical insulation.\n6. Grounding and bonding.\n7. Abnormal operation.\n8. Mechanical construction.\n9. Markings and installation instructions.\n10. Corrective-action and retesting procedures.\n\nFor each category, identify the relevant standard, intended evidence, and unresolved acceptance criteria.\n\n",
+    "topics": [
+      {
+        "id": "8.1",
+        "title": "Construction Review",
+        "why": "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+        "objectives": [
+          "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review."
+        ],
+        "questions": [
+          "What is a construction review?",
+          "Why are schematics required?",
+          "Why is a bill of materials required?",
+          "How are component certifications verified?",
+          "What is a safety-critical component?",
+          "What construction problems might be discovered before laboratory testing?",
+          "How does construction review influence the test plan?"
+        ],
+        "readings": [
+          {
+            "id": "8.1:r1",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "General overview of product certification and evaluation.",
+            "summary": "General overview of product certification and evaluation. Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+            "relevance": "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "8.1:r2",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate appliance construction requirements, including electrical protection, wiring, components, and enclosures.",
+            "summary": "Investigate appliance construction requirements, including electrical protection, wiring, components, and enclosures. Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+            "relevance": "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "8.2",
+        "title": "Input Power, Current, and Normal Operation",
+        "why": "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+        "objectives": [
+          "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation."
+        ],
+        "questions": [
+          "Why do laboratories measure actual input power?",
+          "How can nominal voltage variation affect resistive heating?",
+          "What is a rated input?",
+          "Why might a heater's actual current differ from its advertised current?",
+          "What is a worst-case operating configuration?",
+          "Why must the laboratory know the intended installation environment?"
+        ],
+        "readings": [
+          {
+            "id": "8.2:r1",
+            "title": "UL 60335-1",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate normal-operation testing and input-rating evaluation.",
+            "summary": "Investigate normal-operation testing and input-rating evaluation. Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+            "relevance": "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.2:r2",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study relevant normal-operation requirements for electric dry-bath heaters.",
+            "summary": "Study relevant normal-operation requirements for electric dry-bath heaters. Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+            "relevance": "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "8.3",
+        "title": "Temperature-Rise Testing",
+        "why": "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+        "objectives": [
+          "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits."
+        ],
+        "questions": [
+          "What is temperature rise?",
+          "Why is temperature rise measured relative to ambient?",
+          "What is thermal equilibrium?",
+          "Why do thermocouple placement and attachment matter?",
+          "How are worst-case temperatures identified?",
+          "What materials and components may require temperature measurements?",
+          "Why must pass/fail limits come from the applicable standard?"
+        ],
+        "readings": [
+          {
+            "id": "8.3:r1",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate temperature testing for sauna heaters and relevant surrounding construction.",
+            "summary": "Investigate temperature testing for sauna heaters and relevant surrounding construction. Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+            "relevance": "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.3:r2",
+            "title": "NIST: Temperature and Humidity",
+            "url": "https://www.nist.gov/pml/sensor-science/temperature-and-humidity",
+            "scope": "Temperature measurement and calibration concepts.",
+            "summary": "Temperature measurement and calibration concepts. Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+            "relevance": "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "8.4",
+        "title": "Dielectric Withstand and Leakage Testing",
+        "why": "Understand how laboratories evaluate electrical insulation and protection against electric shock.",
+        "objectives": [
+          "Understand how laboratories evaluate electrical insulation and protection against electric shock."
+        ],
+        "questions": [
+          "What is a dielectric withstand test?",
+          "What is leakage current?",
+          "What is insulation resistance?",
+          "Why are these different measurements?",
+          "What is the difference between normal operating voltage and dielectric test voltage?",
+          "What kinds of insulation failures can dielectric testing reveal?",
+          "Why might moisture affect leakage current?",
+          "What is the difference between basic and reinforced insulation?",
+          "Why must the applicable test voltage and acceptance criteria come from the relevant standard?",
+          "Why should high-voltage dielectric tests be performed only by qualified personnel using appropriate equipment?"
+        ],
+        "readings": [
+          {
+            "id": "8.4:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the requirements addressing electric shock protection, leakage current, dielectric strength, and insulation systems in household electrical appliances.",
+            "summary": "Study the requirements addressing electric shock protection, leakage current, dielectric strength, and insulation systems in household electrical appliances. Understand how laboratories evaluate electrical insulation and protection against electric shock.",
+            "relevance": "Understand how laboratories evaluate electrical insulation and protection against electric shock.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.4:r2",
+            "title": "IEC 60335-1, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Review the international framework for appliance electrical safety testing.",
+            "summary": "Review the international framework for appliance electrical safety testing. Compare general testing concepts with the US adoption and applicable national differences.",
+            "relevance": "Understand how laboratories evaluate electrical insulation and protection against electric shock.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.4:r3",
+            "title": "OSHA: Electrical Safety",
+            "url": "https://www.osha.gov/electrical",
+            "scope": "Introduces electrical shock hazards and protective practices.",
+            "summary": "Introduces electrical shock hazards and protective practices. Useful for understanding the hazards that insulation and protective grounding are intended to address.",
+            "relevance": "Understand how laboratories evaluate electrical insulation and protection against electric shock.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A sauna heater has a metal enclosure, resistive heating elements, a power cord, and electronic controls.\n\nCreate a conceptual insulation and shock-protection assessment identifying the relevant insulation boundaries, exposed conductive parts, and evidence a certification laboratory would need.\n\n"
+      },
+      {
+        "id": "8.5",
+        "title": "Grounding Continuity and Protective Bonding Tests",
+        "why": "Understand how laboratories verify protective grounding and bonding of exposed conductive parts.",
+        "objectives": [
+          "Understand how laboratories verify protective grounding and bonding of exposed conductive parts."
+        ],
+        "questions": [
+          "What is the purpose of protective bonding?",
+          "What is the difference between a neutral conductor and an equipment grounding conductor?",
+          "Why should exposed conductive parts be bonded where required?",
+          "What is a grounding continuity test?",
+          "Why is a simple visual inspection insufficient?",
+          "How can corrosion or a loose connection affect protective bonding?",
+          "Why must grounding test criteria be obtained from the applicable standard?"
+        ],
+        "readings": [
+          {
+            "id": "8.5:r1",
+            "title": "NEC Article 250, NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study grounding and bonding requirements and the role of equipment grounding conductors in fault protection.",
+            "summary": "Study grounding and bonding requirements and the role of equipment grounding conductors in fault protection. Understand how laboratories verify protective grounding and bonding of exposed conductive parts.",
+            "relevance": "Understand how laboratories verify protective grounding and bonding of exposed conductive parts.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.5:r2",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate protective earthing, grounding continuity, and related construction and testing requirements.",
+            "summary": "Investigate protective earthing, grounding continuity, and related construction and testing requirements. Understand how laboratories verify protective grounding and bonding of exposed conductive parts.",
+            "relevance": "Understand how laboratories verify protective grounding and bonding of exposed conductive parts.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Identify the exposed conductive parts of a hypothetical metal sauna heater and document which grounding and bonding questions require verification.\n\n"
+      },
+      {
+        "id": "8.6",
+        "title": "Abnormal-Operation Testing",
+        "why": "Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+        "objectives": [
+          "Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation."
+        ],
+        "questions": [
+          "What is abnormal operation?",
+          "How does abnormal operation differ from normal operation?",
+          "Why is successful normal operation insufficient to establish safety?",
+          "What happens if a thermostat fails to regulate temperature?",
+          "What happens if a relay remains closed?",
+          "How can blocked airflow affect heater safety?",
+          "Why can sensor placement affect abnormal-operation results?",
+          "What is the purpose of an independent high-limit control?",
+          "How are applicable abnormal conditions selected?",
+          "Why should actual fault-injection testing be performed in a qualified laboratory?"
+        ],
+        "readings": [
+          {
+            "id": "8.6:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study abnormal-operation requirements for household electrical appliances, including protective measures intended to prevent unacceptable hazards during specified faults.",
+            "summary": "Study abnormal-operation requirements for household electrical appliances, including protective measures intended to prevent unacceptable hazards during specified faults. Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "relevance": "Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.6:r2",
+            "title": "UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate sauna-specific abnormal-operation requirements and their relationship to the general appliance standard.",
+            "summary": "Investigate sauna-specific abnormal-operation requirements and their relationship to the general appliance standard. Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "relevance": "Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.6:r3",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Review the abnormal-operation requirements relevant to electric dry-bath heaters.",
+            "summary": "Review the abnormal-operation requirements relevant to electric dry-bath heaters. Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "relevance": "Understand why certification laboratories evaluate foreseeable failures and abnormal conditions rather than only normal operation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a preliminary abnormal-operation evaluation matrix for Product A.\n\nInclude the hazard being investigated, expected protective response, evidence required, and relevant standards questions.\n\n"
+      },
+      {
+        "id": "8.7",
+        "title": "Mechanical Construction and Enclosure Testing",
+        "why": "Understand how mechanical design affects electrical and fire safety.",
+        "objectives": [
+          "Understand how mechanical design affects electrical and fire safety."
+        ],
+        "questions": [
+          "Why does mechanical construction affect electrical safety?",
+          "What is accessibility of live parts?",
+          "How can enclosure deformation create hazards?",
+          "Why are sharp edges near wiring a concern?",
+          "What is strain relief?",
+          "Why might mounting orientation affect safety?",
+          "How can mechanical vibration or thermal expansion affect electrical connections?",
+          "What evidence is required to demonstrate suitable mechanical construction?"
+        ],
+        "readings": [
+          {
+            "id": "8.7:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate construction requirements addressing mechanical strength, access to hazardous parts, wiring protection, and appliance enclosures.",
+            "summary": "Investigate construction requirements addressing mechanical strength, access to hazardous parts, wiring protection, and appliance enclosures. Understand how mechanical design affects electrical and fire safety.",
+            "relevance": "Understand how mechanical design affects electrical and fire safety.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "8.7:r2",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study mechanical construction and installation requirements applicable to traditional sauna heaters.",
+            "summary": "Study mechanical construction and installation requirements applicable to traditional sauna heaters. Understand how mechanical design affects electrical and fire safety.",
+            "relevance": "Understand how mechanical design affects electrical and fire safety.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "8.8",
+        "title": "Test Instrumentation and Measurement Uncertainty",
+        "why": "Understand how engineering measurements are collected, calibrated, and interpreted.",
+        "objectives": [
+          "Understand how engineering measurements are collected, calibrated, and interpreted."
+        ],
+        "questions": [
+          "What is measurement uncertainty?",
+          "Why is calibration important?",
+          "What is the difference between accuracy and precision?",
+          "How can sensor placement affect measurements?",
+          "Why should ambient conditions be recorded?",
+          "What is repeatability?",
+          "What is reproducibility?",
+          "How should uncertainty affect interpretation of a result near a limit?"
+        ],
+        "readings": [
+          {
+            "id": "8.8:r1",
+            "title": "NIST: Temperature and Humidity Metrology",
+            "url": "https://www.nist.gov/pml/sensor-science/temperature-and-humidity",
+            "scope": "Introduces temperature measurement, calibration, and uncertainty.",
+            "summary": "Introduces temperature measurement, calibration, and uncertainty. Understand how engineering measurements are collected, calibrated, and interpreted.",
+            "relevance": "Understand how engineering measurements are collected, calibrated, and interpreted.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "8.8:r2",
+            "title": "NIST Engineering Statistics Handbook",
+            "url": "https://www.itl.nist.gov/div898/handbook/",
+            "scope": "Provides statistical methods for measurement, experimental design, and interpreting engineering data.",
+            "summary": "Provides statistical methods for measurement, experimental design, and interpreting engineering data. Understand how engineering measurements are collected, calibrated, and interpreted.",
+            "relevance": "Understand how engineering measurements are collected, calibrated, and interpreted.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "8.9",
+        "title": "Precompliance Testing and Certification Test Plans",
+        "why": "Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+        "objectives": [
+          "Understand how manufacturers prepare for formal certification testing and reduce avoidable failures."
+        ],
+        "questions": [
+          "What is precompliance testing?",
+          "How does it differ from formal certification testing?",
+          "What is a test plan?",
+          "What is a requirements verification matrix?",
+          "How should test failures be documented?",
+          "What is corrective action?",
+          "When is retesting necessary?",
+          "How do design changes affect test validity?",
+          "Why might precompliance testing reduce cost and schedule risk?",
+          "What information should be included in a laboratory test report?"
+        ],
+        "readings": [
+          {
+            "id": "8.9:r1",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Review the general product evaluation and certification lifecycle.",
+            "summary": "Review the general product evaluation and certification lifecycle. Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "relevance": "Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "8.9:r2",
+            "title": "Intertek: ETL Listed Mark",
+            "url": "https://www.intertek.com/marks/etl/",
+            "scope": "Understand third-party certification and the relationship between product evaluation and certification authorization.",
+            "summary": "Understand third-party certification and the relationship between product evaluation and certification authorization. Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "relevance": "Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "8.9:r3",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Learn how requirements are linked to verification activities and evidence.",
+            "summary": "Learn how requirements are linked to verification activities and evidence. Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "relevance": "Understand how manufacturers prepare for formal certification testing and reduce avoidable failures.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "title": "LFP Battery Fundamentals",
+    "objective": "Understand lithium iron phosphate battery chemistry, electrical behavior, performance, degradation, and failure mechanisms relevant to a high-power battery-assisted sauna heater.",
+    "capstone": "Prepare a preliminary battery requirements document for Product B.\n\nInclude:\n\n- Energy capacity.\n- Operating voltage.\n- Power demand.\n- Discharge rate.\n- Charging requirements.\n- Temperature limits.\n- BMS functions.\n- Thermal management.\n- Fault protection.\n- Lifetime assumptions.\n- Safety and certification uncertainties.\n\n",
+    "topics": [
+      {
+        "id": "9.1",
+        "title": "Lithium-Ion and LFP Chemistry",
+        "why": "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+        "objectives": [
+          "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability."
+        ],
+        "questions": [
+          "What distinguishes LFP from other lithium-ion chemistries?",
+          "What is the nominal voltage of an LFP cell?",
+          "Why does battery chemistry affect energy density?",
+          "Why does battery chemistry affect thermal stability?",
+          "Does LFP eliminate thermal runaway risk?",
+          "What are the main advantages and disadvantages of LFP for a residential heating appliance?"
+        ],
+        "readings": [
+          {
+            "id": "9.1:r1",
+            "title": "Battery University: Lithium-Ion Batteries",
+            "url": "https://batteryuniversity.com/article/bu-205-types-of-lithium-ion",
+            "scope": "Introduces common lithium-ion chemistries, including LFP, and compares characteristics such as energy density, voltage, thermal behavior, and cycle life.",
+            "summary": "Introduces common lithium-ion chemistries, including LFP, and compares characteristics such as energy density, voltage, thermal behavior, and cycle life. Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+            "relevance": "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "9.1:r2",
+            "title": "U.S. Department of Energy: Energy Storage",
+            "url": "https://www.energy.gov/oe/energy-storage",
+            "scope": "Overview of energy storage technologies and their applications.",
+            "summary": "Overview of energy storage technologies and their applications. Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+            "relevance": "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "9.2",
+        "title": "Battery Capacity, Voltage, and Energy",
+        "why": "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime.",
+        "objectives": [
+          "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime."
+        ],
+        "questions": [
+          "What is the difference between Ah and Wh?",
+          "What is the difference between kW and kWh?",
+          "How do series connections affect battery voltage?",
+          "How do parallel connections affect capacity?",
+          "How is nominal pack voltage determined?",
+          "Why does actual battery voltage vary with state of charge?",
+          "Why is nominal capacity different from usable energy?"
+        ],
+        "readings": [
+          {
+            "id": "9.2:r1",
+            "title": "Battery University: Battery Definitions",
+            "url": "https://batteryuniversity.com/",
+            "scope": "Review ampere-hours, watt-hours, voltage, capacity, and energy calculations.",
+            "summary": "Review ampere-hours, watt-hours, voltage, capacity, and energy calculations. Use the site's battery fundamentals material.",
+            "relevance": "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "9.2:r2",
+            "title": "All About Circuits: Direct Current",
+            "url": "https://www.allaboutcircuits.com/textbook/direct-current/",
+            "scope": "Review series and parallel electrical configurations, current, resistance, and power.",
+            "summary": "Review series and parallel electrical configurations, current, resistance, and power. Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime.",
+            "relevance": "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare hypothetical 5, 7.5, and 10 kWh LFP battery packs.\n\nCalculate nominal energy, approximate current under specified loads, and ideal runtime.\n\n"
+      },
+      {
+        "id": "9.3",
+        "title": "C-Rate and High-Power Discharge",
+        "why": "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+        "objectives": [
+          "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints."
+        ],
+        "questions": [
+          "What is C-rate?",
+          "What is the relationship between power, energy capacity, and C-rate?",
+          "What C-rate does a 5 kWh battery experience when delivering 10 kW?",
+          "How does discharge rate affect battery heating?",
+          "Why can high discharge current reduce usable energy?",
+          "What limits a cell's allowable discharge current?",
+          "Why must pack-level current limits be verified independently of cell ratings?"
+        ],
+        "readings": [
+          {
+            "id": "9.3:r1",
+            "title": "Battery University: Battery Discharge Characteristics",
+            "url": "https://batteryuniversity.com/",
+            "scope": "Study how discharge rate affects usable capacity, heating, voltage, and battery performance.",
+            "summary": "Study how discharge rate affects usable capacity, heating, voltage, and battery performance. Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+            "relevance": "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "9.3:r2",
+            "title": "Victron Energy: Battery Documentation",
+            "url": "https://www.victronenergy.com/batteries",
+            "scope": "Examine manufacturer documentation for battery discharge ratings, temperature limits, and BMS constraints.",
+            "summary": "Examine manufacturer documentation for battery discharge ratings, temperature limits, and BMS constraints. Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+            "relevance": "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "9.4",
+        "title": "Internal Resistance and Battery Heating",
+        "why": "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+        "objectives": [
+          "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery."
+        ],
+        "questions": [
+          "What is battery internal resistance?",
+          "How does internal resistance create heat?",
+          "How does battery temperature affect resistance?",
+          "Why can high-current operation require substantial thermal management?",
+          "How can aging affect internal resistance?",
+          "What measurements would be useful for evaluating a high-power battery pack?"
+        ],
+        "readings": [
+          {
+            "id": "9.4:r1",
+            "title": "Battery University: Battery Internal Resistance",
+            "url": "https://batteryuniversity.com/",
+            "scope": "Study how internal resistance affects voltage drop, heat generation, and power delivery.",
+            "summary": "Study how internal resistance affects voltage drop, heat generation, and power delivery. Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+            "relevance": "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "9.4:r2",
+            "title": "NREL Publications",
+            "url": "https://www.nrel.gov/research/publications.html",
+            "scope": "Search for research on lithium-ion battery thermal behavior and high-power operation.",
+            "summary": "Search for research on lithium-ion battery thermal behavior and high-power operation. Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+            "relevance": "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "9.5",
+        "title": "State of Charge, State of Health, and Degradation",
+        "why": "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+        "objectives": [
+          "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance."
+        ],
+        "questions": [
+          "What is state of charge?",
+          "What is state of health?",
+          "What is calendar aging?",
+          "What is cycle aging?",
+          "How does temperature affect battery degradation?",
+          "How does high-power discharge affect battery life?",
+          "Why should a product's battery be evaluated near end of life?"
+        ],
+        "readings": [
+          {
+            "id": "9.5:r1",
+            "title": "Battery University: Battery Aging",
+            "url": "https://batteryuniversity.com/",
+            "scope": "Explore calendar aging, cycle aging, temperature effects, and battery lifetime.",
+            "summary": "Explore calendar aging, cycle aging, temperature effects, and battery lifetime. Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+            "relevance": "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "9.5:r2",
+            "title": "NREL Battery Research",
+            "url": "https://www.nrel.gov/transportation/battery-research.html",
+            "scope": "Review research on battery performance, aging, and testing.",
+            "summary": "Review research on battery performance, aging, and testing. Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+            "relevance": "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "9.6",
+        "title": "Battery Management Systems",
+        "why": "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+        "objectives": [
+          "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response."
+        ],
+        "questions": [
+          "What is a BMS?",
+          "What does a BMS monitor?",
+          "What is cell balancing?",
+          "What happens when a cell exceeds its voltage limits?",
+          "What happens when the battery exceeds its temperature limits?",
+          "What is the difference between monitoring and protective disconnection?",
+          "Why should a BMS fault be included in a safety analysis?",
+          "How should the heater respond when the BMS disconnects the battery?"
+        ],
+        "readings": [
+          {
+            "id": "9.6:r1",
+            "title": "Texas Instruments: Battery Management Systems",
+            "url": "https://www.ti.com/power-management/battery-management/overview.html",
+            "scope": "Introduces battery monitoring, protection, balancing, and charging control technologies.",
+            "summary": "Introduces battery monitoring, protection, balancing, and charging control technologies. Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+            "relevance": "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "9.6:r2",
+            "title": "Analog Devices: Battery Management",
+            "url": "https://www.analog.com/en/product-category/battery-management.html",
+            "scope": "Review battery monitoring, protection, and management functions.",
+            "summary": "Review battery monitoring, protection, and management functions. Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+            "relevance": "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "9.7",
+        "title": "Battery Thermal Runaway and Propagation",
+        "why": "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+        "objectives": [
+          "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability."
+        ],
+        "questions": [
+          "What is thermal runaway?",
+          "What can initiate thermal runaway?",
+          "What is propagation?",
+          "Why can a battery remain hazardous after electrical disconnection?",
+          "What hazards can battery vent gases create?",
+          "Why is LFP generally considered more thermally stable than some other lithium-ion chemistries?",
+          "Why does improved thermal stability not mean zero fire risk?",
+          "What design considerations are important when batteries are near high-temperature equipment?"
+        ],
+        "readings": [
+          {
+            "id": "9.7:r1",
+            "title": "UL Solutions: UL 9540A",
+            "url": "https://www.ul.com/services/ul-9540a-test-method",
+            "scope": "Explains thermal runaway fire propagation testing and its relevance to energy storage safety.",
+            "summary": "Explains thermal runaway fire propagation testing and its relevance to energy storage safety. Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+            "relevance": "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "9.7:r2",
+            "title": "NFPA 855",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Study the safety framework for stationary energy storage installations and related fire hazards.",
+            "summary": "Study the safety framework for stationary energy storage installations and related fire hazards. Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+            "relevance": "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "title": "Battery Certification and Residential Energy Storage",
+    "objective": "Understand the standards and regulatory frameworks that may apply to LFP batteries, battery packs, energy storage systems, and battery-integrated household appliances.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "10.1",
+        "title": "Battery Cell and Pack Certification",
+        "why": "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+        "objectives": [
+          "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B."
+        ],
+        "questions": [
+          "What is the difference between a battery cell and a battery pack?",
+          "Why can a certified cell be unsafe when integrated into a poorly designed pack?",
+          "How do UL 1642, UL 2054, and UL 1973 differ in scope?",
+          "What is the role of the BMS in pack safety?",
+          "Why does component certification not automatically certify the finished appliance?",
+          "How would you determine which battery standard applies to Product B?"
+        ],
+        "readings": [
+          {
+            "id": "10.1:r1",
+            "title": "UL 1642, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Safety standard for lithium battery cells and relevant battery constructions within its scope.",
+            "summary": "Safety standard for lithium battery cells and relevant battery constructions within its scope. Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "relevance": "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.1:r2",
+            "title": "UL 2054, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Safety standard for household and commercial battery packs within its scope.",
+            "summary": "Safety standard for household and commercial battery packs within its scope. Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "relevance": "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.1:r3",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Safety standard for batteries used in stationary and certain other applications.",
+            "summary": "Safety standard for batteries used in stationary and certain other applications. Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "relevance": "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "10.2",
+        "title": "UL 1973 and Stationary Battery Safety",
+        "why": "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+        "objectives": [
+          "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation."
+        ],
+        "questions": [
+          "What products fall within UL 1973's scope?",
+          "What safety hazards does the standard address?",
+          "How does pack-level evaluation differ from cell-level evaluation?",
+          "What is the relationship between battery protection and battery certification?",
+          "What is the difference between a UL Recognized battery component and a listed battery product?",
+          "What additional evaluation might be required when integrating the battery into a sauna heater?"
+        ],
+        "readings": [
+          {
+            "id": "10.2:r1",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the scope, construction, and safety evaluation of batteries used in stationary and other covered applications.",
+            "summary": "Study the scope, construction, and safety evaluation of batteries used in stationary and other covered applications. Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+            "relevance": "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.2:r2",
+            "title": "UL Solutions: Energy Storage",
+            "url": "https://www.ul.com/services/energy-storage-system-testing-and-certification",
+            "scope": "Overview of testing and certification services for energy storage technologies.",
+            "summary": "Overview of testing and certification services for energy storage technologies. Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+            "relevance": "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "10.3",
+        "title": "UL 9540 and Complete Energy Storage Systems",
+        "why": "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope.",
+        "objectives": [
+          "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope."
+        ],
+        "questions": [
+          "What is an energy storage system?",
+          "What types of equipment fall within UL 9540's scope?",
+          "What is the difference between a certified battery and a certified ESS?",
+          "Why does complete-system evaluation matter?",
+          "How do chargers, inverters, batteries, and controls interact in an ESS?",
+          "Why is UL 1973 certification alone insufficient to establish UL 9540 compliance?",
+          "What is the relationship between UL 9540 and NFPA 855?",
+          "Does every household appliance containing a large battery automatically qualify as an ESS?",
+          "What evidence would be needed to determine whether UL 9540 applies to Product B?"
+        ],
+        "readings": [
+          {
+            "id": "10.3:r1",
+            "title": "UL 9540, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "UL 9540 covers energy storage systems and equipment within its defined scope.",
+            "summary": "UL 9540 covers energy storage systems and equipment within its defined scope. Study how complete-system evaluation differs from certification of an individual battery, inverter, or charger. Pay attention to interactions among components, protection systems, electrical construction, and installation conditions.",
+            "relevance": "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.3:r2",
+            "title": "UL Solutions: Energy Storage System Testing and Certification",
+            "url": "https://www.ul.com/services/energy-storage-system-testing-and-certification",
+            "scope": "Overview of ESS certification and the role of complete-system evaluation.",
+            "summary": "Overview of ESS certification and the role of complete-system evaluation. Useful for understanding how certified components contribute to, but do not automatically establish, certification of the assembled system.",
+            "relevance": "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.3:r3",
+            "title": "NFPA 855, NFPA Standards",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Standard governing installation of stationary energy storage systems.",
+            "summary": "Standard governing installation of stationary energy storage systems. Study its scope and relationship to product certification, fire safety, and installation requirements.",
+            "relevance": "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare three hypothetical products:\n\n1. A standalone 10 kWh home backup battery.\n2. A 5 kWh battery integrated into an induction range.\n3. A 7.5 kWh battery integrated into a sauna heater.\n\nFor each, identify possible certification categories, relevant standards, and unresolved classification questions.\n\nDo not assume all three products require identical certification.\n\n"
+      },
+      {
+        "id": "10.4",
+        "title": "UL 9540A and Thermal Runaway Fire Propagation Testing",
+        "why": "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+        "objectives": [
+          "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims."
+        ],
+        "questions": [
+          "What is thermal runaway?",
+          "What is thermal runaway propagation?",
+          "What is the purpose of UL 9540A?",
+          "How does UL 9540A differ from UL 9540?",
+          "Does completing UL 9540A testing mean a product is UL 9540 certified?",
+          "What is the difference between cell-, module-, unit-, and installation-level evaluation?",
+          "Why are vent gases relevant to battery fire safety?",
+          "Why does LFP chemistry not eliminate the need for battery safety evaluation?",
+          "How might UL 9540A evidence be relevant to a battery-integrated appliance?",
+          "Who determines which testing is required for a particular product?"
+        ],
+        "readings": [
+          {
+            "id": "10.4:r1",
+            "title": "UL Solutions: UL 9540A Test Method",
+            "url": "https://www.ul.com/services/ul-9540a-test-method",
+            "scope": "Introduces the test method used to evaluate thermal runaway fire propagation characteristics of battery energy storage technologies.",
+            "summary": "Introduces the test method used to evaluate thermal runaway fire propagation characteristics of battery energy storage technologies. Study the distinctions among cell-level, module-level, unit-level, and installation-level evaluation, as applicable to the referenced edition.",
+            "relevance": "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.4:r2",
+            "title": "UL 9540A, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Review the standard's scope and testing framework.",
+            "summary": "Review the standard's scope and testing framework. Understand that UL 9540A is a test method, not a standalone certification of the entire energy storage system.",
+            "relevance": "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.4:r3",
+            "title": "NFPA 855",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Investigate how fire propagation testing can inform installation requirements, separation distances, and other safety decisions for stationary energy storage systems.",
+            "summary": "Investigate how fire propagation testing can inform installation requirements, separation distances, and other safety decisions for stationary energy storage systems. Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+            "relevance": "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A manufacturer claims:\n\n\"Our LFP battery is UL 9540A certified, so the battery-integrated sauna heater is safe to install in any US home.\"\n\nIdentify every unsupported assumption in that statement.\n\nExplain what UL 9540A actually establishes and what additional evidence might be required.\n\n"
+      },
+      {
+        "id": "10.5",
+        "title": "NFPA 855 and Residential Battery Installation",
+        "why": "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+        "objectives": [
+          "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions."
+        ],
+        "questions": [
+          "What is the purpose of NFPA 855?",
+          "How does an installation standard differ from a product safety standard?",
+          "What kinds of battery installation locations may be restricted?",
+          "Why can battery capacity affect installation requirements?",
+          "Why do separation distances and enclosure design matter?",
+          "How do fire codes interact with electrical codes?",
+          "What role does the local AHJ play?",
+          "Does NFPA 855 automatically apply to every battery-powered household appliance?",
+          "What questions should be asked about installing Product B in a residential wooden sauna?"
+        ],
+        "readings": [
+          {
+            "id": "10.5:r1",
+            "title": "NFPA 855: Standard for the Installation of Stationary Energy Storage Systems",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-855-standard-development/855",
+            "scope": "Study the installation framework for stationary ESS, including relevant provisions concerning location, fire safety, system capacity, separation, and installation conditions.",
+            "summary": "Study the installation framework for stationary ESS, including relevant provisions concerning location, fire safety, system capacity, separation, and installation conditions. Verify the applicable edition and jurisdictional adoption.",
+            "relevance": "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.5:r2",
+            "title": "International Code Council: International Fire Code",
+            "url": "https://codes.iccsafe.org/",
+            "scope": "Explore fire-code provisions concerning energy storage systems and their installation.",
+            "summary": "Explore fire-code provisions concerning energy storage systems and their installation. Determine which edition is adopted in the relevant jurisdiction.",
+            "relevance": "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.5:r3",
+            "title": "California Building Standards Commission",
+            "url": "https://www.dgs.ca.gov/BSC/Codes",
+            "scope": "Identify California's adopted building and fire codes and relevant amendments.",
+            "summary": "Identify California's adopted building and fire codes and relevant amendments. Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+            "relevance": "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare the regulatory questions for locating an LFP battery:\n\n1. Inside a sauna heater enclosure.\n2. In a separate enclosure adjacent to the sauna.\n3. In a remote enclosure outside the sauna cabin.\n\nConsider thermal exposure, fire hazards, electrical connections, service access, and installation-code applicability.\n\n"
+      },
+      {
+        "id": "10.6",
+        "title": "NEC Articles 706 and 480",
+        "why": "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions.",
+        "objectives": [
+          "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions."
+        ],
+        "questions": [
+          "What types of installations fall within NEC Article 706?",
+          "What is the scope of NEC Article 480?",
+          "How do these articles differ?",
+          "What electrical hazards do battery installation requirements address?",
+          "What is the purpose of a disconnecting means?",
+          "Why must battery overcurrent protection consider available fault current?",
+          "How do grounding and bonding requirements depend on system architecture?",
+          "What is the relationship between NEC installation requirements and battery product certification?",
+          "What must be established before applying Article 706 to Product B?"
+        ],
+        "readings": [
+          {
+            "id": "10.6:r1",
+            "title": "NFPA 70: National Electrical Code",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Read Article 706 on energy storage systems and Article 480 on stationary batteries where applicable.",
+            "summary": "Read Article 706 on energy storage systems and Article 480 on stationary batteries where applicable. Study their scopes, electrical installation requirements, protective devices, disconnecting means, and relevant safety provisions.",
+            "relevance": "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.6:r2",
+            "title": "NFPA 70: Definitions and Equipment Approval",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Review Articles 100 and 110 to understand terminology, equipment approval, listing, and installation instructions.",
+            "summary": "Review Articles 100 and 110 to understand terminology, equipment approval, listing, and installation instructions. Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions.",
+            "relevance": "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a list of electrical-code applicability questions for a nominal 48V, 7.5 kWh battery supplying a high-power resistive heater.\n\nDo not assume the system falls within Article 706 merely because it stores electrical energy.\n\n"
+      },
+      {
+        "id": "10.7",
+        "title": "UL 1741, Power Conversion, and Grid Interconnection",
+        "why": "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+        "objectives": [
+          "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability."
+        ],
+        "questions": [
+          "What is an inverter?",
+          "What is a converter?",
+          "What is a battery charger?",
+          "What kinds of equipment does UL 1741 cover?",
+          "Does every AC-to-DC battery charger necessarily require UL 1741 certification?",
+          "What is grid interconnection?",
+          "When is IEEE 1547 relevant?",
+          "Why might a battery-integrated appliance that never exports power have different requirements from a grid-connected ESS?",
+          "How does the charging architecture influence certification scope?",
+          "What standards questions should be resolved before selecting a charger for Product B?"
+        ],
+        "readings": [
+          {
+            "id": "10.7:r1",
+            "title": "UL 1741, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Standard covering inverters, converters, controllers, and interconnection system equipment within its scope.",
+            "summary": "Standard covering inverters, converters, controllers, and interconnection system equipment within its scope. Study which types of power electronics it covers and why the precise function of the equipment matters.",
+            "relevance": "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.7:r2",
+            "title": "IEEE 1547, IEEE Standards",
+            "url": "https://standards.ieee.org/ieee/1547/5915/",
+            "scope": "Standard concerning interconnection and interoperability of distributed energy resources with electric power systems.",
+            "summary": "Standard concerning interconnection and interoperability of distributed energy resources with electric power systems. Study its relevance to grid-connected power-exporting equipment and why it may not apply to an appliance that only consumes grid power.",
+            "relevance": "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.7:r3",
+            "title": "Victron Energy: Chargers",
+            "url": "https://www.victronenergy.com/chargers",
+            "scope": "Review examples of battery charger architecture, input ratings, charging control, and battery compatibility.",
+            "summary": "Review examples of battery charger architecture, input ratings, charging control, and battery compatibility. Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+            "relevance": "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare:\n\n1. A standalone AC-to-DC battery charger.\n2. A bidirectional inverter/charger.\n3. A battery-powered DC heater with a separate AC charging circuit.\n\nIdentify the functional differences and the standards-applicability questions for each.\n\n"
+      },
+      {
+        "id": "10.8",
+        "title": "Battery Transportation, Importation, and Documentation",
+        "why": "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+        "objectives": [
+          "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions."
+        ],
+        "questions": [
+          "What is UN 38.3?",
+          "What kinds of battery transportation tests does it address?",
+          "Does UN 38.3 establish that a battery is safe for residential installation?",
+          "How do transportation requirements differ from product certification?",
+          "What is a UN 38.3 test summary?",
+          "What documentation should be requested from a battery supplier?",
+          "How can battery capacity and configuration affect shipping requirements?",
+          "What responsibilities might a US importer have?",
+          "Why does DDP shipping not automatically eliminate all product safety or importer responsibilities?"
+        ],
+        "readings": [
+          {
+            "id": "10.8:r1",
+            "title": "UNECE: Dangerous Goods Transport",
+            "url": "https://unece.org/transport/dangerous-goods",
+            "scope": "Introduces international dangerous-goods transportation requirements, including the UN Manual of Tests and Criteria and subsection 38.3 for lithium batteries.",
+            "summary": "Introduces international dangerous-goods transportation requirements, including the UN Manual of Tests and Criteria and subsection 38.3 for lithium batteries. Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+            "relevance": "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.8:r2",
+            "title": "U.S. Department of Transportation: PHMSA Lithium Batteries",
+            "url": "https://www.phmsa.dot.gov/lithiumbatteries",
+            "scope": "Explains US hazardous-material transportation requirements relevant to lithium batteries, including packaging, marking, documentation, and transport safety.",
+            "summary": "Explains US hazardous-material transportation requirements relevant to lithium batteries, including packaging, marking, documentation, and transport safety. Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+            "relevance": "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.8:r3",
+            "title": "U.S. Customs and Border Protection: Basic Importing and Exporting",
+            "url": "https://www.cbp.gov/trade/basic-import-export",
+            "scope": "Introduces import procedures and importer responsibilities.",
+            "summary": "Introduces import procedures and importer responsibilities. Battery transportation compliance and customs compliance are separate issues.",
+            "relevance": "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a battery supplier documentation request for Product B.\n\nInclude requests for cell and pack specifications, safety certifications, UN 38.3 documentation, operating limits, BMS specifications, and relevant manufacturing quality records.\n\n"
+      },
+      {
+        "id": "10.9",
+        "title": "Certification Boundaries for Battery-Integrated Appliances",
+        "why": "Integrate the standards knowledge from Module 10 and apply it to Product B.",
+        "objectives": [
+          "Integrate the standards knowledge from Module 10 and apply it to Product B."
+        ],
+        "questions": [
+          "What is the difference between a certified battery and a certified battery-integrated appliance?",
+          "Why might multiple standards apply to one product?",
+          "Why might multiple laboratories participate in certification?",
+          "What is a certification boundary?",
+          "What is an integrated-system hazard?",
+          "Why might individually certified subsystems still require additional evaluation together?",
+          "What is the difference between a battery-integrated appliance and a stationary ESS?",
+          "What evidence is required to determine which standards apply?",
+          "What can Product B learn from Impulse Labs?",
+          "What can Product B learn from Copper Home?",
+          "What questions should be sent to an NRTL before detailed engineering?"
+        ],
+        "readings": [
+          {
+            "id": "10.9:r1",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Study Impulse's publicly documented certification approach for a battery-integrated induction cooktop.",
+            "summary": "Study Impulse's publicly documented certification approach for a battery-integrated induction cooktop. Focus on the distinction between battery, power electronics, automatic controls, and complete-appliance evaluation.",
+            "relevance": "Integrate the standards knowledge from Module 10 and apply it to Product B.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.9:r2",
+            "title": "Copper Home: FAQ",
+            "url": "https://copperhome.com/pages/faq",
+            "scope": "Review Copper's public descriptions of its battery-integrated range, safety testing, certification status, and installation considerations.",
+            "summary": "Review Copper's public descriptions of its battery-integrated range, safety testing, certification status, and installation considerations. Verify current claims before relying on them.",
+            "relevance": "Integrate the standards knowledge from Module 10 and apply it to Product B.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "10.9:r3",
+            "title": "UL 1973, UL 9540, and UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Compare the scopes of battery, energy storage, and sauna appliance standards.",
+            "summary": "Compare the scopes of battery, energy storage, and sauna appliance standards. Investigate where requirements overlap and where additional integrated-system evaluation may be necessary.",
+            "relevance": "Integrate the standards knowledge from Module 10 and apply it to Product B.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "10.9:r4",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Review how NRTL certification is tied to recognized standards and defined product scopes.",
+            "summary": "Review how NRTL certification is tied to recognized standards and defined product scopes. Integrate the standards knowledge from Module 10 and apply it to Product B.",
+            "relevance": "Integrate the standards knowledge from Module 10 and apply it to Product B.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a preliminary certification applicability matrix for Product B.\n\nInclude:\n\n- LFP cells.\n- Battery pack.\n- BMS.\n- Battery charger.\n- DC power distribution.\n- DC heating elements.\n- AC heating elements.\n- Temperature controls.\n- Independent protective controls.\n- Complete sauna heater assembly.\n- Residential installation.\n\nFor each subsystem, record candidate standards, evidence available, unresolved questions, and the party responsible for confirming applicability.\n\n"
+      },
+      {
+        "id": "10.10",
+        "title": "Capstone: Battery Safety and Certification Strategy",
+        "why": "Understand the standards and regulatory frameworks that may apply to LFP batteries, battery packs, energy storage systems, and battery-integrated household appliances.",
+        "objectives": [
+          "Understand the standards and regulatory frameworks that may apply to LFP batteries, battery packs, energy storage systems, and battery-integrated household appliances."
+        ],
+        "questions": [
+          "I can distinguish battery cell, battery pack, ESS, and battery-integrated appliance certification.",
+          "I can explain UL 1973.",
+          "I can explain UL 9540.",
+          "I can explain UL 9540A.",
+          "I can explain why UL 9540A is not equivalent to UL 9540 certification.",
+          "I can explain the purpose of NFPA 855.",
+          "I can identify when NEC Articles 706 and 480 require investigation.",
+          "I can explain when UL 1741 and IEEE 1547 may be relevant.",
+          "I can distinguish transportation compliance from product certification.",
+          "I can explain why certified components do not automatically certify Product B.",
+          "I can prepare technically credible questions for an NRTL about Product B.",
+          "I can identify which conclusions remain uncertain without an authoritative standards-applicability determination."
+        ],
+        "readings": [],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a preliminary battery safety and certification report for Product B.\n\nThe report should include:\n\n1. Battery subsystem definition.\n2. Nominal electrical architecture.\n3. Operating power and energy assumptions.\n4. Battery protection requirements.\n5. Thermal safety considerations.\n6. Candidate cell and battery standards.\n7. Potential ESS standards applicability.\n8. Charging and power electronics considerations.\n9. Transportation and import documentation.\n10. Integrated appliance certification questions.\n11. Unresolved regulatory questions.\n12. Proposed laboratory engagement strategy.\n\n\n\n\n"
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "title": "High-Current DC Power Engineering",
+    "objective": "Understand the electrical, thermal, and safety challenges of using a nominal 48V LFP battery to deliver approximately 6–10 kW of resistive heating, and learn how to evaluate alternative architectures for a battery-assisted residential sauna heater.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "11.1",
+        "title": "High-Current DC Fundamentals",
+        "why": "Understand why low-voltage, high-power electrical systems require careful attention to current, resistance, losses, and thermal behavior.",
+        "objectives": [
+          "Understand why low-voltage, high-power electrical systems require careful attention to current, resistance, losses, and thermal behavior."
+        ],
+        "questions": [
+          "What current does a 6 kW load draw at nominal 48V?",
+          "What current does an 8 kW load draw?",
+          "What current does a 10 kW load draw?",
+          "How does current change when battery voltage decreases?",
+          "Why do resistive losses increase with the square of current?",
+          "Why can a small increase in connection resistance create substantial heating?",
+          "What is the difference between nominal current and worst-case current?",
+          "Why is nominal 48V not sufficient to characterize the entire operating voltage range?",
+          "What information is required before selecting conductors and protective devices?"
+        ],
+        "readings": [
+          {
+            "id": "11.1:r1",
+            "title": "All About Circuits: Direct Current",
+            "url": "https://www.allaboutcircuits.com/textbook/direct-current/",
+            "scope": "Review the relationship between voltage, current, resistance, and power.",
+            "summary": "Review the relationship between voltage, current, resistance, and power. Focus on how high currents amplify resistive losses and why conductor and connection resistance become important at high power.",
+            "relevance": "Understand why low-voltage, high-power electrical systems require careful attention to current, resistance, losses, and thermal behavior.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.1:r2",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Practical reference for DC electrical systems, including conductor sizing, voltage drop, connections, protection, and installation considerations.",
+            "summary": "Practical reference for DC electrical systems, including conductor sizing, voltage drop, connections, protection, and installation considerations. Understand why low-voltage, high-power electrical systems require careful attention to current, resistance, losses, and thermal behavior.",
+            "relevance": "Understand why low-voltage, high-power electrical systems require careful attention to current, resistance, losses, and thermal behavior.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare 6, 8, and 10 kW electrical loads at nominal 48V.\n\nCalculate current and the theoretical resistive loss for several hypothetical total circuit resistances.\n\nThen explain why actual current and power depend on whether the heater behaves as a fixed resistance, regulated constant-power load, or another controlled configuration.\n\n"
+      },
+      {
+        "id": "11.2",
+        "title": "Conductors, Busbars, and Voltage Drop",
+        "why": "Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+        "objectives": [
+          "Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability."
+        ],
+        "questions": [
+          "What determines conductor resistance?",
+          "How does conductor length affect voltage drop?",
+          "How does cross-sectional area affect resistance?",
+          "What is ampacity?",
+          "How do conductor temperature ratings affect selection?",
+          "Why are busbars sometimes used instead of flexible conductors?",
+          "What are the mechanical and thermal tradeoffs between busbars and cables?",
+          "Why must electrical connections be evaluated independently of conductor size?",
+          "How can thermal cycling affect high-current connections?",
+          "Why should conductor selection consider fault conditions as well as normal operation?"
+        ],
+        "readings": [
+          {
+            "id": "11.2:r1",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Study the sections concerning conductor sizing, cable length, voltage drop, routing, connections, and temperature effects.",
+            "summary": "Study the sections concerning conductor sizing, cable length, voltage drop, routing, connections, and temperature effects. Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+            "relevance": "Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.2:r2",
+            "title": "UL 486 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate standards governing electrical connectors and terminals, including their ratings and conditions of use.",
+            "summary": "Investigate standards governing electrical connectors and terminals, including their ratings and conditions of use. Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+            "relevance": "Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.2:r3",
+            "title": "NEC Article 310, NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Introduces conductor ampacity principles and the effects of conductor type, temperature ratings, and installation conditions.",
+            "summary": "Introduces conductor ampacity principles and the effects of conductor type, temperature ratings, and installation conditions. Applicability to internal appliance wiring must be determined separately.",
+            "relevance": "Understand how high-current DC systems distribute power and how conductor resistance affects efficiency, temperature, and reliability.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare two conceptual DC distribution arrangements:\n\n1. Short busbars inside a compact assembly.\n2. Flexible cables connecting a separate battery enclosure to the heater.\n\nDiscuss electrical losses, mechanical stress, thermal behavior, serviceability, and safety considerations.\n\nDo not select actual conductor sizes without applicable engineering standards and verified installation conditions.\n\n"
+      },
+      {
+        "id": "11.3",
+        "title": "Contact Resistance and High-Current Connections",
+        "why": "Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+        "objectives": [
+          "Understand why electrical connections are a critical safety concern in high-current DC equipment."
+        ],
+        "questions": [
+          "What is contact resistance?",
+          "Why can contact resistance increase over time?",
+          "How do oxidation and corrosion affect electrical connections?",
+          "How can thermal cycling reduce connection reliability?",
+          "Why can a connection overheat without an overcurrent event?",
+          "Why are connector current ratings dependent on installation conditions?",
+          "What is the role of manufacturer-specified tightening procedures?",
+          "What are the differences between crimped, bolted, and spring-based connections?",
+          "How should connection reliability be evaluated during design verification?"
+        ],
+        "readings": [
+          {
+            "id": "11.3:r1",
+            "title": "UL 486 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study the scope of electrical connector standards and the importance of appropriate ratings, installation methods, and construction.",
+            "summary": "Study the scope of electrical connector standards and the importance of appropriate ratings, installation methods, and construction. Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "relevance": "Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.3:r2",
+            "title": "NASA Workmanship Standards",
+            "url": "https://workmanship.nasa.gov/",
+            "scope": "Examples of disciplined electrical assembly, inspection, and connection-quality practices.",
+            "summary": "Examples of disciplined electrical assembly, inspection, and connection-quality practices. Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "relevance": "Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "11.3:r3",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Review practical discussion of electrical connections, contact quality, corrosion, and installation.",
+            "summary": "Review practical discussion of electrical connections, contact quality, corrosion, and installation. Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "relevance": "Understand why electrical connections are a critical safety concern in high-current DC equipment.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A high-current DC connection develops increased resistance after repeated thermal cycling.\n\nExplain how this could affect temperature, voltage drop, efficiency, and failure risk.\n\nIdentify the engineering evidence needed to investigate the problem.\n\n"
+      },
+      {
+        "id": "11.4",
+        "title": "DC Fuses, Circuit Breakers, and Fault Protection",
+        "why": "Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+        "objectives": [
+          "Understand how protective devices are selected and evaluated for battery-powered DC systems."
+        ],
+        "questions": [
+          "What is the difference between overload protection and short-circuit protection?",
+          "What is available fault current?",
+          "Why can batteries deliver high fault currents?",
+          "What is interrupting capacity?",
+          "Why must a protective device have an appropriate DC voltage rating?",
+          "Why might an AC-rated breaker be unsuitable for DC interruption?",
+          "What is the difference between a fuse and a circuit breaker?",
+          "What is a supplementary protector?",
+          "Why must protective-device selection consider the complete circuit?",
+          "Why is normal operating current insufficient to select fault protection?"
+        ],
+        "readings": [
+          {
+            "id": "11.4:r1",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Study battery protection, fuse placement, DC wiring, and protective-device considerations.",
+            "summary": "Study battery protection, fuse placement, DC wiring, and protective-device considerations. Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+            "relevance": "Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.4:r2",
+            "title": "UL 248 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate fuse standards and how fuse categories differ.",
+            "summary": "Investigate fuse standards and how fuse categories differ. Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+            "relevance": "Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.4:r3",
+            "title": "UL 489 and UL 1077, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Compare circuit breakers and supplementary protectors.",
+            "summary": "Compare circuit breakers and supplementary protectors. Learn why device classification and intended application matter.",
+            "relevance": "Understand how protective devices are selected and evaluated for battery-powered DC systems.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Develop a conceptual protection map for Product B showing the battery, power distribution, heating loads, charging subsystem, and major fault boundaries.\n\nIdentify where protection decisions are required and what information must be known before selecting devices.\n\nDo not specify final protective-device ratings without qualified engineering review.\n\n"
+      },
+      {
+        "id": "11.5",
+        "title": "DC Switching, Relays, and Contactors",
+        "why": "Understand the challenges of controlling and interrupting high-current DC power.",
+        "objectives": [
+          "Understand the challenges of controlling and interrupting high-current DC power."
+        ],
+        "questions": [
+          "What is a contactor?",
+          "How does a contactor differ from a relay?",
+          "Why is DC interruption challenging?",
+          "What is contact welding?",
+          "What happens if a DC contactor fails closed?",
+          "What is electrical endurance?",
+          "How do switching current and voltage affect component selection?",
+          "Why does load type matter?",
+          "What is the difference between functional switching and safety disconnection?",
+          "Why might a separate protective mechanism be required?"
+        ],
+        "readings": [
+          {
+            "id": "11.5:r1",
+            "title": "Omron Electronic Components",
+            "url": "https://components.omron.com/us-en/",
+            "scope": "Explore relay and switching component documentation, including contact ratings, endurance, and application limitations.",
+            "summary": "Explore relay and switching component documentation, including contact ratings, endurance, and application limitations. Understand the challenges of controlling and interrupting high-current DC power.",
+            "relevance": "Understand the challenges of controlling and interrupting high-current DC power.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "11.5:r2",
+            "title": "TE Connectivity: Relays and Contactors",
+            "url": "https://www.te.com/en/products/relays-contactors-switches.html",
+            "scope": "Investigate contactor types, switching applications, and the distinction between AC and DC ratings.",
+            "summary": "Investigate contactor types, switching applications, and the distinction between AC and DC ratings. Understand the challenges of controlling and interrupting high-current DC power.",
+            "relevance": "Understand the challenges of controlling and interrupting high-current DC power.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "11.5:r3",
+            "title": "UL 61058 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Review appliance switching standards and determine which requirements may apply to particular switching devices.",
+            "summary": "Review appliance switching standards and determine which requirements may apply to particular switching devices. Understand the challenges of controlling and interrupting high-current DC power.",
+            "relevance": "Understand the challenges of controlling and interrupting high-current DC power.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Analyze a hypothetical DC heating subsystem whose primary switching device becomes permanently closed.\n\nIdentify the resulting hazards and the independent protective functions that would need evaluation.\n\n"
+      },
+      {
+        "id": "11.6",
+        "title": "DC Arcing and Electrical Fault Energy",
+        "why": "Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+        "objectives": [
+          "Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems."
+        ],
+        "questions": [
+          "What is an electrical arc?",
+          "Why can an arc persist in a DC circuit?",
+          "What factors influence arc behavior?",
+          "What is fault energy?",
+          "How does a high-capacity battery affect fault hazards?",
+          "Why do electrical connections and switching devices require appropriate ratings?",
+          "What is the difference between normal switching and fault interruption?",
+          "Why must protective devices be evaluated for the actual DC system voltage and fault conditions?"
+        ],
+        "readings": [
+          {
+            "id": "11.6:r1",
+            "title": "All About Circuits: Electrical Safety",
+            "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-3/",
+            "scope": "Reviews electrical hazards and foundational principles relevant to fault conditions.",
+            "summary": "Reviews electrical hazards and foundational principles relevant to fault conditions. Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+            "relevance": "Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.6:r2",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Review protective devices, battery fault hazards, and electrical connection considerations.",
+            "summary": "Review protective devices, battery fault hazards, and electrical connection considerations. Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+            "relevance": "Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.6:r3",
+            "title": "UL 60947 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate standards covering certain categories of low-voltage switchgear and controlgear.",
+            "summary": "Investigate standards covering certain categories of low-voltage switchgear and controlgear. Applicability depends on the equipment category.",
+            "relevance": "Understand the mechanisms and hazards of DC electrical arcs, particularly in high-current battery systems.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare the general fault hazards of:\n\n1. A 120V AC resistive heater.\n2. A nominal 48V high-current battery-powered resistive heater.\n\nIdentify differences in available fault energy, switching behavior, and protective-device requirements.\n\n"
+      },
+      {
+        "id": "11.7",
+        "title": "Battery Disconnects and Isolation",
+        "why": "Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+        "objectives": [
+          "Understand the purpose of disconnecting and isolating battery-powered electrical systems."
+        ],
+        "questions": [
+          "What is the purpose of a battery disconnect?",
+          "What is the difference between switching a load off and electrically isolating it?",
+          "Why might a battery remain energized after the main controller loses power?",
+          "What is the purpose of a service disconnect?",
+          "What happens if a contactor fails closed?",
+          "How can isolation requirements affect maintenance and repair?",
+          "Why must battery-system architecture be considered when determining grounding and isolation requirements?",
+          "What certification questions arise from disconnect design?"
+        ],
+        "readings": [
+          {
+            "id": "11.7:r1",
+            "title": "NEC Article 706, NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Investigate energy storage system electrical installation requirements, including relevant disconnecting and protection concepts.",
+            "summary": "Investigate energy storage system electrical installation requirements, including relevant disconnecting and protection concepts. Determine applicability to Product B before treating these as binding requirements.",
+            "relevance": "Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.7:r2",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Review battery safety requirements and the role of protective devices within the applicable standard's scope.",
+            "summary": "Review battery safety requirements and the role of protective devices within the applicable standard's scope. Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+            "relevance": "Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.7:r3",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Practical introduction to battery isolation and protective electrical architecture.",
+            "summary": "Practical introduction to battery isolation and protective electrical architecture. Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+            "relevance": "Understand the purpose of disconnecting and isolating battery-powered electrical systems.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Create a conceptual block diagram showing the battery, BMS, protective devices, heating loads, charger, and service isolation boundaries.\n\nLabel the safety functions without specifying unverified component ratings.\n\n"
+      },
+      {
+        "id": "11.8",
+        "title": "Battery Charging and AC Input Power Management",
+        "why": "Understand how battery charging and AC heating compete for limited residential input power.",
+        "objectives": [
+          "Understand how battery charging and AC heating compete for limited residential input power."
+        ],
+        "questions": [
+          "What is the difference between charger input power and battery charging power?",
+          "Why does charger efficiency matter?",
+          "What is the combined input power when AC heating and charging operate simultaneously?",
+          "How does the available branch circuit constrain charging?",
+          "What happens when a charger and heater demand more power than the input can supply?",
+          "How might dynamic power allocation work conceptually?",
+          "Why should software power management not be assumed to satisfy every safety requirement?",
+          "What happens if the power-management controller fails?",
+          "How could charging be coordinated with sauna heatup and sustaining operation?",
+          "What would need to be verified before certifying such an arrangement?"
+        ],
+        "readings": [
+          {
+            "id": "11.8:r1",
+            "title": "Victron Energy: Battery Chargers",
+            "url": "https://www.victronenergy.com/chargers",
+            "scope": "Explore charger input ratings, charging behavior, and battery management.",
+            "summary": "Explore charger input ratings, charging behavior, and battery management. Understand how battery charging and AC heating compete for limited residential input power.",
+            "relevance": "Understand how battery charging and AC heating compete for limited residential input power.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "11.8:r2",
+            "title": "NEC Article 210, NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study branch-circuit load requirements and the implications of multiple simultaneous electrical loads.",
+            "summary": "Study branch-circuit load requirements and the implications of multiple simultaneous electrical loads. Understand how battery charging and AC heating compete for limited residential input power.",
+            "relevance": "Understand how battery charging and AC heating compete for limited residential input power.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.8:r3",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate appliance input ratings, electrical construction, and abnormal-operation considerations.",
+            "summary": "Investigate appliance input ratings, electrical construction, and abnormal-operation considerations. Understand how battery charging and AC heating compete for limited residential input power.",
+            "relevance": "Understand how battery charging and AC heating compete for limited residential input power.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare three operating modes for Product B:\n\n1. AC heating only.\n2. Battery charging only.\n3. Simultaneous AC heating and charging.\n\nCalculate nominal input power under stated assumptions and identify the code and certification questions that determine whether each mode is permissible.\n\n"
+      },
+      {
+        "id": "11.9",
+        "title": "Comparing 48V and Higher-Voltage DC Architectures",
+        "why": "Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+        "objectives": [
+          "Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations."
+        ],
+        "questions": [
+          "Why does increasing voltage reduce current for a constant-power load?",
+          "How does higher voltage affect conductor losses?",
+          "How can higher voltage affect shock hazards?",
+          "How can higher voltage affect insulation and spacing requirements?",
+          "Why might component availability differ across voltage ranges?",
+          "What changes when the load is a fixed-resistance heater rather than a regulated constant-power load?",
+          "Why is nominal voltage only one part of the architecture decision?",
+          "What safety and certification questions should be resolved before selecting system voltage?"
+        ],
+        "readings": [
+          {
+            "id": "11.9:r1",
+            "title": "Victron Energy: Technical Documentation",
+            "url": "https://www.victronenergy.com/",
+            "scope": "Explore battery system architectures and DC distribution equipment.",
+            "summary": "Explore battery system architectures and DC distribution equipment. Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "relevance": "Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "access": false,
+            "searchDestination": true,
+            "accessNote": "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          },
+          {
+            "id": "11.9:r2",
+            "title": "IEC 60664-1, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Introduces insulation coordination and the relationship between voltage, electrical spacing, and environmental conditions.",
+            "summary": "Introduces insulation coordination and the relationship between voltage, electrical spacing, and environmental conditions. Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "relevance": "Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.9:r3",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate battery safety requirements and how electrical architecture affects the scope of evaluation.",
+            "summary": "Investigate battery safety requirements and how electrical architecture affects the scope of evaluation. Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "relevance": "Understand how selecting a battery system voltage changes current, losses, components, hazards, and certification considerations.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Compare nominal 48V, 96V, and 192V architectures for an 8 kW heating load.\n\nCalculate nominal current and compare the broad engineering tradeoffs.\n\nDo not conclude that the highest-voltage option is automatically preferable.\n\n"
+      },
+      {
+        "id": "11.10",
+        "title": "High-Current DC Architecture for Product B",
+        "why": "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+        "objectives": [
+          "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater."
+        ],
+        "questions": [
+          "What are the major electrical subsystems of Product B?",
+          "What are the main high-current DC hazards?",
+          "How do conductor and connection losses affect design?",
+          "How should normal switching and protective disconnection be distinguished?",
+          "What are the implications of contactor failure?",
+          "What are the implications of a BMS fault?",
+          "How does charging interact with AC heating?",
+          "What determines the appropriate DC system voltage?",
+          "Why might the battery be located separately from the heater?",
+          "What certification questions must be resolved before detailed engineering?",
+          "How would you explain the architecture to an NRTL engineer?"
+        ],
+        "readings": [
+          {
+            "id": "11.10:r1",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Consolidates practical DC electrical system considerations, including wiring, connections, protection, and grounding.",
+            "summary": "Consolidates practical DC electrical system considerations, including wiring, connections, protection, and grounding. Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "relevance": "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "11.10:r2",
+            "title": "UL 1973, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Review battery safety and protection requirements within the standard's scope.",
+            "summary": "Review battery safety and protection requirements within the standard's scope. Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "relevance": "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.10:r3",
+            "title": "UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate sauna-specific appliance safety requirements and how they might interact with an unconventional electrical architecture.",
+            "summary": "Investigate sauna-specific appliance safety requirements and how they might interact with an unconventional electrical architecture. Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "relevance": "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "11.10:r4",
+            "title": "Impulse Labs: Battery-Integrated Appliance Certification",
+            "url": "https://www.impulselabs.com/blog/impulse-becomes-first-certified-battery-integrated-appliance",
+            "scope": "Review a real-world battery-integrated appliance certification project and the challenges of combining subsystems.",
+            "summary": "Review a real-world battery-integrated appliance certification project and the challenges of combining subsystems. Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "relevance": "Integrate the module's electrical engineering concepts into a preliminary architecture for the battery-assisted sauna heater.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "11.11",
+        "title": "Capstone: Preliminary High-Current DC Engineering Assessment",
+        "why": "Demonstrate the ability to evaluate the electrical architecture, principal hazards, and certification uncertainties of Product B before committing to detailed engineering.",
+        "objectives": [
+          "Demonstrate the ability to evaluate the electrical architecture, principal hazards, and certification uncertainties of Product B before committing to detailed engineering."
+        ],
+        "questions": [
+          "Product B preliminary electrical requirements specification.",
+          "Electrical power and energy budget.",
+          "DC architecture comparison.",
+          "Battery capacity and discharge analysis.",
+          "Conceptual electrical block diagram.",
+          "High-current distribution considerations.",
+          "Electrical protection requirements matrix.",
+          "Preliminary fault and hazard register.",
+          "AC input and charging power-management analysis.",
+          "Grounding, bonding, and isolation questions.",
+          "Thermal integration considerations.",
+          "Preliminary standards-applicability matrix.",
+          "Verification requirements matrix.",
+          "Uncertainty and assumptions register.",
+          "Prioritized engineering and certification action plan.",
+          "Can I calculate current, power, resistance, and losses in a high-current DC system?",
+          "Can I explain why a nominal 48V, 10 kW system presents substantial electrical and thermal challenges?",
+          "Can I explain the differences between nominal and actual battery voltage?",
+          "Can I explain how fixed-resistance and constant-power loads behave differently as voltage changes?",
+          "Can I calculate battery C-rate and approximate discharge duration?",
+          "Can I identify the principal factors affecting conductor and connection suitability?",
+          "Can I explain why connection resistance can create dangerous localized heating?",
+          "Can I distinguish normal switching from protective fault interruption?",
+          "Can I explain why DC-rated protective devices are necessary?",
+          "Can I identify the consequences of a welded contactor?",
+          "Can I explain why a BMS is not automatically sufficient to protect the entire heating appliance?",
+          "Can I identify the main considerations for grounding, bonding, and electrical isolation?",
+          "Can I explain how battery charging and AC heating compete for limited residential input power?",
+          "Can I compare 48V and higher-voltage architectures without assuming either is universally superior?",
+          "Can I identify the principal hazards of integrating a battery with a high-temperature appliance?",
+          "Can I distinguish confirmed technical requirements from assumptions and unresolved certification questions?",
+          "Can I explain the proposed architecture to an experienced electrical engineer or NRTL project engineer?",
+          "Can I identify which engineering decisions should be deferred until the certification pathway is better understood?"
+        ],
+        "readings": [],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Prepare a preliminary engineering assessment for the proposed battery-assisted sauna heater.\n\nThe report must include:\n\n1. **Electrical requirements:** Battery capacity, nominal voltage, operating voltage range, DC heating power, AC heating power, charging requirements, and expected operating modes.\n\n2. **Power and current calculations:** Calculate nominal current for 6, 8, and 10 kW DC loads at 48V, 96V, and 192V. Explain how voltage variation, fixed-resistance heating elements, and power regulation affect actual current.\n\n3. **Battery performance:** Compare 5, 7.5, and 10 kWh LFP battery configurations. Estimate C-rate, ideal discharge duration, usable energy, and relevant battery performance limitations.\n\n4. **Electrical distribution:** Compare conceptual busbar and cable-based architectures. Evaluate resistance, voltage drop, thermal losses, connection reliability, mechanical constraints, and serviceability.\n\n5. **Electrical protection:** Identify the major protection functions required for the battery, distribution system, DC heating circuits, and charger. Distinguish overload protection, short-circuit protection, protective disconnection, and normal switching.\n\n6. **Switching and controls:** Describe the functions of relays, contactors, electronic switches, and protective controls. Analyze the consequences of a switching device failing open or closed.\n\n7. **Fault analysis:** Identify credible electrical hazards, including short circuits, loose connections, contactor welding, insulation failures, loss of control, and BMS faults. Explain which hazards could produce overheating, arcing, or fire.\n\n8. **Charging and AC power management:** Evaluate how the AC heating subsystem and battery charger share a residential 120V input. Identify operating modes that could exceed available circuit capacity and the protective functions that would require evaluation.\n\n9. **Grounding, bonding, and isolation:** Identify the major questions concerning protective grounding, electrical isolation, service disconnects, and safe maintenance.\n\n10. **Thermal integration:** Discuss how high-current electrical components and the battery generate heat, and how proximity to the sauna heater affects component suitability and system safety.\n\n11. **Architecture comparison:** Compare at least three candidate configurations:\n    - Nominal 48V integrated battery and heater.\n    - Higher-voltage battery architecture.\n    - Separate battery enclosure connected to the heating appliance.\n\n12. **Certification considerations:** Identify candidate standards for the battery, electrical distribution, controls, charger, and finished sauna appliance. Distinguish confirmed applicability from unresolved questions.\n\n13. **Verification requirements:** Prepare a preliminary verification matrix linking major engineering requirements to the evidence needed to evaluate them. Do not invent formal certification acceptance criteria.\n\n14. **Uncertainty register:** Record engineering assumptions, missing component data, unresolved standards questions, and decisions requiring review by qualified engineers or certification laboratories.\n\n15. **Recommended next steps:** Prioritize the technical and regulatory questions that should be resolved before selecting the final architecture or committing substantial manufacturing expenditure.\n\n\n\nThe capstone should produce the following documents:\n\n\n\n\n\n\n## Capstone completion criteria\n\nMark Module 11 complete only when I can:\n\n1. Explain the electrical architecture of Product B without relying on memorized component descriptions.\n2. Perform the relevant power, current, energy, and loss calculations.\n3. Identify major safety hazards and explain the engineering principles behind them.\n4. Compare reasonable architecture alternatives and articulate their tradeoffs.\n5. Identify the information required to evaluate protective devices and components.\n6. Explain how the AC input, charger, battery, and heating subsystems interact.\n7. Prepare a technically credible preliminary standards-applicability inquiry.\n8. Distinguish conclusions supported by evidence from questions requiring qualified engineering or laboratory review.\n\nThe capstone is an educational and preliminary engineering assessment. It does not constitute a certified design, installation authorization, or permission to perform hazardous high-current testing.\n\n\n",
+        "deliverableCount": 15
+      }
+    ],
+    "context": "This module focuses on Product B.\n\nThe proposed architecture includes:\n\n- 5–10 kWh LFP battery.\n\n- Approximately 48V nominal DC system, subject to engineering evaluation.\n\n- 6–10 kW battery-powered resistive heating.\n\n- 1.2–2.2 kW of 120V AC heating.\n\n- Residential 120V AC input.\n\n- Battery charging and coordinated AC/DC heating.\n\nThe goal is to evaluate feasibility and safety, not assume the architecture is optimal."
   },
   {
     "id": "12",

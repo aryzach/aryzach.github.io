@@ -15,6 +15,24 @@ export function extendCurriculum(
         new URL("../docs/curriculum-source/" + file, import.meta.url),
         "utf8",
       );
+      if (file === "09-modules-6-8.md")
+        return source
+          .slice(source.indexOf("# Module 6:"))
+          .split("## Topic 8.4:")[0];
+      if (file === "10-modules-8-10.md")
+        return source
+          .slice(source.indexOf("# Module 8:"))
+          .split("## Topic 10.3:")[0];
+      if (file === "11-module-10-continuation.md")
+        return source.split("# Implementation Reminder")[0];
+      if (file === "12-module-11.md")
+        return source
+          .slice(
+            source.indexOf("# Module 11:", source.indexOf("# Module 11:") + 1),
+          )
+          .split("# Module 11 Capstone:")[0];
+      if (file === "13-module-11-capstone.md")
+        return source.split("# Final Instructions to Codex")[0];
       // The complete continuation replaces the truncated 24.7 paste.
       return file === "05-modules-23-24.md"
         ? source
@@ -28,10 +46,13 @@ export function extendCurriculum(
   let section,
     topic,
     reading,
-    mode = "";
+    mode = "",
+    capstoneChecklist = "";
   const clean = (s) => s.replace(/\*\*/g, "").trim();
   const key = (r) =>
-    r.url + "|" + (r.title.match(/(?:UL|IEC)\s+\d+(?:-\d+)*/)?.[0] || "");
+    sources.includes("11-module-10-continuation.md")
+      ? r.url + "|" + r.title
+      : r.url + "|" + (r.title.match(/(?:UL|IEC)\s+\d+(?:-\d+)*/)?.[0] || "");
   const incoming = [];
   for (const raw of text.split("\n")) {
     const line = clean(raw.replace(/^#+\s*/, ""));
@@ -43,6 +64,26 @@ export function extendCurriculum(
       section = data.find((s) => s.id === capstone[1]);
       topic = null;
       reading = null;
+      if (
+        sources.includes("11-module-10-continuation.md") &&
+        ["10", "11"].includes(capstone[1])
+      ) {
+        topic = {
+          id: capstone[1] + "." + (section.topics.length + 1),
+          title: "Capstone: " + capstone[2],
+          why: section.objective,
+          objectives: [section.objective],
+          questions: [],
+          readings: [],
+          context: [],
+          incomplete: false,
+          exercise: "",
+        };
+        section.topics.push(topic);
+        capstoneChecklist = "";
+        mode = "capstone-topic";
+        continue;
+      }
       mode = "capstone";
       section.capstone = capstone[2] ? "### " + capstone[2] + "\n" : "";
       continue;
@@ -104,6 +145,23 @@ export function extendCurriculum(
       reading = null;
       continue;
     }
+    if (mode === "capstone-topic") {
+      if (/^Required deliverables$/.test(line)) {
+        capstoneChecklist = "deliverables";
+        topic.deliverableCount = 0;
+        continue;
+      }
+      if (/^Final mastery (questions|checklist)$/.test(line)) {
+        capstoneChecklist = "questions";
+        continue;
+      }
+      if (line.startsWith("- [ ] ")) {
+        topic.questions.push(line.slice(6));
+        if (capstoneChecklist === "deliverables") topic.deliverableCount++;
+      } else if (line !== "---")
+        topic.exercise += (topic.exercise ? "\n" : "") + raw.trimEnd();
+      continue;
+    }
     if (mode === "capstone") {
       if (line !== "---")
         section.capstone += (section.capstone ? "\n" : "") + raw.trimEnd();
@@ -111,6 +169,9 @@ export function extendCurriculum(
     }
     if (!topic) {
       if (line && line !== "---" && section.id === "24") section.context = line;
+      if (line && line !== "---" && section.id === "11")
+        section.context =
+          (section.context ? section.context + "\n\n" : "") + raw.trimEnd();
       continue;
     }
     if (/^Readings$/.test(line)) {
@@ -119,7 +180,7 @@ export function extendCurriculum(
       continue;
     }
     if (
-      /^(?:Final mastery|Mastery) questions$/.test(line) ||
+      /^(?:Final mastery|Remaining mastery|Mastery) questions$/.test(line) ||
       /^Complete the following checklist:/.test(line)
     ) {
       mode = "questions";
@@ -183,7 +244,12 @@ export function extendCurriculum(
     if (url === "https://www.ul.com/services/follow-up-services")
       url = "https://www.ul.com/services/follow-services";
     const access =
-      /shopulstandards|webstore\.iec|nfpa\.org\/codes-and-standards|nema\.org\/standards|iso\.org\/standards/.test(
+      /codes\.iccsafe\.org|standards\.ieee\.org|shopulstandards|webstore\.iec|nfpa\.org\/codes-and-standards|nema\.org\/standards|iso\.org\/standards/.test(
+        url,
+      );
+    const library =
+      sources.includes("11-module-10-continuation.md") &&
+      /productiq\.ulprospector|^https:\/\/(?:www\.)?harvia\.com\/?$|components\.omron\.com|^https:\/\/(?:www\.)?batteryuniversity\.com\/?$|nrel\.gov\/research\/publications|^https:\/\/(?:www\.)?victronenergy\.com\/?$|te\.com\/en\/products\/relays|workmanship\.nasa\.gov|victronenergy\.com\/(batteries|chargers)|ti\.com\/power-management\/battery-management|analog\.com\/en\/product-category\/battery-management/.test(
         url,
       );
     const scope = r.summary.split(/(?<=[.!?])\s+/)[0];
@@ -198,17 +264,21 @@ export function extendCurriculum(
           : r.summary,
       relevance: t.why,
       access,
-      ...(/components.omron.com\/.*support/.test(url) ||
+      ...(library ||
+      /components.omron.com\/.*support/.test(url) ||
       ((Number(t.id.split(".")[0]) >= 23 ||
-        sources.includes("07-topic-2-6-modules-3-4.md")) &&
+        sources.includes("07-topic-2-6-modules-3-4.md") ||
+        sources.includes("11-module-10-continuation.md")) &&
         access)
         ? { searchDestination: true }
         : {}),
       accessNote: access
         ? "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
-        : /components.omron.com\/.*support/.test(url)
-          ? "Search destination: locate the relevant manufacturer technical document; this library is not a direct document link."
-          : "",
+        : library
+          ? "Search destination: locate the relevant technical document or certification record in this resource library. This is not a direct full-text document link."
+          : /components.omron.com\/.*support/.test(url)
+            ? "Search destination: locate the relevant manufacturer technical document; this library is not a direct document link."
+            : "",
     });
   }
   return data;

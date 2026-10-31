@@ -47,7 +47,7 @@ test("curriculum navigation persists independent checks and notes locally withou
     w.eval(compiled.outputFiles[0].text);
     await tick();
     await tick();
-    assert.match(d.body.textContent!, /698/);
+    assert.match(d.body.textContent!, /1129/);
     await click("How US Electrical Product Regulation Works");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 9);
     d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
@@ -112,12 +112,12 @@ test("curriculum navigation persists independent checks and notes locally withou
     assert.equal(navigation.options.length, 25);
     assert.match(
       navigation.options[7].textContent!,
-      /Module 7.*Content not received/,
+      /Module 7.*Component Standards/,
     );
     navigation.value = "7";
     navigation.dispatchEvent(new w.Event("change", { bubbles: true }));
     await tick();
-    assert.match(d.body.textContent!, /Module 7 · Content not received/);
+    assert.match(d.body.textContent!, /Component Standards and Certification/);
     assert.ok(!d.body.textContent!.includes("No matching topics"));
     await click("All sections");
     assert.match(
@@ -160,8 +160,41 @@ test("curriculum navigation persists independent checks and notes locally withou
     assert.equal(faultTree.value.questions["5.3:q1"], true);
     await click("All sections");
     await click("Heater-Only Versus Complete Sauna Certification");
-    assert.match(d.body.textContent!, /supplied text ends early/);
-    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 7);
+    assert.ok(!d.body.textContent!.includes("supplied text ends early"));
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 14);
+    await click("All sections");
+    await click("Capstone: Preliminary High-Current DC Engineering Assessment");
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 33);
+    assert.match(d.body.textContent!, /Required deliverables/);
+    assert.match(d.body.textContent!, /Final mastery questions/);
+    assert.match(d.body.textContent!, /Recommended next steps/);
+    const finalChecks = d.querySelectorAll<HTMLInputElement>(
+      "input[type=checkbox]",
+    );
+    finalChecks[0].click();
+    await tick();
+    finalChecks[32].click();
+    await tick();
+    const notes = d.querySelector("textarea")!;
+    Object.getOwnPropertyDescriptor(
+      w.HTMLTextAreaElement.prototype,
+      "value",
+    )!.set!.call(notes, "My capstone calculations and uncertainty register");
+    notes.dispatchEvent(new w.Event("input", { bubbles: true }));
+    await tick();
+    await click("Save notes");
+    await click("All sections");
+    await click("Capstone: Preliminary High-Current DC Engineering Assessment");
+    assert.equal(
+      d.querySelector("textarea")!.value,
+      "My capstone calculations and uncertainty register",
+    );
+    const finalState = JSON.parse(
+      w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
+    ).entries.find((e: { id: string }) => e.id === "explorer:11.11");
+    assert.equal(finalState.value.questions["11.11:q1"], true);
+    assert.equal(finalState.value.questions["11.11:q33"], true);
+    assert.equal(Object.keys(finalState.value.questions).length, 2);
     assert.equal(network, 0);
   } finally {
     await w.happyDOM.close();

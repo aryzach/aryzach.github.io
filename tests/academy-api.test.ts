@@ -216,6 +216,40 @@ test("checklist backend removes its key, isolates legacy data, changes password,
       (await call("entry", { entry: branchEntry }, token)).status,
       200,
     );
+    const capstoneEntry = {
+      id: "explorer:11.11",
+      kind: "note",
+      value: {
+        readings: {},
+        questions: { "11.11:q1": true, "11.11:q33": true },
+        notes: "Private capstone report",
+      },
+      version: 0,
+    };
+    assert.equal(
+      (await call("entry", { entry: capstoneEntry }, token)).status,
+      200,
+    );
+    const continuedEntry = {
+      id: "explorer:6.6",
+      kind: "note",
+      value: {
+        readings: { "6.6:r1": true },
+        questions: { "6.6:q1": true, "6.6:q11": true },
+        notes: "Previous certification comparison",
+      },
+      version: 0,
+    };
+    assert.equal(
+      (await call("entry", { entry: continuedEntry }, token)).status,
+      200,
+    );
+    assert.equal(
+      (await call("snapshot", {}, token)).body.state.entries.find(
+        (e: { id: string }) => e.id === capstoneEntry.id,
+      ).value.notes,
+      "Private capstone report",
+    );
     const changed = await call(
       "password",
       {

@@ -21,6 +21,7 @@ export type Topic = {
   objectives: string[];
   incomplete: boolean;
   exercise?: string;
+  deliverableCount?: number;
   closingNote?: string;
 };
 export type Section = {

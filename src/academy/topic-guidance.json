@@ -438,5 +438,109 @@
   "6.6": [
     "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
     "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope."
+  ],
+  "7.1": [
+    "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability.",
+    "Distinguish listed products from recognized components, verify certification records, and evaluate conditions of acceptability."
+  ],
+  "7.2": [
+    "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions.",
+    "Evaluate thermostat and high-limit control roles, failure behavior, reset modes, sensor placement, and rated operating conditions."
+  ],
+  "7.3": [
+    "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings.",
+    "Compare relays and contactors using load type, switching endurance, temperature limitations, and AC or DC ratings."
+  ],
+  "7.4": [
+    "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings.",
+    "Distinguish one-time thermal links from resettable limiters and evaluate protective-device placement and ratings."
+  ],
+  "7.5": [
+    "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence.",
+    "Distinguish internal wiring, supply cords, and cord sets and evaluate temperature, routing, strain relief, and certification evidence."
+  ],
+  "7.6": [
+    "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence.",
+    "Evaluate terminals and connectors using contact resistance, thermal cycling, installation methods, and high-temperature application evidence."
+  ],
+  "7.7": [
+    "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification.",
+    "Interpret polymer and PCB material ratings without treating a flammability classification as finished-product certification."
+  ],
+  "7.8": [
+    "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review.",
+    "Control safety-critical component substitutions through documented ratings, approved alternatives, and certification review."
+  ],
+  "8.1": [
+    "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review.",
+    "Explain how schematics, bills of materials, construction details, and component certification evidence inform laboratory review."
+  ],
+  "8.2": [
+    "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation.",
+    "Distinguish rated and measured input power and evaluate voltage variation, installation conditions, and worst-case operation."
+  ],
+  "8.3": [
+    "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits.",
+    "Explain temperature-rise measurements, sensor attachment, thermal equilibrium, and the evidence needed to select applicable limits."
+  ],
+  "9.1": [
+    "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability.",
+    "Compare LFP with other lithium-ion chemistries in voltage, energy density, thermal behavior, and residential heating suitability."
+  ],
+  "9.2": [
+    "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime.",
+    "Distinguish power, capacity, and energy and calculate series/parallel pack configurations and ideal runtime."
+  ],
+  "9.3": [
+    "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints.",
+    "Explain C-rate and high-power discharge limitations, including heating, usable energy, and pack-level current constraints."
+  ],
+  "9.4": [
+    "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery.",
+    "Explain the relationship between internal resistance, temperature, aging, heat generation, and power delivery."
+  ],
+  "9.5": [
+    "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance.",
+    "Distinguish state of charge, state of health, calendar aging, and cycle aging and evaluate end-of-life performance."
+  ],
+  "9.6": [
+    "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response.",
+    "Distinguish BMS monitoring and protective disconnection and evaluate balancing, fault behavior, and heater response."
+  ],
+  "9.7": [
+    "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability.",
+    "Explain thermal runaway, propagation, vent-gas hazards, and the limitations of improved LFP thermal stability."
+  ],
+  "10.1": [
+    "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B.",
+    "Compare cell and pack certification scopes and investigate which battery standards may apply to Product B."
+  ],
+  "10.2": [
+    "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation.",
+    "Investigate UL 1973 scope, pack-level protection, recognition versus listing, and additional appliance integration evaluation."
+  ],
+  "10.3": [
+    "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope.",
+    "Distinguish battery certification from complete ESS evaluation and investigate whether Product B falls within ESS scope."
+  ],
+  "10.4": [
+    "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims.",
+    "Distinguish UL 9540A propagation testing from UL 9540 certification and evaluate unsupported installation safety claims."
+  ],
+  "10.5": [
+    "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions.",
+    "Investigate adopted ESS installation rules, location restrictions, capacity, fire hazards, and local AHJ questions."
+  ],
+  "10.6": [
+    "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions.",
+    "Compare the scopes of NEC Articles 706 and 480 and identify architecture-dependent protection, grounding, and disconnect questions."
+  ],
+  "10.7": [
+    "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability.",
+    "Compare chargers, converters, and grid-interconnected equipment and investigate UL 1741 and IEEE 1547 applicability."
+  ],
+  "10.8": [
+    "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions.",
+    "Distinguish lithium-battery transportation evidence from product certification and document supplier and importer questions."
   ]
 }
