@@ -698,8 +698,9 @@ export default function Academy() {
           ) : (
             <>
               <aside className="ce-notice">
-                Content received: Modules 1–2 and 12–24. Still awaiting the rest
-                of Topic 2.6 and Modules 3–11. Missing content is marked below.
+                Content received: Modules 1–6 and 12–24. The remainder of Topic
+                6.6 and Modules 7–11 are still awaiting source material. Missing
+                modules are marked in navigation.
               </aside>
               {Array.from({ length: 24 }, (_, i) => String(i + 1))
                 .filter((id) => !sections.some((s) => s.id === id))

@@ -216,6 +216,14 @@ for (const s of data) {
   }
 }
 extendCurriculum(data, guidance);
+extendCurriculum(data, guidance, [
+  "07-topic-2-6-modules-3-4.md",
+  "08-modules-5-6.md",
+]);
+// The attachment stops after four questions in 6.6; retain the actual received material.
+data.find((s) => s.id === "6").topics.find((t) => t.id === "6.6").incomplete =
+  true;
+data.sort((a, b) => Number(a.id) - Number(b.id));
 writeFileSync(
   new URL("../src/academy/content.json", import.meta.url),
   JSON.stringify(data, null, 2) + "\n",

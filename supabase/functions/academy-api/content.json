@@ -576,17 +576,1300 @@
       },
       {
         "id": "2.6",
-        "title": "Cord-Connected Versus Hardwired Appliances",
-        "why": "The proposed plug-in heater needs to be distinguished from equipment intended for permanent installation.",
+        "title": "Residential Circuit Loading, Plug Configurations, and Installation Constraints",
+        "why": "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
         "questions": [
-          "What distinguishes a cord-connected appliance from permanently installed equipment?"
+          "What distinguishes a cord-connected appliance from permanently installed equipment?",
+          "What is the NEC definition of a continuous load?",
+          "Why does the three-hour definition not create a general permission to overload a circuit for shorter periods?",
+          "How does the conventional 125% continuous-load sizing rule work?",
+          "What exceptions or equipment-specific rules might affect the analysis?",
+          "What is the difference between a 15A branch circuit and a 20A branch circuit?",
+          "What is the difference between NEMA 5-15 and NEMA 5-20 connectors?",
+          "How much current does a 1.7 kW heater draw at 120V?",
+          "How much current does a 2.0 kW heater draw?",
+          "How much current does a 2.2 kW heater draw?",
+          "Why is a 20A breaker not sufficient evidence that a particular appliance is suitable for that circuit?",
+          "What is the significance of a dedicated circuit?",
+          "When might GFCI protection be required?",
+          "What installation information must be provided by the appliance manufacturer?",
+          "Why does using an existing receptacle not automatically resolve product approval requirements?",
+          "What additional information would be required to establish whether Product A can be installed legally in San Francisco?"
         ],
-        "readings": [],
+        "readings": [
+          {
+            "id": "2.6:r1",
+            "title": "NFPA 70: National Electrical Code",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study Articles 100, 110, 210, 240, 250, 400, and 422.",
+            "summary": "Study Articles 100, 110, 210, 240, 250, 400, and 422. Focus on continuous-load definitions, branch-circuit sizing, appliance ratings, receptacle requirements, grounding, flexible cords, and installation instructions. The precise requirements depend on the adopted edition and equipment classification.",
+            "relevance": "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.6:r2",
+            "title": "NEMA Standards",
+            "url": "https://www.nema.org/standards",
+            "scope": "Investigate NEMA 5-15 and 5-20 plug and receptacle configurations.",
+            "summary": "Investigate NEMA 5-15 and 5-20 plug and receptacle configurations. Understand their nominal ratings, physical differences, and intended applications.",
+            "relevance": "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "2.6:r3",
+            "title": "California Building Standards Commission",
+            "url": "https://www.dgs.ca.gov/BSC/Codes",
+            "scope": "Learn how California adopts and amends the electrical code, and why national NEC guidance must be checked against the locally effective edition.",
+            "summary": "Learn how California adopts and amends the electrical code, and why national NEC guidance must be checked against the locally effective edition. Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "relevance": "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "2.6:r4",
+            "title": "San Francisco Department of Building Inspection",
+            "url": "https://www.sf.gov/departments/department-building-inspection",
+            "scope": "Investigate local requirements for residential appliance installations, permits, equipment approval, and inspections.",
+            "summary": "Investigate local requirements for residential appliance installations, permits, equipment approval, and inspections. Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "relevance": "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
         "context": [],
-        "incomplete": true,
+        "incomplete": false,
         "objectives": [
-          "Explain the distinction between cord-connected and permanently installed equipment."
-        ]
+          "Understand the practical and regulatory limits of powering residential sauna heaters from existing 120V branch circuits."
+        ],
+        "exercise": "Prepare an electrical feasibility matrix for heaters rated at 1.2, 1.5, 1.7, 1.8, 2.0, and 2.2 kW.\n\nFor each variant, record:\n\n- Nominal current at 120V.\n- Potential circuit configuration.\n- Relevant continuous-load considerations.\n- Plug and receptacle questions.\n- Certification questions.\n- Installation restrictions.\n- Unresolved code interpretations.\n\nDo not declare a configuration compliant without the necessary evidence.\n\n"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Electrical Safety Engineering",
+    "objective": "Understand how electrical appliances create shock, overheating, and fire hazards, and how those hazards are controlled.",
+    "capstone": "Develop a preliminary electrical hazard analysis for Product A, covering shock, overheating, short circuits, loose terminals, insulation failure, and control failures.\n\n",
+    "topics": [
+      {
+        "id": "3.1",
+        "title": "Electric shock and protective grounding",
+        "why": "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+        "objectives": [
+          "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection."
+        ],
+        "questions": [
+          "What determines the severity of an electric shock?",
+          "Why is voltage alone insufficient to describe shock risk?",
+          "What is protective grounding?",
+          "What is the difference between grounding and bonding?",
+          "How does a ground fault differ from normal load current?",
+          "Why must exposed conductive parts be considered during product design?",
+          "How does protective grounding interact with overcurrent protection?"
+        ],
+        "readings": [
+          {
+            "id": "3.1:r1",
+            "title": "All About Circuits: Electric Shock",
+            "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-3/",
+            "scope": "Explains the physiological effects of electric current, current paths through the body, and the relationship between voltage, resistance, and shock hazards.",
+            "summary": "Explains the physiological effects of electric current, current paths through the body, and the relationship between voltage, resistance, and shock hazards. Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+            "relevance": "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "3.1:r2",
+            "title": "NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study Article 250 and relevant Article 110 provisions concerning grounding, bonding, and electrical equipment installation.",
+            "summary": "Study Article 250 and relevant Article 110 provisions concerning grounding, bonding, and electrical equipment installation. Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+            "relevance": "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "3.2",
+        "title": "Leakage current and dielectric protection",
+        "why": "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+        "objectives": [
+          "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture."
+        ],
+        "questions": [
+          "What is leakage current?",
+          "How does leakage current differ from a ground fault?",
+          "What is dielectric withstand testing?",
+          "What is insulation resistance?",
+          "Why are dielectric withstand and insulation resistance not equivalent?",
+          "What are basic, supplementary, and reinforced insulation?",
+          "How does moisture affect electrical insulation?"
+        ],
+        "readings": [
+          {
+            "id": "3.2:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate requirements relating to protection against electric shock, leakage current, insulation, and electric strength.",
+            "summary": "Investigate requirements relating to protection against electric shock, leakage current, insulation, and electric strength. Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+            "relevance": "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "3.2:r2",
+            "title": "IEC 60335-1, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Review the international household appliance safety framework, including electrical insulation and protective construction.",
+            "summary": "Review the international household appliance safety framework, including electrical insulation and protective construction. Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+            "relevance": "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "3.3",
+        "title": "Creepage, clearance, and insulation systems",
+        "why": "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+        "objectives": [
+          "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation."
+        ],
+        "questions": [
+          "What is clearance?",
+          "What is creepage distance?",
+          "Why are they different?",
+          "How do humidity and contamination affect insulation requirements?",
+          "What is an overvoltage category?",
+          "What is a pollution degree?",
+          "Why can PCB layout affect electrical safety?",
+          "How would you evaluate insulation near a hot sauna heater?"
+        ],
+        "readings": [
+          {
+            "id": "3.3:r1",
+            "title": "IEC 60664-1, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "Introduces insulation coordination for low-voltage equipment, including clearance, creepage, overvoltage categories, and pollution degrees.",
+            "summary": "Introduces insulation coordination for low-voltage equipment, including clearance, creepage, overvoltage categories, and pollution degrees. Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+            "relevance": "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "3.3:r2",
+            "title": "UL 746 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Covers aspects of evaluating polymeric materials used in electrical equipment, including relevant material properties.",
+            "summary": "Covers aspects of evaluating polymeric materials used in electrical equipment, including relevant material properties. Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+            "relevance": "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "3.4",
+        "title": "Overcurrent protection and fault currents",
+        "why": "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+        "objectives": [
+          "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption."
+        ],
+        "questions": [
+          "What is the difference between overload and short-circuit current?",
+          "What is fault-current availability?",
+          "What does a fuse protect?",
+          "What does a branch-circuit breaker protect?",
+          "Why might a breaker not protect against a loose terminal?",
+          "What is interrupting capacity?",
+          "Why is DC fault interruption different from AC interruption?"
+        ],
+        "readings": [
+          {
+            "id": "3.4:r1",
+            "title": "NFPA 70: Article 240",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Study overcurrent protection requirements and the role of protective devices in electrical installations.",
+            "summary": "Study overcurrent protection requirements and the role of protective devices in electrical installations. Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+            "relevance": "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "3.4:r2",
+            "title": "Victron Energy: Wiring Unlimited",
+            "url": "https://www.victronenergy.com/upload/documents/Wiring-Unlimited-EN.pdf",
+            "scope": "Practical discussion of electrical protection, fuses, wiring, and battery systems, especially useful for understanding Product B.",
+            "summary": "Practical discussion of electrical protection, fuses, wiring, and battery systems, especially useful for understanding Product B. Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+            "relevance": "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "3.5",
+        "title": "Contact resistance and loose terminals",
+        "why": "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions.",
+        "objectives": [
+          "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions."
+        ],
+        "questions": [
+          "What is contact resistance?",
+          "Why does a loose connection generate localized heat?",
+          "How do oxidation and corrosion affect connection resistance?",
+          "Why does thermal cycling contribute to terminal degradation?",
+          "How can a connection overheat without excessive total circuit current?",
+          "Why are connector material and installation conditions important?",
+          "What evidence is needed to determine the root cause of a failed terminal?"
+        ],
+        "readings": [
+          {
+            "id": "3.5:r1",
+            "title": "UL 486 Series, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate electrical connector ratings, suitability, and evaluation requirements.",
+            "summary": "Investigate electrical connector ratings, suitability, and evaluation requirements. Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions.",
+            "relevance": "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "3.5:r2",
+            "title": "NASA Workmanship Standards",
+            "url": "https://workmanship.nasa.gov/",
+            "scope": "Review general principles of reliable electrical assembly, inspection, and workmanship.",
+            "summary": "Review general principles of reliable electrical assembly, inspection, and workmanship. These are not substitutes for appliance-specific connector requirements.",
+            "relevance": "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A sauna heater develops a damaged heating-element connection after several months.\n\nAnalyze possible causes, evidence to preserve, design weaknesses, manufacturing issues, and corrective actions.\n\n"
+      },
+      {
+        "id": "3.6",
+        "title": "Electrical arcing and insulation failure",
+        "why": "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+        "objectives": [
+          "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection."
+        ],
+        "questions": [
+          "What is an electrical arc?",
+          "How can arcing arise from a deteriorating connection?",
+          "Why can DC arcs be difficult to interrupt?",
+          "What are the limitations of ordinary circuit breakers?",
+          "What is an arc-fault circuit interrupter?",
+          "Why can an arc fault create a fire hazard without a conventional short circuit?"
+        ],
+        "readings": [
+          {
+            "id": "3.6:r1",
+            "title": "All About Circuits: Electric Circuits",
+            "url": "https://www.allaboutcircuits.com/textbook/",
+            "scope": "Review the fundamentals of current flow, electrical resistance, and circuit behavior relevant to electrical faults.",
+            "summary": "Review the fundamentals of current flow, electrical resistance, and circuit behavior relevant to electrical faults. Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+            "relevance": "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "3.6:r2",
+            "title": "NFPA 70",
+            "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70",
+            "scope": "Review applicable overcurrent and arc-fault protection concepts.",
+            "summary": "Review applicable overcurrent and arc-fault protection concepts. Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+            "relevance": "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "3.7",
+        "title": "Safety engineering and single-fault analysis",
+        "why": "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+        "objectives": [
+          "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections."
+        ],
+        "questions": [
+          "What is a hazard?",
+          "What is the difference between hazard and risk?",
+          "What is a single-fault condition?",
+          "What is a common-cause failure?",
+          "What is a fault tree?",
+          "How does FMEA differ from fault-tree analysis?",
+          "Why might two protective controls fail together?",
+          "How should an engineer evaluate a stuck relay?",
+          "What makes a protective mechanism genuinely independent?"
+        ],
+        "readings": [
+          {
+            "id": "3.7:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Introduces hazard identification, systems engineering, risk analysis, and verification.",
+            "summary": "Introduces hazard identification, systems engineering, risk analysis, and verification. Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+            "relevance": "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "3.7:r2",
+            "title": "ASQ: Failure Mode and Effects Analysis",
+            "url": "https://asq.org/quality-resources/fmea",
+            "scope": "Explains FMEA as a structured method for evaluating possible failures and their consequences.",
+            "summary": "Explains FMEA as a structured method for evaluating possible failures and their consequences. Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+            "relevance": "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "Thermal Safety Engineering",
+    "objective": "Understand heat transfer, thermal measurement, material degradation, and protective temperature controls in sauna heaters.",
+    "capstone": "Create a conceptual thermal safety model for Product A, identifying likely hot spots, relevant materials, protective controls, and required measurements.\n",
+    "topics": [
+      {
+        "id": "4.1",
+        "title": "Heat transfer mechanisms",
+        "why": "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+        "objectives": [
+          "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand."
+        ],
+        "questions": [
+          "What is the difference between conduction, convection, and radiation?",
+          "How does a sauna heater transfer energy to the cabin?",
+          "Why does heating the air require less energy than heating the entire sauna?",
+          "What is thermal mass?",
+          "How does thermal mass affect heatup time?",
+          "How do insulation and ventilation affect energy demand?"
+        ],
+        "readings": [
+          {
+            "id": "4.1:r1",
+            "title": "Engineering Toolbox: Heat Transfer",
+            "url": "https://www.engineeringtoolbox.com/heat-transfer-d_431.html",
+            "scope": "Introduces conduction, convection, radiation, and their roles in thermal systems.",
+            "summary": "Introduces conduction, convection, radiation, and their roles in thermal systems. Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+            "relevance": "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "4.1:r2",
+            "title": "Engineering Toolbox: Specific Heat Capacity",
+            "url": "https://www.engineeringtoolbox.com/specific-heat-capacity-d_391.html",
+            "scope": "Explains how material mass and specific heat determine energy required for temperature change.",
+            "summary": "Explains how material mass and specific heat determine energy required for temperature change. Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+            "relevance": "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "4.2",
+        "title": "Thermal resistance and temperature rise",
+        "why": "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+        "objectives": [
+          "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements."
+        ],
+        "questions": [
+          "What is thermal resistance?",
+          "How does thermal conductivity affect heat transfer?",
+          "What is temperature rise above ambient?",
+          "Why does a hotter surrounding environment affect component temperature?",
+          "How can thermal resistance create localized hot spots?",
+          "What is thermal equilibrium?",
+          "How does a thermal model differ from a measured test result?"
+        ],
+        "readings": [
+          {
+            "id": "4.2:r1",
+            "title": "Engineering Toolbox: Thermal Conductivity",
+            "url": "https://www.engineeringtoolbox.com/thermal-conductivity-d_429.html",
+            "scope": "Provides thermal conductivity information and an introduction to how different materials transmit heat.",
+            "summary": "Provides thermal conductivity information and an introduction to how different materials transmit heat. Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+            "relevance": "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "4.2:r2",
+            "title": "Engineering Toolbox: Heat Transfer",
+            "url": "https://www.engineeringtoolbox.com/heat-transfer-d_431.html",
+            "scope": "Review heat-transfer relationships relevant to enclosure temperatures and heat loss.",
+            "summary": "Review heat-transfer relationships relevant to enclosure temperatures and heat loss. Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+            "relevance": "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "4.3",
+        "title": "Temperature measurement and sensors",
+        "why": "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+        "objectives": [
+          "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements."
+        ],
+        "questions": [
+          "How does a thermocouple work?",
+          "What is the difference between thermocouple types?",
+          "Why does sensor placement matter?",
+          "What is measurement uncertainty?",
+          "How can a sensor underestimate a hot spot?",
+          "Why must testing conditions be repeatable?",
+          "What are the limitations of measuring only ambient sauna temperature?"
+        ],
+        "readings": [
+          {
+            "id": "4.3:r1",
+            "title": "NIST Thermocouple Reference Tables",
+            "url": "https://srdata.nist.gov/its90/main/",
+            "scope": "Provides reference data for thermocouple types and temperature measurement.",
+            "summary": "Provides reference data for thermocouple types and temperature measurement. Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+            "relevance": "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "4.3:r2",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate relevant temperature measurement and appliance temperature-rise test requirements.",
+            "summary": "Investigate relevant temperature measurement and appliance temperature-rise test requirements. Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+            "relevance": "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "4.4",
+        "title": "Wood, plastics, and combustible materials",
+        "why": "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+        "objectives": [
+          "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety."
+        ],
+        "questions": [
+          "How does prolonged heating affect wood?",
+          "Why is ignition temperature not a single universal number?",
+          "How can repeated heating change material behavior?",
+          "Why are combustible-material clearances important?",
+          "What does a UL 94 classification indicate?",
+          "Why doesn't a material flammability classification automatically establish appliance safety?"
+        ],
+        "readings": [
+          {
+            "id": "4.4:r1",
+            "title": "US Forest Products Laboratory: Wood Handbook",
+            "url": "https://www.fpl.fs.usda.gov/documnts/fplgtr/fpl_gtr190.pdf",
+            "scope": "Technical reference on wood properties, including thermal behavior and material characteristics.",
+            "summary": "Technical reference on wood properties, including thermal behavior and material characteristics. Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+            "relevance": "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "4.4:r2",
+            "title": "UL 94, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Introduces classifications of plastic material flammability under defined test conditions.",
+            "summary": "Introduces classifications of plastic material flammability under defined test conditions. Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+            "relevance": "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "4.5",
+        "title": "Thermal cutoffs and independent overtemperature protection",
+        "why": "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+        "objectives": [
+          "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults."
+        ],
+        "questions": [
+          "What is the difference between a thermostat and a thermal cutoff?",
+          "What is a manual-reset high-limit control?",
+          "What is an automatic-reset control?",
+          "Why might independent protection be required?",
+          "What happens if a thermostat relay fails closed?",
+          "How can a thermal cutoff fail?",
+          "What is a common-cause thermal protection failure?"
+        ],
+        "readings": [
+          {
+            "id": "4.5:r1",
+            "title": "UL 60730-2-9",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Temperature-sensing control requirements, including relevant control safety concepts.",
+            "summary": "Temperature-sensing control requirements, including relevant control safety concepts. Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+            "relevance": "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "4.5:r2",
+            "title": "UL 60335-2-53",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate sauna-specific temperature regulation and protective-control requirements.",
+            "summary": "Investigate sauna-specific temperature regulation and protective-control requirements. Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+            "relevance": "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "4.6",
+        "title": "Normal and abnormal thermal operation",
+        "why": "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+        "objectives": [
+          "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances."
+        ],
+        "questions": [
+          "What distinguishes normal operation from abnormal operation?",
+          "Why are worst-case conditions important?",
+          "How does ambient temperature affect a thermal test?",
+          "What happens when a temperature-regulating control fails?",
+          "What evidence is needed to evaluate safe clearances?",
+          "Why is successful normal operation insufficient evidence of safety?"
+        ],
+        "readings": [
+          {
+            "id": "4.6:r1",
+            "title": "UL 875",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate normal-operation and abnormal-operation requirements for electric dry-bath heaters.",
+            "summary": "Investigate normal-operation and abnormal-operation requirements for electric dry-bath heaters. Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+            "relevance": "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "4.6:r2",
+            "title": "UL 60335-1",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Study general appliance testing concepts, including abnormal operation and thermal safety.",
+            "summary": "Study general appliance testing concepts, including abnormal operation and thermal safety. Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+            "relevance": "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "title": "Safety Engineering and Failure Analysis",
+    "objective": "Learn systematic methods for identifying hazards, analyzing failures, evaluating risk, and designing independent safety protections for electrical appliances.",
+    "capstone": "Create a preliminary safety engineering report for Product A containing:\n\n1. Hazard register.\n2. FMEA.\n3. Fault tree for uncontrolled heating.\n4. Identification of safety-critical components.\n5. Protective-control architecture.\n6. Verification requirements.\n7. Unresolved questions requiring laboratory review.\n\n",
+    "topics": [
+      {
+        "id": "5.1",
+        "title": "Hazard Identification and Risk Assessment",
+        "why": "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+        "objectives": [
+          "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction."
+        ],
+        "questions": [
+          "What is the difference between a hazard and a risk?",
+          "How do severity and likelihood affect risk?",
+          "What is residual risk?",
+          "What is the hierarchy of risk reduction?",
+          "Why is eliminating a hazard generally preferable to adding a warning label?",
+          "What is the difference between preventing a hazardous event and reducing its consequences?",
+          "How should uncertainty be documented in a risk assessment?",
+          "Why can a low-probability event still justify substantial protective measures?",
+          "How do product safety standards relate to a manufacturer's own risk assessment?"
+        ],
+        "readings": [
+          {
+            "id": "5.1:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Introduces structured engineering methods for identifying risks, defining requirements, and verifying that systems meet their objectives.",
+            "summary": "Introduces structured engineering methods for identifying risks, defining requirements, and verifying that systems meet their objectives. Focus on the relationship between hazards, design decisions, verification, and lifecycle risk management.",
+            "relevance": "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.1:r2",
+            "title": "ISO 12100, ISO Standards Catalog",
+            "url": "https://www.iso.org/standards.html",
+            "scope": "General machinery safety standard covering hazard identification, risk estimation, risk evaluation, and risk reduction.",
+            "summary": "General machinery safety standard covering hazard identification, risk estimation, risk evaluation, and risk reduction. Useful as a conceptual framework, although it is not automatically the governing standard for household sauna heaters.",
+            "relevance": "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "5.1:r3",
+            "title": "ASQ: Risk Management",
+            "url": "https://asq.org/quality-resources/risk-management",
+            "scope": "Introduces risk identification, assessment, prioritization, mitigation, and monitoring.",
+            "summary": "Introduces risk identification, assessment, prioritization, mitigation, and monitoring. Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+            "relevance": "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Identify at least ten hazards associated with a 120V traditional sauna heater installed inside a small wooden cabin.\n\nClassify them as electrical, thermal, mechanical, control-related, installation-related, or manufacturing-related.\n\nFor each hazard, describe the potential consequence and a possible risk-reduction strategy.\n\n"
+      },
+      {
+        "id": "5.2",
+        "title": "Failure Mode and Effects Analysis (FMEA)",
+        "why": "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+        "objectives": [
+          "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers."
+        ],
+        "questions": [
+          "What is an FMEA?",
+          "What is the difference between a failure mode, failure cause, and failure effect?",
+          "How does FMEA differ from a general hazard list?",
+          "What is the purpose of severity, occurrence, and detection ratings?",
+          "What are the limitations of multiplying these ratings into a risk priority number?",
+          "Why should a low-probability but catastrophic failure not be dismissed automatically?",
+          "How do you identify existing preventive and detective controls?",
+          "How does FMEA influence design changes?",
+          "When should an FMEA be updated?"
+        ],
+        "readings": [
+          {
+            "id": "5.2:r1",
+            "title": "ASQ: Failure Mode and Effects Analysis",
+            "url": "https://asq.org/quality-resources/fmea",
+            "scope": "Introduces FMEA, including failure modes, causes, effects, severity, occurrence, detection, and corrective actions.",
+            "summary": "Introduces FMEA, including failure modes, causes, effects, severity, occurrence, detection, and corrective actions. Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+            "relevance": "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.2:r2",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Provides a systems-engineering context for identifying failure modes and connecting them to requirements, risks, and verification activities.",
+            "summary": "Provides a systems-engineering context for identifying failure modes and connecting them to requirements, risks, and verification activities. Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+            "relevance": "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Perform a preliminary FMEA for a sauna heater containing:\n\n- Resistive heating elements.\n- Thermostat.\n- Relay.\n- Mechanical timer.\n- Independent high-limit cutoff.\n- Temperature sensor.\n- Supply cord.\n- Heating-element terminals.\n\nInclude at least one failure mode for each component.\n\n"
+      },
+      {
+        "id": "5.3",
+        "title": "Fault-Tree Analysis",
+        "why": "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+        "objectives": [
+          "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures."
+        ],
+        "questions": [
+          "What is a fault tree?",
+          "How does fault-tree analysis differ from FMEA?",
+          "What is a top event?",
+          "What is the difference between AND and OR gates in a fault tree?",
+          "What is a minimal cut set?",
+          "What is a common-cause failure?",
+          "Why can apparently redundant protections fail together?",
+          "How can a fault tree reveal weaknesses in protective architecture?",
+          "What are the limitations of assigning numerical probabilities without adequate data?"
+        ],
+        "readings": [
+          {
+            "id": "5.3:r1",
+            "title": "NASA Fault Tree Handbook with Aerospace Applications",
+            "url": "https://ntrs.nasa.gov/citations/20020021862",
+            "scope": "Detailed introduction to fault-tree analysis, including top events, contributing failures, logical relationships, and common-cause considerations.",
+            "summary": "Detailed introduction to fault-tree analysis, including top events, contributing failures, logical relationships, and common-cause considerations. Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+            "relevance": "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.3:r2",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Explains how fault analysis contributes to system safety and risk management.",
+            "summary": "Explains how fault analysis contributes to system safety and risk management. Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+            "relevance": "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Construct a fault tree for the top event:\n\n**\"Sauna heater continues generating heat after a dangerous overtemperature condition develops.\"**\n\nConsider primary control failure, independent protective-control failure, sensing failures, and common-cause failures.\n\nDo not assume that every possible failure combination has the same probability.\n\n"
+      },
+      {
+        "id": "5.4",
+        "title": "Single-Fault Conditions and Independent Protection",
+        "why": "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors.",
+        "objectives": [
+          "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors."
+        ],
+        "questions": [
+          "What is a single-fault condition?",
+          "What is the difference between normal temperature regulation and safety protection?",
+          "Why might a thermostat alone be insufficient?",
+          "What does independent protection mean?",
+          "Can two protective devices share a common failure mechanism?",
+          "What happens if a relay welds closed?",
+          "What happens if a temperature sensor fails?",
+          "Why might a manual-reset high-limit control be preferable in some applications?",
+          "How does protective-control placement affect effectiveness?",
+          "What evidence demonstrates that a protective function is sufficiently independent?"
+        ],
+        "readings": [
+          {
+            "id": "5.4:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General household appliance safety framework, including abnormal-operation and protective-construction concepts.",
+            "summary": "General household appliance safety framework, including abnormal-operation and protective-construction concepts. Study the relevant requirements using the applicable edition.",
+            "relevance": "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "5.4:r2",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Safety requirements for automatic electrical controls.",
+            "summary": "Safety requirements for automatic electrical controls. Investigate the distinction between normal regulation and protective functions.",
+            "relevance": "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "5.4:r3",
+            "title": "IEC 61508, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "General functional safety framework for safety-related systems.",
+            "summary": "General functional safety framework for safety-related systems. Useful for understanding independence, systematic failures, and safety functions, without assuming this standard applies directly to sauna certification.",
+            "relevance": "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Analyze a heater whose primary thermostat controls a relay and whose independent thermal cutoff interrupts heating during excessive temperatures.\n\nIdentify potential single faults and common-cause failures. Explain what must be verified to determine whether the protective arrangement is adequate.\n\n"
+      },
+      {
+        "id": "5.5",
+        "title": "Fail-Safe Design and Safety Architecture",
+        "why": "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+        "objectives": [
+          "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults."
+        ],
+        "questions": [
+          "What does fail-safe mean?",
+          "Why is fail-safe behavior dependent on the hazard and operating context?",
+          "What is a safe state for a sauna heater?",
+          "What is the difference between fault detection and fault prevention?",
+          "What is the difference between redundancy and diversity?",
+          "Why is software-only shutdown not always sufficient?",
+          "What happens if the controller loses power?",
+          "What happens if the controller freezes?",
+          "What happens if the temperature sensor becomes disconnected?",
+          "How should protective systems behave after a fault is detected?"
+        ],
+        "readings": [
+          {
+            "id": "5.5:r1",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Systems engineering principles for requirements, risk reduction, verification, and lifecycle safety.",
+            "summary": "Systems engineering principles for requirements, risk reduction, verification, and lifecycle safety. Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "relevance": "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.5:r2",
+            "title": "IEC: Functional Safety",
+            "url": "https://www.iec.ch/functional-safety",
+            "scope": "Introduces safety functions, safety-related systems, and the importance of systematic design and verification.",
+            "summary": "Introduces safety functions, safety-related systems, and the importance of systematic design and verification. Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "relevance": "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.5:r3",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Investigate control-system construction, fault behavior, and protective-function evaluation.",
+            "summary": "Investigate control-system construction, fault behavior, and protective-function evaluation. Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "relevance": "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "Propose a high-level protective-control architecture for Product A.\n\nIdentify the normal temperature-control function, independent protective functions, expected behavior after faults, and evidence needed to validate the architecture.\n\n"
+      },
+      {
+        "id": "5.6",
+        "title": "Safety-Related Software and Control Failures",
+        "why": "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+        "objectives": [
+          "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification."
+        ],
+        "questions": [
+          "What is the difference between a software bug and a hardware failure?",
+          "What is a watchdog timer?",
+          "What are the limitations of watchdogs?",
+          "Why can communication failures create unsafe operating states?",
+          "What is a safety-related control function?",
+          "Why should critical protective functions not depend solely on an internet connection?",
+          "What happens if a controller's temperature reading is incorrect?",
+          "What is requirements traceability?",
+          "How should firmware changes be evaluated for safety impact?"
+        ],
+        "readings": [
+          {
+            "id": "5.6:r1",
+            "title": "UL 60730-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL60730-1_6_S_20241031",
+            "scope": "Study requirements relevant to electronic controls and software-dependent safety functions.",
+            "summary": "Study requirements relevant to electronic controls and software-dependent safety functions. Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+            "relevance": "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "5.6:r2",
+            "title": "NASA Software Engineering Handbook",
+            "url": "https://swehb.nasa.gov/",
+            "scope": "Introduces requirements traceability, software verification, fault management, and disciplined development of software-dependent systems.",
+            "summary": "Introduces requirements traceability, software verification, fault management, and disciplined development of software-dependent systems. Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+            "relevance": "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false,
+        "exercise": "A sauna controller uses a microcontroller to regulate temperature. A software fault leaves the heating command enabled indefinitely.\n\nExplain the hazards, the protective mechanisms that should be considered, and the evidence required to evaluate whether the system remains safe.\n\n"
+      },
+      {
+        "id": "5.7",
+        "title": "Risk Reduction and Verification",
+        "why": "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+        "objectives": [
+          "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions."
+        ],
+        "questions": [
+          "How do you decide which hazards require additional controls?",
+          "What is the difference between eliminating a hazard and mitigating it?",
+          "What is residual risk?",
+          "How can testing demonstrate that a protective measure works?",
+          "Why must risk analysis be updated after design changes?",
+          "Why does certification not eliminate all product risk?",
+          "How should safety requirements be traced to verification evidence?"
+        ],
+        "readings": [
+          {
+            "id": "5.7:r1",
+            "title": "ISO 12100, ISO Standards Catalog",
+            "url": "https://www.iso.org/standards.html",
+            "scope": "General risk-reduction framework emphasizing inherently safer design, safeguarding, and information for use.",
+            "summary": "General risk-reduction framework emphasizing inherently safer design, safeguarding, and information for use. Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "relevance": "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "5.7:r2",
+            "title": "NASA Systems Engineering Handbook",
+            "url": "https://www.nasa.gov/reference/1-0-introduction/",
+            "scope": "Connects risk reduction to requirements, verification, validation, and engineering evidence.",
+            "summary": "Connects risk reduction to requirements, verification, validation, and engineering evidence. Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "relevance": "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "5.7:r3",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Introduces third-party product evaluation and the role of certification in demonstrating compliance with defined safety requirements.",
+            "summary": "Introduces third-party product evaluation and the role of certification in demonstrating compliance with defined safety requirements. Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "relevance": "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "Sauna Safety Standards and Certification",
+    "objective": "Understand the standards governing traditional electric sauna heaters, how those standards are interpreted, and how they affect the design and certification of a 120V residential sauna heater.",
+    "capstone": "",
+    "topics": [
+      {
+        "id": "6.1",
+        "title": "UL 875, Electric Dry-Bath Heaters",
+        "why": "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard.",
+        "objectives": [
+          "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard."
+        ],
+        "questions": [
+          "What products fall within the scope of UL 875?",
+          "Does UL 875 cover heaters, prefabricated sauna rooms, or both under specified conditions?",
+          "What construction requirements are relevant to a traditional heater?",
+          "What normal-operation tests are relevant?",
+          "What abnormal-operation tests are relevant?",
+          "What protective-control requirements need to be investigated?",
+          "How are combustible-material clearances addressed?",
+          "What markings and installation instructions are required?",
+          "How does UL 875 influence heater design decisions?",
+          "What must be confirmed using the actual standard rather than a public summary?"
+        ],
+        "readings": [
+          {
+            "id": "6.1:r1",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "The traditional North American standard for electric dry-bath heaters and relevant associated equipment.",
+            "summary": "The traditional North American standard for electric dry-bath heaters and relevant associated equipment. Study the scope, definitions, construction requirements, normal operation, abnormal operation, protective controls, markings, and installation requirements.",
+            "relevance": "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.1:r2",
+            "title": "UL Solutions: Product Certification",
+            "url": "https://www.ul.com/services/certification",
+            "scope": "Provides context for how a product is evaluated and certified against an applicable standard.",
+            "summary": "Provides context for how a product is evaluated and certified against an applicable standard. Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard.",
+            "relevance": "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "6.2",
+        "title": "UL 60335-1, General Household Appliance Safety",
+        "why": "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences.",
+        "objectives": [
+          "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences."
+        ],
+        "questions": [
+          "What is the purpose of a general appliance safety standard?",
+          "How does UL 60335-1 interact with product-specific Part 2 standards?",
+          "What types of electrical hazards does it address?",
+          "How does it treat abnormal operation?",
+          "What is the relationship between component suitability and appliance certification?",
+          "Why are national differences important?",
+          "Can UL 60335-1 alone establish that a sauna heater meets all applicable safety requirements?"
+        ],
+        "readings": [
+          {
+            "id": "6.2:r1",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General safety requirements for household and similar electrical appliances.",
+            "summary": "General safety requirements for household and similar electrical appliances. Study electric shock protection, electrical construction, heating, abnormal operation, insulation, protective controls, and component suitability.",
+            "relevance": "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.2:r2",
+            "title": "IEC 60335-1, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "International general appliance safety standard.",
+            "summary": "International general appliance safety standard. Compare the IEC framework with its US adoption and national differences.",
+            "relevance": "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "6.3",
+        "title": "UL 60335-2-53, Sauna Heating Appliances",
+        "why": "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement.",
+        "objectives": [
+          "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement."
+        ],
+        "questions": [
+          "What products are covered by UL 60335-2-53?",
+          "How does it relate to UL 60335-1?",
+          "How does its scope compare with UL 875?",
+          "What requirements are specific to sauna heating?",
+          "How does it address temperature regulation and protective controls?",
+          "What abnormal operating conditions need evaluation?",
+          "What national differences are relevant to US certification?",
+          "Can a manufacturer choose between UL 875 and UL 60335-2-53 without laboratory agreement?",
+          "What would determine which standard applies to Product A?"
+        ],
+        "readings": [
+          {
+            "id": "6.3:r1",
+            "title": "UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "US sauna-specific safety standard.",
+            "summary": "US sauna-specific safety standard. Study its scope, requirements for sauna heating appliances and infrared cabins, protective controls, thermal behavior, and construction requirements.",
+            "relevance": "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.3:r2",
+            "title": "UL 60335-1, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General requirements used together with the applicable Part 2 standard.",
+            "summary": "General requirements used together with the applicable Part 2 standard. Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement.",
+            "relevance": "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "6.4",
+        "title": "IEC 60335-2-53 and International Certification",
+        "why": "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+        "objectives": [
+          "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences."
+        ],
+        "questions": [
+          "What is the relationship between IEC and UL standards?",
+          "What are national differences?",
+          "What is a CB Test Certificate?",
+          "What is a CB Test Report?",
+          "Does IEC compliance automatically establish US certification?",
+          "Why might a manufacturer use IEC-based testing?",
+          "How could international test evidence support a US certification project?",
+          "What additional verification might be required?"
+        ],
+        "readings": [
+          {
+            "id": "6.4:r1",
+            "title": "IEC 60335-2-53, IEC Webstore",
+            "url": "https://webstore.iec.ch/",
+            "scope": "International safety requirements for sauna heating appliances and infrared cabins.",
+            "summary": "International safety requirements for sauna heating appliances and infrared cabins. Study the scope and compare relevant editions with the US standard.",
+            "relevance": "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.4:r2",
+            "title": "IECEE CB Scheme",
+            "url": "https://www.iecee.org/",
+            "scope": "Explains international testing and certification mechanisms that can support national approvals.",
+            "summary": "Explains international testing and certification mechanisms that can support national approvals. Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+            "relevance": "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+            "access": false,
+            "accessNote": ""
+          },
+          {
+            "id": "6.4:r3",
+            "title": "OSHA: NRTL Program",
+            "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+            "scope": "Explains the US recognition framework for product safety certification.",
+            "summary": "Explains the US recognition framework for product safety certification. Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+            "relevance": "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "6.5",
+        "title": "UL 499, UL 1278, and UL 2021",
+        "why": "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification.",
+        "objectives": [
+          "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification."
+        ],
+        "questions": [
+          "What products does UL 499 cover?",
+          "What products does UL 1278 cover?",
+          "What products does UL 2021 cover?",
+          "How do general room heaters differ from traditional sauna heaters?",
+          "Why do sauna heaters have dedicated safety standards?",
+          "Can a manufacturer classify a sauna heater as a room heater simply because it uses resistive heating?",
+          "What role do scope exclusions play?",
+          "What questions should be asked before pursuing an alternative classification?"
+        ],
+        "readings": [
+          {
+            "id": "6.5:r1",
+            "title": "UL 499, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "General electric heating appliance standard.",
+            "summary": "General electric heating appliance standard. Study its scope and exclusions to understand whether a particular heater falls within this category.",
+            "relevance": "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.5:r2",
+            "title": "UL 1278, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Standard for movable and wall- or ceiling-hung electric room heaters.",
+            "summary": "Standard for movable and wall- or ceiling-hung electric room heaters. Compare its intended product category with sauna heating appliances.",
+            "relevance": "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.5:r3",
+            "title": "UL 2021, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Standard for fixed and location-dedicated electric room heaters.",
+            "summary": "Standard for fixed and location-dedicated electric room heaters. Study its scope and differences from sauna-specific requirements.",
+            "relevance": "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          }
+        ],
+        "context": [],
+        "incomplete": false
+      },
+      {
+        "id": "6.6",
+        "title": "Heater-Only Versus Complete Sauna Certification",
+        "why": "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+        "objectives": [
+          "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope."
+        ],
+        "questions": [
+          "What does it mean to certify a heater alone?",
+          "What does it mean to certify a complete sauna assembly?",
+          "What installation conditions might accompany heater-only certification?",
+          "Can a certified heater be installed in any wooden enclosure?"
+        ],
+        "readings": [
+          {
+            "id": "6.6:r1",
+            "title": "UL 875, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate the standard's treatment of heaters and associated sauna equipment, including the scope of certification and installation conditions.",
+            "summary": "Investigate the standard's treatment of heaters and associated sauna equipment, including the scope of certification and installation conditions. Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "relevance": "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.6:r2",
+            "title": "UL 60335-2-53, UL Standards Catalog",
+            "url": "https://www.shopulstandards.com/",
+            "scope": "Investigate the scope of sauna heating appliances and infrared cabins, and the distinction between heater evaluation and complete appliance evaluation.",
+            "summary": "Investigate the scope of sauna heating appliances and infrared cabins, and the distinction between heater evaluation and complete appliance evaluation. Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "relevance": "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "access": true,
+            "searchDestination": true,
+            "accessNote": "Catalog/access link: public scope and publication information may be available. Full requirements and clauses require authorized standards access; confirm the applicable edition."
+          },
+          {
+            "id": "6.6:r3",
+            "title": "UL Solutions: Field Evaluations",
+            "url": "https://www.ul.com/services/field-evaluations",
+            "scope": "Provides context for evaluating installed equipment and assemblies that may not be covered by a conventional product listing.",
+            "summary": "Provides context for evaluating installed equipment and assemblies that may not be covered by a conventional product listing. Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "relevance": "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+            "access": false,
+            "accessNote": ""
+          }
+        ],
+        "context": [],
+        "incomplete": true
       }
     ]
   },

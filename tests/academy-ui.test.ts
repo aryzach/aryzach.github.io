@@ -47,7 +47,7 @@ test("curriculum navigation persists independent checks and notes locally withou
     w.eval(compiled.outputFiles[0].text);
     await tick();
     await tick();
-    assert.match(d.body.textContent!, /484/);
+    assert.match(d.body.textContent!, /698/);
     await click("How US Electrical Product Regulation Works");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 9);
     d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
@@ -111,13 +111,13 @@ test("curriculum navigation persists independent checks and notes locally withou
     )!;
     assert.equal(navigation.options.length, 25);
     assert.match(
-      navigation.options[3].textContent!,
-      /Module 3.*Content not received/,
+      navigation.options[7].textContent!,
+      /Module 7.*Content not received/,
     );
-    navigation.value = "3";
+    navigation.value = "7";
     navigation.dispatchEvent(new w.Event("change", { bubbles: true }));
     await tick();
-    assert.match(d.body.textContent!, /Module 3 · Content not received/);
+    assert.match(d.body.textContent!, /Module 7 · Content not received/);
     assert.ok(!d.body.textContent!.includes("No matching topics"));
     await click("All sections");
     assert.match(
@@ -139,6 +139,29 @@ test("curriculum navigation persists independent checks and notes locally withou
       w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
     ).entries.find((e: { id: string }) => e.id === "explorer:24.7");
     assert.equal(final.value.questions["24.7:q28"], true);
+    await click("All sections");
+    await click(
+      "Residential Circuit Loading, Plug Configurations, and Installation Constraints",
+    );
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 20);
+    assert.match(
+      d.body.textContent!,
+      /Prepare an electrical feasibility matrix/,
+    );
+    assert.ok(!d.body.textContent!.includes("supplied text ends early"));
+    await click("All sections");
+    await click("Fault-Tree Analysis");
+    assert.match(d.body.textContent!, /Sauna heater continues generating heat/);
+    d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
+    await tick();
+    const faultTree = JSON.parse(
+      w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
+    ).entries.find((e: { id: string }) => e.id === "explorer:5.3");
+    assert.equal(faultTree.value.questions["5.3:q1"], true);
+    await click("All sections");
+    await click("Heater-Only Versus Complete Sauna Certification");
+    assert.match(d.body.textContent!, /supplied text ends early/);
+    assert.equal(d.querySelectorAll("input[type=checkbox]").length, 7);
     assert.equal(network, 0);
   } finally {
     await w.happyDOM.close();

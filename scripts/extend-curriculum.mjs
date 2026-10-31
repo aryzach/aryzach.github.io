@@ -1,11 +1,14 @@
 import { readFileSync } from "node:fs";
 // Append-only IDs keep existing saved checkboxes attached to the same content.
-export function extendCurriculum(data, guidance) {
-  const sources = [
+export function extendCurriculum(
+  data,
+  guidance,
+  sources = [
     "04-module-20-extension.md",
     "05-modules-23-24.md",
     "06-topic-24-7-capstone.md",
-  ];
+  ],
+) {
   const text = sources
     .map((file) => {
       const source = readFileSync(
@@ -17,7 +20,9 @@ export function extendCurriculum(data, guidance) {
         ? source
             .slice(source.indexOf("# Module 23:"))
             .split("## Topic 24.7:")[0]
-        : source;
+        : file === "08-modules-5-6.md"
+          ? source.slice(source.indexOf("# Module 5:"))
+          : source;
     })
     .join("\n");
   let section,
@@ -60,6 +65,10 @@ export function extendCurriculum(data, guidance) {
       mode = "";
       continue;
     }
+    if (!section && /^Topic \d+\.\d+:/.test(line)) {
+      const sectionId = line.match(/^Topic (\d+)/)[1];
+      section = data.find((s) => s.id === sectionId);
+    }
     if (!section) continue;
     if (line.startsWith("Objective:")) {
       if (topic) {
@@ -88,6 +97,8 @@ export function extendCurriculum(data, guidance) {
         };
         section.topics.push(topic);
       }
+      if (sources.includes("07-topic-2-6-modules-3-4.md") && topic.id === "2.6")
+        topic.title = m[2];
       topic.incomplete = false;
       mode = "context";
       reading = null;
@@ -172,7 +183,9 @@ export function extendCurriculum(data, guidance) {
     if (url === "https://www.ul.com/services/follow-up-services")
       url = "https://www.ul.com/services/follow-services";
     const access =
-      /shopulstandards|webstore\.iec|nfpa\.org\/codes-and-standards/.test(url);
+      /shopulstandards|webstore\.iec|nfpa\.org\/codes-and-standards|nema\.org\/standards|iso\.org\/standards/.test(
+        url,
+      );
     const scope = r.summary.split(/(?<=[.!?])\s+/)[0];
     t.readings.push({
       id: t.id + ":r" + (t.readings.length + 1),
@@ -186,7 +199,9 @@ export function extendCurriculum(data, guidance) {
       relevance: t.why,
       access,
       ...(/components.omron.com\/.*support/.test(url) ||
-      (Number(t.id.split(".")[0]) >= 23 && access)
+      ((Number(t.id.split(".")[0]) >= 23 ||
+        sources.includes("07-topic-2-6-modules-3-4.md")) &&
+        access)
         ? { searchDestination: true }
         : {}),
       accessNote: access

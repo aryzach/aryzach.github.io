@@ -334,5 +334,109 @@
   "24.6": [
     "Identify how manufacturers can participate in standards development and seek clarification.",
     "Distinguish a proposed standards change from a requirement or approval already in effect."
+  ],
+  "3.1": [
+    "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection.",
+    "Explain shock severity, protective grounding, bonding, and the interaction between ground faults and overcurrent protection."
+  ],
+  "3.2": [
+    "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture.",
+    "Distinguish leakage current, ground faults, insulation resistance, and dielectric withstand; explain the role of insulation and moisture."
+  ],
+  "3.3": [
+    "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation.",
+    "Distinguish creepage and clearance and assess how contamination, humidity, material properties, and layout affect insulation."
+  ],
+  "3.4": [
+    "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption.",
+    "Distinguish overloads and short circuits, explain protective-device limitations, and compare AC and DC fault interruption."
+  ],
+  "3.5": [
+    "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions.",
+    "Explain localized terminal heating and investigate connection failures using preserved evidence and assembly conditions."
+  ],
+  "3.6": [
+    "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection.",
+    "Explain how deteriorating connections and insulation faults can create arcs and identify limits of circuit protection."
+  ],
+  "3.7": [
+    "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections.",
+    "Use hazard analysis, FMEA, fault trees, and single-fault reasoning to evaluate genuinely independent heater protections."
+  ],
+  "4.1": [
+    "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand.",
+    "Explain conduction, convection, radiation, and thermal mass in sauna heatup and energy demand."
+  ],
+  "4.2": [
+    "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements.",
+    "Distinguish thermal resistance, temperature rise, hot spots, and thermal equilibrium; compare thermal models with measurements."
+  ],
+  "4.3": [
+    "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements.",
+    "Evaluate thermocouple selection, sensor placement, measurement uncertainty, and repeatability in heater temperature measurements."
+  ],
+  "4.4": [
+    "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety.",
+    "Explain how prolonged heating affects combustible materials and distinguish material flammability classifications from appliance safety."
+  ],
+  "4.5": [
+    "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults.",
+    "Distinguish temperature regulation from independent overtemperature protection and evaluate reset behavior and common-cause faults."
+  ],
+  "4.6": [
+    "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances.",
+    "Distinguish normal and abnormal operation and identify evidence required to evaluate heater temperatures and clearances."
+  ],
+  "5.1": [
+    "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction.",
+    "Identify appliance hazards, assess severity and likelihood, document uncertainty, and prioritize risk reduction."
+  ],
+  "5.2": [
+    "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers.",
+    "Build a preliminary component FMEA, distinguish failure modes, causes, and effects, and recognize limits of risk priority numbers."
+  ],
+  "5.3": [
+    "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures.",
+    "Construct a fault tree for uncontrolled heating using top events, AND/OR relationships, and common-cause failures."
+  ],
+  "5.4": [
+    "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors.",
+    "Evaluate single faults and the independence of protective controls, including welded relays and failed temperature sensors."
+  ],
+  "5.5": [
+    "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults.",
+    "Define hazard-dependent safe states and propose protective architecture that addresses power, controller, and sensor faults."
+  ],
+  "5.6": [
+    "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification.",
+    "Evaluate software-dependent safety functions, watchdog limitations, communication faults, and firmware change verification."
+  ],
+  "5.7": [
+    "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions.",
+    "Trace risk-reduction measures to requirements and verification evidence while documenting residual risk and laboratory questions."
+  ],
+  "6.1": [
+    "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard.",
+    "Investigate UL 875 scope, construction, testing, controls, markings, and installation conditions using the applicable standard."
+  ],
+  "6.2": [
+    "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences.",
+    "Explain the relationship between general appliance requirements, Part 2 standards, components, and national differences."
+  ],
+  "6.3": [
+    "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement.",
+    "Compare UL 60335-2-53 with UL 875 and identify sauna-specific scope and requirements needing laboratory agreement."
+  ],
+  "6.4": [
+    "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences.",
+    "Distinguish IEC compliance, CB certificates and reports, and US certification requirements and national differences."
+  ],
+  "6.5": [
+    "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification.",
+    "Compare the scopes and exclusions of UL 499, UL 1278, and UL 2021 without assuming a sauna can use room-heater classification."
+  ],
+  "6.6": [
+    "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope.",
+    "Distinguish heater-only and complete-sauna certification and investigate the installation conditions attached to each scope."
   ]
 }

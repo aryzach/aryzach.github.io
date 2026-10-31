@@ -188,6 +188,34 @@ test("checklist backend removes its key, isolates legacy data, changes password,
     assert.equal(persistedFinal.value.questions["24.7:q28"], true);
     assert.equal((await call("tutor", {}, token)).status, 410);
     assert.equal((await call("evaluate", {}, token)).status, 410);
+    const foundationEntry = {
+      id: "explorer:5.4",
+      kind: "note",
+      value: {
+        readings: { "5.4:r3": true },
+        questions: { "5.4:q10": true },
+        notes: "Independent control evidence",
+      },
+      version: 0,
+    };
+    assert.equal(
+      (await call("entry", { entry: foundationEntry }, token)).status,
+      200,
+    );
+    const branchEntry = {
+      id: "explorer:2.6",
+      kind: "note",
+      value: {
+        readings: { "2.6:r4": true },
+        questions: { "2.6:q1": true, "2.6:q16": true },
+        notes: "Original notes and new feasibility matrix",
+      },
+      version: 0,
+    };
+    assert.equal(
+      (await call("entry", { entry: branchEntry }, token)).status,
+      200,
+    );
     const changed = await call(
       "password",
       {
@@ -200,7 +228,9 @@ test("checklist backend removes its key, isolates legacy data, changes password,
     assert.equal((await call("snapshot", {}, token)).status, 401);
     token = changed.body.token;
     assert.equal(
-      (await call("snapshot", {}, token)).body.state.entries[0].value.notes,
+      (await call("snapshot", {}, token)).body.state.entries.find(
+        (e: { id: string }) => e.id === "explorer:1.1",
+      ).value.notes,
       "Private evidence",
     );
     assert.equal(

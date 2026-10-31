@@ -11,6 +11,14 @@ import {
   validateValue,
   type Entry,
 } from "../src/academy/engine.ts";
+const foundations = JSON.parse(
+  readFileSync(
+    new URL("./fixtures/curriculum-before-foundations.json", import.meta.url),
+    "utf8",
+  ),
+);
+const historicalTopic = (t: (typeof topics)[number]) =>
+  t.id === "2.6" ? foundations.original2_6 : t;
 test("all complete supplied questions survive verbatim and partial topics stay explicit", () => {
   const dir = new URL("../docs/curriculum-source/", import.meta.url);
   const first = readFileSync(new URL("01-foundations.md", dir), "utf8").split(
@@ -33,12 +41,12 @@ test("all complete supplied questions survive verbatim and partial topics stay e
   );
   for (const [, question] of extension.matchAll(/^- \[ \] (.+)$/gm))
     assert.ok(actual.includes(question), question);
-  assert.equal(sections.length, 15);
-  assert.equal(topics.length, 71);
+  assert.equal(sections.length, 19);
+  assert.equal(topics.length, 97);
   assert.equal(expected.length, 267);
   assert.deepEqual(
     topics.filter((t) => t.incomplete).map((t) => t.id),
-    ["2.6"],
+    ["6.6"],
   );
   for (const t of topics)
     for (const r of t.readings) {
@@ -46,7 +54,7 @@ test("all complete supplied questions survive verbatim and partial topics stay e
       assert.ok(r.summary && r.scope && r.relevance);
       if (r.url.includes("shopulstandards")) assert.ok(r.access);
     }
-  assert.equal(topics.flatMap((t) => t.readings).length, 182);
+  assert.equal(topics.flatMap((t) => t.readings).length, 245);
 });
 test("reading completion does not imply understanding; backups validate before writes", () => {
   const t = topics[0],
@@ -93,7 +101,15 @@ test("extension preserves all Modules 1–19 and every previous progress identit
   );
   assert.equal(
     createHash("sha256")
-      .update(JSON.stringify(sections.filter((s) => Number(s.id) < 20)))
+      .update(
+        JSON.stringify(
+          sections
+            .filter(
+              (s) => Number(s.id) < 20 && foundations.sectionIds.includes(s.id),
+            )
+            .map((s) => ({ ...s, topics: s.topics.map(historicalTopic) })),
+        ),
+      )
       .digest("hex"),
     baseline.modules1To19Hash,
   );
@@ -115,8 +131,8 @@ test("extension preserves all Modules 1–19 and every previous progress identit
     for (const r of before.readings) v.readings[r.id] = true;
     assert.deepEqual(validateValue(before.id, v), v);
   }
-  assert.equal(topics.flatMap((t) => t.questions).length, 484);
-  assert.equal(topics.filter((t) => t.exercise).length, 13);
+  assert.equal(topics.flatMap((t) => t.questions).length, 698);
+  assert.equal(topics.filter((t) => t.exercise).length, 21);
   const emc = topics.find((t) => t.id === "22.4")!;
   assert.equal(emc.readings.length, 2);
   assert.notEqual(emc.readings[0].title, emc.readings[1].title);
@@ -138,7 +154,11 @@ test("final continuation preserves every old topic and all supplied new assignme
   assert.equal(
     createHash("sha256")
       .update(
-        JSON.stringify(topics.filter((t) => baseline.topicIds.includes(t.id))),
+        JSON.stringify(
+          topics
+            .filter((t) => baseline.topicIds.includes(t.id))
+            .map(historicalTopic),
+        ),
       )
       .digest("hex"),
     baseline.topicHash,
@@ -185,4 +205,56 @@ test("final continuation preserves every old topic and all supplied new assignme
   value.questions["24.7:q28"] = true;
   value.readings["24.7:r5"] = true;
   assert.deepEqual(validateValue("24.7", value), value);
+});
+
+test("foundation additions preserve prior identities and every supplied assignment", () => {
+  const previous = topics.filter(
+    (t) => foundations.topicIds.includes(t.id) && t.id !== "2.6",
+  );
+  assert.equal(
+    createHash("sha256").update(JSON.stringify(previous)).digest("hex"),
+    foundations.unchangedTopicsHash,
+  );
+  const branch = topics.find((t) => t.id === "2.6")!;
+  assert.equal(branch.questions[0], foundations.original2_6.questions[0]);
+  assert.equal(branch.questions.length, 16);
+  const saved = emptyValue();
+  saved.questions["2.6:q1"] = true;
+  saved.notes = "Previous personal notes";
+  assert.deepEqual(validateValue("2.6", saved), saved);
+  assert.equal(branch.incomplete, false);
+  for (const file of ["07-topic-2-6-modules-3-4.md", "08-modules-5-6.md"]) {
+    const source = readFileSync(
+      new URL("../docs/curriculum-source/" + file, import.meta.url),
+      "utf8",
+    );
+    const blocks = source.split(/^#+ Topic /m).slice(1);
+    for (const block of blocks) {
+      const id = block.match(/^(\d+\.\d+):/)![1];
+      const topic = topics.find((t) => t.id === id)!;
+      assert.ok(topic.why && topic.objectives.length, id);
+      for (const [, q] of block.matchAll(/^- \[ \] (.+)$/gm))
+        assert.ok(topic.questions.includes(q), id + ": " + q);
+      for (const [, title, , summary] of block.matchAll(
+        /\*\*\d+\. \[([^\]]+)\]\(([^)]+)\)\*\*\s+?(?:\*\*)?Summary:(?:\*\*)? ([^\n]+)/g,
+      )) {
+        const reading = topic.readings.find((r) => r.title === title)!;
+        assert.ok(reading, id + ": " + title);
+        assert.ok(reading.summary.includes(summary), summary);
+      }
+    }
+  }
+  for (const id of ["3", "4", "5"])
+    assert.ok(sections.find((s) => s.id === id)!.capstone);
+  assert.equal(topics.find((t) => t.id === "6.6")!.questions.length, 4);
+  assert.ok(topics.find((t) => t.id === "6.6")!.incomplete);
+  assert.deepEqual(
+    sections.map((s) => Number(s.id)),
+    [...sections.map((s) => Number(s.id))].sort((a, b) => a - b),
+  );
+  assert.ok(
+    topics
+      .find((t) => t.id === "5.1")!
+      .readings.find((r) => r.title.startsWith("ISO"))!.access,
+  );
 });
