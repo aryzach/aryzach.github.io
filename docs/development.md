@@ -101,3 +101,9 @@ Release on October 30, 2026 (Asia/Shanghai): the owner explicitly requested the 
 `/learn-certify` now uses the owner's supplied reading curriculum, with independent reading/question checks, topic notes, search, progress totals, and JSON backup. See [academy.md](academy.md) for content provenance, received gaps, syncing, password changes, and the removal of the former AI tutor. Use `npm run academy:content` after editing the supplied content and topic guidance, then redeploy the matching validation bundle if topic IDs change. Preview uses separate browser-local progress.
 
 The owner explicitly authorized replacement of the old app, deletion of its Supabase API credential, and a new access password on October 31, 2026. Migration `20261031104124_academy_curriculum_explorer.sql` removes only its dedicated Vault credential and the tutor credential RPC; the deployed academy backend accepts only checklist and access operations. Business data is outside this release's scope. Existing personal academy records stay private as legacy history.
+
+## Confirm installation: reserved sauna
+
+Rentals → Manage → Confirm installation shows the numbered sauna from that rental’s Inventory future-customer link, including type, inventory status and the booking’s agreed date. A single, consistent assignment is preselected; other saunas remain selectable in number order. Missing, multiple, cancelled or conflicting allocations are shown for review without a preset. A cached booking pointer alone never replaces the inventory assignment. Selecting another unit displays a warning; saving still uses the existing lifecycle command, actual date, confirmation note and server checks.
+
+Regression checks: `tests/installation-selection.test.ts` covers allocation identity and ambiguity; `tests/installation-flow-ui.test.ts` exercises the rental form through selection and submission using synthetic records and a test dialog surface.

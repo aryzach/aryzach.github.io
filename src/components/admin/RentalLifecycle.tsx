@@ -1,3 +1,4 @@
+import InstallationSaunaSelect from './InstallationSaunaSelect';
 import {AdminRequestUncertain} from '@/lib/adminRequest';
 import {rentalStateLabels} from '@/lib/bookingModel';
 import {useState,type FormEvent} from 'react';
@@ -149,7 +150,8 @@ export default function RentalLifecycle({state,onCommand,onOpenAgreement,onUploa
  {editor?.operation==='end_rental'&&<p className="text-sm text-muted-foreground">{endBlocked||'Closes rental service after the sauna has been returned or sold. This does not charge or refund the customer.'}</p>}
  {editor?.operation==='manual_reservation'&&<>{customerSelect}<input name="historical" type="hidden" value="on"/><p className="text-xs text-muted-foreground">Historical backfill only. Create current requests in Bookings.</p><Field name="bookedOn" label="Original booking date (if known)" type="date"/><Field name="address" label="Service address (if known)"/><Field name="months" label="Minimum months (if known)" type="number"/><Field name="notes" label="Source / notes"/><p className="text-xs text-muted-foreground">Creates a reservation and rental under this customer. No emails, payments or inventory holds are created.</p></>}
  {['install','return','swap','sale','asset_status','settlement','end_rental','cancel_rental'].includes(editor?.operation||'')&&<Field name="date" label="Actual event date" type="date" required/>}
- {['install','swap','sale','asset_status'].includes(editor?.operation||'')&&assetSelect}
+ {editor?.operation==='install'&&selected&&<InstallationSaunaSelect key={editor.commandId} state={state} rental={selected}/>}
+ {['swap','sale','asset_status'].includes(editor?.operation||'')&&assetSelect}
  {['return','swap'].includes(editor?.operation||'')&&placementSelect}
  {['install','swap','return'].includes(editor?.operation||'')&&<Field name="evidence" label="Date source / confirmation note" required/>}
  {editor?.operation==='terms'&&<><Field name="months" label="Minimum commitment (months)" type="number" required/><Field name="amount" label="Agreed base monthly rent ($)" required/><Field name="effectiveFrom" label="Rate effective from (leave blank if not yet known)" type="date"/><Field name="commitmentStart" label="Commitment starts (if confirmed)" type="date"/><Field name="saunaType" label="Sauna type"/><Field name="source" label="Source / reason for change" required/><Field name="notes" label="Notes"/><p className="text-xs text-muted-foreground">This records agreed terms, not a payment. Prior dated terms and original agreements remain unchanged.</p></>}
