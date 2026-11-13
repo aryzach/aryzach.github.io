@@ -1,3 +1,4 @@
+import { signatureNamesMatch } from "../_shared/signatureName.ts";
 import { RENTAL_RATE_REVISION, currentRentalTier } from "../_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_DISTANCE_NOTE } from "../_shared/serviceFeePolicy.ts";
 import { rentalCommercialTerms, unansweredOptions, upfrontEligible } from "../_shared/rentalTerms.ts";
@@ -461,9 +462,9 @@ serveWithMigrationPolicy(async (req) => {
         if ((reservation.rental_pricing_version ?? 1) >= 2 && !contract.rental_summary_snapshot?.commercial_terms) {
           return json({error: 'Please regenerate the agreement and explicitly answer all Additional Options.'}, 400);
         }
-        // Require exact match of typed legal name (case-insensitive, trimmed) to prevent silent mismatch.
+        // Ignore keyboard formatting only; preserve the original typed name for the signature audit.
         const typed = typed_legal_name.trim();
-        if (typed.toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {
+        if (!signatureNamesMatch(typed, contract.customer_legal_name)) {
           return json({
             error: `Please type your full legal name exactly as shown on the agreement: "${contract.customer_legal_name}".`,
           }, 400);

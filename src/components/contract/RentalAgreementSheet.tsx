@@ -1,3 +1,4 @@
+import { signatureNamesMatch } from "../../../supabase/functions/_shared/signatureName.ts";
 import { RENTAL_RATE_REVISION, currentRentalTier } from "../../../supabase/functions/_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -317,7 +318,11 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     if (!contract) return;
     const missing = ACKNOWLEDGMENTS.find((a) => !acks[a.key]);
     if (missing) { toast.error("Please accept all acknowledgments to continue."); return; }
-    if (typedName.trim().toLowerCase() !== String(contract.customer_legal_name).trim().toLowerCase()) {
+    if (!typedName.trim()) {
+      toast.error("Enter your full legal name in the signature field.");
+      return;
+    }
+    if (!signatureNamesMatch(typedName, contract.customer_legal_name)) {
       toast.error(`Please type your full legal name exactly as shown: "${contract.customer_legal_name}".`);
       return;
     }
@@ -706,8 +711,7 @@ const SignStep = ({
   masterAgreementUrl: string | null;
 }) => {
   const nameMatches =
-    typedName.trim().length > 0 &&
-    typedName.trim().toLowerCase() === String(contract.customer_legal_name).trim().toLowerCase();
+    signatureNamesMatch(typedName, contract.customer_legal_name);
   return (
     <div className="space-y-6">
       <div className="rounded-md border border-border bg-card p-4 text-sm">
@@ -762,7 +766,12 @@ const SignStep = ({
         <Input
           value={typedName}
           onChange={(e) => setTypedName(e.target.value)}
-          placeholder={contract.customer_legal_name}
+          placeholder="Type your full legal name"
+          aria-label="Electronic signature"
+          autoComplete="name"
+          autoCapitalize="words"
+          autoCorrect="off"
+          spellCheck={false}
           className={`font-serif text-lg tracking-wide ${nameMatches ? "border-primary" : ""}`}
         />
         <p className="text-xs text-muted-foreground">

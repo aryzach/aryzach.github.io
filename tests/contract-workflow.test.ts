@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
+import * as signatureNames from '../supabase/functions/_shared/signatureName.ts';
 import * as pricing from '../supabase/functions/_shared/pricing.ts';
 import * as terms from '../supabase/functions/_shared/rentalTerms.ts';
 import * as serviceFees from '../supabase/functions/_shared/serviceFeePolicy.ts';
@@ -14,6 +15,7 @@ function harness(version = 2, previous: any = null, reservationOverrides: Record
   let handler: (request: Request) => Promise<Response>;
   let contract = previous;
   let pdfSummary: any;
+  let signatureAudit: any;
   const writes: string[] = [];
   const reservation = {id:'r',first_name:'Test',last_name:'Customer',email:'test@example.invalid',sauna_type_id:'indoor_traditional_standard',rental_pricing_version:version,...reservationOverrides};
   const client = {
@@ -22,6 +24,7 @@ function harness(version = 2, previous: any = null, reservationOverrides: Record
       const result=()=>{
         if(operation==='insert') {
           writes.push(table);
+          if(table==='contract_signature_audit') signatureAudit=value;
           if(table==='contracts') contract={...value,id:'c'};
           return {data:table==='contracts'?contract:null,error:null};
         }
@@ -49,13 +52,14 @@ function harness(version = 2, previous: any = null, reservationOverrides: Record
     if(path.includes('esm.sh/@supabase'))return {createClient:()=>client};
     if(path.endsWith('/currentRentalRates.ts'))return currentRates;
     if(path.endsWith('/serviceFeePolicy.ts'))return serviceFees;
+    if(path.endsWith('/signatureName.ts'))return signatureNames;
     if(path.endsWith('/pricing.ts'))return pricing;
     if(path.endsWith('/rentalTerms.ts'))return terms;
     if(path.endsWith('/pdfBuilder.ts'))return {buildSignedContractPdf:async({summary}:any)=>{pdfSummary=summary;return new Uint8Array([1,2,3])},sha256Hex:async()=> 'test-hash'};
     if(path.endsWith('/assignSauna.ts'))return {syncSaunaAfterContract:async()=>{}};
     throw Error('Unexpected dependency '+path);
   }});
-  return {writes,get contract(){return contract},get pdfSummary(){return pdfSummary},async call(body:any){
+  return {writes,get signatureAudit(){return signatureAudit},get contract(){return contract},get pdfSummary(){return pdfSummary},async call(body:any){
     const response=await handler!(new Request('https://test.invalid',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:'r',token:'test-token',...body})}));
     return {status:response.status,body:await response.json()};
   }};
@@ -134,4 +138,36 @@ test('a stale traditional deposit is rejected before any signature or PDF write'
   h.contract.security_deposit=1500;h.contract.rental_summary_snapshot.security_deposit=1500;
   const priorWrites=h.writes.length;const signed=await h.call({action:'sign',contract_id:'c',typed_legal_name:'Test Customer'});
   assert.equal(signed.status,400);assert.match(signed.body.error,/security deposit is now/);assert.equal(h.writes.length,priorWrites);
+});
+
+
+test('signature comparison ignores only keyboard formatting and canonical Unicode equivalents', () => {
+  for (const typed of ['  TEST   CUSTOMER  ', 'Test\u00a0Customer', 'Test\u202fCustomer', 'Test\u200b Customer\u200e', 'Test\tCustomer']) {
+    assert.equal(signatureNames.signatureNamesMatch(typed, 'Test Customer'), true, JSON.stringify(typed));
+  }
+  assert.equal(signatureNames.signatureNamesMatch('Jose\u0301 Customer', 'José Customer'), true);
+  for (const typed of ['', '  ', '\u200b', null, undefined, 'Test Other', 'TestCustomer', 'Test Customer Jr', 'Test-Customer', 'Test Custоmer']) {
+    assert.equal(signatureNames.signatureNamesMatch(typed, 'Test Customer'), false, JSON.stringify(typed));
+  }
+  assert.equal(signatureNames.signatureNamesMatch('Jose Customer', 'José Customer'), false);
+  assert.equal(signatureNames.signatureNamesMatch('', ''), false);
+});
+
+test('actual signature handler accepts keyboard spacing while retaining the entered signature and all consent guards', async () => {
+  const acknowledgments={reviewed_agreement:true,commitment_binding:true,cancellation_terms:true,safety_terms:true,electronic_signature_consent:true};
+  for (const typed of ['Test  Customer', 'Test\u00a0Customer', 'Test\u200b Customer\u200e']) {
+    const h=harness();
+    assert.equal((await h.call(draft)).status, 200);
+    const before=h.writes.length;
+    const rejected=await h.call({action:'sign',contract_id:'c',typed_legal_name:typed,acknowledgments:{}});
+    assert.equal(rejected.status,400);assert.match(rejected.body.error,/acknowledgments/);
+    assert.equal(h.writes.length,before);
+    const signed=await h.call({action:'sign',contract_id:'c',typed_legal_name:typed,acknowledgments});
+    assert.equal(signed.status,200,JSON.stringify(signed.body));
+    assert.equal(h.signatureAudit.typed_legal_name,typed);
+    assert.equal(h.contract.customer_legal_name,'Test Customer');
+  }
+  const h=harness();await h.call(draft);const before=h.writes.length;
+  const rejected=await h.call({action:'sign',contract_id:'c',typed_legal_name:'Test Other',acknowledgments});
+  assert.equal(rejected.status,400);assert.match(rejected.body.error,/full legal name/);assert.equal(h.writes.length,before);
 });
