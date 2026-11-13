@@ -75,3 +75,19 @@ test('every recovery column sorts in both directions; missing numeric values rem
   else assert.deepEqual(up.map(r=>r.code),down.map(r=>r.code).reverse());
  }
 });
+
+test('customer search includes historical payers and explicit current/future/history links, excluding suppliers and ambiguous tags',async()=>{
+ const {recoverySearchIndex}=await import('../src/lib/saunaRecovery.ts');
+ const s=state();
+ s.assets[0].currentCustomerName='Current Renter';
+ s.customers=[{id:'future',name:'Future Renter',primaryContact:'Booking Contact',kind:'person',email:'',phone:'',archived:false,legacyReservationIds:[]},{id:'past',name:'Past Renter',kind:'person',email:'',phone:'',archived:false,legacyReservationIds:[]}];
+ s.rentals=[{id:'future-rental',customerId:'future',reservationId:null,address:'',notes:''},{id:'past-rental',customerId:'past',reservationId:null,address:'',notes:''}];
+ s.legacyLinks=[{assetId:'unit2',rentalId:'future-rental',kind:'future',recordedInstallDate:null}];
+ s.assignments=[{id:'history',assetId:'unit1',rentalId:'past-rental',installedOn:'2025-01-01',removedOn:'2025-02-01',address:''}];
+ const source=recoverySources([tx('payer','RECEIVE',[line('102',100)],{Contact:{Name:'Historical Payer'}}),tx('supplier','SPEND',[line('540',100)],{Contact:{Name:'Sauna Supplier'}}),tx('buyer','RECEIVE',[line('372',200,'002')],{Contact:{Name:'Past Buyer'}}),tx('untagged','RECEIVE',[line('102',100,null)],{Contact:{Name:'Unassigned Payer'}})],null);
+ source.transactions.push({...source.transactions[0],id:'ambiguous',contactName:'Ambiguous Payer',lines:[{...source.transactions[0].lines[0],saunaCodes:['001','002']}]});
+ const index=recoverySearchIndex(s,source);
+ assert.match(index.get('unit1')!,/current renter/);assert.match(index.get('unit1')!,/past renter/);assert.match(index.get('unit1')!,/historical payer/);
+ assert.match(index.get('unit2')!,/future renter/);assert.match(index.get('unit2')!,/booking contact/);assert.match(index.get('unit2')!,/past buyer/);
+ assert.doesNotMatch([...index.values()].join(' '),/sauna supplier|unassigned payer|ambiguous payer/);
+});

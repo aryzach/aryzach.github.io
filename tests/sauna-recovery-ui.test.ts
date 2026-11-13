@@ -76,6 +76,17 @@ test("recovery headers sort and source entries open in an accessible popup with 
   try {
     w.eval(compiled.outputFiles[0].text);
     await wait(() => d.querySelectorAll("tbody tr").length === 2);
+    const search=d.querySelector<HTMLInputElement>('input[aria-label="Search sauna cost recovery"]')!;
+    const searchFor=async(value:string)=>{
+      Object.getOwnPropertyDescriptor(w.HTMLInputElement.prototype,'value')!.set!.call(search,value);
+      search.dispatchEvent(new w.Event('input',{bubbles:true}));
+      await new Promise(r=>setTimeout(r,50));
+    };
+    await searchFor('  EARLIER  ');
+    assert.equal(d.querySelectorAll('tbody tr').length,1);
+    assert.equal(d.querySelector('tbody tr td')?.textContent,'#001');
+    await searchFor('not a customer');assert.equal(d.querySelectorAll('tbody tr').length,0);
+    await searchFor('');await wait(()=>d.querySelectorAll('tbody tr').length===2);
     assert.equal(d.querySelectorAll("thead th button").length, 9);
     const header = [...d.querySelectorAll("th")].find((h) =>
       h.textContent?.startsWith("Rental cash"),

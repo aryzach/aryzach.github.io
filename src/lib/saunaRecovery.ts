@@ -350,3 +350,88 @@ export function compareRecoveryRows(
     a.code.localeCompare(b.code, undefined, { numeric: true })
   );
 }
+
+/** Search associations only; never reattribute cash or infer a placement from a payer. */
+export function recoverySearchIndex(
+  state: RentalWorkspace,
+  sources: RecoverySources,
+) {
+  const names = new Map(
+    state.assets.map((a) => [
+      a.id,
+      new Set<string>([a.currentCustomerName || ""]),
+    ]),
+  );
+  const addCustomer = (assetId: string, customerId: string | undefined) => {
+    if (!customerId) return;
+    const customer = state.customers.find((c) => c.id === customerId);
+    for (const name of [
+      customer?.name,
+      customer?.primaryContact,
+      ...(state.xeroLinks || [])
+        .filter((l) => l.customerId === customerId)
+        .map((l) => l.name),
+    ]) {
+      if (name) names.get(assetId)?.add(name);
+    }
+  };
+  const rentalCustomer = (id: string) =>
+    state.lifecycle?.rentals.find((r) => r.id === id)?.customer_id ||
+    state.rentals.find((r) => r.id === id)?.customerId;
+  for (const link of [...state.assignments, ...(state.legacyLinks || [])])
+    addCustomer(link.assetId, rentalCustomer(link.rentalId));
+  for (const placement of state.lifecycle?.placements || [])
+    addCustomer(placement.asset_id, rentalCustomer(placement.rental_id));
+  for (const sale of state.lifecycle?.sales || [])
+    addCustomer(sale.asset_id, sale.customer_id);
+  const byCode = new Map(
+    state.assets.map((a) => [a.code.padStart(3, "0"), a.id]),
+  );
+  const excluded = new Set(
+    (state.lifecycle?.paymentReviews || []).map((r) => r.source_id),
+  );
+  for (const transaction of sources.transactions) {
+    if (
+      !transaction.contactName ||
+      transaction.currency !== "USD" ||
+      excluded.has(transaction.id)
+    )
+      continue;
+    const addName = (codes: string[]) => {
+      if (codes.length === 1)
+        names.get(byCode.get(codes[0]) || "")?.add(transaction.contactName!);
+    };
+    for (const line of transaction.lines) {
+      if (
+        (rentAccounts.has(line.account) || saleAccounts.has(line.account)) &&
+        line.net
+      )
+        addName(line.saunaCodes);
+    }
+    if (
+      state.lifecycle?.allocations.some(
+        (a) =>
+          a.source_id === transaction.id &&
+          !a.voided_at &&
+          a.currency === "USD" &&
+          ["rental", "sale"].includes(a.category) &&
+          a.amount_cents,
+      )
+    ) {
+      addName([...new Set(transaction.lines.flatMap((l) => l.saunaCodes))]);
+    }
+  }
+  return new Map(
+    state.assets.map((a) => [
+      a.id,
+      [
+        a.code,
+        `#${a.code.padStart(3, "0")}`,
+        a.typeName || a.model,
+        ...names.get(a.id)!,
+      ]
+        .join(" ")
+        .toLocaleLowerCase(),
+    ]),
+  );
+}

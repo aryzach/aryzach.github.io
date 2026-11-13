@@ -15,6 +15,7 @@ import {
   compareRecoveryRows,
   compareRecoveryDates,
   recoveryStatusLabel,
+  recoverySearchIndex,
   type RecoverySortKey,
   type RecoveryEntry,
   type RecoverySources,
@@ -69,13 +70,23 @@ export function SaunaRecoveryDashboard({
         : null,
     [state, sources, includeHeaters, includeSales],
   );
+  const searchIndex = useMemo(
+    () =>
+      recoverySearchIndex(
+        state,
+        sources || { snapshotAt: null, complete: false, transactions: [] },
+      ),
+    [state, sources],
+  );
   const types = [...new Set(result?.rows.map((r) => r.type))].sort();
   const rows = (result?.rows || [])
     .filter(
       (r) =>
         (status === "all" || r.status === status) &&
         (type === "all" || r.type === type) &&
-        `${r.code} ${r.type}`.toLowerCase().includes(search.toLowerCase()),
+        (searchIndex.get(r.id) || "").includes(
+          search.trim().toLocaleLowerCase(),
+        ),
     )
     .sort((a, b) => compareRecoveryRows(a, b, sort.key, sort.desc));
   const changeSort = (key: typeof sort.key) =>
@@ -200,7 +211,7 @@ export function SaunaRecoveryDashboard({
             <Input
               className="max-w-xs"
               aria-label="Search sauna cost recovery"
-              placeholder="Search sauna number or type…"
+              placeholder="Search sauna number, type, or customer…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -228,8 +239,9 @@ export function SaunaRecoveryDashboard({
             </select>
           </div>
           <p className="text-sm text-muted-foreground">
-            {rows.length} saunas. Income follows Xero’s numbered-sauna tags
-            across customers; untagged or ambiguous entries stay unassigned.
+            {rows.length} saunas. Search includes current, future and past
+            customers. Income follows Xero’s numbered-sauna tags across
+            customers; untagged or ambiguous entries stay unassigned.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
