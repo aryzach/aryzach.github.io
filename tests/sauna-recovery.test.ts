@@ -48,3 +48,30 @@ test('supplier bill allocations count their cost once, including paid bills, and
  assert.equal(saunaRecovery(state(),recoverySources([],null,true,[{...bills[0],Status:'PAID'}])).rows[0].cost,50000);
  assert.equal(recoverySources([],null,true,[{...bills[0],Status:'VOIDED'},{...bills[0],Type:'ACCREC'}]).transactions.length,0);
 });
+
+test('entries retain original Xero contacts and cash direction, newest first, without using current customer',()=>{
+ const s=state();
+ const sources=recoverySources([
+  tx('old','RECEIVE',[line('102',100)],{Contact:{Name:'Former Renter'},DateString:'2025-01-03'}),
+  tx('unknown','RECEIVE',[line('102',200)],{DateString:''}),
+  tx('refund','SPEND',[line('102',50)],{Contact:{Name:'Refund Recipient'},DateString:'2026-09-02'}),
+  tx('new','RECEIVE',[line('102',300)],{Contact:{Name:' New Renter '},DateString:'2026-11-02'})
+ ],null,true,[{InvoiceID:'bill',Type:'ACCPAY',Status:'AUTHORISED',CurrencyCode:'USD',DateString:'2024-01-01',Contact:{Name:'Supplier'},LineItems:[line('1400',1000)]}]);
+ const entries=saunaRecovery(s,sources).rows[0].entries;
+ assert.deepEqual(entries.map(e=>e.sourceId),['new','refund','old','bill','unknown']);
+ assert.equal(entries[0].contactName,'New Renter');assert.equal(entries[0].direction,'RECEIVE');
+ assert.equal(entries[1].contactName,'Refund Recipient');assert.equal(entries[1].direction,'SPEND');
+ assert.equal(entries[3].contactName,'Supplier');assert.equal(entries[3].sourceType,'bill');
+ assert.equal(entries[4].contactName,undefined);
+});
+
+test('every recovery column sorts in both directions; missing numeric values remain last',async()=>{
+ const {compareRecoveryRows}=await import('../src/lib/saunaRecovery.ts');
+ const rows=saunaRecovery(state(),recoverySources([tx('c','SPEND',[line('540',1000)]),tx('r','RECEIVE',[line('102',100)]),tx('s','RECEIVE',[line('372',50,'002')])],null)).rows;
+ for(const key of ['code','type','cost','rent','sale','recovered','remaining','percentage','status'] as const){
+  const up=[...rows].sort((a,b)=>compareRecoveryRows(a,b,key,false));
+  const down=[...rows].sort((a,b)=>compareRecoveryRows(a,b,key,true));
+  if(['cost','remaining','percentage'].includes(key))assert.equal(down.at(-1)!.code,'002');
+  else assert.deepEqual(up.map(r=>r.code),down.map(r=>r.code).reverse());
+ }
+});
