@@ -476,8 +476,12 @@ export function correctedRecoverySources(
         !to ||
         from.id === to.id ||
         typeof e.detail.contactId !== "string" ||
-        !e.occurred_on ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(e.occurred_on)
+        (!e.occurred_on && !e.detail.untilExclusive) ||
+        (e.occurred_on !== null &&
+          !/^\d{4}-\d{2}-\d{2}$/.test(e.occurred_on)) ||
+        (e.detail.untilExclusive !== undefined &&
+          (typeof e.detail.untilExclusive !== "string" ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(e.detail.untilExclusive)))
       )
         return [];
       return [
@@ -486,6 +490,10 @@ export function correctedRecoverySources(
           to: to.code.padStart(3, "0"),
           contactId: e.detail.contactId,
           fromDate: e.occurred_on,
+          untilExclusive:
+            typeof e.detail.untilExclusive === "string"
+              ? e.detail.untilExclusive
+              : null,
         },
       ];
     });
@@ -500,7 +508,10 @@ export function correctedRecoverySources(
       )
         return t;
       const matches = rules.filter(
-        (r) => r.contactId === t.contactId && t.date >= r.fromDate,
+        (r) =>
+          r.contactId === t.contactId &&
+          (!r.fromDate || t.date >= r.fromDate) &&
+          (!r.untilExclusive || t.date < r.untilExclusive),
       );
       return {
         ...t,

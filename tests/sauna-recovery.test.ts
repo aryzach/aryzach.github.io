@@ -111,3 +111,14 @@ test('owner attribution corrects only the specified contact, start date and orig
  // Re-imported source facts keep the same correction without being edited in place.
  assert.deepEqual(correctedRecoverySources(s,JSON.parse(original)),corrected);
 });
+
+test('bounded owner corrections split payments around a date without moving earlier receipts back again',async()=>{
+ const {emptyLifecycle}=await import('../src/lib/lifecycleModel.ts');
+ const s=state();s.assets[0].code='019';s.assets[1].code='041';
+ const rule={id:'before',rental_id:null,asset_id:'unit1',event_type:'payment_sauna_attribution_corrected',occurred_on:null,created_at:'2026-11-13T00:00:00Z',detail:{version:1,fromAssetId:'unit2',contactId:'payer',untilExclusive:'2026-09-03'}};
+ s.lifecycle={...emptyLifecycle(),events:[rule,{...rule,id:'after',asset_id:'unit2',occurred_on:'2026-09-03',detail:{version:1,fromAssetId:'unit1',contactId:'payer'}}]};
+ const source=recoverySources(['2026-09-02','2026-09-03','2026-09-04'].flatMap((date,i)=>['019','041'].map(code=>tx(`${i}-${code}`,'RECEIVE',[line('102',100,code)],{DateString:date,Contact:{ContactID:'payer',Name:'Split Payer'}}))),null);
+ const rows=saunaRecovery(s,source).rows;
+ assert.deepEqual(rows[0].entries.map(e=>e.date),['2026-09-02','2026-09-02']);
+ assert.equal(rows[1].entries.length,4);assert.equal(rows[0].rent+rows[1].rent,60000);
+});
