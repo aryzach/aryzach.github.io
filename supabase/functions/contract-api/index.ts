@@ -270,10 +270,7 @@ serveWithMigrationPolicy(async (req) => {
           typeof reservation.custom_delivery_fee === "number"
             ? reservation.custom_delivery_fee
             : getDeliveryFee(city);
-        const securityDeposit =
-          typeof reservation.custom_security_deposit === "number"
-            ? reservation.custom_security_deposit
-            : getSecurityDeposit(saunaInfo.id);
+        const securityDeposit = getSecurityDeposit(saunaInfo.id, reservation.custom_security_deposit);
         const installationFee =
           revisedTier ? revisedTier.installFee : keepAgreedPrice && typeof existing.rental_summary_snapshot?.installation_fee === "number" ? existing.rental_summary_snapshot.installation_fee :
           matchedOption && matchedOption.install_fee != null
@@ -456,6 +453,11 @@ serveWithMigrationPolicy(async (req) => {
           return json({ error: "Rental pricing or delivery and access terms have changed. Please reopen and regenerate the agreement, then review it before signing." }, 400);
         }
 
+        const traditional = getSaunaTypeInfo(contract.rental_summary_snapshot?.sauna_type_id)?.family === "traditional" || /traditional/i.test(contract.sauna_type ?? "");
+        const requiredDeposit = getSecurityDeposit(contract.rental_summary_snapshot?.sauna_type_id || "indoor_traditional_standard");
+        if (traditional && (Number(contract.security_deposit) !== requiredDeposit || Number(contract.rental_summary_snapshot?.security_deposit) !== requiredDeposit || (contract.rental_summary_snapshot?.commercial_terms && contract.rental_summary_snapshot.commercial_terms.security_deposit_cents !== requiredDeposit * 100))) {
+          return json({ error: "The traditional sauna security deposit is now $2,500. Please regenerate and review the agreement before signing." }, 400);
+        }
         if ((reservation.rental_pricing_version ?? 1) >= 2 && !contract.rental_summary_snapshot?.commercial_terms) {
           return json({error: 'Please regenerate the agreement and explicitly answer all Additional Options.'}, 400);
         }

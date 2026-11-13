@@ -232,7 +232,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     [customDeliveryFee, isSf, form.installation_address, form.installation_city],
   );
   const securityDeposit = useMemo(
-    () => (customDeposit != null ? customDeposit : form.sauna_type ? getSecurityDeposit(form.sauna_type) : 0),
+    () => (form.sauna_type ? getSecurityDeposit(form.sauna_type, customDeposit) : 0),
     [form.sauna_type, customDeposit],
   );
 

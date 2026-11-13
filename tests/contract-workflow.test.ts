@@ -68,7 +68,7 @@ test('actual draft and signature handlers preserve the same server-calculated sn
     const h=harness();const saved=await h.call({...draft,commitment_months:months,pay_upfront_selected:upfront,monthly_price:1,premium_monthly_price:1,discount_percent:99});
     if(upfront && !terms.upfrontEligible(months)){assert.equal(saved.status,400);assert.deepEqual(h.writes,[]);continue;}
     assert.equal(saved.status,200,JSON.stringify(saved.body));
-    const expected=terms.rentalCommercialTerms({monthly:pricing.getMonthlyPrice('indoor_traditional_standard',months)!,months,choices:{...choices,pay_upfront_selected:upfront},installation:pricing.getInstallFee('indoor_traditional_standard',months),securityDeposit:1500,delivery:0});
+    const expected=terms.rentalCommercialTerms({monthly:pricing.getMonthlyPrice('indoor_traditional_standard',months)!,months,choices:{...choices,pay_upfront_selected:upfront},installation:pricing.getInstallFee('indoor_traditional_standard',months),securityDeposit:2500,delivery:0});
     assert.deepEqual(JSON.parse(JSON.stringify(h.contract.rental_summary_snapshot.commercial_terms)),expected);
     assert.deepEqual(JSON.parse(JSON.stringify(h.contract.pricing_snapshot.commercial_terms)),expected);
     const snapshot=JSON.stringify(h.contract.rental_summary_snapshot);
@@ -119,4 +119,19 @@ test('legacy magic-link reads expose revised prices and regenerate old custom qu
       assert.equal(h.contract.rental_summary_snapshot.rental_rate_revision,20261112);
     }
   }
+});
+
+test('traditional unsigned drafts use $2500 despite custom overrides; infrared quotes are preserved', async()=>{
+  for(const sauna_type of ['indoor_traditional_standard','outdoor_traditional_standard','indoor_traditional_original','outdoor_traditional_original','indoor_infrared_standard']) {
+    const h=harness(1,null,{custom_security_deposit:750});
+    const saved=await h.call({...draft,sauna_type,pay_upfront_selected:false,premium_selected:false,second_heater_selected:false});
+    assert.equal(saved.status,200);assert.equal(h.contract.security_deposit,sauna_type.includes('traditional')?2500:750);
+    assert.equal(h.contract.rental_summary_snapshot.security_deposit,h.contract.security_deposit);
+  }
+});
+test('a stale traditional deposit is rejected before any signature or PDF write',async()=>{
+  const h=harness(1);await h.call({...draft,pay_upfront_selected:false,premium_selected:false});
+  h.contract.security_deposit=1500;h.contract.rental_summary_snapshot.security_deposit=1500;
+  const priorWrites=h.writes.length;const signed=await h.call({action:'sign',contract_id:'c',typed_legal_name:'Test Customer'});
+  assert.equal(signed.status,400);assert.match(signed.body.error,/security deposit is now/);assert.equal(h.writes.length,priorWrites);
 });

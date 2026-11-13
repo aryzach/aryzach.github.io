@@ -57,10 +57,10 @@ export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersi
   return row ? row.monthly : null;
 }
 
-export function getSecurityDeposit(saunaTypeId: string): number {
+export function getSecurityDeposit(saunaTypeId: string, customDeposit?: number | null): number {
   const info = getSaunaTypeInfo(saunaTypeId);
   if (!info) return 0;
-  return info.family === "infrared" ? SECURITY_DEPOSIT_INFRARED : SECURITY_DEPOSIT_TRADITIONAL;
+  return info.family === "traditional" ? SECURITY_DEPOSIT_TRADITIONAL : customDeposit ?? SECURITY_DEPOSIT_INFRARED;
 }
 
 export function isSanFranciscoAddress(address: string | null | undefined): boolean {
