@@ -6,6 +6,7 @@ export interface RecoveryLine {
   net: number;
   gross: number;
   saunaCodes: string[];
+  attributionNote?: string;
 }
 export interface RecoveryCash {
   id: string;
@@ -13,6 +14,7 @@ export interface RecoveryCash {
   direction: "RECEIVE" | "SPEND";
   currency: string;
   lines: RecoveryLine[];
+  contactId?: string;
   contactName?: string;
   sourceType?: "bill" | "bank";
   sourceUrl?: string;
@@ -23,11 +25,13 @@ export interface RecoverySources {
   transactions: RecoveryCash[];
 }
 export interface RecoveryEntry {
+  attributionNote?: string;
   sourceId: string;
   date: string;
   description: string;
   kind: "cost" | "rent" | "sale";
   amount: number;
+  contactId?: string;
   contactName?: string;
   direction?: "RECEIVE" | "SPEND";
   sourceType?: "bill" | "bank";
@@ -104,6 +108,11 @@ export function recoverySources(
       date,
       direction: record.Type as RecoveryCash["direction"],
       currency: String(record.CurrencyCode),
+      contactId:
+        typeof (record.Contact as { ContactID?: unknown } | undefined)
+          ?.ContactID === "string"
+          ? (record.Contact as { ContactID: string }).ContactID
+          : undefined,
       contactName:
         typeof (record.Contact as { Name?: unknown } | undefined)?.Name ===
         "string"
@@ -176,7 +185,7 @@ export function saunaRecovery(
   );
   let heaterTotal = 0;
   const seen = new Set<string>();
-  for (const t of sources.transactions) {
+  for (const t of correctedRecoverySources(state, sources).transactions) {
     if (seen.has(t.id)) continue;
     seen.add(t.id);
     const add = (
@@ -184,6 +193,7 @@ export function saunaRecovery(
       kind: RecoveryEntry["kind"],
       amount: number,
       description: string,
+      attributionNote?: string,
     ) => {
       if (!amount) return;
       const row = codes.length === 1 ? byCode.get(codes[0]) : undefined;
@@ -211,6 +221,7 @@ export function saunaRecovery(
         kind,
         amount,
         description,
+        attributionNote,
         contactName: t.contactName,
         direction: t.direction,
         sourceType: t.sourceType,
@@ -264,12 +275,21 @@ export function saunaRecovery(
             line.net * sign,
             line.description ||
               `${kind === "rent" ? "Rental" : "Sauna sale"} cash`,
+            line.attributionNote,
           );
       } else if (amount) {
         // A reviewed mixed receipt can follow one explicit Xero unit; never guess
         // from today's customer assignment or spread cash across several units.
         const codes = [...new Set(t.lines.flatMap((l) => l.saunaCodes))];
-        add(codes, kind, amount * sign, "Reviewed payment classification");
+        add(
+          codes,
+          kind,
+          amount * sign,
+          "Reviewed payment classification",
+          [
+            ...new Set(t.lines.map((l) => l.attributionNote).filter(Boolean)),
+          ].join(" ") || undefined,
+        );
       }
     }
   }
@@ -390,7 +410,8 @@ export function recoverySearchIndex(
   const excluded = new Set(
     (state.lifecycle?.paymentReviews || []).map((r) => r.source_id),
   );
-  for (const transaction of sources.transactions) {
+  for (const transaction of correctedRecoverySources(state, sources)
+    .transactions) {
     if (
       !transaction.contactName ||
       transaction.currency !== "USD" ||
@@ -434,4 +455,68 @@ export function recoverySearchIndex(
         .toLocaleLowerCase(),
     ]),
   );
+}
+
+/** Owner corrections overlay imported facts; the original Xero cache is never rewritten. */
+export function correctedRecoverySources(
+  state: RentalWorkspace,
+  sources: RecoverySources,
+): RecoverySources {
+  const rules = (state.lifecycle?.events || [])
+    .filter(
+      (e) =>
+        e.event_type === "payment_sauna_attribution_corrected" &&
+        e.detail.version === 1,
+    )
+    .flatMap((e) => {
+      const from = state.assets.find((a) => a.id === e.detail.fromAssetId),
+        to = state.assets.find((a) => a.id === e.asset_id);
+      if (
+        !from ||
+        !to ||
+        from.id === to.id ||
+        typeof e.detail.contactId !== "string" ||
+        !e.occurred_on ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(e.occurred_on)
+      )
+        return [];
+      return [
+        {
+          from: from.code.padStart(3, "0"),
+          to: to.code.padStart(3, "0"),
+          contactId: e.detail.contactId,
+          fromDate: e.occurred_on,
+        },
+      ];
+    });
+  if (!rules.length) return sources;
+  return {
+    ...sources,
+    transactions: sources.transactions.map((t) => {
+      if (
+        t.direction !== "RECEIVE" ||
+        t.currency !== "USD" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(t.date)
+      )
+        return t;
+      const matches = rules.filter(
+        (r) => r.contactId === t.contactId && t.date >= r.fromDate,
+      );
+      return {
+        ...t,
+        lines: t.lines.map((l) => {
+          if (costAccounts.has(l.account) || l.saunaCodes.length !== 1)
+            return l;
+          const matching = matches.filter((r) => r.from === l.saunaCodes[0]);
+          if (matching.length !== 1) return l;
+          const r = matching[0];
+          return {
+            ...l,
+            saunaCodes: [r.to],
+            attributionNote: `Owner-corrected attribution: #${r.from} → #${r.to}. Original Xero entry preserved.`,
+          };
+        }),
+      };
+    }),
+  };
 }

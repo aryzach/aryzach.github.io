@@ -240,8 +240,9 @@ export function SaunaRecoveryDashboard({
           </div>
           <p className="text-sm text-muted-foreground">
             {rows.length} saunas. Search includes current, future and past
-            customers. Income follows Xero’s numbered-sauna tags across
-            customers; untagged or ambiguous entries stay unassigned.
+            customers. Income follows Xero’s numbered-sauna tags and recorded
+            owner corrections across customers; untagged or ambiguous entries
+            stay unassigned.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -406,6 +407,11 @@ function RecoveryTableRow({ row: r }: { row: RecoveryRow }) {
                     <p className="whitespace-pre-line break-words text-sm text-muted-foreground">
                       {entry.description}
                     </p>
+                    {entry.attributionNote && (
+                      <p className="text-sm text-amber-900">
+                        {entry.attributionNote}
+                      </p>
+                    )}
                     <a
                       target="_blank"
                       rel="noreferrer"

@@ -91,3 +91,23 @@ test('customer search includes historical payers and explicit current/future/his
  assert.match(index.get('unit2')!,/future renter/);assert.match(index.get('unit2')!,/booking contact/);assert.match(index.get('unit2')!,/past buyer/);
  assert.doesNotMatch([...index.values()].join(' '),/sauna supplier|unassigned payer|ambiguous payer/);
 });
+
+test('owner attribution corrects only the specified contact, start date and original sauna, without altering source money or placements',async()=>{
+ const {correctedRecoverySources,recoverySearchIndex}=await import('../src/lib/saunaRecovery.ts');
+ const s=state();s.assets[0].code='009';s.assets[1].code='026';
+ s.lifecycle={rentals:[],agreements:[],terms:[],placements:[],sales:[],settlements:[],documents:[],allocations:[],events:[{id:'rule',rental_id:null,asset_id:'unit2',event_type:'payment_sauna_attribution_corrected',occurred_on:'2026-04-24',created_at:'2026-11-13T00:00:00Z',detail:{version:1,fromAssetId:'unit1',contactId:'payer-a'}}]};
+ const make=(id:string,date:string,code='009',contact='payer-a',direction='RECEIVE',account='102')=>tx(id,direction,[line(account,110,code,10)],{DateString:date,Contact:{ContactID:contact,Name:contact==='payer-a'?'Corrected Payer':'Other Payer'}});
+ const sources=recoverySources([make('before','2026-04-23'),make('same-day','2026-04-24'),make('after','2026-05-24'),make('already-correct','2026-06-24','026'),make('other','2026-05-24','009','payer-b'),make('refund','2026-05-24','009','payer-a','SPEND'),make('cost','2026-05-24','009','payer-a','RECEIVE','540')],null);
+ const original=JSON.stringify(sources),stateOriginal=JSON.stringify(s);
+ const corrected=correctedRecoverySources(s,sources);
+ assert.deepEqual(corrected.transactions.map(t=>t.lines[0].saunaCodes[0]),['009','026','026','026','009','009','009']);
+ assert.match(corrected.transactions[1].lines[0].attributionNote!,/#009 → #026/);
+ assert.equal(JSON.stringify(sources),original);assert.equal(JSON.stringify(s),stateOriginal);
+ const uncorrected=saunaRecovery({...s,lifecycle:{...s.lifecycle,events:[]}},sources),result=saunaRecovery(s,sources);
+ assert.equal(result.rows[0].rent,uncorrected.rows[0].rent-20000);assert.equal(result.rows[1].rent,uncorrected.rows[1].rent+20000);
+ assert.equal(result.rows.reduce((n,r)=>n+r.recovered,0),uncorrected.rows.reduce((n,r)=>n+r.recovered,0));
+ assert.match(result.rows[1].entries.find(e=>e.sourceId==='same-day')!.attributionNote!,/Original Xero entry preserved/);
+ assert.match(recoverySearchIndex(s,sources).get('unit2')!,/corrected payer/);
+ // Re-imported source facts keep the same correction without being edited in place.
+ assert.deepEqual(correctedRecoverySources(s,JSON.parse(original)),corrected);
+});
