@@ -6,18 +6,19 @@ import ts from 'typescript';
 import * as pricing from '../supabase/functions/_shared/pricing.ts';
 import * as terms from '../supabase/functions/_shared/rentalTerms.ts';
 import * as serviceFees from '../supabase/functions/_shared/serviceFeePolicy.ts';
+import * as currentRates from '../supabase/functions/_shared/currentRentalRates.ts';
 
 // Execute the actual Edge Function handler against an isolated in-memory client.
 // No Supabase, Stripe, storage or network calls leave this process.
-function harness(version = 2, previous: any = null) {
+function harness(version = 2, previous: any = null, reservationOverrides: Record<string, any> = {}) {
   let handler: (request: Request) => Promise<Response>;
   let contract = previous;
   let pdfSummary: any;
   const writes: string[] = [];
-  const reservation = {id:'r',first_name:'Test',last_name:'Customer',email:'test@example.invalid',sauna_type_id:'indoor_traditional_standard',rental_pricing_version:version};
+  const reservation = {id:'r',first_name:'Test',last_name:'Customer',email:'test@example.invalid',sauna_type_id:'indoor_traditional_standard',rental_pricing_version:version,...reservationOverrides};
   const client = {
     from(table: string) {
-      let operation='read', value:any, filters:Record<string,any>={};
+      let operation='read', value:any, single=false, filters:Record<string,any>={};
       const result=()=>{
         if(operation==='insert') {
           writes.push(table);
@@ -29,12 +30,12 @@ function harness(version = 2, previous: any = null) {
         if(table==='agreement_versions')return {data:{id:'v',version_name:'Test master',master_pdf_storage_path:'test.pdf'},error:null};
         if(table==='contracts') {
           const matches=contract && (filters.status===undefined || (Array.isArray(filters.status)?filters.status.includes(contract.status):filters.status===contract.status));
-          return {data:matches?contract:null,error:null};
+          return {data:single?(matches?contract:null):(matches?[contract]:[]),error:null};
         }
         return {data:null,error:null};
       };
       const query:any={select(){return query},eq(k:string,v:any){filters[k]=v;return query},neq(){return query},in(k:string,v:any){filters[k]=v;return query},is(){return query},order(){return query},limit(){return query},
-        maybeSingle:async()=>result(),single:async()=>result(),
+        maybeSingle:async()=>{single=true;return result()},single:async()=>{single=true;return result()},
         insert(v:any){operation='insert';value=v;return query},update(v:any){operation='update';value=v;return query},
         then(resolve:any,reject:any){return Promise.resolve(result()).then(resolve,reject)}};
       return query;
@@ -46,6 +47,7 @@ function harness(version = 2, previous: any = null) {
   vm.runInNewContext(js, {exports:{},Request,Response,Blob,Date,console, Deno:{env:{get:()=> 'test-only'}},require:(path:string)=>{
     if(path.includes('migrationPolicy'))return {serveWithMigrationPolicy:(h:any)=>{handler=h}};
     if(path.includes('esm.sh/@supabase'))return {createClient:()=>client};
+    if(path.endsWith('/currentRentalRates.ts'))return currentRates;
     if(path.endsWith('/serviceFeePolicy.ts'))return serviceFees;
     if(path.endsWith('/pricing.ts'))return pricing;
     if(path.endsWith('/rentalTerms.ts'))return terms;
@@ -75,17 +77,17 @@ test('actual draft and signature handlers preserve the same server-calculated sn
     assert.equal(h.contract.status,'Signed');assert.equal(JSON.stringify(h.pdfSummary),snapshot);assert.equal(JSON.stringify(h.contract.rental_summary_snapshot),snapshot);
   }
 });
-test('actual API rejects unanswered options and cannot add new options or reprice existing unsigned bookings',async()=>{
+test('actual API rejects unanswered options and cannot add new options and applies the revised prices to existing unsigned bookings',async()=>{
   for(const key of Object.keys(choices)){
     const h=harness();const response=await h.call({...draft,[key]:null});assert.equal(response.status,400);assert.deepEqual(h.writes,[]);
   }
   const legacy=harness(1);assert.equal((await legacy.call(draft)).status,400);assert.deepEqual(legacy.writes,[]);
   const result=await legacy.call({...draft,pay_upfront_selected:false,premium_selected:false});assert.equal(result.status,200);
-  assert.equal(legacy.contract.monthly_price,400);assert.equal(legacy.contract.rental_summary_snapshot.installation_fee,0);
+  assert.equal(legacy.contract.monthly_price,500);assert.equal(legacy.contract.rental_summary_snapshot.installation_fee,0);
   assert.equal(legacy.contract.rental_summary_snapshot.commercial_terms,undefined);
   const agreed=harness(1,{id:'c',status:'Draft Created',commitment_months:12,monthly_price:375,rental_summary_snapshot:{sauna_type_id:'indoor_traditional_standard',installation_fee:75}});
   assert.equal((await agreed.call({...draft,pay_upfront_selected:false,premium_selected:false})).status,200);
-  assert.equal(agreed.contract.monthly_price,375);assert.equal(agreed.contract.rental_summary_snapshot.installation_fee,75);
+  assert.equal(agreed.contract.monthly_price,500);assert.equal(agreed.contract.rental_summary_snapshot.installation_fee,0);
 });
 test('signed agreements reject regeneration without writing any new record',async()=>{
   const h=harness(2,{id:'c',status:'Signed'});assert.equal((await h.call(draft)).status,409);assert.deepEqual(h.writes,[]);
@@ -100,5 +102,21 @@ test('old unsigned terms cannot be signed until the revised charges have been re
     assert.equal(generated.status,200);assert.equal(h.contract.delivery_fee,200);
     assert.equal(h.contract.rental_summary_snapshot.service_fee_policy_version,1);
     assert.equal(h.contract.status,'Draft Created');
+  }
+});
+
+test('legacy magic-link reads expose revised prices and regenerate old custom quotes at the new rates',async()=>{
+  const oldOptions=[{months:6,monthly_price:300,install_fee:0},{months:12,monthly_price:400,install_fee:500},{months:24,monthly_price:250,install_fee:100}];
+  for(const custom_pricing_options of [null,oldOptions]) {
+    const h=harness(1,null,{custom_pricing_options});
+    const loaded=await h.call({action:'get'});assert.equal(loaded.status,200);
+    for(const [months,monthly,install] of [[6,600,500],[12,500,0],[24,350,0]]) {
+      const option=loaded.body.reservation.custom_pricing_options.find((o:any)=>o.months===months);
+      assert.equal(option.monthly_price,monthly);assert.equal(option.install_fee,install);
+      const saved=await h.call({...draft,commitment_months:months,pay_upfront_selected:false,premium_selected:false});
+      assert.equal(saved.status,200);assert.equal(h.contract.monthly_price,monthly);
+      assert.equal(h.contract.rental_summary_snapshot.installation_fee,install);
+      assert.equal(h.contract.rental_summary_snapshot.rental_rate_revision,20261112);
+    }
   }
 });

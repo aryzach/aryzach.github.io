@@ -10,7 +10,7 @@ const generate=()=>page.evaluate(()=>[...document.querySelectorAll('button')].fi
 assert.equal(await generate(),true);
 for(const name of ['Damage Protection','Second Heater','Pay Upfront & Save 10%'])await page.$eval('[role="group"][aria-label="'+name+'"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='No').click());
 assert.equal(await generate(),true);await page.$eval('[role="group"][aria-label="SF Sauna Premium"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='No').click());assert.equal(await generate(),false);
-for(const [term,price,install] of [[1,'$1,200','$500'],[3,'$800','$500'],[6,'$600','$500'],[12,'$500','Free installation'],[24,'$300','Free installation']]){
+for(const [term,price,install] of [[1,'$1,200','$500'],[3,'$800','$500'],[6,'$600','$500'],[12,'$500','Free installation'],[24,'$350','Free installation']]){
  const text=await page.evaluate(term=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith(term+' '+(term===1?'month':'months')));b.click();return b.textContent},term);assert.ok(text.includes(price),text);assert.ok(text.includes(install),text);
 }
 await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('12 months')).click());
@@ -25,6 +25,6 @@ assert.equal(await generate(),true);
 await page.$eval('[role="group"][aria-label="Pay Upfront & Save 10%"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='No').click());assert.equal(await generate(),false);
 await page.setViewport({width:390,height:844});
 await page.goto(origin+'/agreement-preview?legacy=1',{waitUntil:'networkidle0'});await page.waitForFunction(()=>document.body.textContent.includes('Optional coverage'));assert.equal(await page.$('[role="group"][aria-label="SF Sauna Premium"]'),null);
-text=await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('12 months')).textContent);assert.ok(text.includes('$400'));text=await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('6 months')).textContent);assert.ok(text.includes('Free installation'));
-assert.deepEqual(errors,[]);console.log('PASS: required Yes/No choices, all term rates, live totals, generated summary, mobile view and existing unsigned booking preservation.');
+text=await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('12 months')).textContent);assert.ok(text.includes('$500'));text=await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('6 months')).textContent);assert.ok(text.includes('+$500 install fee'));
+assert.deepEqual(errors,[]);console.log('PASS: required Yes/No choices, all term rates, live totals, generated summary, mobile view and revised existing unsigned booking prices.');
 }finally{await browser.close()}

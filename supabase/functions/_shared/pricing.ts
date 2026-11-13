@@ -1,3 +1,4 @@
+import { currentRentalTier } from "./currentRentalRates.ts";
 import { LEGACY_RENTAL_TIERS } from "./legacyRentalPricing.ts";
 import { standardTraditionalTier } from "./rentalTerms.ts";
 // Server mirror of src/lib/contractConfig.ts. Sources numeric pricing from
@@ -45,6 +46,8 @@ export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
 }
 
 export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
+  if (revised) return revised.monthly;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.monthly ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.monthly ?? null;
   const current = standardTraditionalTier(saunaTypeId, months);
   if (current) return current.monthly;
@@ -83,6 +86,8 @@ export function getDeliveryFee(cityOrAddress: string | null | undefined): number
   return DELIVERY_FEE_OUTSIDE_SF;
 }
 export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number {
+  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
+  if (revised) return revised.installFee;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? 0;
   const current = standardTraditionalTier(saunaTypeId, months);
   if (current) return current.installFee;

@@ -1,3 +1,4 @@
+import { RENTAL_RATE_REVISION, currentRentalTier } from "../../../supabase/functions/_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -131,7 +132,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       setContract(c ?? null);
       setAgreedQuote(c?.rental_summary_snapshot?.sauna_type_id ? {
         saunaTypeId: c.rental_summary_snapshot.sauna_type_id, months: c.commitment_months,
-        monthly: c.monthly_price, installFee: c.rental_summary_snapshot.installation_fee ?? 0,
+        monthly: currentRentalTier(c.commitment_months)?.monthly ?? c.monthly_price, installFee: currentRentalTier(c.commitment_months)?.installFee ?? c.rental_summary_snapshot.installation_fee ?? 0,
         variant: c.rental_summary_snapshot.pricing_variant ?? null,
       } : null);
       const hasCustom =
@@ -139,8 +140,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       const custom = hasCustom
         ? {
             months: r.custom_commitment_months as number,
-            monthly: r.custom_monthly_price as number,
-            installFee: typeof r.custom_install_fee === "number" ? (r.custom_install_fee as number) : 0,
+            monthly: currentRentalTier(r.custom_commitment_months)?.monthly ?? r.custom_monthly_price as number,
+            installFee: currentRentalTier(r.custom_commitment_months)?.installFee ?? (typeof r.custom_install_fee === "number" ? (r.custom_install_fee as number) : 0),
           }
         : null;
       setCustomTerm(custom);
@@ -148,8 +149,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         ? (r.custom_pricing_options as any[])
             .map((o) => ({
               months: Number(o?.months),
-              monthly: Number(o?.monthly_price),
-              installFee: Number(o?.install_fee ?? 0),
+              monthly: currentRentalTier(Number(o?.months))?.monthly ?? Number(o?.monthly_price),
+              installFee: currentRentalTier(Number(o?.months))?.installFee ?? Number(o?.install_fee ?? 0),
               variant: typeof o?.variant === "string" && o.variant ? (o.variant as string) : null,
             }))
             .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
@@ -199,7 +200,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           setSignedPdfUrl(urlRes?.url ?? null);
         } catch { /* non-fatal */ }
       } else {
-        setStep(c && c.status !== "Replacement Required" && (version < 2 || c.rental_summary_snapshot?.commercial_terms?.version === 2) ? "preview" : "configure");
+        setStep(c && c.status !== "Replacement Required" && c.rental_summary_snapshot?.rental_rate_revision === RENTAL_RATE_REVISION && (version < 2 || c.rental_summary_snapshot?.commercial_terms?.version === 2) ? "preview" : "configure");
       }
     } catch (e) {
       toast.error((e as Error).message || "Failed to load contract");
@@ -260,7 +261,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         const commercial = policyVersion >= 2 ? rentalCommercialTerms({ monthly: monthlyPrice!, months: form.commitment_months, choices: form,
           installation: install, delivery: deliveryFee, securityDeposit, insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY }) : undefined;
         setContract({ status: 'Draft Created', rental_summary_snapshot: {
-          service_fee_policy_version: SERVICE_FEE_POLICY_VERSION, reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
+          service_fee_policy_version: SERVICE_FEE_POLICY_VERSION, rental_rate_revision: RENTAL_RATE_REVISION, reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
           email: form.email, phone: form.phone, installation_address: `${form.installation_address}, ${form.installation_city}`,
           sauna_type: saunaInfo!.label, placement: saunaInfo!.placement, commitment_months: form.commitment_months,
           monthly_price: monthlyPrice, installation_fee: install, delivery_fee: deliveryFee, security_deposit: securityDeposit,

@@ -8,7 +8,7 @@ import { emptyRentalWorkspace } from '../src/lib/rentalModel.ts';
 import { emptyLifecycle } from '../src/lib/lifecycleModel.ts';
 
 const no: RentalChoices = { insurance_selected: false, second_heater_selected: false, pay_upfront_selected: false, premium_selected: false };
-const rows = [[1,1200,500],[3,800,500],[6,600,500],[12,500,0],[24,300,0]];
+const rows = [[1,1200,500],[3,800,500],[6,600,500],[12,500,0],[24,350,0]];
 test('every Traditional term and every option combination uses the same cent-exact policy', () => {
   for (const id of ['indoor_traditional_standard','outdoor_traditional_standard']) for (const [months,monthly,installation] of rows) {
     assert.deepEqual(standardTraditionalTier(id, months), {monthly,installFee:installation});
@@ -43,15 +43,15 @@ test('all four choices require explicit booleans including No; invalid input can
   assert.throws(()=>rentalCommercialTerms({monthly:-1,months:12,choices:no}));
   assert.throws(()=>rentalCommercialTerms({monthly:500,months:0,choices:no}));
 });
-test('existing bookings retain legacy or frozen catalog prices, while other sauna models remain unchanged',()=>{
-  for(const id of ['indoor_traditional_standard','outdoor_traditional_standard']){
-    assert.equal(getMonthlyPrice(id,12,1),400);assert.equal(getInstallFee(id,6,1),0);
-    const frozen={[id]:{12:{monthly:425,installFee:75}}};
-    assert.equal(getMonthlyPrice(id,12,1,frozen),425);assert.equal(getInstallFee(id,12,1,frozen),75);
+test('unsigned rates supersede legacy and frozen prices for every sauna type',()=>{
+  for(const id of ['indoor_traditional_standard','outdoor_traditional_standard','indoor_traditional_original','outdoor_traditional_original','indoor_infrared_standard','outdoor_infrared_standard']) {
+    for (const version of [1,2]) for (const [months,monthly,install] of [[6,600,500],[12,500,0],[24,350,0]]) {
+      const frozen={[id]:{[months]:{monthly:225,installFee:75}}};
+      assert.equal(getMonthlyPrice(id,months,version,frozen),monthly);
+      assert.equal(getInstallFee(id,months,version,frozen),install);
+    }
   }
-  assert.equal(getMonthlyPrice('indoor_infrared_standard',12),200);
-  assert.equal(getMonthlyPrice('outdoor_infrared_standard',12),300);
-  assert.equal(getMonthlyPrice('indoor_traditional_original',12),300);
+  assert.equal(getMonthlyPrice('indoor_traditional_original',3,1),500);
 });
 test('upfront discount includes recurring add-ons, delivery, access and tax but excludes install and security',()=>{
   const t=rentalCommercialTerms({monthly:333.33,months:12,choices:{...no,pay_upfront_selected:true,premium_selected:true},installation:500,securityDeposit:1500,delivery:150,stairs:50,taxes:123.45});

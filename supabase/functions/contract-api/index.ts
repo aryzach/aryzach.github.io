@@ -1,3 +1,4 @@
+import { RENTAL_RATE_REVISION, currentRentalTier } from "../_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_DISTANCE_NOTE } from "../_shared/serviceFeePolicy.ts";
 import { rentalCommercialTerms, unansweredOptions, upfrontEligible } from "../_shared/rentalTerms.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
@@ -147,7 +148,11 @@ serveWithMigrationPolicy(async (req) => {
             custom_delivery_fee: reservation.custom_delivery_fee,
             custom_stair_elevator_charge: reservation.custom_stair_elevator_charge,
             allowed_commitment_months: reservation.allowed_commitment_months,
-            custom_pricing_options: reservation.custom_pricing_options,
+            custom_pricing_options: current?.signed_at ? reservation.custom_pricing_options :
+              (reservation.custom_pricing_options ?? COMMITMENT_MONTHS.map(months => ({ months, monthly_price: getMonthlyPrice(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot), install_fee: getInstallFee(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot) }))).map(option => {
+                const tier = currentRentalTier(Number(option.months));
+                return tier ? { ...option, monthly_price: tier.monthly, install_fee: tier.installFee } : option;
+              }),
             default_sauna_type: reservation.default_sauna_type,
             custom_contract_terms: reservation.custom_contract_terms,
           },
@@ -249,8 +254,9 @@ serveWithMigrationPolicy(async (req) => {
         if (draftReadError) throw draftReadError;
         const keepAgreedPrice = existing?.rental_summary_snapshot?.sauna_type_id === saunaInfo.id &&
           Number(existing.commitment_months) === months && (existing.rental_summary_snapshot?.pricing_variant ?? null) === selectedVariant;
+        const revisedTier = currentRentalTier(months);
         const monthlyPrice =
-          keepAgreedPrice ? Number(existing.monthly_price) :
+          revisedTier ? revisedTier.monthly : keepAgreedPrice ? Number(existing.monthly_price) :
           matchedOption
             ? Number(matchedOption.monthly_price)
             : hasCustomTerm && months === reservation.custom_commitment_months
@@ -269,7 +275,7 @@ serveWithMigrationPolicy(async (req) => {
             ? reservation.custom_security_deposit
             : getSecurityDeposit(saunaInfo.id);
         const installationFee =
-          keepAgreedPrice && typeof existing.rental_summary_snapshot?.installation_fee === "number" ? existing.rental_summary_snapshot.installation_fee :
+          revisedTier ? revisedTier.installFee : keepAgreedPrice && typeof existing.rental_summary_snapshot?.installation_fee === "number" ? existing.rental_summary_snapshot.installation_fee :
           matchedOption && matchedOption.install_fee != null
             ? Number(matchedOption.install_fee)
             : hasCustomTerm && months === reservation.custom_commitment_months &&
@@ -310,6 +316,7 @@ serveWithMigrationPolicy(async (req) => {
         const rentalSummary = {
           reservation_id: reservation.id,
           service_fee_policy_version: SERVICE_FEE_POLICY_VERSION,
+          rental_rate_revision: RENTAL_RATE_REVISION,
           agreement_version: activeVersion.version_name,
           customer_legal_name: customer_legal_name.trim(),
           phone: (phone ?? "").toString().trim() || null,
@@ -445,8 +452,8 @@ serveWithMigrationPolicy(async (req) => {
         if (!contract) return json({ error: "Contract not found" }, 404);
         if (contract.status === "Signed") return json({ error: "This agreement has already been signed." }, 400);
         if (contract.status === "Voided") return json({ error: "This agreement has been voided." }, 400);
-        if (contract.status === "Replacement Required" || contract.rental_summary_snapshot?.service_fee_policy_version !== SERVICE_FEE_POLICY_VERSION) {
-          return json({ error: "Delivery and access terms have changed. Please reopen and regenerate the agreement, then review it before signing." }, 400);
+        if (contract.status === "Replacement Required" || contract.rental_summary_snapshot?.service_fee_policy_version !== SERVICE_FEE_POLICY_VERSION || contract.rental_summary_snapshot?.rental_rate_revision !== RENTAL_RATE_REVISION) {
+          return json({ error: "Rental pricing or delivery and access terms have changed. Please reopen and regenerate the agreement, then review it before signing." }, 400);
         }
 
         if ((reservation.rental_pricing_version ?? 1) >= 2 && !contract.rental_summary_snapshot?.commercial_terms) {

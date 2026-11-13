@@ -7,7 +7,7 @@ export const STANDARD_TRADITIONAL_TIERS: Record<number, { monthly: number; insta
   3: { monthly: 800, installFee: 500 },
   6: { monthly: 600, installFee: 500 },
   12: { monthly: 500, installFee: 0 },
-  24: { monthly: 300, installFee: 0 },
+  24: { monthly: 350, installFee: 0 },
 };
 export function standardTraditionalTier(id: string, months: number) {
   return ['indoor_traditional_standard', 'outdoor_traditional_standard'].includes(id)
