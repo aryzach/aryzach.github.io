@@ -1,8 +1,10 @@
+import { DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
 import { commercialPriceRows, type RentalCommercialTerms } from "@/lib/rentalTerms";
 import { formatUSD, commitmentLabel } from "@/lib/contractConfig";
 
 interface Summary {
   commercial_terms?: RentalCommercialTerms;
+  service_fee_policy_version?: number;
   reservation_id: string;
   agreement_version: string;
   customer_legal_name: string;
@@ -75,7 +77,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             value={summary.installation_fee ? formatUSD(summary.installation_fee) : "Included"}
           />
           <PriceRow
-            label="Delivery fee"
+            label={summary.service_fee_policy_version === 1 ? "Delivery fee (base)" : "Delivery fee"}
             value={`${formatUSD((summary.commercial_terms?.discounted_delivery_cents ?? summary.delivery_fee * 100) / 100)}${summary.delivery_fee_note ? ` — ${summary.delivery_fee_note}` : ""}`}
           />
           <PriceRow label="Security deposit" value={formatUSD(summary.security_deposit)} />
@@ -98,6 +100,8 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
           />
         </div>
       </section>
+
+      {summary.service_fee_policy_version === 1 && <section className="space-y-2 text-sm text-slate-700"><h3 className="font-semibold">Delivery and access charges</h3><p>{DELIVERY_FEE_TERMS}</p><p>{STAIR_ELEVATOR_TERMS}</p></section>}
 
       {summary.commercial_terms && <section className="space-y-3 text-sm text-slate-700">
         <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500">Payment arrangement</h3>

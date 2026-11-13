@@ -74,13 +74,13 @@ export function isSanFranciscoCity(city: string | null | undefined): boolean {
   const s = city.trim().toLowerCase();
   if (!s) return false;
   if (s === "sf" || s === "s.f." || s === "s.f") return true;
-  if (/san\s*francisco/.test(s)) return true;
+  if (/^san\s+francisco(?:\s*,.*)?$/.test(s)) return true;
   return false;
 }
 
 export function getDeliveryFee(cityOrAddress: string | null | undefined): number {
   if (isSanFranciscoCity(cityOrAddress)) return 0;
-  return isSanFranciscoAddress(cityOrAddress) ? 0 : DELIVERY_FEE_OUTSIDE_SF;
+  return DELIVERY_FEE_OUTSIDE_SF;
 }
 export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number {
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? 0;

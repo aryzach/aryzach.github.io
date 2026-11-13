@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import * as pricing from '../supabase/functions/_shared/pricing.ts';
 import * as terms from '../supabase/functions/_shared/rentalTerms.ts';
+import * as serviceFees from '../supabase/functions/_shared/serviceFeePolicy.ts';
 
 // Execute the actual Edge Function handler against an isolated in-memory client.
 // No Supabase, Stripe, storage or network calls leave this process.
@@ -45,6 +46,7 @@ function harness(version = 2, previous: any = null) {
   vm.runInNewContext(js, {exports:{},Request,Response,Blob,Date,console, Deno:{env:{get:()=> 'test-only'}},require:(path:string)=>{
     if(path.includes('migrationPolicy'))return {serveWithMigrationPolicy:(h:any)=>{handler=h}};
     if(path.includes('esm.sh/@supabase'))return {createClient:()=>client};
+    if(path.endsWith('/serviceFeePolicy.ts'))return serviceFees;
     if(path.endsWith('/pricing.ts'))return pricing;
     if(path.endsWith('/rentalTerms.ts'))return terms;
     if(path.endsWith('/pdfBuilder.ts'))return {buildSignedContractPdf:async({summary}:any)=>{pdfSummary=summary;return new Uint8Array([1,2,3])},sha256Hex:async()=> 'test-hash'};
@@ -87,4 +89,16 @@ test('actual API rejects unanswered options and cannot add new options or repric
 });
 test('signed agreements reject regeneration without writing any new record',async()=>{
   const h=harness(2,{id:'c',status:'Signed'});assert.equal((await h.call(draft)).status,409);assert.deepEqual(h.writes,[]);
+});
+
+test('old unsigned terms cannot be signed until the revised charges have been regenerated and reviewed', async () => {
+  for (const status of ['Draft Created', 'Replacement Required']) {
+    const h=harness(1,{id:'c',status,customer_legal_name:'Test Customer',rental_summary_snapshot:{}});
+    const rejected=await h.call({action:'sign',contract_id:'c',typed_legal_name:'Test Customer'});
+    assert.equal(rejected.status,400);assert.match(rejected.body.error,/terms have changed/);assert.deepEqual(h.writes,[]);
+    const generated=await h.call({...draft,installation_city:'Alameda',pay_upfront_selected:false,premium_selected:false});
+    assert.equal(generated.status,200);assert.equal(h.contract.delivery_fee,200);
+    assert.equal(h.contract.rental_summary_snapshot.service_fee_policy_version,1);
+    assert.equal(h.contract.status,'Draft Created');
+  }
 });

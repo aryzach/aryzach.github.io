@@ -1,3 +1,4 @@
+import { DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "./serviceFeePolicy.ts";
 import { commercialPriceRows, type RentalCommercialTerms, SECOND_HEATER_DESCRIPTION } from "./rentalTerms.ts";
 // Server-side PDF builder for signed rental agreements.
 // Uses pdf-lib in Deno. Produces: [Rental Summary page(s)] + [Audit page] +
@@ -13,6 +14,7 @@ import {
 
 export interface RentalSummarySnapshot {
   commercial_terms?: RentalCommercialTerms;
+  service_fee_policy_version?: number;
   reservation_id: string;
   agreement_version: string;
   customer_legal_name: string;
@@ -217,7 +219,7 @@ async function buildRentalSummary(
   drawPriceRow(c, "Installation fee", s.installation_fee ? fmtUSD(s.installation_fee) : "Included");
   drawPriceRow(
     c,
-    "Delivery fee",
+    s.service_fee_policy_version === 1 ? "Delivery fee (base)" : "Delivery fee",
     `${fmtUSD((s.commercial_terms?.discounted_delivery_cents ?? s.delivery_fee * 100) / 100)}${s.delivery_fee_note ? ` - ${s.delivery_fee_note}` : ""}`,
   );
   drawPriceRow(c, "Security deposit (refundable)", fmtUSD(s.security_deposit));
@@ -238,6 +240,12 @@ async function buildRentalSummary(
       ? "To be confirmed before delivery"
       : `${fmtUSD((s.commercial_terms?.discounted_stair_charge_cents ?? s.stair_elevator_charge * 100) / 100)}${s.stair_elevator_charge_note ? ` - ${s.stair_elevator_charge_note}` : ""}`,
   );
+
+  if (s.service_fee_policy_version === 1) {
+    drawHeading(c, "Delivery and access charges");
+    drawParagraph(c, DELIVERY_FEE_TERMS);
+    drawParagraph(c, STAIR_ELEVATOR_TERMS);
+  }
 
   if (s.commercial_terms) {
     drawHeading(c, "Payment arrangement");

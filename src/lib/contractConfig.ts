@@ -86,13 +86,13 @@ export function isSanFranciscoCity(city: string | null | undefined): boolean {
   const s = city.trim().toLowerCase();
   if (!s) return false;
   if (s === "sf" || s === "s.f." || s === "s.f") return true;
-  if (/san\s*francisco/.test(s)) return true;
+  if (/^san\s+francisco(?:\s*,.*)?$/.test(s)) return true;
   return false;
 }
 
 export function getDeliveryFee(cityOrAddress: string | null | undefined): number {
   if (isSanFranciscoCity(cityOrAddress)) return 0;
-  return isSanFranciscoAddress(cityOrAddress) ? 0 : DELIVERY_FEE_OUTSIDE_SF;
+  return DELIVERY_FEE_OUTSIDE_SF;
 }
 
 export function formatUSD(dollars: number): string {

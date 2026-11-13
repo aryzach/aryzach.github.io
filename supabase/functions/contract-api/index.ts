@@ -1,3 +1,4 @@
+import { SERVICE_FEE_POLICY_VERSION, DELIVERY_DISTANCE_NOTE } from "../_shared/serviceFeePolicy.ts";
 import { rentalCommercialTerms, unansweredOptions, upfrontEligible } from "../_shared/rentalTerms.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
@@ -262,9 +263,7 @@ serveWithMigrationPolicy(async (req) => {
         const deliveryFee =
           typeof reservation.custom_delivery_fee === "number"
             ? reservation.custom_delivery_fee
-            : getDeliveryFee(city) === 0
-              ? 0
-              : getDeliveryFee(combinedAddress);
+            : getDeliveryFee(city);
         const securityDeposit =
           typeof reservation.custom_security_deposit === "number"
             ? reservation.custom_security_deposit
@@ -310,6 +309,7 @@ serveWithMigrationPolicy(async (req) => {
         const nowIso = new Date().toISOString();
         const rentalSummary = {
           reservation_id: reservation.id,
+          service_fee_policy_version: SERVICE_FEE_POLICY_VERSION,
           agreement_version: activeVersion.version_name,
           customer_legal_name: customer_legal_name.trim(),
           phone: (phone ?? "").toString().trim() || null,
@@ -329,7 +329,7 @@ serveWithMigrationPolicy(async (req) => {
           delivery_fee_note:
             typeof reservation.custom_delivery_fee === "number" && deliveryFee === 0
               ? "Waived for 24-month commitment"
-              : null,
+              : deliveryFee === 200 ? DELIVERY_DISTANCE_NOTE : null,
           security_deposit: securityDeposit,
           insurance_selected: insurance,
           insurance_monthly_price: insurance ? INSURANCE_MONTHLY : 0,
@@ -445,6 +445,9 @@ serveWithMigrationPolicy(async (req) => {
         if (!contract) return json({ error: "Contract not found" }, 404);
         if (contract.status === "Signed") return json({ error: "This agreement has already been signed." }, 400);
         if (contract.status === "Voided") return json({ error: "This agreement has been voided." }, 400);
+        if (contract.status === "Replacement Required" || contract.rental_summary_snapshot?.service_fee_policy_version !== SERVICE_FEE_POLICY_VERSION) {
+          return json({ error: "Delivery and access terms have changed. Please reopen and regenerate the agreement, then review it before signing." }, 400);
+        }
 
         if ((reservation.rental_pricing_version ?? 1) >= 2 && !contract.rental_summary_snapshot?.commercial_terms) {
           return json({error: 'Please regenerate the agreement and explicitly answer all Additional Options.'}, 400);

@@ -1,3 +1,4 @@
+import { SERVICE_FEE_POLICY_VERSION, DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -198,7 +199,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
           setSignedPdfUrl(urlRes?.url ?? null);
         } catch { /* non-fatal */ }
       } else {
-        setStep(c && (version < 2 || c.rental_summary_snapshot?.commercial_terms?.version === 2) ? "preview" : "configure");
+        setStep(c && c.status !== "Replacement Required" && (version < 2 || c.rental_summary_snapshot?.commercial_terms?.version === 2) ? "preview" : "configure");
       }
     } catch (e) {
       toast.error((e as Error).message || "Failed to load contract");
@@ -226,7 +227,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       ? customDeliveryFee
       : isSf
         ? 0
-        : getDeliveryFee(`${form.installation_address}, ${form.installation_city}`),
+        : getDeliveryFee(form.installation_city),
     [customDeliveryFee, isSf, form.installation_address, form.installation_city],
   );
   const securityDeposit = useMemo(
@@ -259,7 +260,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
         const commercial = policyVersion >= 2 ? rentalCommercialTerms({ monthly: monthlyPrice!, months: form.commitment_months, choices: form,
           installation: install, delivery: deliveryFee, securityDeposit, insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY }) : undefined;
         setContract({ status: 'Draft Created', rental_summary_snapshot: {
-          reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
+          service_fee_policy_version: SERVICE_FEE_POLICY_VERSION, reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
           email: form.email, phone: form.phone, installation_address: `${form.installation_address}, ${form.installation_city}`,
           sauna_type: saunaInfo!.label, placement: saunaInfo!.placement, commitment_months: form.commitment_months,
           monthly_price: monthlyPrice, installation_fee: install, delivery_fee: deliveryFee, security_deposit: securityDeposit,
@@ -538,6 +539,8 @@ const ConfigureStep = ({
           <Input type="date" value={form.preferred_installation_date} onChange={(e) => set("preferred_installation_date", e.target.value)} />
         </Field>
       </Section>
+
+      <section className="space-y-2 text-sm text-muted-foreground"><h3 className="font-semibold text-foreground">Delivery and access charges</h3><p>{DELIVERY_FEE_TERMS}</p><p>{STAIR_ELEVATOR_TERMS}</p></section>
 
       <Section title={policyVersion >= 2 ? "Sauna Type" : "Sauna"}>
         {policyVersion < 2 && <Label className="text-xs text-muted-foreground">Sauna type</Label>}

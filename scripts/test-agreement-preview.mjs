@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import puppeteer from 'puppeteer';
 const origin=process.env.AGREEMENT_PREVIEW_ORIGIN || 'http://127.0.0.1:8080';
-const browser=await puppeteer.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+const browser=await puppeteer.launch({executablePath:process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
 try{
 const page=await browser.newPage();await page.setViewport({width:1440,height:1000});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(origin+'/agreement-preview',{waitUntil:'networkidle0'});await page.waitForSelector('[role="group"][aria-label="SF Sauna Premium"]');
@@ -17,7 +17,7 @@ await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textC
 for(const name of ['Damage Protection','Second Heater','Pay Upfront & Save 10%','SF Sauna Premium'])await page.$eval('[role="group"][aria-label="'+name+'"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='Yes').click());
 let text=await page.$eval('[role="dialog"]',el=>el.textContent);for(const expected of ['$8,856','$984','$320'])assert.ok(text.includes(expected),expected);
 
-await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Generate Agreement')).click());await page.waitForFunction(()=>[...document.querySelectorAll('button')].some(b=>b.disabled && b.textContent==='Preview only'));text=await page.$eval('[role="dialog"]',el=>el.textContent);assert.ok(text.includes('$8,856'));assert.ok(!text.includes('Monthly billing during initial term'));assert.ok(!text.includes('Month-to-month renewal (before any add-on cancellation)'));assert.ok(!text.includes('Initial commitment including monthly add-ons'));assert.ok(!text.includes('(no discount)'));assert.ok(text.includes('3 business days'));assert.ok(text.includes('Bucket and ladle'));
+await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Generate Agreement')).click());await page.waitForFunction(()=>[...document.querySelectorAll('button')].some(b=>b.disabled && b.textContent==='Preview only'));text=await page.$eval('[role="dialog"]',el=>el.textContent);assert.ok(text.includes('$8,856'));assert.ok(text.includes('$150 for 1-15 stairs or elevator access'));assert.ok(text.includes('beyond 50 miles ($400 total)'));assert.ok(text.includes('Delivery fee (base)'));assert.ok(!text.includes('Monthly billing during initial term'));assert.ok(!text.includes('Month-to-month renewal (before any add-on cancellation)'));assert.ok(!text.includes('Initial commitment including monthly add-ons'));assert.ok(!text.includes('(no discount)'));assert.ok(text.includes('3 business days'));assert.ok(text.includes('Bucket and ladle'));
 await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Edit Agreement')).click());
 await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('6 months')).click());
 assert.equal(await page.$eval('[role="group"][aria-label="Pay Upfront & Save 10%"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='Yes').disabled),true);
