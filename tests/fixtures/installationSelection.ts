@@ -94,6 +94,6 @@ export function installationFixture(): RentalWorkspace {
         recordedInstallDate: null,
       },
     ],
-    lifecycle: { ...emptyLifecycle(), rentals: [rental] },
+    lifecycle: { ...emptyLifecycle(),terms:[{id:'terms',rental_id:rental.id,agreement_id:null,state:'planned',effective_from:null,effective_until:null,minimum_months:12,commitment_start:null,base_monthly_cents:40000,extras:[],currency:'USD',sauna_type:'Outdoor Traditional',source:'Owner agreement',note:null}], rentals: [rental] },
   };
 }

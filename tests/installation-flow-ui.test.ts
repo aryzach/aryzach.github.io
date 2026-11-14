@@ -74,12 +74,16 @@ test("confirm installation shows and submits the reserved sauna, while permittin
       "2026-11-05";
     (dialog.querySelector("input[name=evidence]") as HTMLInputElement).value =
       "Owner confirmed actual installation";
+    dialog.querySelector('form')!.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick();
+    assert.equal((w as any).commands.length,0);assert.match(dialog.textContent!,/Explicitly confirm indoor or outdoor/);
+    (dialog.querySelector('select[name=installationLocation]') as HTMLSelectElement).value='outdoor';
     dialog
       .querySelector("form")!
       .dispatchEvent(
         new w.Event("submit", { bubbles: true, cancelable: true }),
       );
     await tick();
+    assert.equal((w as any).commands[0].payload.installationLocation,"outdoor");
     assert.equal((w as any).commands[0].op, "install");
     assert.equal((w as any).commands[0].payload.assetId, "unit-56");
     assert.equal((w as any).commands[0].payload.date, "2026-11-05");
@@ -89,6 +93,7 @@ test("confirm installation shows and submits the reserved sauna, while permittin
     select.dispatchEvent(new w.Event("change", { bubbles: true }));
     await tick();
     assert.match(d.body.textContent!, /instead of the reserved sauna/);
+    (d.querySelector('select[name=installationLocation]') as HTMLSelectElement).value='outdoor';
     d.querySelector("form")!.dispatchEvent(
       new w.Event("submit", { bubbles: true, cancelable: true }),
     );

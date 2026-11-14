@@ -114,6 +114,20 @@ stateDiagram-v2
 
 Fleet and custody labels are derived from the inventory status, retirement field and customer links; condition is stored separately. Retired and sold equipment cannot be made bookable through a condition edit. A returned unit requires readiness confirmation before redeployment; pickup and the next installation may share a date.
 
+## Capability, agreement placement and installation location
+
+These are separate facts:
+
+| Fact | Stored source | Meaning |
+| --- | --- | --- |
+| Capability | Inventory `locations` / indoor-outdoor eligibility | Where the numbered unit can be used: indoor, outdoor or both |
+| Agreement placement | `rental_terms.agreed_location`, derived from preserved agreement type | What was agreed for that rental and date |
+| Actual installation | Private `rental_installation_locations` records | Confirmed indoor/outdoor use at a dated installation, independently of the catalog label |
+
+Install and swap require an explicit indoor/outdoor confirmation. The server rejects a mismatch with the dated agreement, an unsupported unit capability, or unknown agreement placement; rejected saves are atomic. The owner's rule is that agreement and actual installation always match. Historical known locations were confirmed from those agreements under that rule, preserving original catalog snapshots and recording audit events. No missing dates or numbered-unit assignments were invented.
+
+Charts use confirmed installation locations. Missing or contradictory confirmations are grouped as **Placement needs review**. Rentals → **Installation placement review** lists unresolved records and corrected catalog conflicts. Reviewing a record requires agreement-matching placement and a source note, and does not change dates, assignments or money. Future signed contracts use contracted placement until installation is recorded.
+
 ## Planned return / booking availability
 
 ```mermaid
@@ -163,6 +177,7 @@ The inventory customer cells are read-only. Direct customer-link edits are also 
 - [Current booking command and inbound checks](../supabase/migrations/20261018170000_separate_inbound_and_booking_availability.sql)
 - [Authoritative assignments and purchase acceptance](../supabase/migrations/20261018080000_authoritative_assignments_and_booking_links.sql)
 - [Rental lifecycle](../supabase/migrations/20261017220000_rental_lifecycle.sql)
+- [Separate installation locations](../supabase/migrations/20261114034855_separate_installation_location.sql)
 - [Customer profile archive constraints](../supabase/migrations/20261017075300_core_customer_rental_foundation.sql)
 - [Automatic allocation](../supabase/functions/_shared/assignSauna.ts)
 - [Payment handler](../supabase/functions/stripe-webhook/index.ts)

@@ -28,6 +28,7 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
     lifecycle_state: "ended",
     actual_end: "2026-05-01",
   });
+  s.lifecycle!.installationLocations!.push({...s.lifecycle!.installationLocations![0],id:'past-location',rental_id:'past-r',location:'indoor'});
   s.lifecycle!.agreements.push({
     ...s.lifecycle!.agreements[0],
     id: "past-a",

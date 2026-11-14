@@ -37,6 +37,7 @@ export function scatterFixture() {
   ];
   state.lifecycle = {
     ...emptyLifecycle(),
+    installationLocations:[{id:'location',rental_id:'r',placement_id:null,installed_on:'2026-01-01',location:'outdoor',source:'owner_confirmed_agreement',reason:'Synthetic owner confirmation',agreed_term_ids:['t'],catalog_conflict:false}],
     rentals: [
       {
         id: "r",

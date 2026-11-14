@@ -5,7 +5,7 @@ import type { RentalWorkspace, SaunaAsset } from "@/lib/rentalModel";
 import { installationSelection } from "@/lib/installationSelection";
 
 const label = (a: SaunaAsset) =>
-  `#${a.code} · ${a.typeName || a.model || "Type unknown"} · ${a.sourceStatus || "Status not recorded"}`;
+  `#${a.code} · Catalog: ${a.typeName || a.model || "Type unknown"} · ${a.sourceStatus || "Status not recorded"}`;
 
 export default function InstallationSaunaSelect({
   state,
@@ -107,6 +107,7 @@ export default function InstallationSaunaSelect({
           ))}
         </select>
       </label>
+      {selected && <p className="text-sm"><strong>Sauna capability:</strong> {selected.locations?.length ? selected.locations.map(l=>l==='indoor'?'Indoor':'Outdoor').join(' / ') : 'Not recorded'} · capability is separate from actual installation.</p>}
       {different && (
         <p role="status" className="text-xs text-amber-800">
           You selected {selected ? `#${selected.code}` : "a different sauna"}{" "}

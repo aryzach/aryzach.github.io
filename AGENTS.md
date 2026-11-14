@@ -14,3 +14,4 @@
 - Xero sync may change only current accounting caches/classifications and the current review queue. Never propagate payment corrections into customer identity, booking acceptance, sauna assignment, installation/pickup dates or agreed terms. Nightly reconciliation and manual refresh share one lease and an atomic publish.
 
 - Committed rental LTV uses each agreement’s original minimum rent and rental add-ons. Later waivers, settlements, payments fulfilling that minimum, and post-minimum billing reductions do not reduce or add to the original commitment. Actual LTV remains classified Xero rental cash.
+- Keep inventory capability, agreement placement and confirmed installation location separate. Install/swap must explicitly match the dated agreement and unit capability. Charts use private installation-location confirmations; preserve original catalog snapshots and flag unresolved history rather than inferring placement from a dual-use unit.

@@ -7,6 +7,7 @@ function fixture(){
  const state={...emptyRentalWorkspace(),lifecycle:emptyLifecycle(),xeroLinks:[{customerId:'a',tenantId:'t',contactId:'x',name:'A'},{customerId:'b',tenantId:'t',contactId:'y',name:'B'}]};
  state.customers=['a','b'].map(id=>({id,name:id,email:'',phone:'',kind:'person' as const,archived:false,legacyReservationIds:[]}));
  state.lifecycle.rentals=['a','b'].map((id,i)=>({id:'r'+id,customer_id:id,purpose:'rental',lifecycle_state:'active',actual_start:i?'2026-03-15':'2026-01-01',actual_start_source:'owner',actual_end:null,originating_reservation_id:null,version:1,history_gaps:[],service_address:null}));
+ state.lifecycle.installationLocations=['a','b'].map(id=>({id:'loc'+id,rental_id:'r'+id,placement_id:null,installed_on:id==='a'?'2026-01-01':'2026-03-15',location:id==='a'?'indoor' as const:'outdoor' as const,source:'owner_confirmed_agreement' as const,reason:'Synthetic confirmed',agreed_term_ids:['term'+id],catalog_conflict:false}));
  for(const id of ['a','b']){
   state.lifecycle.agreements.push({id:'g'+id,rental_id:'r'+id,contract_id:null,document_id:null,label:'original',agreement_date:null,signed_on:id==='a'?'2026-01-01':'2026-03-15',signing_state:'signed',source_terms:{},owner_corrections:{}});
   state.lifecycle.terms.push({id:'term'+id,rental_id:'r'+id,agreement_id:'g'+id,state:'active',effective_from:id==='a'?'2026-01-01':'2026-03-15',effective_until:null,minimum_months:3,commitment_start:null,base_monthly_cents:30000,extras:[],currency:'USD',sauna_type:id==='a'?'Indoor Infrared':'Outdoor Traditional',source:'contract',note:null});

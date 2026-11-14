@@ -370,8 +370,7 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
         purchases are excluded. Each customer appears once: active customers
         stay current, otherwise a signed upcoming rental is future. Future
         agreements use the contracted sauna type; this is not a confirmed
-        indoor/outdoor installation. Installed rentals retain their recorded
-        installed type; unknown types remain labeled. Later waivers, cash
+        indoor/outdoor installation. Installed rentals use confirmed installation locations; catalog conflicts and missing confirmations are listed in Rentals → Installation placement review; unknown types remain labeled. Later waivers, cash
         payments and post-minimum rate changes do not change original committed
         value.
       </p>

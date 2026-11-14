@@ -106,6 +106,7 @@ test("latest agreement supplies original base rate; scope toggle changes X only"
     address: null,
     evidence: "owner",
   });
+  s.lifecycle!.installationLocations![0].placement_id='p';
   const r = rateCommitment(s, today);
   assert.equal(r.points.length, 1);
   assert.equal(r.points[0].monthlyRate, 350);

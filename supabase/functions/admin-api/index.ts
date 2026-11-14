@@ -97,7 +97,7 @@ serveWithMigrationPolicy(async (req) => {
         return json({ workspace: await workspace() });
 
       case "lifecycle_command": {
-        const allowed=['manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
+        const allowed=['confirm_location','manual_reservation','install','return','swap','legacy_return','legacy_swap','terms','settlement','end_rental','cancel_rental','sale','asset_status','link_agreement','backfill_history','allocate_payment','void_allocation','confirm_agreement'];
         if(!allowed.includes(payload.operation)||!/^[0-9a-f-]{36}$/i.test(payload.commandId||''))return json({error:'Choose a supported history operation and request ID'},400);
         const {error}=await supabase.rpc('rental_lifecycle_command',{command_id:payload.commandId,operation:payload.operation,payload:payload.record||{}});
         if(error)return json({error:error.message},error.code==='40001'?409:400);

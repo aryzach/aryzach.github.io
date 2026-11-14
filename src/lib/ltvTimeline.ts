@@ -1,3 +1,4 @@
+import { confirmedSaunaType } from './installationLocation.ts';
 import { customerLtv } from './customerLtv.ts';
 import type { LifecycleRental, LifecycleTerm } from './lifecycleModel.ts';
 import type { RentalWorkspace } from './rentalModel.ts';
@@ -35,10 +36,7 @@ export function latestInstalledType(state:RentalWorkspace,customerId:string):str
  const rentals=(state.lifecycle?.rentals||[]).filter(r=>r.customer_id===customerId&&rentalEligible(r)).sort((a,b)=>b.actual_start!.localeCompare(a.actual_start!)||a.id.localeCompare(b.id));
  if(!rentals.length)return 'Unknown type';
  const types=rentals.filter(r=>r.actual_start===rentals[0].actual_start).map(r=>{
-  const placement=state.lifecycle!.placements.filter(p=>p.rental_id===r.id).sort((a,b)=>b.installed_on.localeCompare(a.installed_on))[0];
-  const terms=state.lifecycle!.terms.filter(t=>t.rental_id===r.id&&!['superseded','voided','canceled'].includes(t.state)&&(!t.effective_from||t.effective_from<=pacificToday())).sort((a,b)=>(termDate(state,b,r)||'0000').localeCompare(termDate(state,a,r)||'0000')||a.id.localeCompare(b.id));
-  // Latest historical installed type; current inventory may have been converted after return.
-  return normalizeSaunaType(placement?.type_at_install||terms[0]?.sauna_type||String(r.owner_review?.saunaType||''));
+  return confirmedSaunaType(state,r,pacificToday());
  });
  return new Set(types).size===1?types[0]:'Multiple latest types';
 }
