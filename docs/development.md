@@ -165,3 +165,11 @@ Sauna-type checkboxes and stable colors use the latest recorded installed type. 
 This is a frontend-only view of the existing authenticated core workspace. No public reads, new database fields, customer mutations or Xero changes are introduced. Read-only verification against the current records found 68 eligible customers (48 current and 20 historical), with usable data for both commitment scopes. Synthetic model/UI tests cover original and discounted commitments, renewals, scope changes, missing data, ambiguity, group filters, colors/shapes and customer-name tooltips. A separate loopback-only example fixture verified the chart layout without placing customer records in the repository.
 
 Validation for this release: all 201 tests, typecheck, safety lint, targeted chart lint and the preview build passed.
+
+### Signed future agreements on the scatter plot
+
+The owner requested future contracts and confirmed signed agreements only. The chart now includes uninstalled planned/unconfirmed rentals with a non-voided signed agreement recorded by the chart date. Future customers use triangle markers, a dedicated status filter and their contracted sauna type, explicitly distinct from confirmed installation placement. Unsigned drafts, waitlist requests without signed terms, canceled/voided agreements and purchases remain excluded. Missing financial terms remain review gaps.
+
+One customer still produces one point: an active installed rental takes current status; otherwise a signed upcoming rental takes future status ahead of historical. The latest/all-agreements toggle includes eligible signed future commitments, preserving signed prepaid amounts and original monthly rates. This is a frontend-only change using the existing protected workspace; no contracts, inventory or accounting records are changed. Regression coverage includes future markers, customer-name tooltips, filters, signed-only guards and repeat-customer deduplication.
+
+Validation: all 205 tests, typecheck, safety lint, targeted chart lint and preview build passed. Browser verification covered the signed-future filter and triangle marker on a narrow viewport using example records only.

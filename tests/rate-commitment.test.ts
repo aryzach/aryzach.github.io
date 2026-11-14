@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { rateCommitment } from "../src/lib/rateCommitment.ts";
-import { scatterFixture, scatterTerm } from "./fixtures/rateCommitment.ts";
+import {
+  scatterFixture,
+  scatterTerm,
+  scatterFutureFixture,
+} from "./fixtures/rateCommitment.ts";
 const today = "2026-11-13";
 test("scatter uses original base rent on Y and original rental-only minimum including add-ons on X", () => {
   const s = scatterFixture(),
@@ -46,7 +50,6 @@ test("historical includes archived customers; active and returned are distinct f
     assert.equal(rateCommitment(copy, today).gaps.length, 1);
   }
   for (const patch of [
-    { actual_start: null },
     { actual_start: "2026-12-01" },
     { lifecycle_state: "canceled" },
     { owner_review: { neverInstalled: true } },
@@ -180,4 +183,66 @@ test("future and voided agreements cannot displace the latest usable agreement; 
   s.lifecycle!.agreements[1].signing_state = "signed";
   assert.equal(rateCommitment(s, today).points.length, 0);
   assert.match(rateCommitment(s, today).gaps[0].reason, /ambiguous/);
+});
+
+test("signed future contracts plot before installation using contracted type and original commitment in both scopes", () => {
+  const s = scatterFutureFixture();
+  for (const scope of ["latest", "all"] as const) {
+    const r = rateCommitment(s, today, scope);
+    assert.equal(r.points.length, 1);
+    assert.equal(r.points[0].status, "future");
+    assert.equal(r.points[0].installedOn, null);
+    assert.equal(r.points[0].saunaType, "Outdoor Traditional");
+    assert.equal(r.points[0].monthlyRate, 350);
+    assert.equal(r.points[0].committedValue, 8880);
+    assert.equal(r.points[0].unverified, false);
+  }
+});
+test("unsigned, voided, canceled, never-installed and purchase requests never appear as signed future contracts", () => {
+  for (const status of ["unconfirmed", "draft", "voided", "superseded"]) {
+    const s = scatterFutureFixture();
+    s.lifecycle!.agreements[0].signing_state = status;
+    assert.equal(rateCommitment(s, today).eligible, 0, status);
+  }
+  for (const patch of [
+    { lifecycle_state: "canceled" },
+    { purpose: "purchase" },
+    { owner_review: { neverInstalled: true } },
+    { lifecycle_state: "active" },
+  ]) {
+    const s = scatterFutureFixture();
+    Object.assign(s.lifecycle!.rentals[0], patch);
+    assert.equal(rateCommitment(s, today).eligible, 0);
+  }
+  const s = scatterFutureFixture();
+  s.lifecycle!.agreements[0].signed_on = "2026-12-01";
+  assert.equal(rateCommitment(s, today).eligible, 0);
+});
+test("future agreements preserve signed prepaid commitments and expose missing values instead of zero", () => {
+  const s = scatterFutureFixture();
+  s.lifecycle!.terms[0].source = "Signed in-app agreement";
+  s.lifecycle!.agreements[0].source_terms = {
+    commercialTerms: { version: 2, initial_commitment_cents: 799200 },
+  };
+  assert.equal(rateCommitment(s, today).points[0].committedValue, 7992);
+  s.lifecycle!.terms[0].minimum_months = null;
+  assert.equal(rateCommitment(s, today).points.length, 0);
+  assert.equal(rateCommitment(s, today).gaps.length, 1);
+});
+test("repeat customers stay one point across installed and signed upcoming rentals; all scope includes both", () => {
+  const s = scatterFixture(),
+    f = scatterFutureFixture();
+  f.lifecycle!.rentals[0].customer_id = "c";
+  s.lifecycle!.rentals.push(...f.lifecycle!.rentals);
+  s.lifecycle!.agreements.push(...f.lifecycle!.agreements);
+  s.lifecycle!.terms.push(...f.lifecycle!.terms);
+  assert.equal(rateCommitment(s, today).points.length, 1);
+  assert.equal(rateCommitment(s, today).points[0].status, "current");
+  assert.equal(rateCommitment(s, today).points[0].committedValue, 8880);
+  assert.equal(rateCommitment(s, today, "all").points[0].committedValue, 15120);
+  Object.assign(s.lifecycle!.rentals[0], {
+    lifecycle_state: "ended",
+    actual_end: "2026-10-01",
+  });
+  assert.equal(rateCommitment(s, today).points[0].status, "future");
 });

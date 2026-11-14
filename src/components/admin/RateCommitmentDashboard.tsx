@@ -27,7 +27,7 @@ const money = (n: number) =>
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(n);
-const statuses = ["current", "historical"] as const;
+const statuses = ["current", "historical", "future"] as const;
 function PointTooltip({
   active,
   payload,
@@ -42,7 +42,11 @@ function PointTooltip({
       <p className="font-semibold">{point.name}</p>
       <p>
         {point.saunaType} ·{" "}
-        {point.status === "current" ? "Current" : "Historical"}
+        {point.status === "current"
+          ? "Current"
+          : point.status === "future"
+            ? "Future · signed"
+            : "Historical"}
       </p>
       <dl className="mt-3 space-y-1">
         <div>
@@ -74,7 +78,9 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
     [result],
   );
   const [chosen, setChosen] = useState<string[] | undefined>();
-  const [status, setStatus] = useState<"all" | "current" | "historical">("all");
+  const [status, setStatus] = useState<
+    "all" | "current" | "historical" | "future"
+  >("all");
   const visible = result.points.filter(
     (p) =>
       (chosen === undefined || chosen.includes(p.saunaType)) &&
@@ -99,8 +105,8 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
           Monthly rate vs. committed value
         </h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          One dot per installed customer · current and historical rentals · as
-          of {today}
+          One dot per customer · current, historical and signed future rentals ·
+          as of {today}
         </p>
       </div>
       <p className="max-w-3xl text-sm text-muted-foreground">
@@ -136,7 +142,7 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       </div>
       <fieldset>
         <legend className="mb-2 text-sm font-medium">
-          Sauna type · latest installed
+          Sauna type · installed or contracted
         </legend>
         <div className="flex flex-wrap gap-x-5 gap-y-3">
           {types.map((type) => (
@@ -179,10 +185,12 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
               onClick={() => setStatus(s)}
             >
               {s === "all"
-                ? "Both"
+                ? "All statuses"
                 : s === "current"
                   ? "● Current"
-                  : "◆ Historical"}
+                  : s === "future"
+                    ? "▲ Future · signed"
+                    : "◆ Historical"}
             </Button>
           ))}
         </div>
@@ -200,14 +208,15 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       <p role="status" className="text-sm">
         {visible.length} customers shown ·{" "}
         {visible.filter((p) => p.status === "current").length} current ·{" "}
-        {visible.filter((p) => p.status === "historical").length} historical.{" "}
+        {visible.filter((p) => p.status === "historical").length} historical ·{" "}
+        {visible.filter((p) => p.status === "future").length} future.{" "}
         {result.gaps.length} excluded for missing or ambiguous information.
       </p>
       {visible.length > 0 ? (
         <div
           className="h-[440px] min-w-0 w-full"
           role="img"
-          aria-label="Scatter plot: total committed value on the horizontal axis and monthly base rate on the vertical axis. Circles are current customers; diamonds are historical customers."
+          aria-label="Scatter plot: total committed value on the horizontal axis and monthly base rate on the vertical axis. Circles are current customers; diamonds are historical customers; triangles are future customers with signed agreements."
         >
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart
@@ -271,7 +280,13 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
                     fillOpacity={0.75}
                     stroke="hsl(var(--background))"
                     strokeWidth={1}
-                    shape={g.status === "current" ? "circle" : "diamond"}
+                    shape={
+                      g.status === "current"
+                        ? "circle"
+                        : g.status === "future"
+                          ? "triangle"
+                          : "diamond"
+                    }
                     isAnimationActive={false}
                   />
                 ))}
@@ -284,9 +299,9 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
         </p>
       )}
       <p className="text-xs text-muted-foreground">
-        ● Circle = current · ◆ Diamond = historical. Hover over a dot for the
-        customer and amounts. Overlapping customers have the same values; the
-        table lists everyone.
+        ● Circle = current · ◆ Diamond = historical · ▲ Triangle = signed
+        future. Hover over a dot for the customer and amounts. Overlapping
+        customers have the same values; the table lists everyone.
       </p>
       <details className="rounded-lg border p-4">
         <summary className="cursor-pointer text-sm font-medium">
@@ -350,9 +365,13 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       )}
       <p className="text-xs text-muted-foreground">
         Current means an active installed rental. Historical means all installed
-        rentals have recorded returns. Pending bookings and purchases are
-        excluded. Customers retain their latest installed sauna type across
-        their full history; unknown types remain labeled. Later waivers, cash
+        rentals have recorded returns. Future means a signed rental agreement
+        awaiting installation; unsigned drafts, waitlist-only requests and
+        purchases are excluded. Each customer appears once: active customers
+        stay current, otherwise a signed upcoming rental is future. Future
+        agreements use the contracted sauna type; this is not a confirmed
+        indoor/outdoor installation. Installed rentals retain their recorded
+        installed type; unknown types remain labeled. Later waivers, cash
         payments and post-minimum rate changes do not change original committed
         value.
       </p>

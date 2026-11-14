@@ -1,5 +1,9 @@
 import { customerLtv } from "./customerLtv.ts";
-import { commitmentAsOf, latestInstalledType } from "./ltvTimeline.ts";
+import {
+  commitmentAsOf,
+  latestInstalledType,
+  normalizeSaunaType,
+} from "./ltvTimeline.ts";
 import type { LifecycleRental, LifecycleTerm } from "./lifecycleModel.ts";
 import type { RentalWorkspace } from "./rentalModel.ts";
 
@@ -7,10 +11,10 @@ export interface RateCommitmentPoint {
   customerId: string;
   name: string;
   saunaType: string;
-  status: "current" | "historical";
+  status: "current" | "historical" | "future";
   monthlyRate: number;
   committedValue: number;
-  installedOn: string;
+  installedOn: string | null;
   unverified: boolean;
 }
 export interface RateCommitmentGap {
@@ -24,7 +28,7 @@ const validDay = (value: string | null | undefined): value is string =>
   Number.isFinite(Date.parse(value)) &&
   new Date(value).toISOString().slice(0, 10) === value;
 
-/** One installed customer per point. Dollars at the chart boundary; source terms stay in cents. */
+/** One installed or signed-future customer per point. Dollars at the chart boundary; source terms stay in cents. */
 export function rateCommitment(
   state: RentalWorkspace,
   asOf: string,
@@ -34,13 +38,32 @@ export function rateCommitment(
   const data = state.lifecycle;
   const points: RateCommitmentPoint[] = [],
     gaps: RateCommitmentGap[] = [];
+  const signedFutureTerms = (r: LifecycleRental) =>
+    (data?.terms || []).filter((t) => {
+      const agreement = data?.agreements.find(
+        (a) => a.id === t.agreement_id && a.rental_id === r.id,
+      );
+      const signedDate = agreement?.signed_on || agreement?.agreement_date;
+      return (
+        t.rental_id === r.id &&
+        !["superseded", "voided", "canceled"].includes(t.state) &&
+        agreement?.signing_state === "signed" &&
+        validDay(signedDate) &&
+        signedDate <= asOf
+      );
+    });
+  const isInstalled = (r: LifecycleRental) =>
+    validDay(r.actual_start) && r.actual_start <= asOf;
+  const isFuture = (r: LifecycleRental) =>
+    !r.actual_start &&
+    ["planned", "unconfirmed"].includes(r.lifecycle_state) &&
+    signedFutureTerms(r).length > 0;
   const rentals = (data?.rentals || []).filter(
     (r) =>
       r.purpose !== "purchase" &&
       r.lifecycle_state !== "canceled" &&
       !r.owner_review?.neverInstalled &&
-      validDay(r.actual_start) &&
-      r.actual_start <= asOf,
+      (isInstalled(r) || isFuture(r)),
   );
   const ids = [...new Set(rentals.map((r) => r.customer_id))];
   for (const customerId of ids) {
@@ -49,17 +72,22 @@ export function rateCommitment(
       "Unknown customer";
     const exclude = (reason: string) => gaps.push({ customerId, name, reason });
     const customerRentals = rentals.filter((r) => r.customer_id === customerId);
-    const current = customerRentals.filter(
+    const installed = customerRentals.filter(isInstalled);
+    const future = customerRentals.filter(isFuture);
+    const current = installed.filter(
       (r) => r.lifecycle_state === "active" && !r.actual_end,
     );
-    const historical = customerRentals.every(
+    const historical = installed.every(
       (r) =>
         r.lifecycle_state === "ended" &&
         validDay(r.actual_end) &&
         r.actual_end >= r.actual_start! &&
         r.actual_end <= asOf,
     );
-    if (!current.length && !historical) {
+    if (
+      !current.length &&
+      (!historical || (!installed.length && !future.length))
+    ) {
       exclude("Current or historical rental status needs review.");
       continue;
     }
@@ -77,6 +105,8 @@ export function rateCommitment(
       const rental = rentalById.get(t.rental_id);
       return (
         rental &&
+        (isInstalled(rental) ||
+          signedFutureTerms(rental).some((signed) => signed.id === t.id)) &&
         !["superseded", "voided", "canceled"].includes(t.state) &&
         !data!.agreements.some(
           (a) =>
@@ -138,9 +168,36 @@ export function rateCommitment(
       },
       customerId,
     );
+    const installedCommitment = installed.length
+      ? commitmentAsOf(state, customerId, asOf)
+      : { value: 0, reasons: [], unverified: false };
+    const futureLtv = future.length
+      ? customerLtv(
+          {
+            ...state,
+            lifecycle: {
+              ...data!,
+              rentals: future,
+              terms: future.flatMap(signedFutureTerms),
+            },
+          },
+          customerId,
+        )
+      : null;
     const commitment =
       scope === "all"
-        ? commitmentAsOf(state, customerId, asOf)
+        ? {
+            value:
+              installedCommitment.value === null ||
+              futureLtv?.committed === null
+                ? null
+                : installedCommitment.value + (futureLtv?.committed || 0),
+            reasons: [
+              ...installedCommitment.reasons,
+              ...(futureLtv?.commitmentNotes || []),
+            ],
+            unverified: installedCommitment.unverified,
+          }
         : {
             value: latestLtv.committed,
             reasons: latestLtv.commitmentNotes.filter(
@@ -163,11 +220,17 @@ export function rateCommitment(
     points.push({
       customerId,
       name,
-      saunaType: latestInstalledType(state, customerId),
-      status: current.length ? "current" : "historical",
+      saunaType: isFuture(latestRental)
+        ? normalizeSaunaType(originals[0].sauna_type)
+        : latestInstalledType(state, customerId),
+      status: current.length
+        ? "current"
+        : future.length
+          ? "future"
+          : "historical",
       monthlyRate: rates[0]! / 100,
       committedValue: commitment.value / 100,
-      installedOn: latestRental.actual_start!,
+      installedOn: latestRental.actual_start,
       unverified: commitment.unverified,
     });
   }

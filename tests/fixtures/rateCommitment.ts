@@ -70,3 +70,30 @@ export function scatterFixture() {
   };
   return state;
 }
+
+export function scatterFutureFixture() {
+  const state = scatterFixture();
+  Object.assign(state.customers[0], { id: "future", name: "Example Future" });
+  Object.assign(state.lifecycle!.rentals[0], {
+    id: "future-r",
+    customer_id: "future",
+    actual_start: null,
+    lifecycle_state: "planned",
+  });
+  Object.assign(state.lifecycle!.agreements[0], {
+    id: "future-a",
+    rental_id: "future-r",
+    agreement_date: "2026-11-01",
+    signed_on: "2026-11-02",
+  });
+  Object.assign(state.lifecycle!.terms[0], {
+    id: "future-t",
+    rental_id: "future-r",
+    agreement_id: "future-a",
+    effective_from: null,
+    state: "planned",
+    base_monthly_cents: 35000,
+    minimum_months: 24,
+  });
+  return state;
+}

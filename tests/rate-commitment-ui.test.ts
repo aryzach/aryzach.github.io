@@ -3,10 +3,19 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { build } from "esbuild";
 import { Window } from "happy-dom";
-import { scatterFixture, scatterTerm } from "./fixtures/rateCommitment.ts";
+import {
+  scatterFixture,
+  scatterTerm,
+  scatterFutureFixture,
+} from "./fixtures/rateCommitment.ts";
 
 test("scatter filters, commitment toggle, type colors, status shapes and customer hover details", async () => {
   const s = scatterFixture();
+  const future = scatterFutureFixture();
+  s.customers.push(...future.customers);
+  s.lifecycle!.rentals.push(...future.lifecycle!.rentals);
+  s.lifecycle!.agreements.push(...future.lifecycle!.agreements);
+  s.lifecycle!.terms.push(...future.lifecycle!.terms);
   s.customers.push({
     ...s.customers[0],
     id: "past",
@@ -95,9 +104,9 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
     await tick();
     assert.match(
       d.body.textContent!,
-      /2 customers shown · 1 current · 1 historical/,
+      /3 customers shown · 1 current · 1 historical · 1 future/,
     );
-    assert.equal(d.querySelectorAll("path.recharts-symbols").length, 2);
+    assert.equal(d.querySelectorAll("path.recharts-symbols").length, 3);
     const symbols = [...d.querySelectorAll("path.recharts-symbols")];
     assert.notEqual(symbols[0].getAttribute("d"), symbols[1].getAttribute("d"));
     assert.notEqual(
@@ -126,6 +135,25 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
       d.querySelector(".recharts-tooltip-wrapper")!.textContent!,
       /Example Historical|Example Current/,
     );
+    await click("▲ Future · signed");
+    assert.match(
+      d.body.textContent!,
+      /1 customers shown · 0 current · 0 historical · 1 future/,
+    );
+    const futurePoint = d.querySelector("path.recharts-symbols")!;
+    assert.ok(futurePoint.getAttribute("d")!.includes("L"));
+    futurePoint.dispatchEvent(
+      new w.MouseEvent("mouseover", {
+        bubbles: true,
+        clientX: 100,
+        clientY: 100,
+      }),
+    );
+    await tick();
+    assert.match(
+      d.querySelector(".recharts-tooltip-wrapper")!.textContent!,
+      /Example Future/,
+    );
     await click("◆ Historical");
     assert.match(
       d.body.textContent!,
@@ -152,7 +180,7 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
     await tick();
     assert.match(d.body.textContent!, /No customers with known rates/);
     await click("Reset filters");
-    assert.match(d.body.textContent!, /2 customers shown/);
+    assert.match(d.body.textContent!, /3 customers shown/);
   } finally {
     await w.happyDOM.close();
   }
