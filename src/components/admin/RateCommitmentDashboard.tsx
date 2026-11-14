@@ -11,6 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { pacificToday } from "@/lib/ltvTimeline";
 import { rateCommitment, type RateCommitmentPoint } from "@/lib/rateCommitment";
+import {
+  scatterDomains,
+  scatterHeight,
+  spreadScatter,
+} from "@/lib/scatterLayout";
 import type { RentalWorkspace } from "@/lib/rentalModel";
 
 const colors: Record<string, string> = {
@@ -86,11 +91,14 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       (chosen === undefined || chosen.includes(p.saunaType)) &&
       (status === "all" || p.status === status),
   );
+  const [chartWidth, setChartWidth] = useState(850);
+  const domain = scatterDomains(visible);
+  const plotted = spreadScatter(visible, chartWidth);
   const groups = types.flatMap((type) =>
     statuses.map((status) => ({
       type,
       status,
-      points: visible.filter(
+      points: plotted.filter(
         (p) => p.saunaType === type && p.status === status,
       ),
     })),
@@ -214,11 +222,16 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       </p>
       {visible.length > 0 ? (
         <div
-          className="h-[440px] min-w-0 w-full"
+          className="min-w-0 w-full"
+          style={{ height: scatterHeight }}
           role="img"
           aria-label="Scatter plot: total committed value on the horizontal axis and monthly base rate on the vertical axis. Circles are current customers; diamonds are historical customers; triangles are future customers with signed agreements."
         >
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            onResize={(width) => setChartWidth(width)}
+          >
             <ScatterChart
               margin={{ top: 20, right: 20, bottom: 40, left: 16 }}
               accessibilityLayer
@@ -229,14 +242,10 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
               />
               <XAxis
                 type="number"
-                dataKey="committedValue"
+                dataKey="plotCommitment"
                 name="Total committed value"
                 unit=""
-                domain={[
-                  0,
-                  (maximum: number) =>
-                    Math.max(1000, Math.ceil((maximum * 1.05) / 1000) * 1000),
-                ]}
+                domain={[0, domain.x]}
                 tickFormatter={money}
                 tick={{ fontSize: 11 }}
                 label={{
@@ -247,13 +256,9 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
               />
               <YAxis
                 type="number"
-                dataKey="monthlyRate"
+                dataKey="plotRate"
                 name="Monthly base rate"
-                domain={[
-                  0,
-                  (maximum: number) =>
-                    Math.max(100, Math.ceil((maximum * 1.05) / 100) * 100),
-                ]}
+                domain={[0, domain.y]}
                 tickFormatter={money}
                 width={70}
                 tick={{ fontSize: 11 }}
@@ -300,8 +305,9 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
       )}
       <p className="text-xs text-muted-foreground">
         ● Circle = current · ◆ Diamond = historical · ▲ Triangle = signed
-        future. Hover over a dot for the customer and amounts. Overlapping
-        customers have the same values; the table lists everyone.
+        future. Nearby dots are spread apart so every customer is visible and
+        dense clusters stay visible. Hover for the customer’s exact amounts;
+        displayed positions are approximate. The table also lists exact values.
       </p>
       <details className="rounded-lg border p-4">
         <summary className="cursor-pointer text-sm font-medium">
@@ -370,9 +376,11 @@ export function RateCommitmentDashboard({ state }: { state: RentalWorkspace }) {
         purchases are excluded. Each customer appears once: active customers
         stay current, otherwise a signed upcoming rental is future. Future
         agreements use the contracted sauna type; this is not a confirmed
-        indoor/outdoor installation. Installed rentals use confirmed installation locations; catalog conflicts and missing confirmations are listed in Rentals → Installation placement review; unknown types remain labeled. Later waivers, cash
-        payments and post-minimum rate changes do not change original committed
-        value.
+        indoor/outdoor installation. Installed rentals use confirmed
+        installation locations; catalog conflicts and missing confirmations are
+        listed in Rentals → Installation placement review; unknown types remain
+        labeled. Later waivers, cash payments and post-minimum rate changes do
+        not change original committed value.
       </p>
     </section>
   );

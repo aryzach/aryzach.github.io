@@ -12,6 +12,8 @@ import {
 test("scatter filters, commitment toggle, type colors, status shapes and customer hover details", async () => {
   const s = scatterFixture();
   const future = scatterFutureFixture();
+  future.lifecycle!.terms[0].base_monthly_cents = 40000;
+  future.lifecycle!.terms[0].minimum_months = 6;
   s.customers.push(...future.customers);
   s.lifecycle!.rentals.push(...future.lifecycle!.rentals);
   s.lifecycle!.agreements.push(...future.lifecycle!.agreements);
@@ -79,7 +81,7 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
                 "ResponsiveContainer,",
                 "ResponsiveContainer as UnusedResponsiveContainer,",
               ) +
-              `\nfunction ResponsiveContainer({children}){return cloneElement(children,{width:850,height:440});}\nimport{cloneElement}from'react';`,
+              `\nfunction ResponsiveContainer({children}){return cloneElement(children,{width:850,height:880});}\nimport{cloneElement}from'react';`,
           }));
         },
       },
@@ -109,6 +111,7 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
     );
     assert.equal(d.querySelectorAll("path.recharts-symbols").length, 3);
     const symbols = [...d.querySelectorAll("path.recharts-symbols")];
+    assert.equal(new Set(symbols.map(p => p.getAttribute("transform"))).size, 3, "overlapping current/future customers must occupy distinct positions");
     assert.notEqual(symbols[0].getAttribute("d"), symbols[1].getAttribute("d"));
     assert.notEqual(
       symbols[0].getAttribute("fill"),
@@ -153,7 +156,7 @@ test("scatter filters, commitment toggle, type colors, status shapes and custome
     await tick();
     assert.match(
       d.querySelector(".recharts-tooltip-wrapper")!.textContent!,
-      /Example Future/,
+      /Example Future.*Original monthly base rate: \$400\/mo.*Total committed value: \$2,520/,
     );
     await click("◆ Historical");
     assert.match(
