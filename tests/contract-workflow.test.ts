@@ -199,3 +199,24 @@ test('infrared quote reads do not advertise a null-priced 36-month offer',async(
  const h=harness(2,null,{sauna_type_id:'indoor_infrared_standard'});const res=await h.call({action:'get'});
  assert.equal(res.status,200);assert.ok(!res.body.reservation.custom_pricing_options.some((o:any)=>o.months===36));
 });
+
+
+test('infrared and Original only offer the three new terms, with server prices and free install',async()=>{
+ for(const id of ['indoor_infrared_standard','outdoor_infrared_standard','indoor_traditional_original','outdoor_traditional_original']) {
+ const h=harness(2,null,{sauna_type_id:id,allowed_commitment_months:[6],custom_pricing_options:[{months:1,monthly_price:1,install_fee:500}]});
+ const loaded=await h.call({action:'get'});
+ assert.deepEqual(loaded.body.reservation.custom_pricing_options.map((o:any)=>o.months),[6,12,24]);
+ for(const [index,months] of [6,12,24].entries()){
+ const infrared=id.includes('infrared');
+ const saved=await h.call({...draft,sauna_type:id,commitment_months:months,pay_upfront_selected:false,premium_selected:infrared?null:false,second_heater_selected:infrared?null:false});
+ assert.equal(saved.status,200,JSON.stringify(saved.body));
+ assert.equal(h.contract.monthly_price,(id==='indoor_infrared_standard'?[300,200,150]:[400,300,200])[index]);
+ assert.equal(h.contract.rental_summary_snapshot.installation_fee,0);
+ assert.equal(h.contract.rental_summary_snapshot.commercial_terms.choices.premium_selected,false);
+ }
+ for(const months of [1,3,36]){const fresh=harness(2,null,{sauna_type_id:id,custom_pricing_options:[{months,monthly_price:1}]});const res=await fresh.call({...draft,sauna_type:id,commitment_months:months,...{premium_selected:false,second_heater_selected:false,pay_upfront_selected:false}});assert.equal(res.status,400);assert.deepEqual(fresh.writes,[]);}
+ }
+});
+test('infrared rejects attempts to add Premium or a second heater',async()=>{
+ for(const key of ['premium_selected','second_heater_selected']){const h=harness();const res=await h.call({...draft,sauna_type:'indoor_infrared_standard',premium_selected:false,second_heater_selected:false,[key]:true});assert.equal(res.status,400);assert.deepEqual(h.writes,[]);}
+});

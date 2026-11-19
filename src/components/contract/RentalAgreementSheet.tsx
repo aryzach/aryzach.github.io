@@ -1,7 +1,7 @@
 import { FEBRUARY_INSTALLATION, FAST_INSTALLATION_LABEL, FEBRUARY_INSTALLATION_LABEL, installationOffer, installationLabel, installationOfferError } from "../../../supabase/functions/_shared/installationOffers.ts";
 import { signatureNamesMatch } from "../../../supabase/functions/_shared/signatureName.ts";
-import { RENTAL_RATE_REVISION, currentRentalTier } from "../../../supabase/functions/_shared/currentRentalRates.ts";
-import { SERVICE_FEE_POLICY_VERSION, DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
+import { RENTAL_RATE_REVISION, limitedRentalFamily, isInfraredRental, currentRentalTier } from "../../../supabase/functions/_shared/currentRentalRates.ts";
+import { SERVICE_FEE_POLICY_VERSION } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -134,7 +134,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       setContract(c ?? null);
       setAgreedQuote(c?.rental_summary_snapshot?.sauna_type_id ? {
         saunaTypeId: c.rental_summary_snapshot.sauna_type_id, months: c.commitment_months,
-        monthly: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.monthly ?? currentRentalTier(c.commitment_months)?.monthly ?? c.monthly_price, installFee: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.installFee ?? currentRentalTier(c.commitment_months)?.installFee ?? c.rental_summary_snapshot.installation_fee ?? 0,
+        monthly: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.monthly ?? currentRentalTier(c.commitment_months, c.rental_summary_snapshot.sauna_type_id)?.monthly ?? c.monthly_price, installFee: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.installFee ?? currentRentalTier(c.commitment_months, c.rental_summary_snapshot.sauna_type_id)?.installFee ?? c.rental_summary_snapshot.installation_fee ?? 0,
         variant: c.rental_summary_snapshot.pricing_variant ?? null,
       } : null);
       const hasCustom =
@@ -142,8 +142,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       const custom = hasCustom
         ? {
             months: r.custom_commitment_months as number,
-            monthly: currentRentalTier(r.custom_commitment_months)?.monthly ?? r.custom_monthly_price as number,
-            installFee: currentRentalTier(r.custom_commitment_months)?.installFee ?? (typeof r.custom_install_fee === "number" ? (r.custom_install_fee as number) : 0),
+            monthly: currentRentalTier(r.custom_commitment_months, r.default_sauna_type ?? r.sauna_type_id)?.monthly ?? r.custom_monthly_price as number,
+            installFee: currentRentalTier(r.custom_commitment_months, r.default_sauna_type ?? r.sauna_type_id)?.installFee ?? (typeof r.custom_install_fee === "number" ? (r.custom_install_fee as number) : 0),
           }
         : null;
       setCustomTerm(custom);
@@ -152,8 +152,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
             .filter(o => o?.monthly_price != null)
             .map((o) => ({
               months: Number(o?.months),
-              monthly: currentRentalTier(Number(o?.months))?.monthly ?? Number(o?.monthly_price),
-              installFee: currentRentalTier(Number(o?.months))?.installFee ?? Number(o?.install_fee ?? 0),
+              monthly: currentRentalTier(Number(o?.months), r.default_sauna_type ?? r.sauna_type_id)?.monthly ?? Number(o?.monthly_price),
+              installFee: currentRentalTier(Number(o?.months), r.default_sauna_type ?? r.sauna_type_id)?.installFee ?? Number(o?.install_fee ?? 0),
               variant: typeof o?.variant === "string" && o.variant ? (o.variant as string) : null,
             }))
             .filter((o) => Number.isFinite(o.months) && Number.isFinite(o.monthly))
@@ -213,6 +213,15 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   }, [reservationId, token, demo, previewBookingVersion]);
 
   useEffect(() => { if (open) load(); }, [open, load]);
+
+  useEffect(() => {
+    setForm(p => {
+      const limited = limitedRentalFamily(p.sauna_type), infrared = isInfraredRental(p.sauna_type);
+      const months = limited && ![6,12,24].includes(p.commitment_months) ? 6 : p.commitment_months;
+      if (months === p.commitment_months && (!limited || p.pricing_variant === null) && (!infrared || (p.premium_selected === false && p.second_heater_selected === false))) return p;
+      return {...p,commitment_months:months,pricing_variant:limited ? null : p.pricing_variant,...(infrared ? {premium_selected:false,second_heater_selected:false} : {})};
+    });
+  }, [form.sauna_type, form.commitment_months, form.pricing_variant, form.premium_selected, form.second_heater_selected]);
 
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
@@ -481,6 +490,7 @@ const ConfigureStep = ({
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
   const termOptions = useMemo(() => {
+    if (limitedRentalFamily(form.sauna_type)) return [6,12,24];
     if (customOptions?.length) {
       return Array.from(new Set(customOptions.map((o) => o.months))).sort((a, b) => a - b);
     }
@@ -494,7 +504,7 @@ const ConfigureStep = ({
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
   }, [customTerm, customOptions, minMonths, allowedMonths, form.sauna_type, policyVersion, frozenPricing]);
   const variantGroups = useMemo(() => {
-    if (saunaInfo?.family === "traditional") {
+    if (saunaInfo?.family === "traditional" && !limitedRentalFamily(form.sauna_type)) {
       const months = [...new Set([...termOptions, 36])].sort((a,b) => a-b);
       return [
         { variant: null, label: FAST_INSTALLATION_LABEL, options: months.map(month => {
@@ -504,7 +514,7 @@ const ConfigureStep = ({
         { variant: FEBRUARY_INSTALLATION, label: FEBRUARY_INSTALLATION_LABEL, options: [12,24].map(month => ({months: month, variant: FEBRUARY_INSTALLATION, ...installationOffer(form.sauna_type, month, FEBRUARY_INSTALLATION)!})) },
       ];
     }
-    if (!customOptions?.length) return null;
+    if (limitedRentalFamily(form.sauna_type) || !customOptions?.length) return null;
     const variants = Array.from(new Set(customOptions.map(o => o.variant ?? null)));
     if (variants.length < 2) return null;
     return variants.map(variant => ({variant, label: variant ?? "Standard", options: customOptions.filter(o => (o.variant ?? null) === variant)}));
@@ -561,7 +571,6 @@ const ConfigureStep = ({
         </Field>
       </Section>
 
-      <section className="space-y-2 text-sm text-muted-foreground"><h3 className="font-semibold text-foreground">Delivery and access charges</h3><p>{DELIVERY_FEE_TERMS}</p><p>{STAIR_ELEVATOR_TERMS}</p></section>
 
       <Section title={policyVersion >= 2 ? "Sauna Type" : "Sauna"}>
         {policyVersion < 2 && <Label className="text-xs text-muted-foreground">Sauna type</Label>}
@@ -616,9 +625,10 @@ const ConfigureStep = ({
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {termOptions.map((m) => {
-                const opt = findOption(customOptions, m, form.pricing_variant);
+                const familyTier = limitedRentalFamily(form.sauna_type) ? currentRentalTier(m, form.sauna_type) : null;
+                const opt = familyTier ? {monthly: familyTier.monthly,installFee:familyTier.installFee} : findOption(customOptions, m, form.pricing_variant);
                 const price =
-                  agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.monthly : opt
+                  !limitedRentalFamily(form.sauna_type) && agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.monthly : opt
                     ? opt.monthly
                     : customTerm && m === customTerm.months
                       ? customTerm.monthly
@@ -626,7 +636,7 @@ const ConfigureStep = ({
                         ? getMonthlyPrice(form.sauna_type, m, policyVersion, frozenPricing)
                         : null;
                 const fee =
-                  agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.installFee : opt
+                  !limitedRentalFamily(form.sauna_type) && agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === m && agreedQuote.variant === form.pricing_variant ? agreedQuote.installFee : opt
                     ? opt.installFee
                     : customTerm && m === customTerm.months
                       ? customTerm.installFee
@@ -657,11 +667,11 @@ const ConfigureStep = ({
 
       {policyVersion >= 2 ? <Section title="Additional Options">
         <p className="text-xs text-muted-foreground" role="status">{unansweredOptions(form).length ? `Choose Yes or No for: ${unansweredOptions(form).join(", ")}.` : "All options answered."}</p>
-        <ToggleRow selected={form.premium_selected} onChange={(v) => set("premium_selected", v)} title="SF Sauna Premium" price={`+${formatUSD(PREMIUM_MONTHLY)} / month`} description={PREMIUM_DESCRIPTION} />
+        {!isInfraredRental(form.sauna_type) && <ToggleRow selected={form.premium_selected} onChange={(v) => set("premium_selected", v)} title="SF Sauna Premium" price={`+${formatUSD(PREMIUM_MONTHLY)} / month`} description={PREMIUM_DESCRIPTION} />}
         {form.premium_selected === true && <div className="text-xs text-muted-foreground space-y-2"><ul className="list-disc pl-5 space-y-1">{PREMIUM_BENEFITS.map(benefit => <li key={benefit}>{benefit}</li>)}</ul><p>Accessories included at no additional charge. No setup fee. Premium continues at $100/month on month-to-month renewals unless canceled under the applicable terms.</p></div>}
         <ToggleRow selected={form.pay_upfront_selected} onChange={(v) => set("pay_upfront_selected", v)} title="Pay Upfront & Save 10%" price="12 or 24 months only" description="Prepay your entire initial rental term and selected add-ons. Save 10% on all eligible charges except installation and the security deposit." yesDisabled={!upfrontEligible(form.commitment_months)} />
-        <ToggleRow selected={form.second_heater_selected} onChange={(v) => set("second_heater_selected", v)} title="Second Heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description={SECOND_HEATER_DESCRIPTION} yesDisabled={!showSecondHeater} />
-        {!showSecondHeater && <p className="text-xs text-muted-foreground">A second heater is not available for this sauna type. Select No to continue.</p>}
+        {!isInfraredRental(form.sauna_type) && <ToggleRow selected={form.second_heater_selected} onChange={(v) => set("second_heater_selected", v)} title="Second Heater" price={`${formatUSD(SECOND_HEATER_MONTHLY)} / month`} description={SECOND_HEATER_DESCRIPTION} yesDisabled={!showSecondHeater} />}
+        {!showSecondHeater && !isInfraredRental(form.sauna_type) && <p className="text-xs text-muted-foreground">A second heater is not available for this sauna type. Select No to continue.</p>}
         <ToggleRow selected={form.insurance_selected} onChange={(v) => set("insurance_selected", v)} title="Damage Protection" price={`${formatUSD(INSURANCE_MONTHLY)} / month`} description="Coverage applies only to specified natural-event damage and does not cover negligence, misuse, unauthorized modifications, or failure to follow instructions." />
       </Section>
       : <Section title="Optional coverage">

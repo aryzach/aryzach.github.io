@@ -45,13 +45,14 @@ test('all four choices require explicit booleans including No; invalid input can
 });
 test('unsigned rates supersede legacy and frozen prices for every sauna type',()=>{
   for(const id of ['indoor_traditional_standard','outdoor_traditional_standard','indoor_traditional_original','outdoor_traditional_original','indoor_infrared_standard','outdoor_infrared_standard']) {
-    for (const version of [1,2]) for (const [months,monthly,install] of [[6,600,500],[12,500,0],[24,350,0]]) {
+    const rates = id==='indoor_infrared_standard' ? [[6,300,0],[12,200,0],[24,150,0]] : /infrared|_original$/.test(id) ? [[6,400,0],[12,300,0],[24,200,0]] : [[6,600,500],[12,500,0],[24,350,0]];
+    for (const version of [1,2]) for (const [months,monthly,install] of rates) {
       const frozen={[id]:{[months]:{monthly:225,installFee:75}}};
       assert.equal(getMonthlyPrice(id,months,version,frozen),monthly);
       assert.equal(getInstallFee(id,months,version,frozen),install);
     }
   }
-  assert.equal(getMonthlyPrice('indoor_traditional_original',3,1),500);
+  assert.equal(getMonthlyPrice('indoor_traditional_original',3,1),null);
 });
 test('upfront discount includes recurring add-ons, delivery, access and tax but excludes install and security',()=>{
   const t=rentalCommercialTerms({monthly:333.33,months:12,choices:{...no,pay_upfront_selected:true,premium_selected:true},installation:500,securityDeposit:1500,delivery:150,stairs:50,taxes:123.45});

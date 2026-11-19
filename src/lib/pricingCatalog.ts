@@ -1,3 +1,4 @@
+import { limitedRentalFamily } from "../../supabase/functions/_shared/currentRentalRates.ts";
 import { getMonthlyPrice, getInstallFee } from "./contractConfig";
 // Catalog for the new /pricing experience.
 // Maps product URL slugs -> sauna_types.id in the database + display data.
@@ -22,7 +23,7 @@ import { assetUrl } from "./assetUrl";
 export type Category = "traditional" | "infrared" | "original";
 
 export interface PricingTier {
-  months: 1 | 3 | 6 | 12;
+  months: 1 | 3 | 6 | 12 | 24 | 36;
   monthly: number;
   installFee: number; // 0 = Free
   badge?: "Most Popular" | "Best Value";
@@ -44,7 +45,7 @@ export interface Product {
 
 function tiersFor(id: SaunaTypeId): PricingTier[] {
   const table = PRICING_TIERS[id];
-  return ([1, 3, 6, 12] as const).map((months) => {
+  return (limitedRentalFamily(id) ? [6,12,24] as const : [1,3,6,12,24,36] as const).filter(months => table[months]).map((months) => {
     const row = table[months];
     const tier: PricingTier = {
       months,

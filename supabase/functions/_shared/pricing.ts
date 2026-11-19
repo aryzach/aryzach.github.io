@@ -1,5 +1,5 @@
 import { installationOffer } from "./installationOffers.ts";
-import { currentRentalTier } from "./currentRentalRates.ts";
+import { limitedRentalFamily, currentRentalTier } from "./currentRentalRates.ts";
 import { LEGACY_RENTAL_TIERS } from "./legacyRentalPricing.ts";
 import { standardTraditionalTier } from "./rentalTerms.ts";
 // Server mirror of src/lib/contractConfig.ts. Sources numeric pricing from
@@ -47,9 +47,10 @@ export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
 }
 
 export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  if (limitedRentalFamily(saunaTypeId)) return currentRentalTier(months, saunaTypeId)?.monthly ?? null;
   const offer = installationOffer(saunaTypeId, months, null);
   if (offer) return offer.monthly;
-  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
+  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months, saunaTypeId) : null;
   if (revised) return revised.monthly;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.monthly ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.monthly ?? null;
   const current = standardTraditionalTier(saunaTypeId, months);
@@ -88,10 +89,11 @@ export function getDeliveryFee(cityOrAddress: string | null | undefined): number
   if (isSanFranciscoCity(cityOrAddress)) return 0;
   return DELIVERY_FEE_OUTSIDE_SF;
 }
-export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number {
+export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  if (limitedRentalFamily(saunaTypeId)) return currentRentalTier(months, saunaTypeId)?.installFee ?? null;
   const offer = installationOffer(saunaTypeId, months, null);
   if (offer) return offer.installFee;
-  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
+  const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months, saunaTypeId) : null;
   if (revised) return revised.installFee;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? 0;
   const current = standardTraditionalTier(saunaTypeId, months);

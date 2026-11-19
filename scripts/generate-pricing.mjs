@@ -91,7 +91,7 @@ async function main() {
   const MONTHS = [1, 3, 6, 12, 24, 36];
   for (const id of SAUNA_TYPE_IDS) {
     if (!grouped[id]) throw new Error(`Missing pricing for sauna type: ${id}`);
-    for (const m of [1, 3, 6, 12]) {
+    for (const m of (/infrared|_original$/.test(id) ? [6,12,24] : [1,3,6,12])) {
       if (!grouped[id][m]) throw new Error(`Missing ${m}-month tier for ${id}`);
     }
   }

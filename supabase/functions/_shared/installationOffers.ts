@@ -1,10 +1,12 @@
+import {limitedRentalFamily,currentRentalTier} from "./currentRentalRates.ts";
 // Traditional-sauna offers for unsigned and future agreements. Signed snapshots
 // remain authoritative. Keep offer identifiers stable in contract snapshots.
 export const FEBRUARY_INSTALLATION = "february_2027";
 export const FAST_INSTALLATION_LABEL = "Installation within 1 week";
 export const FEBRUARY_INSTALLATION_LABEL = "February installation";
-export function isTraditional(type: string) { return /traditional/.test(type); }
+export function isTraditional(type: string) { return /traditional/.test(type) && !limitedRentalFamily(type); }
 export function installationOffer(type: string, months: number, variant: string | null) {
+  if (limitedRentalFamily(type)) return variant === null ? currentRentalTier(months,type) : null;
   if (!isTraditional(type)) return null;
   if (variant === FEBRUARY_INSTALLATION) {
     if (months === 12) return { monthly: 400, installFee: 0 };

@@ -1,4 +1,4 @@
-import { DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
+
 import { commercialPriceRows, type RentalCommercialTerms } from "@/lib/rentalTerms";
 import { formatUSD, commitmentLabel } from "@/lib/contractConfig";
 
@@ -87,11 +87,11 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
             label="Optional insurance"
             value={summary.insurance_selected ? `${formatUSD(summary.insurance_monthly_price)} / month` : "Not selected"}
           />
-          <PriceRow
+          {!/infrared/i.test(summary.sauna_type) && <PriceRow
             label="Optional second heater"
             value={summary.second_heater_selected ? `${formatUSD(summary.second_heater_monthly_price)} / month` : "Not selected"}
-          />
-          {summary.commercial_terms && commercialPriceRows(summary.commercial_terms).map(row => <PriceRow key={row.label} label={row.label} value={`${formatUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`} />)}
+          />}
+          {summary.commercial_terms && commercialPriceRows(summary.commercial_terms).filter(row => !/infrared/i.test(summary.sauna_type) || row.label !== "SF Sauna Premium").map(row => <PriceRow key={row.label} label={row.label} value={`${formatUSD(row.cents / 100)}${row.monthly ? " / month" : ""}`} />)}
           <PriceRow
             label="Stair / elevator charge"
             value={
@@ -103,7 +103,6 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
         </div>
       </section>
 
-      {summary.service_fee_policy_version === 1 && <section className="space-y-2 text-sm text-slate-700"><h3 className="font-semibold">Delivery and access charges</h3><p>{DELIVERY_FEE_TERMS}</p><p>{STAIR_ELEVATOR_TERMS}</p></section>}
 
       {summary.commercial_terms && <section className="space-y-3 text-sm text-slate-700">
         <h3 className="text-xs font-semibold tracking-widest uppercase text-slate-500">Payment arrangement</h3>

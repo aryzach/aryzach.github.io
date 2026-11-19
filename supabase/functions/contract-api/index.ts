@@ -1,6 +1,6 @@
 import { FEBRUARY_INSTALLATION, installationOffer, installationLabel, installationOfferError } from "../_shared/installationOffers.ts";
 import { signatureNamesMatch } from "../_shared/signatureName.ts";
-import { RENTAL_RATE_REVISION, currentRentalTier } from "../_shared/currentRentalRates.ts";
+import { RENTAL_RATE_REVISION, limitedRentalFamily, isInfraredRental, currentRentalTier } from "../_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_DISTANCE_NOTE } from "../_shared/serviceFeePolicy.ts";
 import { rentalCommercialTerms, unansweredOptions, upfrontEligible } from "../_shared/rentalTerms.ts";
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
@@ -151,8 +151,8 @@ serveWithMigrationPolicy(async (req) => {
             custom_stair_elevator_charge: reservation.custom_stair_elevator_charge,
             allowed_commitment_months: reservation.allowed_commitment_months,
             custom_pricing_options: current?.signed_at ? reservation.custom_pricing_options :
-              (reservation.custom_pricing_options ?? COMMITMENT_MONTHS.map(months => ({ months, monthly_price: getMonthlyPrice(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot), install_fee: getInstallFee(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot) }))).filter(option => option.monthly_price != null).map(option => {
-                const tier = currentRentalTier(Number(option.months));
+              (limitedRentalFamily(reservation.sauna_type_id) ? [6,12,24].map(months => ({months, monthly_price: currentRentalTier(months,reservation.sauna_type_id)!.monthly,install_fee:0})) : reservation.custom_pricing_options ?? COMMITMENT_MONTHS.map(months => ({ months, monthly_price: getMonthlyPrice(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot), install_fee: getInstallFee(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot) }))).filter(option => option.monthly_price != null).map(option => {
+                const tier = currentRentalTier(Number(option.months),reservation.sauna_type_id);
                 return tier ? { ...option, monthly_price: tier.monthly, install_fee: tier.installFee } : option;
               }),
             default_sauna_type: reservation.default_sauna_type,
@@ -169,9 +169,11 @@ serveWithMigrationPolicy(async (req) => {
 
       case "save_draft": {
         const policyVersion = reservation.rental_pricing_version ?? 1;
+        const infrared = isInfraredRental(String(body.sauna_type ?? ""));
+        if (infrared && (body.premium_selected === true || body.second_heater_selected === true)) return json({error: "SF Sauna Premium and a second heater are not available for infrared saunas."},400);
         const choices = {
-          insurance_selected: body.insurance_selected, second_heater_selected: body.second_heater_selected,
-          pay_upfront_selected: body.pay_upfront_selected, premium_selected: body.premium_selected,
+          insurance_selected: body.insurance_selected, second_heater_selected: infrared ? false : body.second_heater_selected,
+          pay_upfront_selected: body.pay_upfront_selected, premium_selected: infrared ? false : body.premium_selected,
         };
         if (policyVersion >= 2 && unansweredOptions(choices).length) return json({error: `Choose Yes or No for: ${unansweredOptions(choices).join(', ')}.`}, 400);
         if (policyVersion >= 2 && choices.pay_upfront_selected === true && !upfrontEligible(Number(body.commitment_months))) return json({error: 'Pay upfront is available only for 12- or 24-month leases.'}, 400);
@@ -213,6 +215,7 @@ serveWithMigrationPolicy(async (req) => {
           ? reservation.custom_pricing_options
           : null;
         const months = Number(commitment_months);
+        if (limitedRentalFamily(saunaInfo.id) && ![6,12,24].includes(months)) return json({error:"Choose a 6-, 12- or 24-month term."},400);
         const requestedVariant =
           typeof body?.pricing_variant === "string" && body.pricing_variant ? body.pricing_variant : null;
         const matchedOption =
@@ -261,7 +264,7 @@ serveWithMigrationPolicy(async (req) => {
         if (draftReadError) throw draftReadError;
         const keepAgreedPrice = existing?.rental_summary_snapshot?.sauna_type_id === saunaInfo.id &&
           Number(existing.commitment_months) === months && (existing.rental_summary_snapshot?.pricing_variant ?? null) === selectedVariant;
-        const revisedTier = timedOffer ?? currentRentalTier(months);
+        const revisedTier = timedOffer ?? currentRentalTier(months,saunaInfo.id);
         const monthlyPrice =
           revisedTier ? revisedTier.monthly : keepAgreedPrice ? Number(existing.monthly_price) :
           matchedOption
@@ -288,7 +291,7 @@ serveWithMigrationPolicy(async (req) => {
               : getInstallFee(saunaInfo.id, months, policyVersion, reservation.rental_pricing_snapshot);
         if (policyVersion >= 2 && second_heater_selected && !saunaInfo.allowsSecondHeater) return json({error: "A second heater is not available for this sauna type."}, 400);
         const insurance = Boolean(insurance_selected);
-        const secondHeater = Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
+        const secondHeater = !infrared && Boolean(second_heater_selected) && saunaInfo.allowsSecondHeater;
         // ---- Flag sauna-type mismatch with reservation-assigned inventory ----
         const flags: string[] = [];
         if (saunaInfo.id !== reservation.sauna_type_id) {
