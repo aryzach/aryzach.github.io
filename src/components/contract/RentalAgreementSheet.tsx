@@ -1,3 +1,4 @@
+import { FEBRUARY_INSTALLATION, FAST_INSTALLATION_LABEL, FEBRUARY_INSTALLATION_LABEL, installationOffer, installationLabel, installationOfferError } from "../../../supabase/functions/_shared/installationOffers.ts";
 import { signatureNamesMatch } from "../../../supabase/functions/_shared/signatureName.ts";
 import { RENTAL_RATE_REVISION, currentRentalTier } from "../../../supabase/functions/_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_FEE_TERMS, STAIR_ELEVATOR_TERMS } from "../../../supabase/functions/_shared/serviceFeePolicy.ts";
@@ -133,7 +134,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       setContract(c ?? null);
       setAgreedQuote(c?.rental_summary_snapshot?.sauna_type_id ? {
         saunaTypeId: c.rental_summary_snapshot.sauna_type_id, months: c.commitment_months,
-        monthly: currentRentalTier(c.commitment_months)?.monthly ?? c.monthly_price, installFee: currentRentalTier(c.commitment_months)?.installFee ?? c.rental_summary_snapshot.installation_fee ?? 0,
+        monthly: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.monthly ?? currentRentalTier(c.commitment_months)?.monthly ?? c.monthly_price, installFee: installationOffer(c.rental_summary_snapshot.sauna_type_id, c.commitment_months, c.rental_summary_snapshot.pricing_variant ?? null)?.installFee ?? currentRentalTier(c.commitment_months)?.installFee ?? c.rental_summary_snapshot.installation_fee ?? 0,
         variant: c.rental_summary_snapshot.pricing_variant ?? null,
       } : null);
       const hasCustom =
@@ -148,6 +149,7 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
       setCustomTerm(custom);
       const opts = Array.isArray(r.custom_pricing_options)
         ? (r.custom_pricing_options as any[])
+            .filter(o => o?.monthly_price != null)
             .map((o) => ({
               months: Number(o?.months),
               monthly: currentRentalTier(Number(o?.months))?.monthly ?? Number(o?.monthly_price),
@@ -215,6 +217,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
   const saunaInfo = useMemo(() => getSaunaTypeInfo(form.sauna_type), [form.sauna_type]);
   const monthlyPrice = useMemo(
     () => {
+      const offer = installationOffer(form.sauna_type, form.commitment_months, form.pricing_variant);
+      if (offer) return offer.monthly;
       if (agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === form.commitment_months && agreedQuote.variant === form.pricing_variant) return agreedQuote.monthly;
       const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.monthly;
@@ -249,6 +253,8 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     if (policyVersion >= 2 && unansweredOptions(form).length) return `Choose Yes or No for: ${unansweredOptions(form).join(", ")}.`;
     if (form.second_heater_selected && !saunaInfo.allowsSecondHeater) return "A second heater is available only for compatible Traditional saunas.";
     if (!form.preferred_installation_date) return "Please choose a preferred installation date.";
+    const offerError = installationOfferError(form.sauna_type, form.commitment_months, form.pricing_variant, form.preferred_installation_date);
+    if (offerError) return offerError;
     return null;
   };
 
@@ -258,13 +264,13 @@ export const RentalAgreementSheet = ({ open, onOpenChange, reservationId, token,
     setSaving(true);
     try {
       if (demo) {
-        const install = getInstallFee(form.sauna_type, form.commitment_months, policyVersion, frozenPricing) ?? 0;
+        const install = installationOffer(form.sauna_type, form.commitment_months, form.pricing_variant)?.installFee ?? getInstallFee(form.sauna_type, form.commitment_months, policyVersion, frozenPricing) ?? 0;
         const commercial = policyVersion >= 2 ? rentalCommercialTerms({ monthly: monthlyPrice!, months: form.commitment_months, choices: form,
           installation: install, delivery: deliveryFee, securityDeposit, insuranceMonthly: INSURANCE_MONTHLY, secondHeaterMonthly: SECOND_HEATER_MONTHLY }) : undefined;
         setContract({ status: 'Draft Created', rental_summary_snapshot: {
           service_fee_policy_version: SERVICE_FEE_POLICY_VERSION, rental_rate_revision: RENTAL_RATE_REVISION, reservation_id: 'preview-only', agreement_version: 'Preview only', customer_legal_name: form.customer_legal_name,
           email: form.email, phone: form.phone, installation_address: `${form.installation_address}, ${form.installation_city}`,
-          sauna_type: saunaInfo!.label, placement: saunaInfo!.placement, commitment_months: form.commitment_months,
+          sauna_type: saunaInfo!.label, pricing_variant: form.pricing_variant, installation_timing: installationLabel(form.sauna_type, form.pricing_variant), placement: saunaInfo!.placement, commitment_months: form.commitment_months,
           monthly_price: monthlyPrice, installation_fee: install, delivery_fee: deliveryFee, security_deposit: securityDeposit,
           insurance_selected: form.insurance_selected, insurance_monthly_price: form.insurance_selected ? INSURANCE_MONTHLY : 0,
           second_heater_selected: form.second_heater_selected, second_heater_monthly_price: form.second_heater_selected ? SECOND_HEATER_MONTHLY : 0,
@@ -474,15 +480,6 @@ const ConfigureStep = ({
   allowedMonths?: number[] | null;
 }) => {
   const showSecondHeater = saunaInfo?.allowsSecondHeater ?? false;
-  const variantGroups = useMemo(() => {
-    if (!customOptions?.length) return null;
-    const variants = Array.from(new Set(customOptions.map((o) => o.variant ?? null)));
-    if (variants.length < 2) return null;
-    return variants.map((v) => ({
-      variant: v,
-      options: customOptions.filter((o) => (o.variant ?? null) === v).sort((a, b) => a.months - b.months),
-    }));
-  }, [customOptions]);
   const termOptions = useMemo(() => {
     if (customOptions?.length) {
       return Array.from(new Set(customOptions.map((o) => o.months))).sort((a, b) => a - b);
@@ -496,8 +493,26 @@ const ConfigureStep = ({
     const unique = Array.from(new Set(all)).sort((a, b) => a - b);
     return allowedMonths?.length ? unique.filter((m) => allowedMonths.includes(m)) : unique;
   }, [customTerm, customOptions, minMonths, allowedMonths, form.sauna_type, policyVersion, frozenPricing]);
+  const variantGroups = useMemo(() => {
+    if (saunaInfo?.family === "traditional") {
+      const months = [...new Set([...termOptions, 36])].sort((a,b) => a-b);
+      return [
+        { variant: null, label: FAST_INSTALLATION_LABEL, options: months.map(month => {
+          const opt = findOption(customOptions, month, null);
+          return {months: month, variant: null, monthly: installationOffer(form.sauna_type, month, null)?.monthly ?? opt?.monthly ?? getMonthlyPrice(form.sauna_type, month, policyVersion, frozenPricing), installFee: installationOffer(form.sauna_type, month, null)?.installFee ?? opt?.installFee ?? getInstallFee(form.sauna_type, month, policyVersion, frozenPricing)};
+        }) },
+        { variant: FEBRUARY_INSTALLATION, label: FEBRUARY_INSTALLATION_LABEL, options: [12,24].map(month => ({months: month, variant: FEBRUARY_INSTALLATION, ...installationOffer(form.sauna_type, month, FEBRUARY_INSTALLATION)!})) },
+      ];
+    }
+    if (!customOptions?.length) return null;
+    const variants = Array.from(new Set(customOptions.map(o => o.variant ?? null)));
+    if (variants.length < 2) return null;
+    return variants.map(variant => ({variant, label: variant ?? "Standard", options: customOptions.filter(o => (o.variant ?? null) === variant)}));
+  }, [saunaInfo?.family, termOptions, customOptions, form.sauna_type, policyVersion, frozenPricing]);
   const installFee = useMemo(
     () => {
+      const offer = installationOffer(form.sauna_type, form.commitment_months, form.pricing_variant);
+      if (offer) return offer.installFee;
       if (agreedQuote?.saunaTypeId === form.sauna_type && agreedQuote.months === form.commitment_months && agreedQuote.variant === form.pricing_variant) return agreedQuote.installFee;
       const opt = findOption(customOptions, form.commitment_months, form.pricing_variant);
       if (opt) return opt.installFee;
@@ -542,7 +557,7 @@ const ConfigureStep = ({
           </Field>
         </div>
         <Field label="Preferred installation date">
-          <Input type="date" value={form.preferred_installation_date} onChange={(e) => set("preferred_installation_date", e.target.value)} />
+          <Input type="date" min={form.pricing_variant === FEBRUARY_INSTALLATION ? "2027-02-01" : undefined} max={form.pricing_variant === FEBRUARY_INSTALLATION ? "2027-02-28" : undefined} value={form.preferred_installation_date} onChange={(e) => set("preferred_installation_date", e.target.value)} />
         </Field>
       </Section>
 
@@ -572,7 +587,7 @@ const ConfigureStep = ({
             <div className="space-y-4">
               {variantGroups.map((g) => (
                 <div key={g.variant ?? "standard"}>
-                  <p className="text-sm font-medium mb-2">{g.variant ?? "Standard"}</p>
+                  <p className="text-sm font-medium mb-2">{g.label}</p>{g.variant === FEBRUARY_INSTALLATION && <p className="mb-2 text-sm text-muted-foreground">February 2027 · Free installation</p>}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {g.options.map((o) => {
                       const active =
@@ -588,6 +603,8 @@ const ConfigureStep = ({
                           onClick={() => {
                             set("commitment_months", o.months);
                             set("pricing_variant", o.variant ?? null);
+                            if (o.variant === FEBRUARY_INSTALLATION && !form.preferred_installation_date.startsWith("2027-02-")) set("preferred_installation_date", "2027-02-01");
+                            if (o.variant !== FEBRUARY_INSTALLATION && form.pricing_variant === FEBRUARY_INSTALLATION) set("preferred_installation_date", "");
                           }}
                         />
                       );
@@ -841,6 +858,7 @@ const TermButton = ({
   <button
     type="button"
     onClick={onClick}
+    aria-pressed={active}
     className={`flex flex-col items-center justify-center gap-0.5 h-20 rounded-md border text-sm font-medium transition ${
       active
         ? "border-primary bg-primary text-primary-foreground"

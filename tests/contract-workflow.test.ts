@@ -7,6 +7,7 @@ import * as signatureNames from '../supabase/functions/_shared/signatureName.ts'
 import * as pricing from '../supabase/functions/_shared/pricing.ts';
 import * as terms from '../supabase/functions/_shared/rentalTerms.ts';
 import * as serviceFees from '../supabase/functions/_shared/serviceFeePolicy.ts';
+import * as installationOffers from '../supabase/functions/_shared/installationOffers.ts';
 import * as currentRates from '../supabase/functions/_shared/currentRentalRates.ts';
 
 // Execute the actual Edge Function handler against an isolated in-memory client.
@@ -50,6 +51,7 @@ function harness(version = 2, previous: any = null, reservationOverrides: Record
   vm.runInNewContext(js, {exports:{},Request,Response,Blob,Date,console, Deno:{env:{get:()=> 'test-only'}},require:(path:string)=>{
     if(path.includes('migrationPolicy'))return {serveWithMigrationPolicy:(h:any)=>{handler=h}};
     if(path.includes('esm.sh/@supabase'))return {createClient:()=>client};
+    if(path.endsWith('/installationOffers.ts'))return installationOffers;
     if(path.endsWith('/currentRentalRates.ts'))return currentRates;
     if(path.endsWith('/serviceFeePolicy.ts'))return serviceFees;
     if(path.endsWith('/signatureName.ts'))return signatureNames;
@@ -120,7 +122,7 @@ test('legacy magic-link reads expose revised prices and regenerate old custom qu
       const saved=await h.call({...draft,commitment_months:months,pay_upfront_selected:false,premium_selected:false});
       assert.equal(saved.status,200);assert.equal(h.contract.monthly_price,monthly);
       assert.equal(h.contract.rental_summary_snapshot.installation_fee,install);
-      assert.equal(h.contract.rental_summary_snapshot.rental_rate_revision,20261112);
+      assert.equal(h.contract.rental_summary_snapshot.rental_rate_revision,currentRates.RENTAL_RATE_REVISION);
     }
   }
 });
@@ -170,4 +172,30 @@ test('actual signature handler accepts keyboard spacing while retaining the ente
   const h=harness();await h.call(draft);const before=h.writes.length;
   const rejected=await h.call({action:'sign',contract_id:'c',typed_legal_name:'Test Other',acknowledgments});
   assert.equal(rejected.status,400);assert.match(rejected.body.error,/full legal name/);assert.equal(h.writes.length,before);
+});
+
+
+test('traditional installation offers save exact prices, windows and totals without trusting client amounts', async()=>{
+ for(const [months,variant,monthly,date] of [[36,null,300,'2026-11-24'],[12,installationOffers.FEBRUARY_INSTALLATION,400,'2027-02-15'],[24,installationOffers.FEBRUARY_INSTALLATION,300,'2027-02-28']] as const){
+  const h=harness(2,null,{allowed_commitment_months:[6],custom_pricing_options:[{months:6,monthly_price:600,install_fee:500}]});
+  const res=await h.call({...draft,commitment_months:months,pricing_variant:variant,preferred_installation_date:date,pay_upfront_selected:false,monthly_price:1});
+  assert.equal(res.status,200,JSON.stringify(res.body));
+  const c=h.contract;
+  assert.equal(c.monthly_price,monthly);
+  assert.equal(c.rental_summary_snapshot.installation_fee,0);
+  assert.equal(c.rental_summary_snapshot.pricing_variant,variant);
+  assert.equal(c.rental_summary_snapshot.commercial_terms.base_initial_cents,monthly*months*100);
+  assert.match(c.rental_summary_snapshot.installation_timing,variant?/February installation 2027/:/within 1 week/);
+ }
+});
+test('invalid February windows, terms and sauna families are rejected before any writes',async()=>{
+ for(const override of [{preferred_installation_date:'2027-01-31'},{preferred_installation_date:'2027-03-01'},{preferred_installation_date:'2027-02-30'},{commitment_months:36},{sauna_type:'indoor_infrared_standard'}]){
+ const h=harness();const res=await h.call({...draft,pricing_variant:installationOffers.FEBRUARY_INSTALLATION,preferred_installation_date:'2027-02-15',...override});
+ assert.equal(res.status,400); assert.deepEqual(h.writes,[]);
+ }
+});
+
+test('infrared quote reads do not advertise a null-priced 36-month offer',async()=>{
+ const h=harness(2,null,{sauna_type_id:'indoor_infrared_standard'});const res=await h.call({action:'get'});
+ assert.equal(res.status,200);assert.ok(!res.body.reservation.custom_pricing_options.some((o:any)=>o.months===36));
 });

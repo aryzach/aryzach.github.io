@@ -10,7 +10,7 @@ const generate=()=>page.evaluate(()=>[...document.querySelectorAll('button')].fi
 assert.equal(await generate(),true);
 for(const name of ['Damage Protection','Second Heater','Pay Upfront & Save 10%'])await page.$eval('[role="group"][aria-label="'+name+'"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='No').click());
 assert.equal(await generate(),true);await page.$eval('[role="group"][aria-label="SF Sauna Premium"]',el=>[...el.querySelectorAll('button')].find(b=>b.textContent==='No').click());assert.equal(await generate(),false);
-for(const [term,price,install] of [[1,'$1,200','$500'],[3,'$800','$500'],[6,'$600','$500'],[12,'$500','Free installation'],[24,'$350','Free installation']]){
+for(const [term,price,install] of [[1,'$1,200','$500'],[3,'$800','$500'],[6,'$600','$500'],[12,'$500','Free installation'],[24,'$350','Free installation'],[36,'$300','Free installation']]){
  const text=await page.evaluate(term=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith(term+' '+(term===1?'month':'months')));b.click();return b.textContent},term);assert.ok(text.includes(price),text);assert.ok(text.includes(install),text);
 }
 await page.evaluate(()=>[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('12 months')).click());

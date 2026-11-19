@@ -1,3 +1,4 @@
+import { installationOffer } from "../../supabase/functions/_shared/installationOffers.ts";
 import { currentRentalTier } from "../../supabase/functions/_shared/currentRentalRates.ts";
 import { LEGACY_RENTAL_TIERS } from "../../supabase/functions/_shared/legacyRentalPricing.ts";
 import { standardTraditionalTier } from "./rentalTerms";
@@ -37,7 +38,7 @@ export const SAUNA_TYPES: SaunaTypeInfo[] = [
   { id: "outdoor_traditional_original", label: "Original Collection Outdoor Traditional Sauna", placement: "outdoor", family: "traditional", allowsSecondHeater: true },
 ];
 
-export const COMMITMENT_MONTHS = [1, 3, 6, 12, 24] as const;
+export const COMMITMENT_MONTHS = [1, 3, 6, 12, 24, 36] as const;
 export type CommitmentMonths = GenCommitmentMonths;
 
 export const INSURANCE_MONTHLY = GEN_INSURANCE_MONTHLY;
@@ -48,6 +49,8 @@ export function getSaunaTypeInfo(id: string): SaunaTypeInfo | undefined {
 }
 
 export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  const offer = installationOffer(saunaTypeId, months, null);
+  if (offer) return offer.monthly;
   const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
   if (revised) return revised.monthly;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.monthly ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.monthly ?? null;
@@ -60,6 +63,8 @@ export function getMonthlyPrice(saunaTypeId: string, months: number, policyVersi
 }
 
 export function getInstallFee(saunaTypeId: string, months: number, policyVersion = 2, frozen?: Record<string, any> | null): number | null {
+  const offer = installationOffer(saunaTypeId, months, null);
+  if (offer) return offer.installFee;
   const revised = getSaunaTypeInfo(saunaTypeId) ? currentRentalTier(months) : null;
   if (revised) return revised.installFee;
   if (policyVersion < 2) return frozen?.[saunaTypeId]?.[months]?.installFee ?? LEGACY_RENTAL_TIERS[saunaTypeId]?.[months]?.installFee ?? null;

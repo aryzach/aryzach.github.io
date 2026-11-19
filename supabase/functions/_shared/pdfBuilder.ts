@@ -211,6 +211,7 @@ async function buildRentalSummary(
   drawHeading(c, "Sauna & installation");
   drawKV(c, "Sauna type", s.sauna_type);
   drawKV(c, "Placement", s.placement === "indoor" ? "Indoor" : "Outdoor");
+  if (s.installation_timing) drawKV(c, "Installation timing", s.installation_timing);
   drawKV(c, "Initial commitment", commitmentLabel(s.commitment_months));
   drawKV(c, "Preferred installation date", fmtDate(s.preferred_installation_date));
 

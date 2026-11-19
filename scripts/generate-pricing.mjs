@@ -87,8 +87,8 @@ async function main() {
     };
   }
 
-  // 24-month tiers are optional (currently only traditional standard offers one).
-  const MONTHS = [1, 3, 6, 12, 24];
+  // Longer tiers are optional; traditional offers include 36 months.
+  const MONTHS = [1, 3, 6, 12, 24, 36];
   for (const id of SAUNA_TYPE_IDS) {
     if (!grouped[id]) throw new Error(`Missing pricing for sauna type: ${id}`);
     for (const m of [1, 3, 6, 12]) {
@@ -127,7 +127,7 @@ export type SaunaTypeId =
   | "indoor_traditional_original"
   | "outdoor_traditional_original";
 
-export type CommitmentMonths = 1 | 3 | 6 | 12 | 24;
+export type CommitmentMonths = 1 | 3 | 6 | 12 | 24 | 36;
 
 export interface PricingTierRow {
   monthly: number;

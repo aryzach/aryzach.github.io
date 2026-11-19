@@ -1,3 +1,4 @@
+import { FEBRUARY_INSTALLATION, installationOffer, installationLabel, installationOfferError } from "../_shared/installationOffers.ts";
 import { signatureNamesMatch } from "../_shared/signatureName.ts";
 import { RENTAL_RATE_REVISION, currentRentalTier } from "../_shared/currentRentalRates.ts";
 import { SERVICE_FEE_POLICY_VERSION, DELIVERY_DISTANCE_NOTE } from "../_shared/serviceFeePolicy.ts";
@@ -150,7 +151,7 @@ serveWithMigrationPolicy(async (req) => {
             custom_stair_elevator_charge: reservation.custom_stair_elevator_charge,
             allowed_commitment_months: reservation.allowed_commitment_months,
             custom_pricing_options: current?.signed_at ? reservation.custom_pricing_options :
-              (reservation.custom_pricing_options ?? COMMITMENT_MONTHS.map(months => ({ months, monthly_price: getMonthlyPrice(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot), install_fee: getInstallFee(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot) }))).map(option => {
+              (reservation.custom_pricing_options ?? COMMITMENT_MONTHS.map(months => ({ months, monthly_price: getMonthlyPrice(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot), install_fee: getInstallFee(reservation.sauna_type_id, months, reservation.rental_pricing_version ?? 1, reservation.rental_pricing_snapshot) }))).filter(option => option.monthly_price != null).map(option => {
                 const tier = currentRentalTier(Number(option.months));
                 return tier ? { ...option, monthly_price: tier.monthly, install_fee: tier.installFee } : option;
               }),
@@ -220,13 +221,16 @@ serveWithMigrationPolicy(async (req) => {
           ) ??
           customOptions?.find((o) => Number(o?.months) === months) ??
           null;
-        const selectedVariant = (matchedOption as any)?.variant ?? null;
-        if (customOptions?.length) {
+        const timedOffer = installationOffer(saunaInfo.id, months, requestedVariant);
+        if (requestedVariant === FEBRUARY_INSTALLATION && !timedOffer) return json({error: "Choose a valid February installation term."}, 400);
+        if (requestedVariant && requestedVariant !== FEBRUARY_INSTALLATION && (matchedOption as any)?.variant !== requestedVariant) return json({error: "Choose a valid pricing option."}, 400);
+        const selectedVariant = requestedVariant === FEBRUARY_INSTALLATION ? requestedVariant : (matchedOption as any)?.variant ?? null;
+        if (customOptions?.length && !timedOffer) {
           if (!matchedOption) {
             return json({ error: "Please choose an initial commitment length." }, 400);
           }
         } else if (
-          !COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12) &&
+          !timedOffer && !COMMITMENT_MONTHS.includes(months as 1 | 3 | 6 | 12) &&
           !(hasCustomTerm && months === reservation.custom_commitment_months)
         ) {
           return json({ error: "Please choose an initial commitment length." }, 400);
@@ -234,18 +238,20 @@ serveWithMigrationPolicy(async (req) => {
         if (typeof preferred_installation_date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(preferred_installation_date)) {
           return json({ error: "Please choose a preferred installation date." }, 400);
         }
+        const timingError = installationOfferError(saunaInfo.id, months, selectedVariant, preferred_installation_date);
+        if (timingError) return json({error: timingError}, 400);
         const minMonths = typeof reservation.min_commitment_months === "number"
           ? reservation.min_commitment_months
           : null;
         const isCustomMonths =
-          (hasCustomTerm && months === reservation.custom_commitment_months) || !!matchedOption;
+          !!timedOffer || (hasCustomTerm && months === reservation.custom_commitment_months) || !!matchedOption;
         if (minMonths && !isCustomMonths && months < minMonths) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
         const allowedMonths = Array.isArray(reservation.allowed_commitment_months)
           ? (reservation.allowed_commitment_months as number[])
           : null;
-        if (allowedMonths?.length && !allowedMonths.includes(months)) {
+        if (!timedOffer && allowedMonths?.length && !allowedMonths.includes(months)) {
           return json({ error: "Please choose an initial commitment length." }, 400);
         }
 
@@ -255,7 +261,7 @@ serveWithMigrationPolicy(async (req) => {
         if (draftReadError) throw draftReadError;
         const keepAgreedPrice = existing?.rental_summary_snapshot?.sauna_type_id === saunaInfo.id &&
           Number(existing.commitment_months) === months && (existing.rental_summary_snapshot?.pricing_variant ?? null) === selectedVariant;
-        const revisedTier = currentRentalTier(months);
+        const revisedTier = timedOffer ?? currentRentalTier(months);
         const monthlyPrice =
           revisedTier ? revisedTier.monthly : keepAgreedPrice ? Number(existing.monthly_price) :
           matchedOption
@@ -322,9 +328,10 @@ serveWithMigrationPolicy(async (req) => {
           installation_address: combinedAddress,
           installation_street: streetAddress,
           installation_city: city,
-          sauna_type: selectedVariant ? `${saunaInfo.label} — ${selectedVariant}` : saunaInfo.label,
+          sauna_type: selectedVariant ? `${saunaInfo.label} — ${installationLabel(saunaInfo.id, selectedVariant) ?? selectedVariant}` : saunaInfo.label,
           sauna_type_id: saunaInfo.id,
           pricing_variant: selectedVariant,
+          installation_timing: installationLabel(saunaInfo.id, selectedVariant),
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,
@@ -358,7 +365,7 @@ serveWithMigrationPolicy(async (req) => {
           phone: (phone ?? "").toString().trim() || null,
           email: email.trim(),
           installation_address: combinedAddress,
-          sauna_type: selectedVariant ? `${saunaInfo.label} — ${selectedVariant}` : saunaInfo.label,
+          sauna_type: selectedVariant ? `${saunaInfo.label} — ${installationLabel(saunaInfo.id, selectedVariant) ?? selectedVariant}` : saunaInfo.label,
           placement: saunaInfo.placement,
           commitment_months: months,
           monthly_price: monthlyPrice,

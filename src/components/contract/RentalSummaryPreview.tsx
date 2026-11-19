@@ -16,6 +16,7 @@ interface Summary {
   commitment_months: number;
   monthly_price: number;
   installation_fee?: number;
+  installation_timing?: string | null;
   delivery_fee: number;
   delivery_fee_note?: string | null;
   security_deposit: number;
@@ -63,6 +64,7 @@ export const RentalSummaryPreview = ({ summary }: { summary: Summary }) => {
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8 text-sm">
           <Row label="Sauna type" value={summary.sauna_type} />
           <Row label="Placement" value={summary.placement === "indoor" ? "Indoor" : "Outdoor"} />
+          {summary.installation_timing && <Row label="Installation timing" value={summary.installation_timing} />}
           <Row label="Initial commitment" value={commitmentLabel(summary.commitment_months)} />
           <Row label="Preferred installation date" value={fmtDate(summary.preferred_installation_date)} />
         </dl>

@@ -11,7 +11,7 @@ export type SaunaTypeId =
   | "indoor_traditional_original"
   | "outdoor_traditional_original";
 
-export type CommitmentMonths = 1 | 3 | 6 | 12 | 24;
+export type CommitmentMonths = 1 | 3 | 6 | 12 | 24 | 36;
 
 export interface PricingTierRow {
   monthly: number;
@@ -40,6 +40,7 @@ export const PRICING_TIERS: Record<SaunaTypeId, Partial<Record<CommitmentMonths,
     6: { monthly: 600, installFee: 500, badge: "Most Popular" },
     12: { monthly: 500, installFee: 0, badge: "Best Value" },
     24: { monthly: 350, installFee: 0 },
+    36: { monthly: 300, installFee: 0 },
   },
   outdoor_traditional_standard: {
     1: { monthly: 1200, installFee: 500 },
@@ -47,6 +48,7 @@ export const PRICING_TIERS: Record<SaunaTypeId, Partial<Record<CommitmentMonths,
     6: { monthly: 600, installFee: 500, badge: "Most Popular" },
     12: { monthly: 500, installFee: 0, badge: "Best Value" },
     24: { monthly: 350, installFee: 0 },
+    36: { monthly: 300, installFee: 0 },
   },
   indoor_traditional_original: {
     1: { monthly: 900, installFee: 500 },
@@ -54,6 +56,7 @@ export const PRICING_TIERS: Record<SaunaTypeId, Partial<Record<CommitmentMonths,
     6: { monthly: 600, installFee: 500, badge: "Most Popular" },
     12: { monthly: 500, installFee: 0, badge: "Best Value" },
     24: { monthly: 350, installFee: 0 },
+    36: { monthly: 300, installFee: 0 },
   },
   outdoor_traditional_original: {
     1: { monthly: 900, installFee: 500 },
@@ -61,6 +64,7 @@ export const PRICING_TIERS: Record<SaunaTypeId, Partial<Record<CommitmentMonths,
     6: { monthly: 600, installFee: 500, badge: "Most Popular" },
     12: { monthly: 500, installFee: 0, badge: "Best Value" },
     24: { monthly: 350, installFee: 0 },
+    36: { monthly: 300, installFee: 0 },
   },
 };
 
