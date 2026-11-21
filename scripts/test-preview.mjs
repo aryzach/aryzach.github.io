@@ -134,6 +134,7 @@ try {
         {}, 'https://www.sfsaunarental.com' + route + '/');
       assert.equal(await staticPage.$eval('main h1', heading => heading.textContent.includes('Sauna Options')), false);
     }
+    await staticPage.goto(origin + '/pricing/infrared/outdoor/', { waitUntil: 'domcontentloaded' });
     await staticPage.waitForFunction(() => [...document.querySelectorAll('main button')]
       .some(button => button.textContent === 'Currently unavailable' && button.disabled));
     await staticPage.goto(origin + '/pricing/infrared/indoor/', { waitUntil: 'domcontentloaded' });
