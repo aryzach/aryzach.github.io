@@ -1,6 +1,7 @@
 // Runs before `vite build` (prebuild hook); writes public/sitemap.xml.
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
+import { pricingProductRoutes } from './pricing-product-routes.mjs';
 
 const BASE_URL = 'https://www.sfsaunarental.com';
 
@@ -10,6 +11,7 @@ const BASE_URL = 'https://www.sfsaunarental.com';
 const entries = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
   { path: '/pricing', changefreq: 'weekly', priority: '0.9' },
+  ...pricingProductRoutes.map(path => ({ path: path + '/', changefreq: 'weekly', priority: '0.8' })),
   { path: '/how-it-works', changefreq: 'monthly', priority: '0.8' },
   { path: '/how-it-started', changefreq: 'yearly', priority: '0.6' },
   { path: '/install-power', changefreq: 'monthly', priority: '0.7' },

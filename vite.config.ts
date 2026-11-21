@@ -1,3 +1,4 @@
+import { pricingProductRoutes } from './scripts/pricing-product-routes.mjs';
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -7,6 +8,7 @@ import { localRecordsPlugin } from "./scripts/dev/localRecordsPlugin";
 export const routes = [
   '/',
   '/pricing',
+  ...pricingProductRoutes,
   '/how-it-works',
   '/how-it-started',
   '/install-power',

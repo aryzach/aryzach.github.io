@@ -6,7 +6,7 @@ test("curriculum navigation persists independent checks and notes locally withou
   const compiled = await build({
     stdin: {
       contents:
-        'import React from "react";import{createRoot}from"react-dom/client";import Academy from"./src/academy/Academy";createRoot(document.getElementById("root")).render(<Academy/>);',
+        'import React,{act} from "react";import{createRoot}from"react-dom/client";import Academy from"./src/academy/Academy";globalThis.IS_REACT_ACT_ENVIRONMENT=true;globalThis.flushAcademy=callback=>act(async()=>{callback()});globalThis.mountAcademy=()=>createRoot(document.getElementById("root")).render(<Academy/>);',
       resolveDir: process.cwd(),
       loader: "tsx",
     },
@@ -18,12 +18,21 @@ test("curriculum navigation persists independent checks and notes locally withou
     define: {
       "import.meta.env": "{}",
       "import.meta.env.MODE": '"development"',
-      "process.env.NODE_ENV": '"production"',
+      "process.env.NODE_ENV": '"development"',
     },
   });
   const w = new Window({
     url: "http://127.0.0.1:5173/learn-certify",
     settings: { enableJavaScriptEvaluation: true },
+  });
+  // happy-dom lacks the browser task channel used by React's async act().
+  Object.assign(w, {
+    MessageChannel: class {
+      port1: { onmessage?: () => void } = {};
+      port2 = {
+        postMessage: () => w.setTimeout(() => this.port1.onmessage?.(), 0),
+      };
+    },
   });
   w.structuredClone = structuredClone;
   w.scrollTo = () => {};
@@ -34,24 +43,29 @@ test("curriculum navigation persists independent checks and notes locally withou
   };
   const d = w.document;
   d.body.innerHTML = '<div id="root"></div>';
-  const tick = () => new Promise((r) => setTimeout(r, 100));
+  // Await React’s render and effects after each input instead of assuming a
+  // fixed sleep is long enough on a loaded CI worker.
+  const harness = w as unknown as {
+    flushAcademy: (callback: () => void) => Promise<void>;
+    mountAcademy: () => void;
+  };
+  const flush = (callback: () => void) => harness.flushAcademy(callback);
   const click = async (text: string) => {
     const b = [...d.querySelectorAll("button")].find((b) =>
       b.textContent?.includes(text),
     );
     assert.ok(b, "missing " + text);
-    b.click();
-    await tick();
+    await flush(() => b.click());
   };
   try {
     w.eval(compiled.outputFiles[0].text);
-    await tick();
-    await tick();
+    await flush(harness.mountAcademy);
     assert.match(d.body.textContent!, /1129/);
     await click("How US Electrical Product Regulation Works");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 9);
-    d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
-    await tick();
+    await flush(() => {
+      d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
+    });
     let state = JSON.parse(
       w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
     );
@@ -77,8 +91,9 @@ test("curriculum navigation persists independent checks and notes locally withou
       w.HTMLTextAreaElement.prototype,
       "value",
     )!.set!.call(input, "My evidence and open questions");
-    input.dispatchEvent(new w.Event("input", { bubbles: true }));
-    await tick();
+    await flush(() => {
+      input.dispatchEvent(new w.Event("input", { bubbles: true }));
+    });
     await click("Save notes");
     await click("All sections");
     await click("How US Electrical Product Regulation Works");
@@ -92,8 +107,9 @@ test("curriculum navigation persists independent checks and notes locally withou
     await click("All sections");
     await click("Final engineering and certification deliverables");
     assert.equal(d.querySelectorAll("input[type=checkbox]").length, 17);
-    d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
-    await tick();
+    await flush(() => {
+      d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
+    });
     const capstone = JSON.parse(
       w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
     ).entries.find((e: { id: string }) => e.id === "explorer:20.4");
@@ -115,8 +131,9 @@ test("curriculum navigation persists independent checks and notes locally withou
       /Module 7.*Component Standards/,
     );
     navigation.value = "7";
-    navigation.dispatchEvent(new w.Event("change", { bubbles: true }));
-    await tick();
+    await flush(() => {
+      navigation.dispatchEvent(new w.Event("change", { bubbles: true }));
+    });
     assert.match(d.body.textContent!, /Component Standards and Certification/);
     assert.ok(!d.body.textContent!.includes("No matching topics"));
     await click("All sections");
@@ -133,8 +150,9 @@ test("curriculum navigation persists independent checks and notes locally withou
       );
     assert.match(d.body.textContent!, /Stage 7: Commercial deployment/);
     const checks = d.querySelectorAll<HTMLInputElement>("input[type=checkbox]");
-    checks[27].click();
-    await tick();
+    await flush(() => {
+      checks[27].click();
+    });
     const final = JSON.parse(
       w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
     ).entries.find((e: { id: string }) => e.id === "explorer:24.7");
@@ -152,8 +170,9 @@ test("curriculum navigation persists independent checks and notes locally withou
     await click("All sections");
     await click("Fault-Tree Analysis");
     assert.match(d.body.textContent!, /Sauna heater continues generating heat/);
-    d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
-    await tick();
+    await flush(() => {
+      d.querySelector<HTMLInputElement>("input[type=checkbox]")!.click();
+    });
     const faultTree = JSON.parse(
       w.localStorage.getItem("sf-curriculum-explorer-preview-v1")!,
     ).entries.find((e: { id: string }) => e.id === "explorer:5.3");
@@ -171,17 +190,20 @@ test("curriculum navigation persists independent checks and notes locally withou
     const finalChecks = d.querySelectorAll<HTMLInputElement>(
       "input[type=checkbox]",
     );
-    finalChecks[0].click();
-    await tick();
-    finalChecks[32].click();
-    await tick();
+    await flush(() => {
+      finalChecks[0].click();
+    });
+    await flush(() => {
+      finalChecks[32].click();
+    });
     const notes = d.querySelector("textarea")!;
     Object.getOwnPropertyDescriptor(
       w.HTMLTextAreaElement.prototype,
       "value",
     )!.set!.call(notes, "My capstone calculations and uncertainty register");
-    notes.dispatchEvent(new w.Event("input", { bubbles: true }));
-    await tick();
+    await flush(() => {
+      notes.dispatchEvent(new w.Event("input", { bubbles: true }));
+    });
     await click("Save notes");
     await click("All sections");
     await click("Capstone: Preliminary High-Current DC Engineering Assessment");

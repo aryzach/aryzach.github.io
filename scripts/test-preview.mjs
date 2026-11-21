@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import puppeteer from 'puppeteer';
+import { pricingProductRoutes } from './pricing-product-routes.mjs';
 
 const origin = 'http://127.0.0.1:4175';
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', ...(process.env.PREVIEW_DIST_DIR ? ['--outDir', process.env.PREVIEW_DIST_DIR] : []), '--host', '127.0.0.1', '--port', '4175', '--strictPort'], { stdio: 'pipe' });
@@ -112,13 +113,38 @@ try {
       if (url.hostname.endsWith('.supabase.co')) {
         if (!['GET', 'OPTIONS'].includes(request.method()) || !['/rest/v1/sauna_types', '/rest/v1/public_sauna_availability', '/rest/v1/app_config'].includes(url.pathname)) staticWrites.push(request.url());
         if (request.method() === 'GET') publicReads++;
-        return void request.respond({ status: 200, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS' }, contentType: 'application/json', body: '[]' });
+        const body = url.pathname === '/rest/v1/public_sauna_availability'
+          ? [
+            { sauna_type_id: 'indoor_infrared_standard', available_now: 1, next_available_date: null },
+            { sauna_type_id: 'outdoor_infrared_standard', available_now: 0, next_available_date: null },
+          ]
+          : [];
+        return void request.respond({ status: 200, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS' }, contentType: 'application/json', body: JSON.stringify(body) });
       }
       if (/stripe|leadconnector|posthog|googletagmanager|facebook|elfsight/.test(url.hostname)) staticWrites.push(request.url());
       void request.abort();
     });
     await staticPage.goto(origin + '/pricing', { waitUntil: 'domcontentloaded' });
     await staticPage.waitForFunction(() => document.body.textContent.includes('Sauna Options'));
+    const cards = await staticPage.$$eval('main a[href^="/pricing/"]', links => links.map(link => link.getAttribute('href')));
+    assert.deepEqual(cards.sort(), [...pricingProductRoutes].sort());
+    for (const route of pricingProductRoutes) {
+      await staticPage.goto(origin + route + '/', { waitUntil: 'domcontentloaded' });
+      await staticPage.waitForFunction(canonical => document.querySelector('link[rel="canonical"]')?.href === canonical,
+        {}, 'https://www.sfsaunarental.com' + route + '/');
+      assert.equal(await staticPage.$eval('main h1', heading => heading.textContent.includes('Sauna Options')), false);
+    }
+    await staticPage.goto(origin + '/pricing/infrared/outdoor/', { waitUntil: 'domcontentloaded' });
+    await staticPage.waitForFunction(() => [...document.querySelectorAll('main button')]
+      .some(button => button.textContent === 'Currently unavailable' && button.disabled));
+    await staticPage.goto(origin + '/pricing/infrared/indoor/', { waitUntil: 'domcontentloaded' });
+    const reserveButton = await staticPage.waitForFunction(() => [...document.querySelectorAll('main button')]
+      .find(button => button.textContent?.trim() === 'Reserve Now' && !button.disabled));
+    await reserveButton.asElement().click();
+    await staticPage.waitForSelector('[role="dialog"]');
+    await staticPage.keyboard.press('Escape');
+    await staticPage.waitForSelector('[role="dialog"]', { hidden: true });
+    console.log('PASS all six pricing detail routes, canonical URLs, and indoor infrared reservation dialog');
     await staticPage.waitForNetworkIdle({ idleTime: 200 });
     assert.equal(await staticPage.$('[data-preview-banner]'), null);
     assert.ok(publicReads > 0, 'Static generation should read public availability rather than synthetic stock');
