@@ -267,6 +267,37 @@ export function saunaRecovery(
             .reduce((n, a) => n + a.amount_cents, 0)
         : sourceTotal;
       const sign = t.direction === "SPEND" ? -1 : 1;
+      if (
+        kind === "sale" &&
+        allocations.some((a) => a.category === "sale" && a.sale_id)
+      ) {
+        // A deposit can belong to an earlier rental (or be untagged). Its
+        // reviewed application follows the recorded sale, never today's unit.
+        for (const allocation of allocations.filter((a) => a.category === "sale")) {
+          if (!allocation.sale_id) {
+            add(
+              [...new Set(t.lines.flatMap((l) => l.saunaCodes))],
+              kind,
+              allocation.amount_cents * sign,
+              "Reviewed payment classification",
+            );
+            continue;
+          }
+          const sale = state.lifecycle?.sales.find(
+            (s) => s.id === allocation.sale_id && s.customer_id === allocation.customer_id,
+          );
+          const asset = sale && state.assets.find((a) => a.id === sale.asset_id);
+          if (!asset) {
+            issues.push({sourceId:t.id,date:t.date,kind,amount:allocation.amount_cents * sign,
+              reason:"Sale allocation needs a matching customer and numbered sauna"});
+            continue;
+          }
+          add([asset.code.padStart(3, "0")], kind, allocation.amount_cents * sign,
+            "Existing receipt applied to recorded sauna sale",
+            "Owner-reviewed application; original receipt date retained. No new cash receipt.");
+        }
+        continue;
+      }
       if (amount === sourceTotal) {
         for (const line of lines)
           add(

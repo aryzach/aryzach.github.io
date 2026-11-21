@@ -5,6 +5,21 @@ import {emptyRentalWorkspace} from '../src/lib/rentalModel.ts';
 const line=(account:string,amount:number,code:string|null='001',tax=0)=>({AccountCode:account,LineAmount:amount,TaxAmount:tax,Tracking:code?[{Name:'Saunas',Option:`Sauna ${code} (Historical customer)`}]:[]});
 const tx=(id:string,type:string,lines:unknown[],extra={})=>({BankTransactionID:id,Type:type,Status:'AUTHORISED',CurrencyCode:'USD',DateString:'2026-10-01',LineAmountTypes:'Inclusive',LineItems:lines,...extra});
 const state=()=>({...emptyRentalWorkspace(),assets:[{id:'unit1',code:'001',model:'Infrared'},{id:'unit2',code:'002',model:'Traditional'}]});
+test('applied deposits follow an explicitly owned sale, retaining other rental cash and excluding tax',()=>{
+ const s=state();s.lifecycle={rentals:[],agreements:[],terms:[],placements:[],settlements:[],events:[],documents:[],
+  sales:[{id:'sale',asset_id:'unit2',customer_id:'buyer'} as never],
+  allocations:[{source_id:'mixed',category:'sale',sale_id:'sale',customer_id:'buyer',amount_cents:46030,currency:'USD',voided_at:null},
+   {source_id:'mixed',category:'tax',amount_cents:3970,currency:'USD',voided_at:null},
+   {source_id:'mixed',category:'rental',amount_cents:30000,currency:'USD',voided_at:null},
+   {source_id:'untagged',category:'sale',sale_id:'sale',customer_id:'buyer',amount_cents:46030,currency:'USD',voided_at:null}] as never};
+ const source=recoverySources([tx('mixed','RECEIVE',[line('200',500),line('542',300)]),tx('untagged','RECEIVE',[line('200',500,null)])],null);
+ const result=saunaRecovery(s,source);assert.equal(result.rows[0].rent,30000);assert.equal(result.rows[0].sale,0);
+ assert.equal(result.rows[1].sale,92060);assert.equal(result.issues.length,0);
+ assert.equal(saunaRecovery(s,source,false,false).rows[1].sale,0);
+ assert.equal(source.transactions[0].lines[0].saunaCodes[0],'001');
+ s.lifecycle.sales[0].customer_id='someone-else';
+ const invalid=saunaRecovery(s,source);assert.equal(invalid.rows[1].sale,0);assert.equal(invalid.rows[0].sale,0);assert.equal(invalid.issues.length,2);
+});
 test('purchase cost includes tax; rental and sale cash exclude tax/deposits; prepaid rent counts',()=>{
  const source=recoverySources([tx('cost','SPEND',[line('540',1100,'001',100)]),tx('rent','RECEIVE',[line('102',660,'001',60),line('200',500)]),tx('last','RECEIVE',[line('542',300)]),tx('sale','RECEIVE',[line('372',440,'001',40)])],null);
  const [r]=saunaRecovery(state(),source).rows;
