@@ -138,7 +138,9 @@ try {
     await staticPage.waitForFunction(() => [...document.querySelectorAll('main button')]
       .some(button => button.textContent === 'Currently unavailable' && button.disabled));
     await staticPage.goto(origin + '/pricing/infrared/indoor/', { waitUntil: 'domcontentloaded' });
-    await staticPage.locator('button').filter(button => button.textContent === 'Reserve Now' && !button.disabled).click();
+    const reserveButton = await staticPage.waitForFunction(() => [...document.querySelectorAll('main button')]
+      .find(button => button.textContent?.trim() === 'Reserve Now' && !button.disabled));
+    await reserveButton.asElement().click();
     await staticPage.waitForSelector('[role="dialog"]');
     await staticPage.keyboard.press('Escape');
     await staticPage.waitForSelector('[role="dialog"]', { hidden: true });
