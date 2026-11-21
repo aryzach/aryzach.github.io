@@ -1,6 +1,7 @@
 import { serveWithMigrationPolicy } from "../_shared/migrationPolicy.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { PRICING_TIERS } from "../_shared/generatedPricing.ts";
+import { buildBillingHistory } from "../_shared/accountingHistory.ts";
+import { readAccountingHistory } from "../_shared/accountingHistoryRecords.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,15 +15,6 @@ const json = (body: unknown, status = 200) =>
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
-
-function standardInstallFee(saunaTypeId: string | null, months: number | null): number | null {
-  if (!saunaTypeId || !months) return null;
-  // deno-lint-ignore no-explicit-any
-  const table = (PRICING_TIERS as any)[saunaTypeId];
-  if (!table) return null;
-  const row = table[months];
-  return row ? row.installFee : null;
-}
 
 serveWithMigrationPolicy(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -53,103 +45,29 @@ serveWithMigrationPolicy(async (req) => {
         return json({ ok: true });
 
       case "list_accounting": {
-        const [resRes, conRes, invRes] = await Promise.all([
-          supabase
-            .from("reservations")
-            .select(
-              "id, first_name, last_name, email, phone, city, install_address, sauna_type_id, reservation_status, payment_status, contract_status, custom_install_fee, custom_pricing_options, created_at, default_payment_method_status",
-            )
-            .order("created_at", { ascending: false }),
-          supabase
-            .from("contracts")
-            .select("*")
-            .eq("status", "Signed")
-            .order("created_at", { ascending: false }),
-          supabase
-            .from("sauna_inventory")
-            .select("unit_code, status, current_customer_id, future_customer_id"),
-        ]);
-        if (resRes.error) throw resRes.error;
-        if (conRes.error) throw conRes.error;
-        if (invRes.error) throw invRes.error;
+        const data = await readAccountingHistory(supabase);
+        const today = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+        return json({ rows: buildBillingHistory(data, today), as_of: today });
+      }
 
-        const contractsByReservation = new Map<string, any>();
-        for (const c of conRes.data ?? []) {
-          if (!contractsByReservation.has(c.reservation_id)) {
-            contractsByReservation.set(c.reservation_id, c);
-          }
+      case "history_agreement_url": {
+        const { data: agreement, error } = await supabase.from('rental_agreements')
+          .select('document_id,contract_id').eq('id', payload.agreement_id).single();
+        if (error) throw error;
+        let path: string | null = null;
+        if (agreement.document_id) {
+          const result = await supabase.from('rental_documents').select('storage_path').eq('id', agreement.document_id).single();
+          if (result.error) throw result.error;
+          path = result.data.storage_path;
+        } else if (agreement.contract_id) {
+          const result = await supabase.from('contracts').select('signed_pdf_storage_path').eq('id', agreement.contract_id).single();
+          if (result.error) throw result.error;
+          path = result.data.signed_pdf_storage_path;
         }
-
-        // Current customers and future (transfer planned) customers.
-        const unitByReservation = new Map<string, string | null>();
-        const currentIds = new Set<string>();
-        for (const u of invRes.data ?? []) {
-          if (u.current_customer_id) {
-            unitByReservation.set(u.current_customer_id, u.unit_code);
-            currentIds.add(u.current_customer_id);
-          }
-        }
-        for (const u of invRes.data ?? []) {
-          if (u.future_customer_id && !unitByReservation.has(u.future_customer_id)) {
-            unitByReservation.set(u.future_customer_id, u.unit_code);
-          }
-        }
-        const soldIds = new Set<string>();
-        for (const u of invRes.data ?? []) {
-          if (["Sold", "Pre-sold"].includes(u.status)) {
-            if (u.current_customer_id) soldIds.add(u.current_customer_id);
-            if (u.future_customer_id) soldIds.add(u.future_customer_id);
-          }
-        }
-        const depositPaid = (r: any) =>
-          ["paid", "succeeded", "complete", "completed"].includes(String(r.payment_status ?? "").toLowerCase());
-
-        const rows = (resRes.data ?? [])
-          .filter((r: any) =>
-            (contractsByReservation.has(r.id) && currentIds.has(r.id)) ||
-            (depositPaid(r) && unitByReservation.has(r.id)) ||
-            soldIds.has(r.id))
-          .map((r: any) => {
-          const c = contractsByReservation.get(r.id) ?? null;
-          const months = c?.commitment_months ?? null;
-          let installFee: number | null = null;
-          if (c) {
-            const opts = Array.isArray(r.custom_pricing_options) ? r.custom_pricing_options : null;
-            const opt = opts?.find((o: any) => Number(o?.months) === months);
-            if (typeof c.rental_summary_snapshot?.installation_fee === "number") installFee = c.rental_summary_snapshot.installation_fee;
-            else if (opt) installFee = Number(opt.install_fee ?? 0);
-            else if (r.custom_install_fee != null) installFee = Number(r.custom_install_fee);
-            else installFee = standardInstallFee(c.sauna_type_id ?? r.sauna_type_id, months);
-          }
-
-          const name =
-            `${(r.first_name ?? "").trim()} ${(r.last_name ?? "").trim()}`.trim() ||
-            c?.customer_legal_name ||
-            "—";
-
-          return {
-            reservation_id: r.id,
-            is_sale: soldIds.has(r.id),
-            name,
-            unit_code: unitByReservation.get(r.id) ?? null,
-            commitment_months: months,
-            monthly_price: c?.monthly_price ?? null,
-            commercial_terms: c?.rental_summary_snapshot?.commercial_terms ?? null,
-            security_deposit: c?.security_deposit ?? null,
-            delivery_fee: c?.delivery_fee ?? null,
-            install_fee: installFee,
-            insurance_selected: !!c?.insurance_selected,
-            insurance_monthly_price: c?.insurance_monthly_price ?? 0,
-            second_heater_selected: !!c?.second_heater_selected,
-            second_heater_monthly_price: c?.second_heater_monthly_price ?? 0,
-            stair_elevator_charge: c?.stair_elevator_charge ?? null,
-            reservation_deposit: 200,
-            payment_method: r.default_payment_method_status === "ACH" ? "Bank transfer / ACH" : "Credit card",
-          };
-        });
-
-
-        return json({ rows });
+        if (!path) return json({ error: 'No contract PDF is available' }, 404);
+        const result = await supabase.storage.from('signed-contracts').createSignedUrl(path, 300);
+        if (result.error) throw result.error;
+        return json({ url: result.data.signedUrl });
       }
 
       case "list_current_customers": {

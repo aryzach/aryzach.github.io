@@ -1,4 +1,5 @@
-import type { RentalCommercialTerms } from "@/lib/rentalTerms";
+import type { BillingRow } from "@/lib/billingHistory";
+import BillingHistory from "@/components/BillingHistory";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,26 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSEO } from "@/hooks/useSEO";
 
 const PASSWORD_STORAGE_KEY = "sf-sauna-accounting-pw";
-
-interface AccountingRow {
-  commercial_terms?: RentalCommercialTerms | null;
-  reservation_id: string;
-  name: string;
-  unit_code: string | null;
-  is_sale: boolean;
-  commitment_months: number | null;
-  monthly_price: number | null;
-  security_deposit: number | null;
-  delivery_fee: number | null;
-  install_fee: number | null;
-  insurance_selected: boolean;
-  insurance_monthly_price: number;
-  second_heater_selected: boolean;
-  second_heater_monthly_price: number;
-  stair_elevator_charge: number | null;
-  reservation_deposit: number;
-  payment_method: string;
-}
 
 interface CurrentCustomerRow {
   reservation_id: string | null;
@@ -70,8 +51,9 @@ const Accounting = () => {
   );
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState<AccountingRow[]>([]);
+  const [rows, setRows] = useState<BillingRow[]>([]);
   const [currentRows, setCurrentRows] = useState<CurrentCustomerRow[]>([]);
+  const [loadError, setLoadError] = useState("");
   const [tab, setTab] = useState<"billing" | "current">("billing");
 
   const call = useCallback(
@@ -99,20 +81,33 @@ const Accounting = () => {
     if (!password) return;
     (async () => {
       setLoading(true);
+      let loggedIn = false;
+      setLoadError("");
       try {
         await call({ action: "login" });
+        loggedIn = true;
         setAuthed(true);
         sessionStorage.setItem(PASSWORD_STORAGE_KEY, password);
         const [data, cur] = await Promise.all([
           call({ action: "list_accounting" }),
           call({ action: "list_current_customers" }),
         ]);
-        setRows(data.rows || []);
+        let billingRows = data.rows || [];
+        if (import.meta.env.DEV) {
+          try {
+            const copy = await fetch('/__local-records', {headers:{'x-sf-local-records':'1'}});
+            if (copy.ok) { const snapshot = await copy.json(); if (Array.isArray(snapshot.billingRows)) billingRows = snapshot.billingRows; }
+          } catch { /* A private copied history is optional; preview stays empty by default. */ }
+        }
+        setRows(billingRows);
         setCurrentRows(cur.rows || []);
-      } catch {
+      } catch (e) {
+        setLoadError(loggedIn ? "Could not load billing history. Please retry." : "Incorrect password or accounting is unavailable.");
+        if (!loggedIn) {
         sessionStorage.removeItem(PASSWORD_STORAGE_KEY);
         setPassword("");
         setAuthed(false);
+        }
       } finally {
         setLoading(false);
       }
@@ -120,18 +115,20 @@ const Accounting = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password]);
 
-  const totals = useMemo(() => {
-    const monthly = rows.reduce(
-      (sum, r) =>
-        sum +
-        (r.monthly_price ?? 0) +
-        (r.insurance_selected ? r.insurance_monthly_price : 0) +
-        (r.second_heater_selected ? r.second_heater_monthly_price : 0) +
-        (r.commercial_terms?.premium_monthly_cents ?? 0) / 100,
-      0,
-    );
-    return { monthly };
-  }, [rows]);
+  const activeBaseRent = useMemo(() => rows.filter(r => r.status === 'Current' && !r.is_sale).reduce((sum,r) => sum + (r.monthly_price ?? 0),0),[rows]);
+
+  const openAgreement = async (id: string) => {
+    // Open synchronously so browsers don't block the document after the private URL request.
+    const opened = window.open('about:blank', '_blank');
+    if (opened) opened.opener = null;
+    try {
+      const data = await call({action:'history_agreement_url',agreement_id:id});
+      const url = new URL(data.url);
+      if (url.protocol !== 'https:' || url.origin !== new URL(import.meta.env.VITE_SUPABASE_URL).origin) throw new Error('Unexpected document URL');
+      if (opened) opened.location.href = url.href;
+      else throw new Error('Allow pop-ups to view the agreement.');
+    } catch (e) { opened?.close(); throw e; }
+  };
 
   const currentTotal = useMemo(
     () => currentRows.reduce((sum, r) => sum + (r.monthly_price ?? 0), 0),
@@ -157,7 +154,8 @@ const Accounting = () => {
                   <Label htmlFor="pw">Password</Label>
                   <Input id="pw" type="password" value={pwInput} onChange={(e) => setPwInput(e.target.value)} autoFocus />
                 </div>
-                <Button type="submit" className="w-full">Sign in</Button>
+                <Button type="submit" className="w-full" disabled={loading}>Sign in</Button>
+                {loadError && <p role="alert" className="text-sm text-destructive">{loadError}</p>}
               </form>
             </CardContent>
           </Card>
@@ -177,11 +175,11 @@ const Accounting = () => {
       <Header />
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-3 max-w-[1600px]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap gap-2 items-center justify-between mb-4">
             <h1 className="text-3xl font-semibold text-foreground">Accounting</h1>
             <div className="text-sm text-muted-foreground">
               {tab === "billing"
-                ? `${rows.length} customers · ${money(totals.monthly)}/mo recurring`
+                ? `${money(activeBaseRent)}/mo recorded current base rent`
                 : `${currentRows.length} saunas · ${money(currentTotal)}/mo`}
             </div>
           </div>
@@ -198,60 +196,7 @@ const Accounting = () => {
           {loading ? (
             <p className="text-muted-foreground">Loading…</p>
           ) : tab === "billing" ? (
-            <div className="overflow-x-auto border border-border rounded-lg bg-card">
-              <table className="w-full text-sm">
-                <thead className="bg-muted/50">
-                  <tr className="text-left">
-                    <th className="px-3 py-2 font-medium">Customer</th>
-                    <th className="px-3 py-2 font-medium">Sauna #</th>
-                    <th className="px-3 py-2 font-medium">Term</th>
-                    <th className="px-3 py-2 font-medium">Monthly</th>
-                    <th className="px-3 py-2 font-medium">Payment method</th>
-                    <th className="px-3 py-2 font-medium">Security deposit</th>
-                    <th className="px-3 py-2 font-medium">Reservation deposit</th>
-                    <th className="px-3 py-2 font-medium">Installation</th>
-                    <th className="px-3 py-2 font-medium">Delivery</th>
-                    <th className="px-3 py-2 font-medium">Damage protection</th>
-                    <th className="px-3 py-2 font-medium">Second heater</th>
-                    <th className="px-3 py-2 font-medium">SF Sauna Premium</th><th className="px-3 py-2 font-medium">Payment arrangement</th><th className="px-3 py-2 font-medium">Initial monthly billing</th><th className="px-3 py-2 font-medium">Renewal / month</th>
-                    <th className="px-3 py-2 font-medium">Stair / elevator</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((r) => (
-                    <tr key={r.reservation_id} className="border-t border-border align-top">
-                      <td className="px-3 py-2 font-medium text-foreground">{r.name}</td>
-                      <td className="px-3 py-2">{r.unit_code ?? "—"}</td>
-                      <td className="px-3 py-2">{r.is_sale ? "Sale" : r.commitment_months ? `${r.commitment_months} mo` : "—"}</td>
-                      <td className="px-3 py-2 font-medium">{money(r.monthly_price)}</td>
-                      <td className="px-3 py-2">{r.payment_method ?? "—"}</td>
-                      <td className="px-3 py-2">{money(r.security_deposit)}</td>
-                      <td className="px-3 py-2">{money(r.reservation_deposit)}</td>
-                      <td className="px-3 py-2">{money(r.install_fee)}</td>
-                      <td className="px-3 py-2">{money(r.commercial_terms?.discounted_delivery_cents != null ? r.commercial_terms.discounted_delivery_cents / 100 : r.delivery_fee)}</td>
-                      <td className="px-3 py-2">
-                        {r.insurance_selected ? `${money(r.insurance_monthly_price)}/mo` : "—"}
-                      </td>
-                      <td className="px-3 py-2">
-                        {r.second_heater_selected ? `${money(r.second_heater_monthly_price)}/mo` : "—"}
-                      </td>
-                      <td className="px-3 py-2">{r.commercial_terms?.choices.premium_selected ? `${money(r.commercial_terms.premium_monthly_cents / 100)}/mo` : "—"}</td>
-                      <td className="px-3 py-2">{r.commercial_terms ? r.commercial_terms.choices.pay_upfront_selected ? <>{money((r.commercial_terms.initial_prepaid_recurring_cents ?? r.commercial_terms.initial_rental_cents) / 100)} upfront rental and add-ons<br/>{money(r.commercial_terms.upfront_savings_cents / 100)} savings · initial term only</> : "Monthly" : "Existing terms"}</td>
-                      <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.initial_recurring_cents / 100) : "Existing terms"}</td>
-                      <td className="px-3 py-2">{r.commercial_terms ? money(r.commercial_terms.renewal_monthly_cents / 100) : "Existing terms"}</td>
-                      <td className="px-3 py-2">{money(r.commercial_terms?.discounted_stair_charge_cents != null ? r.commercial_terms.discounted_stair_charge_cents / 100 : r.stair_elevator_charge)}</td>
-                    </tr>
-                  ))}
-                  {rows.length === 0 && (
-                    <tr>
-                      <td colSpan={16} className="px-3 py-8 text-center text-muted-foreground">
-                        No customers yet.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <>{loadError && <div role="alert" className="mb-4 text-destructive">{loadError} <Button variant="outline" onClick={()=>window.location.reload()}>Retry</Button></div>}<BillingHistory rows={rows} onAgreement={openAgreement}/></>
           ) : (
             <div className="overflow-x-auto border border-border rounded-lg bg-card">
               <table className="w-full text-sm">
