@@ -18,6 +18,7 @@ const PricingProduct = () => {
   useSEO({
     title: `${product.name} — SF Sauna Rental`,
     description: product.shortDescription,
+    canonical: `https://www.sfsaunarental.com/pricing/${product.category}/${product.slug}/`,
   });
 
   const { getStatus } = useAvailability();

@@ -1,3 +1,4 @@
+import { pricingProductRoutes } from './pricing-product-routes.mjs';
 import puppeteer from 'puppeteer';
 import { spawn } from 'child_process';
 import fs from 'fs';
@@ -10,6 +11,7 @@ const distDir = path.resolve(__dirname, '../dist');
 const routes = [
   '/',
   '/pricing',
+  ...pricingProductRoutes,
   '/how-it-works',
   '/how-it-started',
   '/install-power',
@@ -144,6 +146,15 @@ async function prerender() {
         // tiny extra wait to let React hydrate main content
         await sleep(1000);
 
+        if (pricingProductRoutes.includes(route)) {
+          await page.waitForFunction(
+            canonical => document.querySelector('main h1')?.textContent?.trim() &&
+              document.querySelector('link[rel="canonical"]')?.href === canonical,
+            { timeout: 5000 },
+            `https://www.sfsaunarental.com${route}/`,
+          );
+        }
+
         const html = await page.content();
 
         let outputPath;
@@ -187,7 +198,7 @@ async function prerender() {
       // ignore
     }
     console.log('Cleanup complete. Exiting.');
-    process.exit(0);
+    process.exit(failedRoutes.some(route => pricingProductRoutes.includes(route)) ? 1 : 0);
   }
 }
 
