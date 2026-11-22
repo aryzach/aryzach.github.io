@@ -36,7 +36,7 @@ interface Reservation {
   phone: string | null;
   install_address: string | null;
   sauna_type_id: string;
-  preferred_install_at: string;
+  preferred_install_at: string | null;
   city: string | null;
   reservation_status: string;
   booking_state?: string;
@@ -196,7 +196,7 @@ const ReservationDashboard = () => {
   const openEdit = () => {
     if (!reservation) return;
     setEditSaunaType(reservation.sauna_type_id);
-    setEditDate(reservation.preferred_install_at.slice(0, 10));
+    setEditDate(reservation.preferred_install_at?.slice(0, 10) ?? "");
     setEditOpen(true);
   };
 
@@ -478,7 +478,9 @@ const ReservationDashboard = () => {
                   <Detail label="Sauna type" value={saunaTypeLabel(reservation.sauna_type_id)} />
                   <Detail
                     label="Preferred installation date"
-                    value={formatDatePretty(reservation.preferred_install_at.slice(0, 10))}
+                    value={reservation.preferred_install_at
+                      ? formatDatePretty(reservation.preferred_install_at.slice(0, 10))
+                      : "Not yet selected"}
                   />
                   <div className="flex items-center justify-between gap-4 pt-2">
                     <span className="text-muted-foreground">Sauna hold status</span>
